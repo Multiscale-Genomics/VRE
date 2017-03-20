@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ontology Visualizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ontology Visualizer">
+    <meta name="author" content="Alex Bardas">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/extra.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+  </head>
+
+  <body data-spy="scroll" data-target=".subnav" data-offset="100">
+
+  <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">Owl-Viz</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="">
+                <a href="./index.html">Home</a>
+              </li>
+              <li class="">
+                <a href="./index.html">Features</a>
+              </li>
+              <li class="divider-vertical"></li>
+              <li class="active">
+                <a href="./demo.html">Demo</a>
+              </li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span4">
+          <div class="owl-tree well sidebar-nav">
+          </div>
+        </div><!--/span-->
+        <div id="owl-viz" class="span8">
+          <div id="log">
+          </div>
+        </div>
+      </div><!--/row-->
+      <button id="test-ontology" class="btn">Convert Test Ontology to JSON </button>
+      <hr class="soften">
+       <!-- Footer
+        ================================================== -->
+      <footer class="footer">
+        <p>Faculty project developed by <a href="http://twitter.com/alexbardas" target="_blank">@alexbardas</a>.</p>
+        <p>Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+      </footer>
+
+    </div><!-- /container-fluid -->
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/require-config.js"></script>
+    <script src="js/libs/require.js"></script>
+    <script src="js/libs/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+          require(['slimscroll'], function () {
+              $(".owl-tree").slimScroll({
+                  width: '',
+                  height: '500px',
+                  size: '5px',
+                  distance: '-1px',
+                  opacity: 0.3,
+                  position:'right'
+              });
+          })
+
+          $( "#test-ontology" ).click(function() {
+              var req = $.ajax({
+                      url: "test-ontology.xml",
+                      dataType: "html"
+                  });
+
+              req.done(function(owl) {
+                  require(['cs!ontology', 'jit'], function(Owl) {
+                      var Tree = new Owl(owl);
+                      var tree_json = Tree[0], jit_json = Tree[1];
+
+                      require(['cs!treeview'], function(TreeView) {
+                          var n = new TreeView(tree_json);
+                          $(".owl-tree").html(n.render().el);
+                      });
+
+                      require(['cs!spaceTree'], function(spaceTree) {
+                          spaceTree.loadJSON(jit_json);
+                          spaceTree.compute();
+                          spaceTree.onClick(spaceTree.root);
+                          spaceTree.geom.translate(new $jit.Complex(-200, 0), "current");
+                          console.log(spaceTree);
+                      });
+
+                  });
+              })
+          });
+
+          $( "#test-ontology" ).click();
+
+    </script>
+  </body>
+</html>

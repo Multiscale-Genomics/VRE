@@ -1,0 +1,238 @@
+{
+  "_id":"nucldynwf",
+  "Name":"Nucleosome Dynamics Worflow",
+  "Description": "Nucleosome Dynamics Tools for performing  nucleosome-related analysis based on MNase-seq experimental data",
+  "URL": "http://mmb.pcb.ub.es/NucleosomeDynamics/",
+  "Owner": {
+        "contact": "laia.codo@bsc.es",
+        "institution": "MMB IRB"
+   },
+  "stageout_data":".results.json",
+  "log_data":"nucleosomeDynamics_wf.log",
+  "launcher": {
+	"type": "SGE",
+	"queue": "nuclDyn.q",
+	"executable": "/orozco/services/Rdata/Web/apps/nucleServ_MuG/nucleosomeDynamics_wf.py",
+	"cpus": 1,
+	"max_mem": "0"
+  },
+  "input_files":[
+    {
+      "name":"condition1",
+      "description":"NMase-seq reference state (condition C1)",
+      "help": "MNase data used to define the initial state  when comparing nucleosome positioning",
+      "file_type":"BAM",
+      "data_type": "MNase-seq",
+      "required":true,
+      "allow_multiple":false,
+      "position":1
+    },
+    {
+      "name":"condition2",
+      "description":"MNAse-seq final state (condition C2)",
+      "help":"MNase data used to define the final state  when comparing nucleosome positioning",
+      "file_type":"BAM",
+      "data_type": "MNase-seq",
+      "required":true,
+      "allow_multiple":false,
+      "position":2
+    }
+  ],
+  "arguments":[
+    {
+      "name":"width",
+      "description":"Width",
+      "help":"Size of each nucleosome, in bp, to be considered by NucleR",
+      "type":"integer",
+      "required":true,
+      "allow_multiple":false,
+      "default":"147"
+    },
+    {
+      "name":"minoverlap",
+      "type":"integer",
+      "description":"Minimum Overlap",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"dyad_length",
+      "type":"integer",
+      "description":"Dyad Length",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"thresholdPercentage",
+      "type":"number",
+      "description":"Percentage",
+      "required":true,
+      "allow_multiple":false,
+      "default":"35",
+      "maximum":100,
+      "minimum":0
+    },
+    {
+      "name":"thresholdValue",
+      "type":"integer",
+      "description":"Absolute value",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"hthresh",
+      "type":"number",
+      "description":"Height Threshold",
+      "required":true,
+      "allow_multiple":false,
+      "default":"0.4"
+    },
+    {
+      "name":"wthresh",
+      "type":"number",
+      "description":"Width Threshold",
+      "required":true,
+      "allow_multiple":false,
+      "default":"0.6"
+    },
+    {
+      "name":"pcKeepComp",
+      "type":"number",
+      "description":"Coverage Smoothing",
+      "required":true,
+      "allow_multiple":false,
+      "default":"0.02"
+    },
+    {
+      "name":"range",
+      "type":"string",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"maxDiff",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"maxLen",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"roundPow",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":"5"
+    },
+    {
+      "name":"readSize",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":"140"
+    },
+    {
+      "name":"same__magnitude",
+      "type":"boolean",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":"true"
+    },
+    {
+      "name":"shift_min_nreads",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"shift_threshold",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"indel_min_nreads",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"indel_threshold",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"minwidth",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"threshold",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"periodicity:periodicity",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"window",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"open__thresh",
+      "type":"integer",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    },
+    {
+      "name":"range",
+      "type":"string",
+      "description":"",
+      "required":true,
+      "allow_multiple":false,
+      "default":""
+    }
+]
+}

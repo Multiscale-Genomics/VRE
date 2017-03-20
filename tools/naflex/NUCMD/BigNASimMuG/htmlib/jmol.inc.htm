@@ -1,0 +1,210 @@
+<!--
+MDWeb
+jmol.inc.htm
+JMol viewer template
+-->
+
+<?php
+
+
+$cartoon= "display all; select all;  spacefill off; wireframe off; backbone off; cartoon on; select ligand; wireframe 0.16;spacefill 0.5; color cpk; select *.FE; spacefill 0.7; color cpk ; select *.CU; spacefill 0.7; color cpk ; select *.ZN; spacefill 0.7; color cpk ; select all;";
+$wireframe= "display all; select all;  spacefill off; cartoon off; backbone off; wireframe 0.2; select all;";
+$backbone= "display all; select all; spacefill off; wireframe off; backbone 0.4; cartoon off; select ligand; wireframe 0.16;spacefill 0.5; color cpk; select *.FE; spacefill 0.7; color cpk ; select *.CU; spacefill 0.7; color cpk ; select *.ZN; spacefill 0.7; color cpk ; select all;";
+$cpk = "display all; select all; spacefill off; wireframe off; backbone off;cartoon off; cpk on; select ligand; wireframe 0.16;spacefill 0.5; color cpk; select *.FE; spacefill 0.7; color cpk ; select *.CU; spacefill 0.7; color cpk ; select *.ZN; spacefill 0.7; color cpk ; select all;";
+$ligands= "restrict ligand; cartoon off; wireframe on;  display selected; select *.FE; spacefill 0.7; color cpk; select *.CU; spacefill 0.7; color cpk; select *.ZN; spacefill 0.7; color cpk; select all;";
+$ligandsandpocket = " select within (6.0,true, ligand); cartoon off; wireframe on; backbone off; display selected; select *.FE; spacefill 0.7; color cpk ; select *.CU; spacefill 0.7; color cpk ; select *.ZN; spacefill 0.7; color cpk ; select all;";
+$ballandstick= "display all; restrict not water;  wireframe 0.2; spacefill 25%; cartoon off; backbone off; select ligand; wireframe 0.16; spacefill 0.5; color cpk; select *.FE; spacefill 0.7; color cpk ; select *.CU; spacefill 0.7; color cpk ; select *.ZN; spacefill 0.7; color cpk ; select all;";
+$byChain= "display all; select all;set defaultColors Jmol; color chain; color cartoon chain; select ligand;wireframe 0.16;spacefill 0.5; color cpk ; select all;";
+$byTemperature= "display all; select all;spacefill off; wireframe off; backbone 0.4; cartoon off; set defaultColors Jmol; color relativeTemperature; color cartoon relateiveTemperature select ligand;wireframe 0.16;spacefill 0.5; color cpk ; select all; ";
+$rainbow="display all; select all; set defaultColors Jmol; color group; color cartoon group; select ligand;wireframe 0.16;spacefill 0.5; color cpk; select all; ";
+$secondaryStructure= "display all; select all; set defaultColors Jmol; color structure; color cartoon structure;select ligand;wireframe 0.16;spacefill 0.5; color cpk; select all;";
+$byElement="display all; select all; set defaultColors Jmol; color cpk; color cartoon cpk; select ligand;wireframe 0.16;spacefill 0.5; color cpk; select all;";
+$byAminoAcid="display all; select all; set defaultColors Jmol; color amino; color cartoon amino; select ligand;wireframe 0.16;spacefill 0.5; color cpk; select all;";
+$hidrophobicity= "display all; set defaultColors Jmol; select hydrophobic; color red; color cartoon red; select not hydrophobic ; color blue ; color cartoon blue; select ligand;wireframe 0.16;spacefill 0.5; color cpk ;; select all;";
+
+$anim = "frame all; anim mode palindrome; anim fps 8; anim on;";
+$superpose = "frame all; display;";
+
+#$inicScript="load "."$GLOBALS[homeURL]/"."pdbs/f01.moby.models.pdb;".$cartoon.$secondaryStructure.$anim;
+#$inicScript="load "."$GLOBALS[homeURL]/"."pdbs/1a32.pdb;".$cartoon.$secondaryStructure.$anim;
+#$inicScript="load "."GOdMD/a3/A/qd/H/1a32_A-1qd7_H-1/1a32_A.REF.pdb;".$cartoon.$secondaryStructure.$anim;
+#$inicScript="load "."$GLOBALS[parmbsc1Dir]/NAFlex_lks1/CURVES/input.pdb;";
+$inicScript="load "."$pdbJmol;".$cartoon.$secondaryStructure.$anim;
+
+?>
+
+<script>
+  var cartoon="<?php echo $cartoon?>";
+  var wireframe="<?php echo $wireframe?>";
+  var backbone="<?php echo $backbone?>";
+  var cpk="<?php echo $cpk?>";
+  var ligands="<?php echo $ligands?>";
+  var ligandsandpocket="<?php echo $ligandsandpocket?>";
+  var ballandstick="<?php echo $ballandstick?>";
+  var spacefill="<?php echo $spacefill?>";
+  var byChain="<?php echo $byChain?>";
+  var byTemperature="<?php echo $byTemperature?>";
+  var rainbow="<?php echo $rainbow?>";
+  var secondaryStructure="<?php echo $secondaryStructure?>";
+  var byElement="<?php echo $byElement?>";
+  var byAminoAcid="<?php echo $byAminoAcid?>";
+  var hydrophobicity="<?php echo $hydrophobicity?>";
+  var anim="<?php echo $anim?>";
+  var superpose="<?php echo $superpose?>";
+</script>
+
+<table cellspacing="0" cellpadding="4" align="center" style="background-color: light grey; margin-left: auto; margin-right:auto;border-style: solid; border-width: 1px 1px 1px 1px; border-color: lightgrey;">
+<tr><td id="insertJmol">
+
+<script type="text/javascript">
+  var script="<?php echo $inicScript?>";
+  var jmol = "jmol";
+  jmol_isReady = function(applet) {
+	Jmol._getElement(applet, "appletdiv");
+  };
+
+  var Info = {
+      width: 448,
+      height: 450,
+      //debug: true,
+      color: "white",
+      use: "html5",
+      //j2sPath: "http://mmb.pcb.ub.es/jsmol/j2s",
+      //j2sPath: "http://mmb.irbbarcelona.org/NAFlex2/NUCMD/jsmol/j2s",
+      j2sPath: "jsmol/j2s",
+      script: script,
+      readyFunction: jmol_isReady,
+      disableInitialConsole: true
+  };
+</script>
+
+</td><td style="vertical-align:middle">
+<table style="width:220px; background-color: white; border-style: solid; border-width: 1px 1px 1px 1px; border-color: lightgrey; border-collapse: separate; vertical-align:middle;">
+	<tr style="width:100%;">
+		<td style="width:100%;">
+			<table style="width:100%; border-style: solid; border-width: 1px 1px 1px 1px; border-color: lightgrey;">
+				<tr style="width:100%;">
+							<td style="width:100%; text-align: center; font-size: xx-small;">
+								<input type="button" onclick="resetJmolButton(); Jmol.script(jmol,'<?php echo $cartoon.$secondaryStructure."center selected; zoom {selected} 0; isosurface off;" ?>')" value="Reset View" />
+							</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr style="width:100%;">
+		<td style="width:100%;">
+			<table style="width:100%; border-style: solid; border-width: 1px 1px 1px 1px; border-color: lightgrey;">
+				<tr style="width:100%;">																		
+							<td align="left" style="width:50%; font-size: xx-small;">Style&nbsp;&nbsp;&nbsp;&nbsp;
+								<select style="font-size: xx-small;" name="jmolStyle" id="jmolStyle" onchange="jmolDropdownMenu(this.options[this.selectedIndex].value); jmolCheckBox('waters');">
+								<option selected="selected" value="cartoon">Cartoon</option>
+								<option value="backbone" >Backbone</option>
+								<option value="cpk" >CPK</option>
+								<option value="ballandstick" >Ball &#38; Stick</option>
+								<option value="wireframe" >Wireframe</option>
+								<option value="ligands" >Ligands</option>
+								<option value="ligandsandpocket" >Ligands &#38; Pocket</option>
+								</select>
+							</td>
+				</tr>
+				<tr style="width:100%;">
+							<td align="left" style="width:50%; font-size: xx-small;">Color&nbsp;&nbsp;&nbsp;&nbsp;
+								<select style="font-size: xx-small;" name="jmolColor" id="jmolColor" onchange="jmolDropdownMenu(this.options[this.selectedIndex].value);">						
+								<option selected="selected" value="secondaryStructure" >Sec Struct</option>
+								<option value="byChain" >By Chain</option>
+								<option value="rainbow" >Rainbow</option>												
+								<option value="byElement" >By Element</option>
+								<option value="byAminoAcid" >By Amino Acid</option>
+								<option value="hidrophobicity" >Hydrophobicity</option>
+								</select>
+							</td>
+							
+				</tr>
+				<tr style="width:100%;">
+							<td align="left" style="width:50%; font-size: xx-small;">Surface
+								<select style="font-size: xx-small;" name="jmolSurface" id="jmolSurface" onchange="jmolDropdownMenu(this.options[this.selectedIndex].value);">
+								<option selected="selected" value="none"  >None</option>
+								<option value="solventAccessible" >Solvent Accessible</option>
+								<option value="solventExcluded" >Solvent Excluded</option>
+								<option value="cavities" >Cavities</option>
+								</select>
+							</td>
+				</tr>
+<!--
+				<tr style="width:100%;">
+							<td align="left" style="width:50%; font-size: xx-small;">
+								<input id="jmolScriptInput" type="text" name="inputjmol"  size="20" class="textfield">
+								<input value="Exe" type="button" class="searchbutton" onclick="executeJmolScriptInput();">
+							</td>
+				</tr>
+-->
+			</table>
+		</td>
+	</tr>
+	<tr style="width:100%;">
+		<td style="width:100%;">
+			<table style="width:100%; border-style: solid; border-width: 1px 1px 1px 1px; border-color: lightgrey;">
+                                <tr style="width:100%;">
+                                        <td align="left" style="width:33%; font-size: xx-small;">
+                                                <input type="checkbox" id="animation"          onclick="jmolCheckBox('animation')" />  Animation/Superposition
+                                        </td>
+                                </tr>
+				<tr style="width:100%;">
+					<td align="left" style="width:33%; font-size: xx-small;">
+						<input type="checkbox" id="togglespin" 		onclick="jmolCheckBox('togglespin')" />  Rotation
+					</td>
+				</tr>
+				<tr style="width:100%;">
+					<td align="left" style="width:33%; font-size: xx-small;">
+						<input type="checkbox" id="backgroundWhite" 	onclick="jmolCheckBox('backgroundWhite')"/>  Black&nbsp;Background
+					</td>
+				</tr>
+				<tr style="width:100%;">
+					<td align="left" style="width:33%; font-size: xx-small;">
+						<input type="checkbox" id="antialias"  		onclick="jmolCheckBox('antialias')" checked="checked"/>  Antialias&nbsp;(nicer)
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr style="width:100%;">
+		<td style="width:100%;">
+			<table style="width:100%; border-style: solid; border-width: 1px 1px 1px 1px; border-color: lightgrey;">
+				<tr style="width:100%;">
+					<td align="left" style="width:33%; font-size: xx-small;">
+						<input type="checkbox" id="togglehbonds" 		onclick="jmolCheckBox('togglehbonds')"/>  H-Bonds
+					</td>
+				</tr>
+				<tr style="width:100%;">
+					<td align="left" style="font-size: xx-small;">
+						<input type="checkbox" id="waters" 		onclick="jmolCheckBox('waters')"/>  WAT
+					</td>
+				</tr>
+				<tr style="width:100%;">
+					<td align="left" style="font-size: xx-small;">
+						<input type="checkbox" id="ligands" 		onclick="jmolCheckBox('ligands')"/>  Ligands
+					</td>
+				</tr>
+				<!--
+				<tr style="width:100%;">
+					<td align="left" style="width:33%; font-size: xx-small;">
+						<input type="checkbox" id="toggledisulfide" 	onclick="jmolCheckBox('toggledisulfide')" />  SS&nbsp;Bonds
+					</td>
+				</tr>
+				-->
+				<tr style="width:100%;">
+					<td align="left" style="width:33%; font-size: xx-small;">
+						<input type="checkbox" id="ions" 		onclick="jmolCheckBox('ions')"/>  Ions
+					</td>
+				</tr>
+				<tr style="width:100%;">
+					<td align="left" style="width:33%; font-size: xx-small;">
+						<input type="checkbox" id="dna" 		onclick="jmolCheckBox('dna')"/>  DNA/RNA
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>	
+</td>
+</table>

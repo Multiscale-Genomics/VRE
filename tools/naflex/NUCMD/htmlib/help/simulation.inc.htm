@@ -1,0 +1,95 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Simulation</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;For each particular simulation, <strong>BIGNASim</strong> integrates all the information extracted from the simulation and the set of pre-computed analyses in a new screen: <strong>Simulation description</strong>. <br/><br/>
+The <strong>Simulation description</strong> screen contains four different sections that can be expanded/shrinked (see figure below):
+</p>
+
+<ul style="text-align:left;">
+<li><a href="#MDSeq">Nucleic Sequence information</a></li>
+<li><a href="#MDSim">MD Simulation information</a></li>
+<li><a href="#MDTraj">Trajectory Analyses</a></li>
+<li><a href="#MDMeta">Trajectory Selection</a></li>
+</ul>
+
+</br>
+
+<a href="htmlib/help/img/SimPageNew.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SimPageNew.png" style="display: block; width: 100%; height:auto; border:1px solid grey;" ></img></a>
+
+<a name="MDSeq"></a>
+</br></br><h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Nucleic Acid information</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;<strong>Nucleic Acid information</strong> section shows the nucleotidic sequence of the nucleic acid, together with the <strong>type</strong> (DNA, RNA, Complex, etc.), <strong>subtype</strong> (A, B, Z, etc.), and <strong>number of chains</strong> (single, duplex, triplex, etc.). Associated <strong>pdb and ligands</strong> are given if they exist, with links to a <a href="http://mmb.irbbarcelona.org/pdb">PDB portal</a> and <a href="http://ndbserver.rutgers.edu/">Nucleic Acids Database (NDB)</a> with information about the structure. 3D and 2D representations are also shown when available.
+</p>
+
+<a href="htmlib/help/img/SimPageNewNAinfo.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SimPageNewNAinfo.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+<a name="MDSim"></a>
+</br></br><h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">MD Simulation information</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;<strong>MD Simulation information</strong> section shows the <strong>metadata</strong> associated with the simulation run. The most important data is directly shown in a table, whereas the complete set of metadata (stored in <strong>UMM format</strong>, see <a href="htmlib/help/pdf/d7.3_-_white_paper_on_standards_for_data_handling.pdf">Scalalife white paper</a>) can be seen clicking at <i>see full UMM</i>.
+</p>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;MD metadata information goes from the <strong>forcefield</strong> used, <strong>length of the simulation</strong>, simulation parameters such as <strong>time step</strong>, <strong>temperature</strong> or <strong>water model</strong> used, <strong>ionic concentration</strong> and <strong>ions type</strong>. Validation analyses such as <strong>RMSd</strong>, <strong>RMSf</strong> and <strong>Solvent Accessible Surface Area</strong> are also shown in 2D plots, as a simulation <strong>Quality Control</strong>.
+</p>
+
+<a href="htmlib/help/img/MDSim.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/MDSim.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Attached to the metadata table, a short <strong>video</strong> representing the simulation is shown. For a further analysis of the trajectory, an <strong>interactive JSMol</strong> window is also available, representing the trajectory with 500 equally-distributed snapshots, that can be rotated, zoomed and superposed. 
+</p>
+
+<a href="htmlib/help/img/SimJSMol.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SimJSMol.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+<a name="MDTraj"></a>
+</br></br><h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Trajectory Analyses</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;<strong>Trajectory Analyses</strong> section shows the set of pre-computed, nucleic-acid specific analyses made to the whole set of trajectories stored in the database. The set of analyses are based on our <a href="http://mmb.irbbarcelona.org/NAFlex/" target="_blank">NAFlex platform</a>, and are the following: 
+</p>
+
+<ul style="text-align: left;">
+<li>Curves Analysis</li>
+<li>Stiffness Analysis</li>
+<li>Principal Components Analysis</li>
+<li>NMR observables Analysis (J-Couplings and NOEs)</li>
+<li>Hydrogen Bonds Analysis</li>
+<li>Stacking Analysis</li>
+<li>Distance Contacts Analysis</li>
+<li>Experimental vs MD Analysis (*)</li>
+</ul>
+<p align="justify" style="font-size: 1.0em;">
+<i>(*) Only computed for those sequences having more than 5 representants in the PDB database (see <a href="help.pho?id=expMDAnalysis">Experimental Trajectories Analyses section</a>).</i>
+</p>
+<p align="justify" style="font-size: 1.0em;">
+&emsp;For a <strong>complete description</strong> of all the analyses, please refer to <a href="http://mmb.irbbarcelona.org/NAFlex/help.php?id=naFlex" target="_blank">NAFlex</a> help pages or <a href="http://nar.oxfordjournals.org/content/41/W1/W47" target="_blank">NAFlex paper</a>.
+</p>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;The number of analyses for the trajectories <strong>vary dynamically</strong>, as some of the analyses can not be computed on all of the structures.
+</p>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;<a href="http://mmb.irbbarcelona.org/NAFlex/help.php?id=tutorialAnalysisNA#HelicalParms" target="_blank">NAFlex interface</a> is used to show all the analyses information in an <strong>interactive way</strong>. Results can be explored for a particular <strong>base/base-pair/base-pair step</strong> either <strong>averaged by time</strong> or for <strong>all the snapshots</strong> of the trajectory.
+</p>
+
+<a href="htmlib/help/img/SimAnalysis.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SimAnalysis.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+<a name="MDMeta"></a>
+</br></br><h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Trajectory Selection</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;<strong>Trajectory Selection</strong> section allows the possibility to extract a particular <strong>slice and/or atom selection</strong> of the trajectory (e.g. obtain a trajectory file containing only the central fragment of the structure).
+</p>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Those trajectories can be <strong>downloaded</strong> but also can be re-inserted in the <a href="http://mmb.irbbarcelona.org/NAFlex"  target="_blank">NAFlex</a> engine for obtaining specific analysis.
+</p>
+
+<a href="htmlib/help/img/SimMetaTraj.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SimMetaTraj.png" style="display: block; width: 100%; height:auto;" ></img></a>
+

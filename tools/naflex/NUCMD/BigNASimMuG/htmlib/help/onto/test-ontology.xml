@@ -1,0 +1,1270 @@
+<?xml version="1.0"?>
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.racai.ro/~trausan/chi.owl"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     ontologyIRI="http://www.racai.ro/~trausan/chi.owl">
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="owl2xml" IRI="http://www.w3.org/2006/12/owl2-xml#"/>
+    <Prefix name="" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="chi" IRI="http://www.racai.ro/~trausan/chi.owl#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Declaration>
+        <Class IRI="#Action"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Activity"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ActivityTheoryConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Advantage"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Analyse"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Anchor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ApplicationSoftware"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ArtificialLanguage"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Blog"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Button"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#C"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#C++"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CHIConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CHILaw"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CHIModel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CSCL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CSCW"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Chat"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Coffeescript"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CognitiveErgonomicsConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CognitiveModel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Collaboration"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CollaborativeInterface"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CommunicationTtheoryConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Community"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Computer"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Concept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Control"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ConversationAnalysis"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cooperation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Csharp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Design"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Desktop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Dialog"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DialogModel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DialogismConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DirectManipulationInterface"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Disadvantage"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Display"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Document"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Earlang"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EthnologyConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EthnometodologyConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Evaluate"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Feature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FittLaw"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FlowState"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Folksonomy"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Form"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Forum"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Groupware"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HTML"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hardware"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Haskell"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Header"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Heteroglosy"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Highlight"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Human"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HumanPhysiologicalFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HumanProcesorModel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HumanPsychologicalFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hypermedia"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hypertext"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ITS"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Image"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Immersion"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Implementation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#InputData"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#InstantMessenger"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#InteligentInterfaces"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Interanimation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Interface"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#InterfaceModel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Interpreter"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Java"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Javascript"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Keyboard"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LaTeX"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Label"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Language"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LinguisticsConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Link"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Lisp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Listen"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Look"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Loudspeaker"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MarkupLanguage"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Memory"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Menu"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Microphone"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MillerLaw"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ModelViewController"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Modeling"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Mouse"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NaturalLanguage"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NaturalLanguageInterface"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Navigation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OWL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ontology"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OperatingSystem"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Paragraph"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Perl"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Polyphony"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Principles"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Problem"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Process"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Processor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ProgrammingLanguage"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Prolog"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Property"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Python"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RDF"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RDFS"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Read"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ruby"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SGML"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SVG"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Scala"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Scheme"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SemioticConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Sign"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SocialNetwork"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Software"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Sound"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SpeechGenre"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Symbol"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Tag"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TagCloud"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TaskModel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Test"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Text"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TextArea"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Troff"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Understanding"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Usability"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#User"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#UserModel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Utter"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Utterance"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ventriloquation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Video"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Virtual-reality"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VirtualCommunities"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Visualization"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Voice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Web"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WebML"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Wiki"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Window"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#XForms"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#XLink"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#XML"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#XPath"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#XSL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#XSLT"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#XSchema"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#advantageOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#disadvantageOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasAdvantage"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasDisadvantage"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasPart"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#implementedBy"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#implements"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#needs"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#partOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#propertyOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#subConceptOf"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="#Action"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Activity"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ActivityTheoryConcept"/>
+        <Class IRI="#Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Advantage"/>
+        <Class IRI="#Feature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Analyse"/>
+        <Class IRI="#Activity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Anchor"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ApplicationSoftware"/>
+        <Class IRI="#Software"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ArtificialLanguage"/>
+        <Class IRI="#Language"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Blog"/>
+        <Class IRI="#CollaborativeInterface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Button"/>
+        <Class IRI="#Control"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#C"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#C++"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CHIConcept"/>
+        <Class IRI="#Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CHILaw"/>
+        <Class IRI="#CHIConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CHIModel"/>
+        <Class IRI="#CHIConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CSCL"/>
+        <Class IRI="#Collaboration"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CSCW"/>
+        <Class IRI="#Cooperation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Chat"/>
+        <Class IRI="#InstantMessenger"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Coffeescript"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CognitiveErgonomicsConcept"/>
+        <Class IRI="#CHIConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CognitiveModel"/>
+        <Class IRI="#UserModel"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Collaboration"/>
+        <Class IRI="#Process"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CollaborativeInterface"/>
+        <Class IRI="#Interface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CommunicationTtheoryConcept"/>
+        <Class IRI="#Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Community"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Computer"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Concept"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Control"/>
+        <Class IRI="#DirectManipulationInterface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ConversationAnalysis"/>
+        <Class IRI="#EthnometodologyConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cooperation"/>
+        <Class IRI="#Process"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Csharp"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Design"/>
+        <Class IRI="#Activity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Desktop"/>
+        <Class IRI="#DirectManipulationInterface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Dialog"/>
+        <Class IRI="#DialogismConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DialogModel"/>
+        <Class IRI="#CHIModel"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DialogismConcept"/>
+        <Class IRI="#Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DirectManipulationInterface"/>
+        <Class IRI="#Interface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Disadvantage"/>
+        <Class IRI="#Feature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Display"/>
+        <Class IRI="#Hardware"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Document"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Earlang"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EthnologyConcept"/>
+        <Class IRI="#Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EthnometodologyConcept"/>
+        <Class IRI="#Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Evaluate"/>
+        <Class IRI="#Activity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Feature"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FittLaw"/>
+        <Class IRI="#CHILaw"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FlowState"/>
+        <Class IRI="#CognitiveErgonomicsConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Folksonomy"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Form"/>
+        <Class IRI="#Control"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Forum"/>
+        <Class IRI="#CollaborativeInterface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Groupware"/>
+        <Class IRI="#Software"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HTML"/>
+        <Class IRI="#MarkupLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hardware"/>
+        <Class IRI="#Computer"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Haskell"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Header"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Heteroglosy"/>
+        <Class IRI="#DialogismConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Highlight"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Human"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HumanPhysiologicalFeature"/>
+        <Class IRI="#Human"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HumanProcesorModel"/>
+        <Class IRI="#UserModel"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HumanPsychologicalFeature"/>
+        <Class IRI="#Human"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hypermedia"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hypertext"/>
+        <Class IRI="#Hypermedia"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ITS"/>
+        <Class IRI="#InteligentInterfaces"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Image"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Immersion"/>
+        <Class IRI="#Process"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Implementation"/>
+        <Class IRI="#Activity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#InputData"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#InstantMessenger"/>
+        <Class IRI="#CollaborativeInterface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#InteligentInterfaces"/>
+        <Class IRI="#Interface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Interanimation"/>
+        <Class IRI="#DialogismConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Interface"/>
+        <Class IRI="#CHIConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Interface"/>
+        <Class IRI="#Computer"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#InterfaceModel"/>
+        <Class IRI="#CHIModel"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Interpreter"/>
+        <Class IRI="#SemioticConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Java"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Javascript"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Keyboard"/>
+        <Class IRI="#Hardware"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LaTeX"/>
+        <Class IRI="#MarkupLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Label"/>
+        <Class IRI="#DirectManipulationInterface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Language"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LinguisticsConcept"/>
+        <Class IRI="#Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Link"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Lisp"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Listen"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Look"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Loudspeaker"/>
+        <Class IRI="#Hardware"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MarkupLanguage"/>
+        <Class IRI="#ArtificialLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Memory"/>
+        <Class IRI="#Hardware"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Menu"/>
+        <Class IRI="#Control"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Microphone"/>
+        <Class IRI="#Hardware"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MillerLaw"/>
+        <Class IRI="#CHILaw"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ModelViewController"/>
+        <Class IRI="#CHIModel"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Modeling"/>
+        <Class IRI="#Activity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Mouse"/>
+        <Class IRI="#Hardware"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NaturalLanguage"/>
+        <Class IRI="#Language"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NaturalLanguageInterface"/>
+        <Class IRI="#InteligentInterfaces"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Navigation"/>
+        <Class IRI="#Process"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OWL"/>
+        <Class IRI="#RDFS"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ontology"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OperatingSystem"/>
+        <Class IRI="#Software"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Paragraph"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Perl"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Polyphony"/>
+        <Class IRI="#DialogismConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Principles"/>
+        <Class IRI="#CognitiveErgonomicsConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Problem"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Process"/>
+        <Class IRI="#ArtificialLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Processor"/>
+        <Class IRI="#Hardware"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ProgrammingLanguage"/>
+        <Class IRI="#ArtificialLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Prolog"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Property"/>
+        <Class IRI="#Feature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Python"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RDF"/>
+        <Class IRI="#XML"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RDFS"/>
+        <Class IRI="#RDF"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Read"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ruby"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SGML"/>
+        <Class IRI="#MarkupLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SVG"/>
+        <Class IRI="#MarkupLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Scala"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Scheme"/>
+        <Class IRI="#ProgrammingLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SemioticConcept"/>
+        <Class IRI="#Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Sign"/>
+        <Class IRI="#SemioticConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SocialNetwork"/>
+        <Class IRI="#Community"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Software"/>
+        <Class IRI="#Computer"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Sound"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SpeechGenre"/>
+        <Class IRI="#DialogismConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Symbol"/>
+        <Class IRI="#Sign"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Tag"/>
+        <Class IRI="#Sign"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TagCloud"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TaskModel"/>
+        <Class IRI="#CHIModel"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Test"/>
+        <Class IRI="#Activity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Text"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TextArea"/>
+        <Class IRI="#Control"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Troff"/>
+        <Class IRI="#MarkupLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Understanding"/>
+        <Class IRI="#Process"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Usability"/>
+        <Class IRI="#CHIConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#User"/>
+        <Class IRI="#Human"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#UserModel"/>
+        <Class IRI="#CHIModel"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Utter"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Utterance"/>
+        <Class IRI="#DialogismConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ventriloquation"/>
+        <Class IRI="#DialogismConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Video"/>
+        <Class IRI="#Document"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Virtual-reality"/>
+        <Class IRI="#Interface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VirtualCommunities"/>
+        <Class IRI="#Community"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Visualization"/>
+        <Class IRI="#Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Voice"/>
+        <Class IRI="#DialogismConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Web"/>
+        <Class IRI="#Hypermedia"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WebML"/>
+        <Class IRI="#MarkupLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Wiki"/>
+        <Class IRI="#CollaborativeInterface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Window"/>
+        <Class IRI="#DirectManipulationInterface"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#XForms"/>
+        <Class IRI="#XML"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#XLink"/>
+        <Class IRI="#XML"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#XML"/>
+        <Class IRI="#MarkupLanguage"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#XPath"/>
+        <Class IRI="#XML"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#XSL"/>
+        <Class IRI="#XML"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#XSLT"/>
+        <Class IRI="#XSL"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#XSchema"/>
+        <Class IRI="#XML"/>
+    </SubClassOf>
+    <DisjointClasses>
+        <Class IRI="#Advantage"/>
+        <Class IRI="#Disadvantage"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#ApplicationSoftware"/>
+        <Class IRI="#OperatingSystem"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Blog"/>
+        <Class IRI="#Forum"/>
+        <Class IRI="#InstantMessenger"/>
+        <Class IRI="#Wiki"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Button"/>
+        <Class IRI="#Form"/>
+        <Class IRI="#Label"/>
+        <Class IRI="#Menu"/>
+        <Class IRI="#TextArea"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#C"/>
+        <Class IRI="#C++"/>
+        <Class IRI="#Java"/>
+        <Class IRI="#Lisp"/>
+        <Class IRI="#Perl"/>
+        <Class IRI="#Prolog"/>
+        <Class IRI="#Python"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#CognitiveModel"/>
+        <Class IRI="#HumanProcesorModel"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Collaboration"/>
+        <Class IRI="#Cooperation"/>
+        <Class IRI="#Understanding"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Control"/>
+        <Class IRI="#Desktop"/>
+        <Class IRI="#Label"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Design"/>
+        <Class IRI="#Implementation"/>
+        <Class IRI="#Test"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#DialogModel"/>
+        <Class IRI="#InterfaceModel"/>
+        <Class IRI="#TaskModel"/>
+        <Class IRI="#UserModel"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Display"/>
+        <Class IRI="#Keyboard"/>
+        <Class IRI="#Loudspeaker"/>
+        <Class IRI="#Memory"/>
+        <Class IRI="#Microphone"/>
+        <Class IRI="#Mouse"/>
+        <Class IRI="#Processor"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Hardware"/>
+        <Class IRI="#Software"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#HumanPhysiologicalFeature"/>
+        <Class IRI="#HumanPsychologicalFeature"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#InteligentInterfaces"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#MarkupLanguage"/>
+        <Class IRI="#NaturalLanguage"/>
+    </DisjointClasses>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#advantageOf"/>
+        <ObjectProperty IRI="#hasAdvantage"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#hasDisadvantage"/>
+        <ObjectProperty IRI="#disadvantageOf"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#partOf"/>
+        <ObjectProperty IRI="#hasPart"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#hasProperty"/>
+        <ObjectProperty IRI="#propertyOf"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#implements"/>
+        <ObjectProperty IRI="#implementedBy"/>
+    </InverseObjectProperties>
+    <TransitiveObjectProperty>
+        <ObjectProperty IRI="#hasPart"/>
+    </TransitiveObjectProperty>
+    <TransitiveObjectProperty>
+        <ObjectProperty IRI="#needs"/>
+    </TransitiveObjectProperty>
+    <TransitiveObjectProperty>
+        <ObjectProperty IRI="#partOf"/>
+    </TransitiveObjectProperty>
+    <TransitiveObjectProperty>
+        <ObjectProperty IRI="#subConceptOf"/>
+    </TransitiveObjectProperty>
+</Ontology>

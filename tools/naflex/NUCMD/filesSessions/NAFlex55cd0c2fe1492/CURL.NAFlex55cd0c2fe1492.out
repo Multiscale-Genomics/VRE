@@ -1,0 +1,81 @@
+HTTP/1.1 400 BAD REQUEST
+Date: Thu, 13 Aug 2015 21:30:12 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 192
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>400 Bad Request</title>
+<h1>Bad Request</h1>
+<p>The browser (or proxy) sent a request that this server could not understand.</p>
+HTTP/1.1 400 BAD REQUEST
+Date: Thu, 13 Aug 2015 21:31:12 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 192
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>400 Bad Request</title>
+<h1>Bad Request</h1>
+<p>The browser (or proxy) sent a request that this server could not understand.</p>
+HTTP/1.1 400 BAD REQUEST
+Date: Thu, 13 Aug 2015 21:33:27 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 192
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>400 Bad Request</title>
+<h1>Bad Request</h1>
+<p>The browser (or proxy) sent a request that this server could not understand.</p>
+HTTP/1.1 400 BAD REQUEST
+Date: Thu, 13 Aug 2015 21:35:57 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 192
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>400 Bad Request</title>
+<h1>Bad Request</h1>
+<p>The browser (or proxy) sent a request that this server could not understand.</p>
+HTTP/1.1 200 OK
+Date: Thu, 13 Aug 2015 21:36:57 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 132
+Content-Type: application/json
+
+{
+  "top_name": "NAFlex55cd0c2fe1492-GTAC-1_5000_100-5trajs.pdb", 
+  "traj_name": "NAFlex55cd0c2fe1492-GTAC-1_5000_100-5trajs.dcd"
+}HTTP/1.1 500 INTERNAL SERVER ERROR
+Date: Thu, 13 Aug 2015 21:43:57 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 291
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request.  Either the server is overloaded or there is an error in the application.</p>
+HTTP/1.1 500 INTERNAL SERVER ERROR
+Date: Thu, 13 Aug 2015 21:48:27 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 291
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request.  Either the server is overloaded or there is an error in the application.</p>

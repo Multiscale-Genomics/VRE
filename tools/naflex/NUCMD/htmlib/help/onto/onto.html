@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ontology Visualizer</title>
+    <link rel="icon" type="image/png" href="images/DNA_extrusion.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ontology Visualizer">
+    <meta name="author" content="Alex Bardas">
+
+    <!-- Le styles -->
+    <link href="css/owl-css/bootstrap.css" rel="stylesheet">
+    <link href="css/owl-css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/owl-css/extra.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+  </head>
+
+  <body data-spy="scroll" data-target=".subnav" data-offset="100" style="padding-top:20px;margin-left:100px;margin-right:100px;background-color:white;">
+
+    <header id="header" class="clearfix">
+        <div id="site-logo" style="margin-top:0px;margin-bottom:20px;margin-left:100px;margin-right:100px;border: 1.5px solid grey;border-radius: 10px;background-color:white;height:100px;padding: 20px;">
+		 <a href="/www/" title="Home">
+                 <img src="http://mmb.irbbarcelona.org/BigNASim/images/logo_0_trans.png" alt="Home" />
+                 </a>
+		 <a href="http://mmb.irbbarcelona.org/BigNASim/" title="Home">
+                 <img src="http://mmb.irbbarcelona.org/BigNASim/images/BigNASim_rot_trans.png" style="height: 100px; float:right;" alt="BigNASim" />
+                 </a>
+	</div>            
+    </header>
+
+  <!-- Navbar
+    ================================================== -->
+    <div class="container-fluid" style="background-color: #EBEBEB; border: 1.5px solid grey;border-radius: 10px;";>
+
+	<h3 style="padding: 10px;text-align: center;margin: 10px;color: rgba(0,0,0,0.6);text-shadow: 2px 8px 6px rgba(0,0,0,0.2),0px -5px 35px rgba(255,255,255,0.3);">BIGNASim database structure and analysis portal for nucleic acids simulation data<br/>Nucleic Acids Ontology</h3>
+	<hr class="soften">
+	<p> Click on keywords to navigate through the Nucleic Acids Ontology:</p>
+      <div class="row-fluid">
+        <div class="span4">
+          <div class="owl-tree well sidebar-nav">
+          </div>
+        </div><!--/span-->
+        <div id="owl-viz" class="span8" style="background-color: lightyellow;">
+          <div id="log">
+          </div>
+        </div>
+      </div><!--/row-->
+      <div id="test-ontology"></div>
+      <hr class="soften">
+       <!-- Footer
+        ================================================== -->
+      <footer class="footer">
+        <p>OWL visualizer developed by <a href="http://twitter.com/alexbardas" target="_blank">@alexbardas</a>. 
+        Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+      </footer>
+
+    </div><!-- /container-fluid -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/require-config.js"></script>
+    <script src="js/libs/require.js"></script>
+    <script src="js/libs/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+          require(['slimscroll'], function () {
+              $(".owl-tree").slimScroll({
+                  width: '',
+                  height: '500px',
+                  size: '5px',
+                  distance: '-1px',
+                  opacity: 0.3,
+                  position:'right'
+              });
+          })
+
+          $( "#test-ontology" ).click(function() {
+              var req = $.ajax({
+                      //url: "test-ontology.xml",
+                      url: "parm.xml",
+                      dataType: "html"
+                  });
+
+              req.done(function(owl) {
+                  require(['cs!ontology', 'jit'], function(Owl) {
+                      var Tree = new Owl(owl);
+                      var tree_json = Tree[0], jit_json = Tree[1];
+
+                      require(['cs!treeview'], function(TreeView) {
+                          var n = new TreeView(tree_json);
+                          $(".owl-tree").html(n.render().el);
+                      });
+
+                      require(['cs!spaceTree'], function(spaceTree) {
+                          spaceTree.loadJSON(jit_json);
+                          spaceTree.compute();
+                          spaceTree.onClick(spaceTree.root);
+                          spaceTree.geom.translate(new $jit.Complex(-200, 0), "current");
+                          console.log(spaceTree);
+                      });
+
+                  });
+              })
+          });
+
+          $( "#test-ontology" ).click();
+
+    </script>
+  </body>
+</html>

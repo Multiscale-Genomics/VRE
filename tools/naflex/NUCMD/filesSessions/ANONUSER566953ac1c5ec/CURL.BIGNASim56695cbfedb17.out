@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Thu, 10 Dec 2015 11:06:48 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 194
+Content-Type: application/json
+
+{
+  "top_name": "ANONUSER566953ac1c5ec/BIGNASim56695cbfedb17-NAFlex_Z-DNA-4M-1_946999_1000.pdb", 
+  "traj_name": "ANONUSER566953ac1c5ec/BIGNASim56695cbfedb17-NAFlex_Z-DNA-4M-1_946999_1000.trr"
+}

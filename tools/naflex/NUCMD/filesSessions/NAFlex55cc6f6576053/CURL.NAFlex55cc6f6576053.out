@@ -1,0 +1,12 @@
+HTTP/1.1 400 BAD REQUEST
+Date: Thu, 13 Aug 2015 10:06:30 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 192
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>400 Bad Request</title>
+<h1>Bad Request</h1>
+<p>The browser (or proxy) sent a request that this server could not understand.</p>

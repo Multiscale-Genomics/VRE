@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Tue, 15 Dec 2015 15:04:18 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 180
+Content-Type: application/json
+
+{
+  "top_name": "ANONUSER567029de46d41/BIGNASim56702bee4d309-NAFlex_DDD_bsc1-1_20_1.pdb", 
+  "traj_name": "ANONUSER567029de46d41/BIGNASim56702bee4d309-NAFlex_DDD_bsc1-1_20_1.xtc"
+}

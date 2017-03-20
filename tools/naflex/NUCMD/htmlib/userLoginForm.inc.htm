@@ -1,0 +1,17 @@
+<h3>User Login:</h3>
+<form style="width: 400px;margin-left:auto;margin-right:auto;" name="login" action="gesUser.php?op=login" method="POST">
+    [#oblig,H#]
+    <table style="border: 1px solid lightgrey;" cellspacing="0" cellpadding="4">
+        <tr>
+            <td>Email:</td>
+            <td>[#login,T,250#]</td>        
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td>[#password,P,50#]</td>
+        </tr>
+    </table>    
+    <p><a href="javascript:document.login.submit()" class="buttonclass">Login</a></p>                    
+</form>
+<p><a href="gesUser.php?op=lostPassForm">Lost Password</a></p>
+<p><a href="gesUser.php?op=registerForm">Register</a></p>

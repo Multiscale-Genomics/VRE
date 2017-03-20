@@ -1,0 +1,1710 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://bsc.es/parm"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://bsc.es/parm">
+    <Prefix name="" IRI="http://bsc.es/parm#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdf:langRange"/>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">en</Literal>
+    </Annotation>
+    <Declaration>
+        <Class abbreviatedIRI="owl:Root"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="#Analysis"/>
+        <Class abbreviatedIRI="owl:Root"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#System"/>
+        <Class abbreviatedIRI="owl:Root"/>
+    </SubClassOf>
+    <Declaration>
+        <Class IRI="#A"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AAtRNAHydrolase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AAtRNALigases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AGCanonical"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AbasicSiteLyase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AddedSalt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AmberParm"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Analysis"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AnalysisType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Androcioaei"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AnimatedTrajectory"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AntiParallelTrip"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AntiparallelQuad"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AvgStruct"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AxisBP"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AxisBPRot"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AxisBPTras"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#B"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BP"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BPStep"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BackboneTorsions"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Bfactor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Binding"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BrokenPolyA"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Buckle"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BulgedLin"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Canonical"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cartesian"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Charge"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CharmmFF"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Circular"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Complex"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ContactMaps"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CrossLinked"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Crossed"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cstrand"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DNA"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DNA-RNA_Hybrid"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DNAOxDemethylase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Deaminases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Dehydrogenases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DrewDickersonD"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Duplex"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EigenValues"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EigenVector"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Electroneutral"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Entropy"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Enzymes"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EpigeneticVariants"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Equilibrium"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ExoNuclease"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ExoRibonucleases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ExodRibonucleases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ExpStructure"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fcrise"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fcroll"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fcshift"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fcslide"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fctilt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fctwist"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Folding"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ForceConstant"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ForceField"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ForceMatrix"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ForceProduct"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FragmentScope"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FullSystem"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Gloop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Glucosyltransferases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Glycosilases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GrooveAnalysis"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GroupAvg"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hairpin"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hbonds"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HelicaBPStepRot"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HelicaBPStepTrans"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HelicaBRRot"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HelicalBP"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HelicalBPStep"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HelicalBPTrans"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HelicalParam"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Helicase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hogsteen"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HollidayJnt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HybridBinder"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hydrolases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IDNA"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Inclination"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Interactions"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Intercalator"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IntronLyase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IonParam"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Isomerases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#JC"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Length"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ligand-nuc"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ligases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Linear"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Loop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Lyases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MajGBinder"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MajGDepth"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MajorGroove"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Metatrajectory"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Methyltransferases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MicroSecondRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MicrococcalNuclease"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MinGBinder"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MinGDepth"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MinGWidth"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MinorGroove"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MixedHConf"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MixedSolvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ModifiedNucleotides"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NA_Type"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NMR"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NOE"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Naked"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NanoSecondRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NonPhysiologicalI"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NonPhysiologicalT"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NucleaseS1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Nucleosome"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OSertRNAKinase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Opening"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OriginalHelicalConformation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Other"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OtherBindProt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OtherConf"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OtherEnz"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OtherFF"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OtherNAType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OtherNucleases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OtherSeqMod"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OtherStructureType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OtherTrajType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PCAZip"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PCAnalysis"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PNA"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ParallelQuad"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ParallelTrip"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Phosphodiesterases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Photolyase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysiologicalI"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysiologicalT"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PolyA"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PolyG"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Polymerases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Propeller"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Protein-nuc"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PseudoUSynthase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PureSolvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Purinetransferase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Quadruplex"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RMSd"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RMSf"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RNA"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RNAPolKinase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RadGyration"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Regulatory"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ribonuclease"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ribonucleases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Rise"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Roll"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Schlitter"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SeqFragment"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SeqMismatch"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SequenceFeatures"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SequenceMismatches"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SequenceModifications"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Shear"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Shift"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SimConditions"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Simulation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SingleBase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SingleStrand"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Slide"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Snapshot"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Solvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SolventModel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SstrandBind"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stacking"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stagger"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stiffness"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stretch"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Structure_Type"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SugarPuckering"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#System"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#System_Type"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Temperature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Tilt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TimeAvg"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TimeScope"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Tip"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Topoisomerases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TrajectoryData"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TrajectoryProj"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TrajectoryType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TrajectoryVideo"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Transferases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Transition"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Triplex"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Twist"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Unpaired"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Variance"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VideoFormat"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WC"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Wstrand"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Xdisp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#XtRNASynthaseQH"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ydisp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Z"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#dRibonuclease"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ftRNADeformylase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#mRNADiphosphatase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#rRNAEndonuclease"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#tRNAReductases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#tRNASTransferase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#tRNASynthase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#tRNASynthases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#tRNAXSynthetase"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#3WayJnt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BI/BIIPopulation"/>
+    </Declaration>
+    <EquivalentClasses>
+        <Class IRI="#AmberParm"/>
+        <ObjectOneOf>
+            <NamedIndividual IRI="#Parm99"/>
+            <NamedIndividual IRI="#ParmBSC0-OL1"/>
+            <NamedIndividual IRI="#ParmBSC0-OL4"/>
+            <NamedIndividual IRI="#ParmBSC0-OL1+OL4"/>
+            <NamedIndividual IRI="#ParmBSC0"/>
+            <NamedIndividual IRI="#ParmBSC1"/>
+            <NamedIndividual IRI="#ParmBSC0-CG"/>
+        </ObjectOneOf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#CharmmFF"/>
+        <ObjectOneOf>
+            <NamedIndividual IRI="#Charmm36"/>
+        </ObjectOneOf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#IonParam"/>
+        <ObjectOneOf>
+            <NamedIndividual IRI="#Dang"/>
+            <NamedIndividual IRI="#Cheatham"/>
+        </ObjectOneOf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#MixedSolvent"/>
+        <ObjectOneOf>
+            <NamedIndividual IRI="#Wat-Ethanol"/>
+        </ObjectOneOf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#PureSolvent"/>
+        <ObjectOneOf>
+            <NamedIndividual IRI="#Water"/>
+        </ObjectOneOf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#SolventModel"/>
+        <ObjectOneOf>
+            <NamedIndividual IRI="#SPC"/>
+            <NamedIndividual IRI="#TIP3P"/>
+            <NamedIndividual IRI="#TIP4P"/>
+        </ObjectOneOf>
+    </EquivalentClasses>
+    <SubClassOf>
+        <Class IRI="#A"/>
+        <Class IRI="#OriginalHelicalConformation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AAtRNAHydrolase"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AAtRNALigases"/>
+        <Class IRI="#Ligases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AGCanonical"/>
+        <Class IRI="#BackboneTorsions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AbasicSiteLyase"/>
+        <Class IRI="#Lyases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AddedSalt"/>
+        <Class IRI="#Charge"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AmberParm"/>
+        <Class IRI="#ForceField"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AnalysisType"/>
+        <Class IRI="#Analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Androcioaei"/>
+        <Class IRI="#Entropy"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AnimatedTrajectory"/>
+        <Class IRI="#PCAnalysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AntiParallelTrip"/>
+        <Class IRI="#Triplex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AntiparallelQuad"/>
+        <Class IRI="#Quadruplex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AvgStruct"/>
+        <Class IRI="#Cartesian"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AxisBP"/>
+        <Class IRI="#HelicalParam"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AxisBPRot"/>
+        <Class IRI="#AxisBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AxisBPTras"/>
+        <Class IRI="#AxisBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#B"/>
+        <Class IRI="#OriginalHelicalConformation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BP"/>
+        <Class IRI="#GroupAvg"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BPStep"/>
+        <Class IRI="#GroupAvg"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BackboneTorsions"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Bfactor"/>
+        <Class IRI="#Cartesian"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Binding"/>
+        <Class IRI="#Protein-nuc"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BrokenPolyA"/>
+        <Class IRI="#PolyA"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Buckle"/>
+        <Class IRI="#HelicaBRRot"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BulgedLin"/>
+        <Class IRI="#Linear"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Canonical"/>
+        <Class IRI="#Duplex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cartesian"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Charge"/>
+        <Class IRI="#SimConditions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CharmmFF"/>
+        <Class IRI="#ForceField"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Circular"/>
+        <Class IRI="#Canonical"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Complex"/>
+        <Class IRI="#System_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ContactMaps"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CrossLinked"/>
+        <Class IRI="#SequenceModifications"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Crossed"/>
+        <Class IRI="#Stacking"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cstrand"/>
+        <Class IRI="#Stacking"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DNA"/>
+        <Class IRI="#NA_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DNA-RNA_Hybrid"/>
+        <Class IRI="#NA_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DNAOxDemethylase"/>
+        <Class IRI="#Dehydrogenases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Deaminases"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Dehydrogenases"/>
+        <Class IRI="#Enzymes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DrewDickersonD"/>
+        <Class IRI="#SequenceFeatures"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Duplex"/>
+        <Class IRI="#Structure_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EigenValues"/>
+        <Class IRI="#PCAnalysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EigenVector"/>
+        <Class IRI="#PCAnalysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Electroneutral"/>
+        <Class IRI="#Charge"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Entropy"/>
+        <Class IRI="#PCAnalysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Enzymes"/>
+        <Class IRI="#Protein-nuc"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EpigeneticVariants"/>
+        <Class IRI="#SequenceModifications"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Equilibrium"/>
+        <Class IRI="#TrajectoryType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ExoNuclease"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ExoRibonucleases"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ExodRibonucleases"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ExpStructure"/>
+        <Class IRI="#FragmentScope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fcrise"/>
+        <Class IRI="#ForceConstant"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fcroll"/>
+        <Class IRI="#ForceConstant"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fcshift"/>
+        <Class IRI="#ForceConstant"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fcslide"/>
+        <Class IRI="#ForceConstant"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fctilt"/>
+        <Class IRI="#ForceConstant"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fctwist"/>
+        <Class IRI="#ForceConstant"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Folding"/>
+        <Class IRI="#TrajectoryType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ForceConstant"/>
+        <Class IRI="#Stiffness"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ForceField"/>
+        <Class IRI="#SimConditions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ForceMatrix"/>
+        <Class IRI="#Stiffness"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ForceProduct"/>
+        <Class IRI="#Stiffness"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FragmentScope"/>
+        <Class IRI="#Analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FullSystem"/>
+        <Class IRI="#FragmentScope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Gloop"/>
+        <Class IRI="#Quadruplex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Glucosyltransferases"/>
+        <Class IRI="#Transferases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Glycosilases"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GrooveAnalysis"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GroupAvg"/>
+        <Class IRI="#FragmentScope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hairpin"/>
+        <Class IRI="#SingleStrand"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hbonds"/>
+        <Class IRI="#Interactions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HelicaBPStepRot"/>
+        <Class IRI="#HelicalBPStep"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HelicaBPStepTrans"/>
+        <Class IRI="#HelicalBPStep"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HelicaBRRot"/>
+        <Class IRI="#HelicalBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HelicalBP"/>
+        <Class IRI="#HelicalParam"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HelicalBPStep"/>
+        <Class IRI="#HelicalParam"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HelicalBPTrans"/>
+        <Class IRI="#HelicalBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HelicalParam"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Helicase"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hogsteen"/>
+        <Class IRI="#Duplex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hogsteen"/>
+        <Class IRI="#OriginalHelicalConformation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HollidayJnt"/>
+        <Class IRI="#Structure_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HybridBinder"/>
+        <Class IRI="#Ligand-nuc"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hydrolases"/>
+        <Class IRI="#Enzymes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IDNA"/>
+        <Class IRI="#Quadruplex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Inclination"/>
+        <Class IRI="#AxisBPRot"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Interactions"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Intercalator"/>
+        <Class IRI="#Ligand-nuc"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IntronLyase"/>
+        <Class IRI="#Lyases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IonParam"/>
+        <Class IRI="#SimConditions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Isomerases"/>
+        <Class IRI="#Enzymes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#JC"/>
+        <Class IRI="#NMR"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Length"/>
+        <Class IRI="#SimConditions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Protein-nuc"/>
+        <Class IRI="#Complex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ligand-nuc"/>
+        <Class IRI="#Complex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ligases"/>
+        <Class IRI="#Enzymes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Linear"/>
+        <Class IRI="#Canonical"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Loop"/>
+        <Class IRI="#Structure_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Lyases"/>
+        <Class IRI="#Enzymes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MajGBinder"/>
+        <Class IRI="#Ligand-nuc"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MajGDepth"/>
+        <Class IRI="#MajorGroove"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MajorGroove"/>
+        <Class IRI="#GrooveAnalysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Metatrajectory"/>
+        <Class IRI="#FragmentScope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Methyltransferases"/>
+        <Class IRI="#Transferases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MicroSecondRange"/>
+        <Class IRI="#Length"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MicrococcalNuclease"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MinGBinder"/>
+        <Class IRI="#Ligand-nuc"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MinGDepth"/>
+        <Class IRI="#MinorGroove"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MinGWidth"/>
+        <Class IRI="#MajorGroove"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MinGWidth"/>
+        <Class IRI="#MinorGroove"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MinorGroove"/>
+        <Class IRI="#GrooveAnalysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MixedHConf"/>
+        <Class IRI="#OriginalHelicalConformation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MixedSolvent"/>
+        <Class IRI="#Solvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ModifiedNucleotides"/>
+        <Class IRI="#SequenceModifications"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NA_Type"/>
+        <Class IRI="#System"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#System_Type"/>
+        <Class IRI="#System"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NMR"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NOE"/>
+        <Class IRI="#NMR"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Naked"/>
+        <Class IRI="#System_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NanoSecondRange"/>
+        <Class IRI="#Length"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NonPhysiologicalI"/>
+        <Class IRI="#AddedSalt"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NonPhysiologicalT"/>
+        <Class IRI="#Temperature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NucleaseS1"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Nucleosome"/>
+        <Class IRI="#Binding"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OSertRNAKinase"/>
+        <Class IRI="#Transferases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Opening"/>
+        <Class IRI="#HelicaBRRot"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OriginalHelicalConformation"/>
+        <Class IRI="#System"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Other"/>
+        <Class IRI="#Hbonds"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OtherBindProt"/>
+        <Class IRI="#Binding"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OtherConf"/>
+        <Class IRI="#OriginalHelicalConformation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OtherEnz"/>
+        <Class IRI="#Enzymes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OtherFF"/>
+        <Class IRI="#ForceField"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OtherNAType"/>
+        <Class IRI="#NA_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OtherNucleases"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OtherSeqMod"/>
+        <Class IRI="#SequenceModifications"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OtherStructureType"/>
+        <Class IRI="#Structure_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OtherTrajType"/>
+        <Class IRI="#TrajectoryType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PCAZip"/>
+        <Class IRI="#TrajectoryData"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PCAnalysis"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PNA"/>
+        <Class IRI="#NA_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ParallelQuad"/>
+        <Class IRI="#Quadruplex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ParallelTrip"/>
+        <Class IRI="#Triplex"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Phosphodiesterases"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Photolyase"/>
+        <Class IRI="#Lyases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysiologicalI"/>
+        <Class IRI="#AddedSalt"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysiologicalT"/>
+        <Class IRI="#Temperature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PolyA"/>
+        <Class IRI="#SequenceFeatures"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PolyG"/>
+        <Class IRI="#SequenceFeatures"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Polymerases"/>
+        <Class IRI="#Transferases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Propeller"/>
+        <Class IRI="#HelicaBRRot"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PseudoUSynthase"/>
+        <Class IRI="#Isomerases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PureSolvent"/>
+        <Class IRI="#Solvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Purinetransferase"/>
+        <Class IRI="#Transferases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Quadruplex"/>
+        <Class IRI="#Structure_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RMSd"/>
+        <Class IRI="#Cartesian"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RMSf"/>
+        <Class IRI="#Cartesian"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RNA"/>
+        <Class IRI="#NA_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RNAPolKinase"/>
+        <Class IRI="#Transferases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RadGyration"/>
+        <Class IRI="#Cartesian"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Regulatory"/>
+        <Class IRI="#Binding"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ribonuclease"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ribonucleases"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Rise"/>
+        <Class IRI="#HelicaBPStepTrans"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Roll"/>
+        <Class IRI="#HelicaBPStepRot"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Schlitter"/>
+        <Class IRI="#Entropy"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SeqFragment"/>
+        <Class IRI="#GroupAvg"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SeqMismatch"/>
+        <Class IRI="#SequenceFeatures"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SequenceFeatures"/>
+        <Class IRI="#System"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SequenceMismatches"/>
+        <Class IRI="#SequenceModifications"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SequenceModifications"/>
+        <Class IRI="#System"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shear"/>
+        <Class IRI="#HelicalBPTrans"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shift"/>
+        <Class IRI="#HelicaBPStepTrans"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SimConditions"/>
+        <Class IRI="#Simulation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SingleBase"/>
+        <Class IRI="#FragmentScope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SingleStrand"/>
+        <Class IRI="#Structure_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Slide"/>
+        <Class IRI="#HelicaBPStepTrans"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Snapshot"/>
+        <Class IRI="#TimeScope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Solvent"/>
+        <Class IRI="#SimConditions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SolventModel"/>
+        <Class IRI="#SimConditions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SstrandBind"/>
+        <Class IRI="#Binding"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stacking"/>
+        <Class IRI="#Interactions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stagger"/>
+        <Class IRI="#HelicalBPTrans"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stiffness"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stretch"/>
+        <Class IRI="#HelicalBPTrans"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Structure_Type"/>
+        <Class IRI="#System"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SugarPuckering"/>
+        <Class IRI="#BackboneTorsions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Temperature"/>
+        <Class IRI="#SimConditions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Tilt"/>
+        <Class IRI="#HelicaBPStepRot"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TimeAvg"/>
+        <Class IRI="#TimeScope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TimeScope"/>
+        <Class IRI="#Analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Tip"/>
+        <Class IRI="#AxisBPRot"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Topoisomerases"/>
+        <Class IRI="#Isomerases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TrajectoryData"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TrajectoryProj"/>
+        <Class IRI="#PCAnalysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TrajectoryType"/>
+        <Class IRI="#Simulation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TrajectoryVideo"/>
+        <Class IRI="#AnalysisType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Transferases"/>
+        <Class IRI="#Enzymes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Transition"/>
+        <Class IRI="#TrajectoryType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Triplex"/>
+        <Class IRI="#Structure_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Twist"/>
+        <Class IRI="#HelicaBPStepRot"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Unpaired"/>
+        <Class IRI="#Linear"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Unpaired"/>
+        <Class IRI="#SingleStrand"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Variance"/>
+        <Class IRI="#PCAnalysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VideoFormat"/>
+        <Class IRI="#TrajectoryVideo"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WC"/>
+        <Class IRI="#Hbonds"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Wstrand"/>
+        <Class IRI="#Stacking"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Xdisp"/>
+        <Class IRI="#AxisBPTras"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#XtRNASynthaseQH"/>
+        <Class IRI="#Ligases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ydisp"/>
+        <Class IRI="#AxisBPTras"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Z"/>
+        <Class IRI="#OriginalHelicalConformation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#dRibonuclease"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ftRNADeformylase"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#mRNADiphosphatase"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#rRNAEndonuclease"/>
+        <Class IRI="#Hydrolases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#tRNAReductases"/>
+        <Class IRI="#Dehydrogenases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#tRNASTransferase"/>
+        <Class IRI="#Transferases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#tRNASynthase"/>
+        <Class IRI="#Lyases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#tRNASynthases"/>
+        <Class IRI="#Dehydrogenases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#tRNAXSynthetase"/>
+        <Class IRI="#Ligases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#3WayJnt"/>
+        <Class IRI="#Structure_Type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BI/BIIPopulation"/>
+        <Class IRI="#BackboneTorsions"/>
+    </SubClassOf>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:CharmFF"/>
+        <NamedIndividual IRI="#Charmm36"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:IonParam"/>
+        <NamedIndividual IRI="#Cheatham"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:IonParam"/>
+        <NamedIndividual IRI="#Dang"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:AmberParm"/>
+        <NamedIndividual IRI="#Parm99"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:AmberParm"/>
+        <NamedIndividual IRI="#ParmBSC0"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:AmberParm"/>
+        <NamedIndividual IRI="#ParmBSC0-CG"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:AmberParm"/>
+        <NamedIndividual IRI="#ParmBSC0-OL1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:AmberParm"/>
+        <NamedIndividual IRI="#ParmBSC0-OL4"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:AmberParm"/>
+        <NamedIndividual IRI="#ParmBSC1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:SolventModel"/>
+        <NamedIndividual IRI="#SPC"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:SolventModel"/>
+        <NamedIndividual IRI="#TIP3P"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:SolventModel"/>
+        <NamedIndividual IRI="#TIP4P"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:MixedSolvent"/>
+        <NamedIndividual IRI="#Wat-Ethanol"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:PureSolvent"/>
+        <NamedIndividual IRI="#Water"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class abbreviatedIRI="owl:AmberParm"/>
+        <NamedIndividual IRI="#ParmBSC0-OL1+OL4"/>
+    </ClassAssertion>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+

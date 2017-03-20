@@ -1,0 +1,86 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Tutorial 2 - Global Analysis (XCGY)</h4>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+        This tutorial shows a brief example of information that can be easily extracted from the <strong>Global Analyses</strong> section of <strong>BIGNASim</strong> portal.
+
+        For this short tutorial we have selected a very simple study that can be extended to a real and current research: the importance of flanking nucleotides in the flexibility of base-pair steps. The effect of the <strong>tetranucleotide environment</strong> in the sequence-dependent polymorphism of particular base-pair steps has been the target of recent studies. <strong>CG base pair step</strong> for example, shows an interesting bimodal behaviour in one of the six helical <a href="images/helical_bpstep.png" target="_blank">base-pair step parameters</a>: <strong>Twist</strong> (<a href="http://nar.oxfordjournals.org/content/42/18/11304" target="_blank">P. Dans et al, NAR 2014</a>).
+
+	In this study, authors claim that the effect of the flanking bases in the <strong>CG base pair step</strong> is crucial for the existence of two different conformers: <strong>High Twist</strong> (HT: ~40º) and <strong>Low Twist</strong> (LT: ~ 20º). Different behaviors are studied and presented for each of the 16 possible tetramers including <strong>CG</strong>. From these, we chose a couple: <i>ACGC</i> showing almost no bimodality, and <i>GCGA</i> showing a clear bimodality, to illustrate the power of <strong>BIGNASim</strong> database and its interface.
+
+	First step in this tutorial is going to the <strong>Search section</strong> of the portal. It can be accessed through the main menu:
+</p>
+
+<img src="htmlib/help/img/SearchNewMenu.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Once in the <strong>search page</strong> we are going to select all the simulations stored in the database having the first fragment of the pair we have chosen: <strong>GCGA</strong>. For that, we just type the letters of the nucleotidic fragment in the <strong>Search by Sequence</strong> area: 
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_SearchNew.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In this case, we have more than 40 simulations stored containing this particular fragment. Now, we can choose the ones we are interested in, or just select all of them. For that, the first thing is to show all the results on the screen, using the selector placed at the top left part of the <strong>browse page</strong>:
+</p>
+
+<img src="htmlib/help/img/Tut3_Selector.png" style="display: block; width: 30%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Then, with all the trajectories now shown on the screen, we can select them all by clicking at the checkbox placed in the top left part of the table, next to the Id title, or we can click at the <strong>Mark All</strong> button placed at the bottom of the page.
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_ResultsNew.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	And finally, clicking at the <strong>Retrieve Analysis for the selected simulations</strong> at the bottom of the page, we will be redirected to a <strong>Global Analyses</strong> page, showing the results for our particular <strong>GCGA</strong> fragment.
+
+	Now we are here, remember we are interested in studying the possible bimodality showed by the <strong>CG</strong> base pair step in its <strong>Twist</strong> parameter when it is surrounded by G and A (<strong>G</strong>CG<strong>A</strong>). Then, we need to select the <strong>CG</strong> button:
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Analysis.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	From all the possible analyses, we are going to chose <strong>Curves</strong>:
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Analysis_Curves.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	And, as the <strong>Twist</strong> parameter is a base-pair step analysis, we are going to chose <strong>Helical_bpstep Analysis</strong>:
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Analysis_Curves_BPS.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	<strong>BIGNASim</strong> in its current version contains a couple of analysis for each of the <strong>six helical base-pair step parameters</strong>: one with <strong>all</strong> the values for each of the snapshots of all the selected simulations, and one with just the <strong>time-averaged</strong> values for each simulation. We are going to choose the one containing all the possible values for the <strong>Twist</strong> parameter: 
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Analysis_Curves_Twist.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	And the result is presented in a histogram plot, with the mean represented in a vertical blue line, and an experimental value represented in a vertical red line, as a reference (see section <a href="help.php?id=expMD" target="_blank">Experimental Averages</a> of this help).
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Twist_plot.png" style="display: block; width: 70%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	This histogram is certainly not following a normal distribution. Actually, two different distributions can be easily identified, centered at ~25º and ~35º, in good agreement with the previously presented study <a href="http://nar.oxfordjournals.org/content/42/18/11304" target="_blank">P. Dans et al, NAR 2014</a>).
+	
+	But we are interested in seeing the influence of the surrounding bases in the <strong>CG</strong> base pair step (tetramer influence). So, for that, we are going to repeat all the steps, but now seeking for the fragment <strong>ACGC</strong>. Remember: <i>Search by Sequence -> Select All -> Open Analysis for the selected simulations</i>. 
+</p>
+
+<img src="htmlib/help/img/Tut3_ACGC_Analysis.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Once in the <strong>Analysis section</strong>: <i>CG -> Curves -> Helical_bpstep Analysis -> Twist Analysis</i>. And we should obtain a similar histogram than the previous one, now for the <strong>CG</strong> base-pair step into the <strong>ACGC</strong> tetramer:
+</p>	
+
+<img src="htmlib/help/img/Tut3_ACGC_Twist_plot.png" style="display: block; width: 70%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Now, this histogram do seems to follow a <strong>normal distribution</strong>, although a shoulder to the <strong>low twist</strong> conformation can still be identified. The difference between the previous plot and this one, though, are clear: <strong>CG</strong> base pair steps included in a <strong>GCGA</strong> tetramer show a clear bimodality in its <strong>Twist</strong> parameter, whereas the ones included in a <strong>ACGC</strong> tetramer are more inclined to be in a <strong>High Twist</strong> conformation. 
+
+	In this short tutorial, we have reproduced one of the results of a published research with just a few clicks. And this is just a brief example of what can be done with <strong>BIGNASim</strong> portal. 
+</p>	
+

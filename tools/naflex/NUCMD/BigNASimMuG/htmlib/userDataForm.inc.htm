@@ -1,0 +1,34 @@
+<h3>User Registration:</h3>
+<form style="width: 750px;margin-left:auto;margin-right:auto;" name="register" action="[#actionVal,V#]" method="POST">
+    [#oblig,H#]
+    <table style="border: 1px solid #ddd;" cellspacing="0" cellpadding="4">
+        <tr>
+            <td>Surname</td>
+            <td>[#Surname,T,150#]</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>[#Name,T,150#]</td>
+        </tr>
+        <tr>
+            <td>Institution</td>
+            <td>[#Inst,T,150#]</td>
+        </tr>
+        <tr>
+            <td>Country</td>
+            <td>[#Country,S,paisesDicc#]</td>
+        </tr>
+            <td>Email:</td>
+            <td>[#Email,T,150#]</td>        
+        </tr>
+        <tr>
+            <td>Password (twice):</td>
+            <td>[#pass1,P,25#] [#pass2,P,25#]</td>
+        </tr>
+	<tr>
+	    <td  style="text-align:right;">[#Uploader,C#]</td>
+	    <td><i>I want to be able to upload my own Nucleic Acids Molecular Dynamics Simulations.</i></td>
+	</tr>
+    </table>    
+    <a href="javascript:document.register.submit()" class="buttonclass">[#submitVal,V#]</a> 
+</form>

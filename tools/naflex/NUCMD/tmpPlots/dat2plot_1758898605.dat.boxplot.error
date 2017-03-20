@@ -1,0 +1,28 @@
+
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(Cairo)
+> CairoPNG(file="dat2plot_1758898605.dat.png",width=1000,height=600)
+> n <- read.table("dat2plot_1758898605.dat")
+> names(n) <- c('North','East','South','West')
+> n1 <- as.matrix(n)
+> barplot(n1,ylab="(%)",xlab="",main="Sugar Puckering")
+> dev.off()
+null device 
+          1 
+> 

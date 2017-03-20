@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="Multiscale complex Genomics: DNA Sequence-Flexibility relationship from microsecond-scale, tetranucleotide-complete, state-of-the-art MD simulations." />
+    <meta name="author" content="The MuG project" />
+    <link rel="icon" href="favicon.ico" />
+    
+    <title>DNA Sequence-dependent flexibility</title>
+    
+    <script type="text/javascript" src="jsMarco/SpryMenuBar.js"></script>
+    <script src="jsMarco/d3.v3.js"></script>
+    <script src="jsMarco/jquery.min.js"></script>
+    <script src="jsMarco/popdda.js"></script>
+    <link href="cssMarco/MuG.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="cssMarco/SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="cssMarco/style.css" rel="stylesheet" />
+  </head>
+  
+  <body>
+    
+    <div id="container">
+      
+      <!-- HEADER: MuG logo -->
+      <div id="header">
+	<p align="left"><img src="imgMarco/topWeb.png" alt="MuG" width="900" height="124" /></p>
+	<p align="center"><strong>DNA Sequence-Flexibility relationship from microsecond-scale, tetranucleotide-complete, state-of-the-art MD simulations</strong>. </p>
+      </div>
+      <div id="menu">
+	<ul id="MenuBar1" class="MenuBarHorizontal">
+	  <li><a href="#intro" class="menuItem">Introduction</a></li>
+	  <li><a href="#flexibility" class="menuItem">Flex Browser</a></li>
+	</ul>
+      </div>
+      <div style='clear:both'></div>
+      
+      <!-- Main content -->
+      <div id="content">
+	
+	<div id="intro">
+	  <!-- <img src="imgMarco/image1.jpeg" align="right" /> -->
+	  <p>
+	    The specific sequence of bases that constitute a DNA molecule
+	    influence significantly its 
+	    properties, in particular its structure and its
+	    flexibility. These effects are expected to play an
+	    important role in how proteins and drugs interact with
+	    DNA, as well as in the design and optimisation of
+	    DNA-based nanomaterials. Indeed, a number of proteins have
+	    been confirmed to rely on the structure and fluctations of
+	    DNA to recognise their target binding sequence. Specific
+	    protein binding to DNA is vital for a number of
+	    fundamental cellular processes, such as DNA replication
+	    and repair, chromatin compaction and transcription
+	    regulation.
+	  </p>
+	  <!-- <img src="imgMarco/image2.jpeg" align="left" /> -->
+	  <p>
+	    Molecular Dynamics (MD) simulations have been used to
+	    integrate experimental data in order to make systematic
+	    studies of how sequence affects DNA. In particular, the
+	    Ascona B-DNA Consortium (or
+	    <a href="https://bisi.ibcp.fr/ABC">ABC</a>) has pioneered
+	    this field (Beveridge et al., 2004; Dixit et al., 2005) and managed to recently obtain
+	    microsecond-scale MD trajectories of a purposely designed set of
+	    oligomers, which provides complete information on DNA
+	    sequence effects up to tetranucleotides (Lavery
+	    et al., 2010; Pasi et al., 2014). This data allowed to
+	    establish that tetranucleotides are the minimal-length
+	    unit of sequence required to correctly describe sequence
+	    effects on B-DNA.
+	  </p>
+	  <p>
+	    This large set of MD data, encompassing more than 9 TB of
+	    stored trajectories, and just under 36 million DNA
+	    structures, has been analysed to provide to the users of
+	    the MuG VRE a complete description of the structure and
+	    flexibility of DNA, as a function of its local
+	    tetranucleotide sequence. The results of these analyses
+	    are presented below, in the <a href="#flexibility">MuG
+	    interactive flexibility browser</a>. In particular, the
+	    conformational variations of DNA are described as a
+	    function of the well-known and widely used Curves+ helical 
+	    parameters of DNA (Lavery et al., 2009). These represent a
+	    set of independent coordinates, as a function of which
+	    averages and covariances were calculated along the
+	    microsecond MD trajectories. Results pertaining to the
+	    inter-base pair helical 
+	    parameters of the central dinucleotide of each of the 136
+	    distinct tetranucleotides are shown below.
+	  </p>
+	  <p>Average values are represented using a colour scale, in a
+	    concise representation
+	    (left) where the 136 distinct tetranucleotide sequences (of
+	    the form WXYZ) are 
+	    grouped in columns according to their central dinucleotide
+	    (XY), and in rows according to its flanking sequence
+	    (W..Z)<sup><a id="ref1" href="#fn1">1</a></sup>. The set
+	    of average values
+	    to display can be selected by clicking the
+	    image on the right.
+	    Flexibility information for each tetranucleotide appears
+	    in the lower part of the page when a coloured cell is
+	    clicked (Hospital et al., 2013). The displayed stiffness
+	    matrix is obtained by inverting diagonal 6x6 blocks of the
+	    covariance matrix. 
+	  </p> 
+	</div>
+	
+	<div id="flexibility">
+	  <h3>Averages</h3>
+	  <div id="heatmap">
+	    <script type="text/javascript">
+              var mat = popdda("#heatmap", "abc.tsv");
+	    </script>
+	  </div>
+	  <div id="selector-hp" class="selector">
+	    <img src="imgMarco/helicalParamsBPS.png" border="0" usemap="#helicalParamsBPS_Map" />
+	    <br/>
+	    <br/>
+	    <span class="small">[Image courtesy of Curves+]</span>
+	  </div>
+	  <div id="selector-cm"  class="selector">
+	    Change colormap<sup><a id="ref2" href="#fn2">2</a></sup>:
+	    <a class="selector-cm" href="javascript:update(null,null,'jet8');">Jet 8</a>
+	    <a class="selector-cm" href="javascript:update(null,null,'RdBu9');">RdBu 9</a>
+	    <a class="selector-cm" href="javascript:update(null,null,'BrBG10');">BrBG 10</a>
+	    <a class="selector-cm" href="javascript:update(null,null,'Spec11');">Spectral 11</a>
+	  </div>
+	</div>
+	
+	<div id="stiffness">
+	  <h3>Stiffness</h3>
+	  <div id="stiffness-external">
+	    <span class="placeholder">Stiffness information will
+	    appear here.</span>
+	  </div>
+	</div>
+      </div>
+
+      <map name="helicalParamsBPS_Map">
+	<area shape="rect" coords="1,0,109,87" title="Show Averages: Shift" 		href="javascript:update('shift', 	[-1.0, 1.0]);" />
+	<area shape="rect" coords="112,3,247,92" title="Show Averages: Slide" 	href="javascript:update('slide', 	[-1.5, 0.5]);" />
+	<area shape="rect" coords="248,1,377,89" title="Show Averages: Rise" 	href="javascript:update('rise', 	[+2.6, 3.8]);" />
+	<area shape="rect" coords="1,91,105,186" title="Show Averages: Tilt" 	href="javascript:update('tilt', 		[-5.0, 5.0]);" />
+	<area shape="rect" coords="108,92,246,185" title="Show Averages: Roll" 	href="javascript:update('roll', 		[-5.0, 15]);" />
+	<area shape="rect" coords="247,91,376,186" title="Show Averages: Twist"  href="javascript:update('twist', 	[+20, 40]);" />
+      </map>      
+
+      <div id="footnotes">
+	<h3>References and Footnotes</h3>
+	<ol class="publist">
+	  <li>...</li>
+	  <li>...</li>
+	  <li>...</li>
+	  <li>...</li>
+	</ol>
+	<dl class="footnotes">
+	  <dd><sup id="fn1">1. Missing cells in the matrix refer to
+	      tetranucleotides whose opposite strand read is present elsewhere in the matrix; e.g. CATA is missing, but TATG is present; see also Pasi <i>et al.</i>, 2015. <a href="#ref1" title="Back.">[Back]</a></sup></dd>
+	  <dd><sup id="fn2">2. Colormaps "RdBu 9", "BrBG 10", "Spectral 11" courtesy of <a href="http://colorbrewer2.org">Color Brewer 2</a>. <a href="#ref2" title="Back.">[Back]</a></sup></dd>
+	</dl>
+      </div>
+      
+      <!-- FOOTER: MuG info -->
+      <div id="footer">
+	<table width="100%" cellpadding="4">
+	  <tr>
+            <td><img src="imgMarco/flag_yellow_high.jpg" alt="EU Logo" width="78" height="51" /></td>
+            <td>This project has  received funding from the European Union's Horizon 2020 research and innovation  programme under grant agreement No 676556.</td>
+	  </tr>
+	</table>
+      </div>
+	
+    </div>
+  </body>
+</html>

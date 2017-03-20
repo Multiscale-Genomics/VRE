@@ -1,0 +1,37 @@
+* { 
+	margin: 0; 
+	padding: 0; 
+}
+body { 
+	font: 14px/1.4 Georgia, Serif; 
+}
+#page-wrap {
+	margin: 50px;
+}
+p {
+	margin: 20px 0; 
+}
+
+/* Generic Styling, for Desktops/Laptops */
+#browseTable table { 
+	width: 100%; 
+	border-collapse: collapse; 
+}
+
+/* Zebra striping */
+#browseTable tr:nth-of-type(odd) { 
+	background: #eee; 
+}
+#browseTable tr:nth-of-type(even) { 
+	background: #f0e3e3; 
+}
+#browseTable th { 
+	background: #333; 
+	color: white; 
+	font-weight: bold; 
+}
+#browseTable td, #browseTable th { 
+	padding: 6px; 
+	border: 1px solid #ccc; 
+	text-align: left; 
+}

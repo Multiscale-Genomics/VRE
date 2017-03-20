@@ -1,0 +1,128 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Searching</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;The easiest way to search in <strong>BIGNASim</strong> server is using the <strong>Quick Search</strong> placed in the right part of the main menu tab. This form allows searching by PDB Id, ontology terms, keywords and authors.
+</p>
+
+<a href="htmlib/help/img/QuickSearch.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/QuickSearch.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;In addition to the <i>Quick Search</i>, <strong>BIGNASim</strong> portal offers a powerful searching engine to find particular sequences/simulations. Basically, the search can be divided into <strong>three main sections</strong>:
+</p>
+
+<ul style="text-align: left;">
+<li> <a href="#seq"> By <strong>sequence or specific sequence fragments</strong> (using regular expressions)</a></li>
+<li> <a href="#bps"> By <strong>specific base-pair-steps</strong> (with or without flanking regions)</a></li>
+<li> <a href="#onto"> By an extensive <strong>nucleic acid ontology</strong></a> (as defined <a href="help.php?id=ontology">here</a>)</li>
+</ul>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Once the search is done, a <a href="help.php?id=browsing">browse</a> page will appear showing the resulting trajectories. 
+</p>
+
+<a href="htmlib/help/img/SearchNew.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SearchNew.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+<br/><br/>
+
+<a name='seq'></a>
+<h4 style="font-size: 1.2em;"> Search by Sequence </h4>
+<hr/>
+
+<a href="htmlib/help/img/SearchBySequenceNew.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SearchBySequenceNew.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;The search engine is able to find a particular sequence, with the possibility to use regular expressions, which increases the power of the search. Input needed is just a chain of bases [A,C,T,G,U]. Examples:<br/>
+</p>
+<ul style="text-align:left";>
+<li>Sequence (DDD): <a href="search.php?idSubSeq=CGCGAATTCGCG"><strong> CGCGAATTCGCG </strong></a></li>
+<li>Sequence Fragment: <a href="search.php?idSubSeq=CTAG"><strong> CTAG </strong></a></li>
+</ul>
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Examples of interesting regular expressions could be:
+</p>
+<ul style="text-align:left";>
+<li>Sequence fragment with a variable nucleotide: <a href="search.php?idSubSeq=GG[GTAC]GG"><strong> GG[GTAC]GG </strong></a></li>
+<li>Sequence fragment with flanking region: <a href="search.php?idSubSeq=[ACGT]{2}CTAG[ACGT]{2}"><strong> [ACGT]{2}CTAG[ACGT]{2} </strong></a></li>
+<li>Repetition of bases: <a href="search.php?idSubSeq=[G]{4}"><strong> [G]{4} </strong></a></li>
+<li>Sequences beggining/ending with a particular fragment: <a href="search.php?idSubSeq=^AA"><strong> ^AA </strong></a> / <a href="search.php?idSubSeq=AA$"><strong> AA$ </strong></a></li>
+</ul>
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Nucleic Acid sequence associated to a particular PDB file will be recovered if a PDB code is used as input in the <i>Seq from PDB Code</i> box. This allows to locate also other PDB entries sharing the same sequence or with small modifications.
+</p>
+<br/>
+
+<a name='bps'></a>
+<h4 style="font-size: 1.2em;"> Search by Base-Pair Step </h4>
+<hr/>
+
+<a href="htmlib/help/img/Search_BPS.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/Search_BPS.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;One of the most important study to understand nucleic acids flexibility is applied in a base-pair step region. This section of the search engine allows to easily select a particular base-pair step to find all sequences simulated having this particular pair of nucleotides. <br/><br/>
+&emsp;Typically, base-pair step studies omit terminal bases, to avoid fraying effects. For this reason, a flanking region (number of bases) can be given, and only those base-pair step having this number of bases before and after them will be retrieved.
+</p>
+
+<br/><br/>
+
+<a name='onto'></a>
+<h4 style="font-size: 1.2em;"> Search by Ontology </h4>
+<hr/>
+
+<a href="htmlib/help/img/SearchByOntologyNew.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SearchByOntologyNew.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;All simulations stored in <strong>BIGNASim</strong> system are classified using a <strong>Nucleic Acids Ontology</strong> (see <a href="help.php?id=onto.php">Ontology</a> section). <br/><br/>
+&emsp;The search engine is querying the database system <i>on the fly</i>, and showing the number of results found in the top-right corner of the ontology search box. <br/><br/>
+&emsp;The ontology is split in <strong>8 different sections</strong>:
+</p>
+
+<ul style="text-align:left";>
+<li> <strong>Nucleic Acid Type:</strong>
+<a href="htmlib/help/img/Search_Onto_NAType.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/Search_Onto_NAType.png" style="display: block; width: 100%; height:auto; " ></img></a>
+&emsp;<strong>Nucleic Acid type:</strong> DNA, RNA or DNA-RNA Hybrid.
+</li>
+</br>
+<li> <strong>Structure:</strong>
+<a href="htmlib/help/img/SearchStructure.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SearchStructure.png" style="display: block; width: 100%; height:auto; " ></img></a>
+&emsp;<strong>Structure:</strong> Single-stranded nucleic acid, duplex, triplex, quadruplex and other nucleic acids structure types.
+</li>
+</br>
+<li> <strong>System Type:</strong>
+<a href="htmlib/help/img/SearchSystemType.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SearchSystemType.png" style="display: block; width: 100%; height:auto; " ></img></a>
+&emsp;<strong>System type:</strong> Nucleic acid naked or complexed with other molecules.
+</li>
+</br>
+<li> <strong>Trajectory Type:</strong>
+<a href="htmlib/help/img/Search_Onto_TrajType.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/Search_Onto_TrajType.png" style="display: block; width: 100%; height:auto; " ></img></a>
+&emsp;<strong>Trajectory Type:</strong> Nucleic acid trajectory computed in equilibrium, folding/unfolding or transition simulation.
+</li>
+</br>
+<li> <strong>Original Helical Conformation:</strong>
+<a href="htmlib/help/img/Search_Onto_HelConf.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/Search_Onto_HelConf.png" style="display: block; width: 100%; height:auto; " ></img></a>
+&emsp;<strong>Original Helical Conformation:</strong> Nucleic Acid original helical conformation: A, B, Z, Hoogsteen, mixed (transitions), etc.
+</li>
+</br>
+<li> <strong>Sequence Modifications:</strong>
+<a href="htmlib/help/img/SearchSystemModifications.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SearchSystemModifications.png" style="display: block; width: 100%; height:auto; " ></img></a>
+&emsp;<strong>Sequence Modifications:</strong> Nucleic acids with modified nucleotides.
+</li>
+</br>
+<li> <strong>Sequence Features:</strong>
+<a href="htmlib/help/img/SearchSequenceFeatures.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SearchSequenceFeatures.png" style="display: block; width: 100%; height:auto; " ></img></a>
+&emsp;<strong>Sequence Features:</strong> Nucleic acids with special sequence features such as the well-known Drew-Dickerson Dodecamer (DDD), sequences having mismatches, etc.
+</li>
+</br>
+<li> <strong>Local Structures:</strong>
+<a href="htmlib/help/img/SearchLocalStructures.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/SearchLocalStructures.png" style="display: block; width: 100%; height:auto; " ></img></a>
+&emsp;<strong>Local Structures:</strong> Different types of local structures arrangements, specially related to RNA molecules.
+</li>
+</br>
+<li> <strong>Simulation Conditions:</strong>
+<a href="htmlib/help/img/Search_Onto_Sim.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/Search_Onto_Sim.png" style="display: block; width: 100%; height:auto; " ></img></a>
+&emsp;<strong>Simulation Conditions:</strong> A selected set of simulation condition parameters, from force-field used to system ionic concentration.
+</br>
+</li>
+</ul>

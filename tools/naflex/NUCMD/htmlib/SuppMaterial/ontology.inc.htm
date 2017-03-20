@@ -1,0 +1,1716 @@
+<p>A strong requirement to organize any filed of knowledge is the agreement in the terminology used. This has been a concern in  Bioinformatics and has led to the development of a number of ontologies  describing several aspects of the discipline (<a href="SuppMaterial.php?id=references#R6">6</a>, <a href="SuppMaterial.php?id=references#R7">7</a>, <a href="SuppMaterial.php?id=references#R8">8</a>, <a href="SuppMaterial.php?id=references#R9">9</a>).  Here we have developed a partial ontology to describe Nucleic Acids simulations. Its contents are used to qualify  simulations, and power the search facility. Simulation <a href="http://mmb.irbbarcelona.org/BigNASim/help.php?id=browsing">browser tables</a>, and <a href="http://mmb.irbbarcelona.org/BigNASim/help.php?id=simulation#MDSim">simulation details</a> (<a href="SuppMaterial.php?id=FigureS1#B">Figure S1B</a>) include the set of keywords derived  from the ontology. In its present state ontology represents merely a set of  normalized terms, but it has been developed in a separate project and  will be documented elsewhere. </p>
+<p><strong>Table of ontology terms</strong> (<a href="http://mmb.irbbarcelona.org/BigNASim/htmlib/help/onto/onto.html" target="_blank">view</a> in a ontology viewer)</p>
+
+<table border="1" cellspacing="0" cellpadding="4" style="border: solid 1px">
+  <tr>
+    <td><strong>Hierarchic
+      Id</strong></td>
+    <td colspan=6><strong>Label</strong></td>
+    <td><strong>Description</strong></td>
+  </tr>
+  <tr>
+    <td style="border-top: solid 1px; border-bottom:solid 1px"><strong>1</strong></td>
+    <td  style="border-top: solid 1px; border-bottom:solid 1px" colspan=6><strong>System</strong></td>
+    <td style="border-top: solid 1px; border-bottom:solid 1px"><strong>Composition of simulated system</strong></td>
+  </tr>
+  <tr>
+    <td>101</td>
+    <td>&nbsp;</td>
+    <td colspan=5>NA_Type</td>
+    <td>Type of Nucleic Acid</td>
+  </tr>
+  <tr>
+    <td>10101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>DNA</td>
+    <td>DNA</td>
+  </tr>
+  <tr>
+    <td>10102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>RNA</td>
+    <td>RNA</td>
+  </tr>
+  <tr>
+    <td>10103</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>DNA-RNA_Hybrid</td>
+    <td>DNA-RNA
+        Hybrid</td>
+  </tr>
+  <tr>
+    <td>10104</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>PNA</td>
+    <td>PNA</td>
+  </tr>
+  <tr>
+    <td>10199</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>OtherNAType</td>
+    <td>Other
+        NA Types</td>
+  </tr>
+  <tr>
+    <td>102</td>
+    <td>&nbsp;</td>
+    <td colspan=5>Structure_Type</td>
+    <td>Structure
+        of the nucleic acid</td>
+  </tr>
+  <tr>
+    <td>10201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>SingleStrand</td>
+    <td>Single
+        Strand </td>
+  </tr>
+  <tr>
+    <td>1020101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Unpaired</td>
+    <td>Single
+        Strand with no WC pairing</td>
+  </tr>
+  <tr>
+    <td>1020102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Hairpin</td>
+    <td>Hairpin,
+        WC pairing</td>
+  </tr>
+  <tr>
+    <td>10202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Duplex</td>
+    <td>Duplex</td>
+  </tr>
+  <tr>
+    <td>1020201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Canonical</td>
+    <td>Canonical
+        WC pairing</td>
+  </tr>
+  <tr>
+    <td>102020101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Linear</td>
+    <td>Linear
+        duplex</td>
+  </tr>
+  <tr>
+    <td>10202010101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Unpaired</td>
+    <td>Linear
+        duplex with unpaired ends</td>
+  </tr>
+  <tr>
+    <td>10202010102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>BulgedLin</td>
+    <td>Linear
+        duplex with unpaired fragments</td>
+  </tr>
+  <tr>
+    <td>102020102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Circular</td>
+    <td>Circular
+        duplex</td>
+  </tr>
+  <tr>
+    <td>1020202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Hogsteen</td>
+    <td>Hogsteen
+        pairing</td>
+  </tr>
+  <tr>
+    <td>10203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Triplex</td>
+    <td>Triplex</td>
+  </tr>
+  <tr>
+    <td>1020301</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>ParallelTrip</td>
+    <td>Parallel
+        Triplex</td>
+  </tr>
+  <tr>
+    <td>1020302</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>AntiParallelTrip</td>
+    <td>Antiparallel
+        Triplex</td>
+  </tr>
+  <tr>
+    <td>10204</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Quadruplex</td>
+    <td>Quadruplex</td>
+  </tr>
+  <tr>
+    <td>1020401</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Gloop</td>
+    <td>Gloop</td>
+  </tr>
+  <tr>
+    <td>1020402</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>ParallelQuad</td>
+    <td>Parallel
+        Quadruplex</td>
+  </tr>
+  <tr>
+    <td>1020403</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>AntiparallelQuad</td>
+    <td>Antiparallel
+        Quadruplex</td>
+  </tr>
+  <tr>
+    <td>1020404</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>IDNA</td>
+    <td>I-DNA</td>
+  </tr>
+  <tr>
+    <td>10205</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>HollidayJnt</td>
+    <td>Holliday
+        junction</td>
+  </tr>
+  <tr>
+    <td>10206</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>3WayJnt</td>
+    <td>3-Way
+        junction</td>
+  </tr>
+  <tr>
+    <td>10207</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Loop</td>
+    <td>Loop</td>
+  </tr>
+  <tr>
+    <td>10299</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>OtherStructureType</td>
+    <td>Other
+        structure types</td>
+  </tr>
+  <tr>
+    <td>103</td>
+    <td>&nbsp;</td>
+    <td colspan=5>System_Type</td>
+    <td>Type
+        of complex involving NA</td>
+  </tr>
+  <tr>
+    <td>10301</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Naked</td>
+    <td>Naked,
+        uncomplexed</td>
+  </tr>
+  <tr>
+    <td>10302</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Complex</td>
+    <td>Complexed
+        Nuc. Acid</td>
+  </tr>
+  <tr>
+    <td>1030201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Protein-nuc</td>
+    <td>Complex
+        Protein Nucl. Acid</td>
+  </tr>
+  <tr>
+    <td>103020101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Enzymes</td>
+    <td>Complexed
+        with Enzyme</td>
+  </tr>
+  <tr>
+    <td>103020102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Binding</td>
+    <td>Binding
+        Proteins</td>
+  </tr>
+  <tr>
+    <td>10302010201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Regulatory</td>
+    <td>Regulatory
+        Proteins (Trans Factors, etc)</td>
+  </tr>
+  <tr>
+    <td>10302010202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>SstrandBind</td>
+    <td>Single
+        Strand Binders</td>
+  </tr>
+  <tr>
+    <td>10302010203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Nucleosome</td>
+    <td>Nucleosome
+        proteins</td>
+  </tr>
+  <tr>
+    <td>10302010299</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>OtherBindProt</td>
+    <td>Other
+        binding proteins</td>
+  </tr>
+  <tr>
+    <td>1030202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Ligand-nuc</td>
+    <td>Ligand 
+        Nucleic Acid complexes</td>
+  </tr>
+  <tr>
+    <td>103020201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Intercalator</td>
+    <td>Intercalator</td>
+  </tr>
+  <tr>
+    <td>103020202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>MinGBinder</td>
+    <td>Minor
+        groove binder</td>
+  </tr>
+  <tr>
+    <td>103020203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>MajGBinder</td>
+    <td>Major
+        groove binder</td>
+  </tr>
+  <tr>
+    <td>103020204</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>HybridBinder</td>
+    <td>Hybrid
+        binders</td>
+  </tr>
+  <tr>
+    <td>104</td>
+    <td>&nbsp;</td>
+    <td colspan=5>OriginalHelicalConformation</td>
+    <td>Original
+        helical conformation of the Nucleic Acids</td>
+  </tr>
+  <tr>
+    <td>10401</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>A</td>
+    <td>A</td>
+  </tr>
+  <tr>
+    <td>10402</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>B</td>
+    <td>B</td>
+  </tr>
+  <tr>
+    <td>10403</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Z</td>
+    <td>Z</td>
+  </tr>
+  <tr>
+    <td>10404</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Hogsteen</td>
+    <td>Hogsteen</td>
+  </tr>
+  <tr>
+    <td>10405</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>MixedHConf</td>
+    <td>Mixed
+        conformations</td>
+  </tr>
+  <tr>
+    <td>10499</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>OtherHConf</td>
+    <td>Other
+        Conformations</td>
+  </tr>
+  <tr>
+    <td>105</td>
+    <td>&nbsp;</td>
+    <td colspan=5>SequenceModifications</td>
+    <td>Modifications
+        of Nucleic Acids Sequence</td>
+  </tr>
+  <tr>
+    <td>10501</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>ModifiedNucleotides</td>
+    <td>Modified
+        Nucleotides</td>
+  </tr>
+  <tr>
+    <td>10502</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>CrossLinked</td>
+    <td>CrossLinked</td>
+  </tr>
+  <tr>
+    <td>10503</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>EpigeneticVariants</td>
+    <td>EpigeneticVariants</td>
+  </tr>
+  <tr>
+    <td>10504</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>SequenceMismatches</td>
+    <td>Sequence
+        Mismatches</td>
+  </tr>
+  <tr>
+    <td>10599</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>OtherSeqMod</td>
+    <td>Other
+        modifications</td>
+  </tr>
+  <tr>
+    <td>106</td>
+    <td>&nbsp;</td>
+    <td colspan=5>SequenceFeatures</td>
+    <td>Relevant
+        features related to sequence</td>
+  </tr>
+  <tr>
+    <td>10601</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>PolyA</td>
+    <td>Poly
+        A Track</td>
+  </tr>
+  <tr>
+    <td>1060101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>BrokenPolyA</td>
+    <td>Broken
+        Poly A Track</td>
+  </tr>
+  <tr>
+    <td>10602</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>PolyG</td>
+    <td>Poly
+        G Track</td>
+  </tr>
+  <tr>
+    <td>10603</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>DrewDickersonD</td>
+    <td>Drew
+        Dickerson Dodecamer</td>
+  </tr>
+  <tr>
+    <td>10604</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>SeqMismatch</td>
+    <td>Sequence
+        Mismatches</td>
+  </tr>
+  <tr >
+    <td style="border-top: solid 1px; border-bottom:solid 1px"><strong>2</strong></td>
+    <td style="border-top: solid 1px; border-bottom:solid 1px" colspan=6><strong>Simulation</strong></td>
+    <td style="border-top: solid 1px; border-bottom:solid 1px"><strong>Simulation
+        Data</strong></td>
+  </tr>
+  <tr>
+    <td>201</td>
+    <td>&nbsp;</td>
+    <td colspan=5>SimConditions</td>
+    <td>Simulation
+        settings</td>
+  </tr>
+  <tr>
+    <td>20101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>ForceField</td>
+    <td>ForceField</td>
+  </tr>
+  <tr>
+    <td>2010101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Amber</td>
+    <td>Cornell
+        ForceField family</td>
+  </tr>
+  <tr>
+    <td>201010101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Parm99</td>
+    <td>Parm99</td>
+  </tr>
+  <tr>
+    <td>201010102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>ParmBSC0</td>
+    <td>ParmBSC0</td>
+  </tr>
+  <tr>
+    <td>201010103</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>ParmBSC1</td>
+    <td>ParmBSC1</td>
+  </tr>
+  <tr>
+    <td>201010104</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>ParmBSC0-OL1</td>
+    <td>ParmBSC0-OL1</td>
+  </tr>
+  <tr>
+    <td>201010105</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>ParmBSC0-OL4</td>
+    <td>ParmBSC0-OL4</td>
+  </tr>
+  <tr>
+    <td>201010106</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>ParmBSC0-OL1-OL4</td>
+    <td>ParmBSC0-OL1-OL4</td>
+  </tr>
+  <tr>
+    <td>201010107</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>ParmBSC0-CG</td>
+    <td>ParmBSC0-Cheng/Garcia</td>
+  </tr>
+  <tr>
+    <td>2010102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Charmm</td>
+    <td>Charmm
+        ForceField family</td>
+  </tr>
+  <tr>
+    <td>201010201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Charmm36</td>
+    <td>Charm66</td>
+  </tr>
+  <tr>
+    <td>2010199</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>OtherFF</td>
+    <td>Other
+        forcefields</td>
+  </tr>
+  <tr>
+    <td>20102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Length</td>
+    <td>Length
+        of simulations</td>
+  </tr>
+  <tr>
+    <td>2010201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>NanoSecondRange</td>
+    <td>Between
+        1 ns and 1 us</td>
+  </tr>
+  <tr>
+    <td>2010202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>MicroSecondRange</td>
+    <td>Over
+        1 us</td>
+  </tr>
+  <tr>
+    <td>20103</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Temperature</td>
+    <td>Simulation
+        temperature</td>
+  </tr>
+  <tr>
+    <td>2010301</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Physiological</td>
+    <td>Physiological
+        (around 298, 300K)</td>
+  </tr>
+  <tr>
+    <td>2010302</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>NonPhysiological</td>
+    <td>NonPhysiological</td>
+  </tr>
+  <tr>
+    <td>20104</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Solvent</td>
+    <td>Solvent
+        used in the simulation</td>
+  </tr>
+  <tr>
+    <td>2010401</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Water</td>
+    <td>Water
+        only </td>
+  </tr>
+  <tr>
+    <td>2010402</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Mixed</td>
+    <td>Mixture
+        water and other solvent</td>
+  </tr>
+  <tr>
+    <td>201040201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Wat-Ethanol</td>
+    <td>Water
+        Ethanol mixture</td>
+  </tr>
+  <tr>
+    <td>20105</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Charge</td>
+    <td>Charge
+        model</td>
+  </tr>
+  <tr>
+    <td>2010501</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Electroneutral</td>
+    <td>Counter
+        ions to compensate NA charge</td>
+  </tr>
+  <tr>
+    <td>2010502</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>AddedSalt</td>
+    <td>Added
+        counterions over charge compensation</td>
+  </tr>
+  <tr>
+    <td>201050201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Physiological</td>
+    <td>Physiological
+        (0.15M)</td>
+  </tr>
+  <tr>
+    <td>201050202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>NonPhysiological</td>
+    <td>NonPhysiological</td>
+  </tr>
+  <tr>
+    <td>20106</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>IonParam</td>
+    <td>Parameter
+        used for ion description</td>
+  </tr>
+  <tr>
+    <td>2010601</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Dang</td>
+    <td>Dang</td>
+  </tr>
+  <tr>
+    <td>2010602</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Cheatham</td>
+    <td>Cheatham</td>
+  </tr>
+  <tr>
+    <td>202</td>
+    <td>&nbsp;</td>
+    <td colspan=5>TrajectoryType</td>
+    <td>Type
+        of trajectory related to conformation changes</td>
+  </tr>
+  <tr>
+    <td>20201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Equilibrium</td>
+    <td>Equilibrium
+        (thermal fluctuations without major conf. Changes)</td>
+  </tr>
+  <tr>
+    <td>20202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Folding</td>
+    <td>Folding
+        or Unfolding</td>
+  </tr>
+  <tr>
+    <td>20203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Transition</td>
+    <td>Transition
+        between known conformations</td>
+  </tr>
+  <tr>
+    <td>20299</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>OtherTrajType</td>
+    <td>Other
+        type of trajectory</td>
+  </tr>
+  <tr>
+    <td style="border-top: solid 1px; border-bottom:solid 1px"><strong>3</strong></td>
+    <td style="border-top: solid 1px; border-bottom:solid 1px" colspan=6><strong>Analysis</strong></td>
+    <td style="border-top: solid 1px; border-bottom:solid 1px"><strong>Analysis:
+        any data derived from trajectories (simulated or experimental ensembles)</strong></td>
+  </tr>
+  <tr>
+    <td>301</td>
+    <td>&nbsp;</td>
+    <td colspan=5>TimeScope</td>
+    <td>Time
+        scope of the analysis</td>
+  </tr>
+  <tr>
+    <td>30101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Snapshot</td>
+    <td>Analysis
+        made on a single snapshot</td>
+  </tr>
+  <tr>
+    <td>30102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>TimeAvg</td>
+    <td>Time
+        averaged analysis</td>
+  </tr>
+  <tr>
+    <td>302</td>
+    <td>&nbsp;</td>
+    <td colspan=5>FragmentScope</td>
+    <td>Fragment
+        scope of the analysis</td>
+  </tr>
+  <tr>
+    <td>30201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>SingleBase</td>
+    <td>Analysis
+        done on a single residue (base)</td>
+  </tr>
+  <tr>
+    <td>30202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>GroupAvg</td>
+    <td>Analysis
+        done on a group of residues</td>
+  </tr>
+  <tr>
+    <td>3020201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>BP</td>
+    <td>Analysis
+        done on a base pair (considering the main NA pairing)</td>
+  </tr>
+  <tr>
+    <td>3020202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>BPStep</td>
+    <td>Analysis
+        done on a base pair step (2 consequent base pairs, considering the main
+        pairing)</td>
+  </tr>
+  <tr>
+    <td>3020203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>SeqFragment</td>
+    <td>Analysis
+        done on other sequence fragments</td>
+  </tr>
+  <tr>
+    <td>30203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>FullSystem</td>
+    <td>Analysis
+        done on the complete system</td>
+  </tr>
+  <tr>
+    <td>30204</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Metatrajectory</td>
+    <td>Analysis
+        done on a group of trajectories</td>
+  </tr>
+  <tr>
+    <td>30205</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>ExpStructure</td>
+    <td>Analysis
+        done on a experimental structure</td>
+  </tr>
+  <tr>
+    <td>303</td>
+    <td>&nbsp;</td>
+    <td colspan=5>AnalysisType</td>
+    <td>Type
+        of analysis</td>
+  </tr>
+  <tr>
+    <td>30301</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>BackboneTorsions</td>
+    <td>Backbone
+        Torsions</td>
+  </tr>
+  <tr>
+    <td>3030101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>BI/BIIPopulation</td>
+    <td>Proportion
+        of BI/BII population</td>
+  </tr>
+  <tr>
+    <td>3030102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>SugarPuckering</td>
+    <td>Sugar
+        puckering populations (N,E,S,W)</td>
+  </tr>
+  <tr>
+    <td>3030103</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>AGCanonical</td>
+    <td>Proportion
+        of canonical alpha/gamma torsions</td>
+  </tr>
+  <tr>
+    <td>30302</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>HelicalParam</td>
+    <td>Helical
+        parameters</td>
+  </tr>
+  <tr>
+    <td>3030201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>AxisBP</td>
+    <td>Base
+        Pair Axis parameters</td>
+  </tr>
+  <tr>
+    <td>303020101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>AxisBPTras</td>
+    <td>Traslational
+        Base Pair Axis parameters</td>
+  </tr>
+  <tr>
+    <td>30302010101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Xdisp</td>
+    <td>X-Displacement</td>
+  </tr>
+  <tr>
+    <td>30302010102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Ydisp</td>
+    <td>Y-Displacement</td>
+  </tr>
+  <tr>
+    <td>303020102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>AxisBPRot</td>
+    <td>Rotational
+        Base Pair Axis parameters</td>
+  </tr>
+  <tr>
+    <td>30302010201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Inclination</td>
+    <td>Inclination</td>
+  </tr>
+  <tr>
+    <td>30302010202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Tip</td>
+    <td>Tip</td>
+  </tr>
+  <tr>
+    <td>3030202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>HelicalBP</td>
+    <td>Base
+        Pair Helical parameters</td>
+  </tr>
+  <tr>
+    <td>303020201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>HelicalBPTrans</td>
+    <td>Translational
+        Base Pair Helical parameters</td>
+  </tr>
+  <tr>
+    <td>30302020101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Shear</td>
+    <td>Shear</td>
+  </tr>
+  <tr>
+    <td>30302020102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Stretch</td>
+    <td>Stretch</td>
+  </tr>
+  <tr>
+    <td>30302020103</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Stagger</td>
+    <td>Stagger</td>
+  </tr>
+  <tr>
+    <td>303020202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>HelicaBRRot</td>
+    <td>Rotational
+        Base Pair Helical parameters</td>
+  </tr>
+  <tr>
+    <td>30302020201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Buckle</td>
+    <td>Buckle</td>
+  </tr>
+  <tr>
+    <td>30302020202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Opening</td>
+    <td>Opening</td>
+  </tr>
+  <tr>
+    <td>30302020203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Propeller</td>
+    <td>Propeller</td>
+  </tr>
+  <tr>
+    <td>3030203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>HelicalBPStep</td>
+    <td>Base
+        Pair Step Helical parameters</td>
+  </tr>
+  <tr>
+    <td>303020301</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>HelicaBPStepTrans</td>
+    <td>Translational
+        Base Pair Step Helical parameters</td>
+  </tr>
+  <tr>
+    <td>30302030101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Rise</td>
+    <td>Rise</td>
+  </tr>
+  <tr>
+    <td>30302030102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Slide</td>
+    <td>Slide</td>
+  </tr>
+  <tr>
+    <td>30302030103</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Shift</td>
+    <td>Shift</td>
+  </tr>
+  <tr>
+    <td>303020302</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>HelicaBPStepRot</td>
+    <td>Rotational
+        Base Pair Step Helical parameters</td>
+  </tr>
+  <tr>
+    <td>30302030201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Roll</td>
+    <td>Roll</td>
+  </tr>
+  <tr>
+    <td>30302030202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Tilt</td>
+    <td>Tilt</td>
+  </tr>
+  <tr>
+    <td>30302030203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Twist</td>
+    <td>Twist</td>
+  </tr>
+  <tr>
+    <td>30303</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>GrooveAnalysis</td>
+    <td>Groove
+        analysis</td>
+  </tr>
+  <tr>
+    <td>3030301</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>MajorGroove</td>
+    <td>Major
+        Groove</td>
+  </tr>
+  <tr>
+    <td>303030101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>MajGDepth</td>
+    <td>Depth
+        of the Major Groove</td>
+  </tr>
+  <tr>
+    <td>303030102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>MinGWidth</td>
+    <td>Width
+        of the Major Groove</td>
+  </tr>
+  <tr>
+    <td>3030302</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>MinorGroove</td>
+    <td>Minor
+        Groove</td>
+  </tr>
+  <tr>
+    <td>303030201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>MinGDepth</td>
+    <td>Depth
+        of the Minor Groove</td>
+  </tr>
+  <tr>
+    <td>303030202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>MinGWidth</td>
+    <td>Width
+        of the Mino Groove</td>
+  </tr>
+  <tr>
+    <td>30304</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Interactions</td>
+    <td>Analysis
+        of interactions</td>
+  </tr>
+  <tr>
+    <td>3030401</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Hbonds</td>
+    <td>Hydrogen
+        bonds (distances)</td>
+  </tr>
+  <tr>
+    <td>303040101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>WC</td>
+    <td>Watson-Crick
+        Hydrogen Bonds</td>
+  </tr>
+  <tr>
+    <td>303040199</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Other</td>
+    <td>Other
+        Hydrogend Bonds</td>
+  </tr>
+  <tr>
+    <td>3030402</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Stacking</td>
+    <td>Stacking
+        interactions</td>
+  </tr>
+  <tr>
+    <td>303040201</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Wstrand</td>
+    <td>Stacking
+        on the Watson Strand</td>
+  </tr>
+  <tr>
+    <td>303040202</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Cstrand</td>
+    <td>Stacking
+        on the Crick Strand</td>
+  </tr>
+  <tr>
+    <td>303040203</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Crossed</td>
+    <td>Stacking
+        between strands</td>
+  </tr>
+  <tr>
+    <td>30305</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>NMR</td>
+    <td>NMR
+        observables</td>
+  </tr>
+  <tr>
+    <td>3030501</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>NOE</td>
+    <td>NOE</td>
+  </tr>
+  <tr>
+    <td>3030502</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>JC</td>
+    <td>J-Couplings</td>
+  </tr>
+  <tr>
+    <td>30306</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Stiffness</td>
+    <td>Stiffness
+        analysis</td>
+  </tr>
+  <tr>
+    <td>3030601</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>ForceConstant</td>
+    <td>Force
+        Constants</td>
+  </tr>
+  <tr>
+    <td>303060101</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Fctwist</td>
+    <td>Fctwist</td>
+  </tr>
+  <tr>
+    <td>303060102</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Fcroll</td>
+    <td>Fcroll</td>
+  </tr>
+  <tr>
+    <td>303060103</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Fctilt</td>
+    <td>Fctilt</td>
+  </tr>
+  <tr>
+    <td>303060104</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Fcrise</td>
+    <td>Fcrise</td>
+  </tr>
+  <tr>
+    <td>303060105</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Fcshift</td>
+    <td>Fcshift</td>
+  </tr>
+  <tr>
+    <td>303060106</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Fcslide</td>
+    <td>Fcslide</td>
+  </tr>
+  <tr>
+    <td>3030602</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>ForceMatrix</td>
+    <td>Matrix
+        of stiffness constants (twist, roll, tilt, rise, shift, slide)</td>
+  </tr>
+  <tr>
+    <td>3030603</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>ForceProduct</td>
+    <td>DiagonalProduct</td>
+  </tr>
+  <tr>
+    <td>30307</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>TrajectoryVideo</td>
+    <td>Video
+        of Trajectory in standard formats</td>
+  </tr>
+  <tr>
+    <td>30308</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>TrajectoryData</td>
+    <td>Trajectory
+        data</td>
+  </tr>
+  <tr>
+    <td>3030801</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>PCAZip</td>
+    <td>Trajectory
+        in PCZ format</td>
+  </tr>
+  <tr>
+    <td>30309</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>Cartesian</td>
+    <td>Cartesian
+        analysis</td>
+  </tr>
+  <tr>
+    <td>3030901</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>RMSd</td>
+    <td>Root
+        Mean Square Deviation (RMSd)</td>
+  </tr>
+  <tr>
+    <td>3030902</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>RMSf</td>
+    <td>Root
+        Mean Square Fluctuation (RMSf)</td>
+  </tr>
+  <tr>
+    <td>3030903</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>RadGyration</td>
+    <td>Radius
+        of Gyration</td>
+  </tr>
+  <tr>
+    <td>3030904</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Bfactor</td>
+    <td>B - Factor</td>
+  </tr>
+  <tr>
+    <td>3030905</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>AvgStruct</td>
+    <td>Average
+        structure</td>
+  </tr>
+  <tr>
+    <td>30310</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>PCAnalysis</td>
+    <td>Principal
+        Component analysis</td>
+  </tr>
+  <tr>
+    <td>3031001</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>EigenValues</td>
+    <td>PCA
+        EigenValues</td>
+  </tr>
+  <tr>
+    <td>3031002</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>NumberEV</td>
+    <td>Number
+        of PCA EigenValues for a given variance</td>
+  </tr>
+  <tr>
+    <td>3031003</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>EigenVal</td>
+    <td>Vector
+        of eigenValues</td>
+  </tr>
+  <tr>
+    <td>3031002</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>EigenVector</td>
+    <td>PCA
+        EigenVectors</td>
+  </tr>
+  <tr>
+    <td>3031003</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>TrajectoryProj</td>
+    <td>Projections
+        of trajectory</td>
+  </tr>
+  <tr>
+    <td>3031004</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Animated
+        trajectory</td>
+    <td>Trajectory
+        animated following given eigenvectors</td>
+  </tr>
+  <tr>
+    <td>3031005</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Entropy</td>
+    <td>Entropy
+        prediction</td>
+  </tr>
+  <tr>
+    <td>3031005</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Schlitter</td>
+    <td>Schlitter</td>
+  </tr>
+  <tr>
+    <td>303100502</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=2>Androcioaei </td>
+    <td>Entropy
+        prediction using Androcioaei  protocol</td>
+  </tr>
+  <tr>
+    <td>3031006</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=3>Variance</td>
+    <td>Variance
+        measured in the trajectory</td>
+  </tr>
+  <tr>
+    <td>30311</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan=4>ContactMaps</td>
+    <td>Contact
+        Maps</td>
+  </tr>
+</table>
+ 

@@ -1,0 +1,60 @@
+<br/>
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Data Manager</h4>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Trajectories generated with <strong>BIGNASim</strong>, especially the ones built from a particular nucleotidic fragment using different trajectories (see <a href="help.php?id=metatraj" target="_blank">metatrajectory help section</a>), can be large files and might require several minutes to be ensembled. To allow an asynchrounous generation of metatrajectories and their subsequent retrieval, <strong>BIGNASim</strong> implements a <strong>data manager</strong>. 
+
+	The <strong>data manager</strong> stores all the trajectories generated in a <strong>BIGNASim</strong> session. The list of generated trajectories will be updated in the <strong>data manager</strong> until the browser is closed or the session expired (after some time of inactivity). After that, the workspace containing the list of trajectories can be accessed from a given link, and will be available for one month from the day of their generation.
+
+	Trajectories are shown in a very intuitive <strong>workspace</strong>, and can be <strong>compressed</strong>, <strong>downloaded</strong>, <strong>erased</strong>, and sent to the <strong>NAFlex</strong> flexibility server to further analyse them. Users also have the possibility to download all the generated trajectories in a particular session in a single compressed <strong>tar tgz file</strong>.
+
+	The datamanager also lists the <strong>trajectories in progress</strong> under the label <i>RUNNING</i>. If an error occurs during the process, the job output and error logfile are also uploaded to the workspace to ease the debugging of the job failure.
+	
+</p>
+
+<img src="htmlib/help/img/datamanager.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<br/><br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Data Manager Icons</h4>
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td colspan="2"><b>Workspace icons</b></td>
+  </tr>
+  <tr>
+    <td align="center"><img style="width:25px;height:25px;" src="BNSdatamanager/images/more.png" alt = "Show Trajectory description" /></td>
+    <td>Show Trajectory description</td>
+  </tr>
+  <tr>
+    <td align="center"><img style="width:25px;height:25px;" src="BNSdatamanager/images/download.png" alt = "Download Trajectory" /></td>
+    <td>Download Trajectory</td>
+  </tr>
+  <tr>
+    <td align="center"><img style="width:25px;height:25px;" src="BNSdatamanager/images/zip.png" alt = "Compress Trajectory" /></td>
+    <td>Compress Trajectory.</td>
+  </tr>
+  <tr>
+    <td align="center"><img style="width:25px;height:25px;" src="images/NA_Flex_Logo.png" alt = "NAFlex" /></td>
+    <td>Analyse Trajectory flexibility with <b>NAFlex</b>.</td>
+  </tr>
+  <tr>
+    <td align="center"><img style="width:25px;height:25px;" src="BNSdatamanager/images/delete.png" alt = "Remove Trajectory" /></td>
+    <td>Delete Trajectory from the workspace.</td>
+  </tr>
+  <tr>
+    <td align="center"><img style="width:25px;height:25px;" src="BNSdatamanager/images/downloadtgz.png" alt = "Download All" /></td>
+    <td>Download All trajectories in a compressed tar tgz file.</td>
+  </tr>
+</table>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Persistent link</h4>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The <strong>persistent link</strong> to a list of generated trajectories (<strong>workspace</strong>) is given in the <strong>waiting page</strong> shown after submiting a meta-trajectory generation process (see figure below), and can also be directly copied from the browser url bar once the workspace is loaded.
+	
+	This link allows access to the list of trajectories even after the session has been closed or expired. Trajectories will be stored in local disks for a period of up to one month after their generation.
+</p>
+
+<img src="htmlib/help/img/waiting.png" style="display: block; width: 100%; height:auto;" ></img>
+<img src="htmlib/help/img/workspacelink.png" style="display: block; width: 100%; height:auto;" ></img>
+

@@ -1,0 +1,175 @@
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	This use case shows several examples on using the <strong>BIGNASim</strong> search engine to locate a particular nucleic acid sequence, nucleic acid fragment or base pair step. The <strong>search section</strong> of the portal is accessed through the main menu:  
+</p>
+
+<img src="htmlib/help/img/SearchNewMenu.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The <strong>search section</strong> contains three different possibilities (see this help <a href='help.php?id=searching'>searching section</a> for more details): 
+</p>
+	<ul style="text-align: left; padding-left:40px;">
+		<li> Search by <strong>sequence or specific sequence fragments</strong> (using regular expressions)</li>
+		<li> Search by <strong>specific base-pair-steps</strong> (with or without flanking regions)</li>
+		<li> Search by an extensive <strong>nucleic acid ontology</strong></a> (as defined <a href="help.php?id=onto">here</a>)</li>
+	</ul>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Examples will show the way of finding three different types of information from the database:
+</p>
+	<ul style="text-align: left; padding-left:40px;">
+		<li style="list-style-type: square;"><a href='#seq'>Information related to the well-known Drew-Dickerson Dodecamer (DDD)</a></li>
+		<!--<li style="list-style-type: square;">Information related to the nucleic fragment AATT, present in the center of the DDD structure</li>-->
+		<li style="list-style-type: square;"><a href='#bps'>Information related to the AT Base-Pair Step (central in DDD)</li>  
+		<li style="list-style-type: square;"><a href='#onto'>Information related to a naked duplex B-DNA structure with a particular nucleotidic fragment</li>  
+	</ul>
+
+<br/>
+
+<a name='seq'></a>
+<h4 style="font-size: 1.2em;"> Drew Dickerson Dodecamer (DDD) </h4>
+<hr/>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In this case, the nucleotidic sequence of the DDD (CGCGAATTCGCG) can be just searched using the <i>"Search by Sequence"</i> section of the portal:
+</p>
+
+<img src="htmlib/help/img/Tut1_SearchBySeqNew.png" style="display: block; width: 80%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p><strong>Javascript code examples</strong></p>
+<pre>
+// Finding DDD simulations
+SimulationList = db.simData.find({'sequence' : 'CGCGAATTCGCG'}).toArray()
+
+// Finding simulations containing DDD sequence using regular expressions
+SimulationList = db.simData.find({'sequence' : /CGCGAATTCGCG/}).toArray()
+
+// Finding simulations containing DDD sequence using possible variations
+SimulationList = db.simData.find({'sequence' : /^CGCGA[AC]TTCGCG$/}).toArray() 
+</pre>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Due to the importance of DDD in the field, it is specifically included in the <i>Sequence Features</i> section of the nucleic acids ontology, and can be located directly:
+</p>
+
+<img src="htmlib/help/img/Tut1_SearchDDDNew.png" style="display: block; width: 80%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p><strong>Javascript example code</strong></p>
+<pre>
+// Finding DDD simulation from ontology search
+SimulationList = db.simData.find({'ontology' : '10603'}).toArray()
+</pre>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Both access ways open a <strong>browse page</strong> showing the simulations stored in the database for this particular sequence. In this case, 5 different trajectories are found, the longest having 10&micro;seconds. Each of the simulations can be opened individually to look at the MD simulation metadata and trajectory analyses. Combined information from more than one simulation can be obtained, by selecting the desired entries and clicking at <strong>Open analyses for selected simulations</strong> (see <a href="help.php?id=browsing">browsing section</a> for more information).
+</p>
+
+<img src="htmlib/help/img/Tut1_DDDlistNew.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<br/>
+
+<a name='bps'></a>
+<h4 style="font-size: 1.2em;"> AT Base-Pair Step (central in DDD) </h4>
+<hr/>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The central base-pair step of DDD (CGCGA<strong>AT</strong>TCGCG), can be obtained from the <strong>Search by Base Pair Step</strong> section: 
+</p>
+
+<img src="htmlib/help/img/Tut1_SearchBPSNew.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+<p><strong>Javascript equivalent code</strong></p>
+<pre>
+// Finding simulations containing AT BpStep with 2 flanking bases
+SimulationList = db.simData.find(
+    {'sequence':/..AT../},
+    {_id:1}
+).toArray();
+// Finding simulations containing AT BpStep on any strand (not needed for ApT due to symmetry)
+SimulationList = db.simData.find(
+    { $or:[ {'sequence':/..AT../}, {'rev-sequence':/..AT../} ]},
+    {_id:1}
+).toArray();
+</pre>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In the selector, the desired base-pair step, in this case AT, must be chosen. There is also the possibility to add a number of required <strong>flanking nucleotides</strong>, to ensure that information obtained will not be from base-pair steps placed at terminal regions, which can show distorted flexibility parameters. In this example, two flanking nucleotides are forced. The same procedure can be applied for any base-pair step.
+</p>
+
+<img src="htmlib/help/img/Tut1_SearchBPS2New.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The results obtained for the <strong>AT</strong> base-pair step with the current content of the database are 51 different simulations. Looking at the sequence column, the interesting <strong>AT pair</strong>, together with the flanking region, can be easily identified thanks to the marking in yellow and orange colours, respectively. The first thing we can see in the browse page is that the database contains simulated systems different from <strong>DDD</strong> containing also the <strong>AT base pair</strong>. Specifically 46 sequences, some of them having more than one occurrence of it, are recovered. That offers enough information to compare between the flexibility parameters obtained for just the 5 sequences of <strong>DDD</strong> obtained in the previous section of this example with the remaining sequences having the <strong>AT base pair</strong>. To exclude <strong>DDD</strong> simulations from the recovered analyses, <strong>selector of records shown</strong> should be set to the maximum (100 records), select all simulations by using the checkbox placed at the left part of the table header, next to the <strong>Id. title</strong>, and then uncheck the ones corresponding to the <strong>DDD</strong> sequence (sorting the results by Id will help in finding the 5 sequences next to each other).
+</p>
+
+<img src="htmlib/help/img/Tut1_FirstShownNew.png" style="display: block; width: 40%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<img src="htmlib/help/img/Tut1_SearchBPS_ResultsNew.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The final step consists on clicking at the <strong>Open Analyses for selected simulations</strong> button at the bottom of the <strong>browse page</strong>, which will lead to the <strong>analysis section</strong> of <strong>BIGNASim</strong> (see <a href='help.php?id=analysis'>analysis section</a>).
+</p>
+
+<img src="htmlib/help/img/OpenAnalysesForSelectedSimulations.png" style="display: block; width: 60%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In this section, the <strong>AT base-pair step</strong> button will open the available analyses for the <strong>AT base-pair step</strong>. In order to compare the results with the ones corresponding to the <strong>AT base-pairs</strong> from just <strong>DDD sequences</strong>, the procedurec an be repeated for these particular simulations, using an additional browser window. 
+</p>
+
+<img src="htmlib/help/img/Tut1_AT_analysis.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p><strong>Continuation Javascript code to retrieve analysis data for ApT steps</strong></p>
+<pre>
+(...)
+idSim = SimulationList[i]._id.idSim;
+// retrieve the position of the AT bpSteps (stored as class:'ATAT')
+ATPos = db.groupDef.find(
+    {'_id.idSim': idSim, 'class': 'ATAT'}, 
+    {_id: 1}
+    ).toArray()
+(...)
+// obtain available data for a given group
+dataCur = db.analData.find(
+    {'_id.idSim': idSim, '_id.nGroup': ATPos[i]._id.n, '_id.idGroup': ATPos[j]._id.idGroup}
+);
+while (dataCur.hasNext()) {
+    printjson(dataCur.next());
+}
+</pre>
+
+<a name='onto'></a>
+<h4 style="font-size: 1.2em;"> Naked duplex B-DNA structure with a particular nucleotide fragment </h4>
+<hr/>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The third example shows a more specific search: trajectories having the <strong>DDD</strong> central tetramer <strong>(AATT)</strong> computed on <strong>naked B-DNA duplex</strong> structures, simulated in <strong>equilibrium</strong> conditions and <strong>electroneutral</strong> charge schema. <strong>AATT</strong> sequence should be included in the <strong>Search by Sequence</strong> section; and then the search refined using the <strong>Search by Ontology</strong> section. 
+</p>
+
+<img src="htmlib/help/img/Tut1_AdvSearchSeq.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In the <strong>Search by Ontology</strong> section, search can be refined using keywords organized in a series of groups. In this case, the keywords chosen should be <strong>DNA</strong> in <strong>Nucleic Acid Type</strong> area, <strong>Duplex</strong> in <strong>Structure</strong> area, <strong>Naked</strong> in <strong>System Type</strong> area, <strong>Equilibrium</strong> in <strong>Trajectory Type</strong>, <strong>B</strong> in <strong>Helical Conformation</strong> and, finally, <strong>Electroneutral</strong> in <strong>Simulation Conditions, Ionic Concentration</strong>. Every time a search parameter is chosen, the <strong>search engine</strong> computes the number of results stored for the current selected refinement specification and shows it on-the-fly in the top right part of the <strong>Search by Ontology</strong> section. 
+</p>
+
+<img src="htmlib/help/img/Tut1_AdvSearch.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+<p><strong>Javascript equivalent code</strong></p>
+<pre>
+// Finding simulations containing TTAA fragment with 2 flanking bases, including
+// TTAA is palindromic, only one strand need to be considered
+// ontology tags: 'DNA' (10101), 'Duplex' (10202), 'Naked' (10301), 'B' (10402)
+//                'Equilibrium' (20201), 'B', 'Electroneutral' (2010501)
+//                further check on subclasses has been eliminated for clarity 
+SimulationList = db.simData.find(
+    {
+        'sequence': /..TTAA../,
+        'ontology': {$all: ['10101','10202','10301','2010501','20201']}
+    }
+,{_id:1}).toArray();
+</pre>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Again, the results are shown in a <strong>browse page</strong>. Descriptions show the keywords assigned to each simulation, and confirm that results are indeed <strong>duplex naked B-DNA structure </strong>simulations, as defined in the <strong>search</strong>. Still, results obtained contain a sequence different than the <strong>DDD</strong> having the <strong>(AATT)</strong> tetramer: 1rvh (GCAAAATTTTGC). For the rest of <strong>DDD</strong> trajectories, the differences rely on the particular simulation parameters used in the MD, e.g. solvent type, ionic parameters or total length.
+</p>
+
+<img src="htmlib/help/img/Tut1_AdvSearchResults.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	From the simulation list, flexibility analyses can be obtained independently, or combined, clicking at <strong>Open Analysis for selected simulations</strong> button, or a <strong>meta-trajectory</strong> with this particular nucleotide fragment can be generated, joining together atomic coordinates of the selected set of simulations. More details on how to build a <strong>meta-trajectory</strong> with <strong>BIGNASim</strong> can be found at the <a href='help.php?id=tut3'>meta-trajectory tutorial</a> and the <a href='help.php?id=metatraj'>meta-trajectory section </a>in the <strong>BIGNASim</strong> help pages.
+</p>

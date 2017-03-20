@@ -1,0 +1,58 @@
+<p align="center" style="font-family: Georgia, serif; font-size: 1.5em;"><strong>BIGNASim:</strong> A noSQL database structure and analysis portal for nucleic
+ acids simulation data</p>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Tutorial 2: Meta-trajectories (CTAG)</h4>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+        This tutorial shows how to build a meta-trajectory containing a particular nucleotidic fragment with <strong>BIGNASim</strong> portal. The first step in this tutorial consists on accessing the <strong>search section</strong> of the portal from the main menu:
+</p>
+
+<img src="htmlib/help/img/headerBIGNASim_Search.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+        The <strong>search section</strong> contains three different possibilities (see this help <a href='help.php?id=searching'>searching section</a> for more details):
+</p>
+        <ul style="text-align: left; padding-left:40px;">
+                <li> Search by <strong>sequence or specific sequence fragments</strong> (using regular expressions)</li>
+                <li> Search by <strong>specific base-pair-steps</strong> (with or without flanking regions)</li>
+                <li> Search by an extensive <strong>nucleic acid ontology</strong></a> (as defined <a href="help.php?id=ontology">here</a>)</li>
+        </ul>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+        To generate a meta-trajectory, we will use the <strong>Search by Sequence Fragment</strong> section of the <strong>search engine</strong>. The <strong>Search by Base-Pair Step</strong> field can also be used if the particular sequence fragment we are interested in is precisely a <strong>base-pair step</strong>. 
+	<!-- Something that explain why the hell we want to study CTAG tetramer... -->
+	<!--As seen in the &micro;ABC project (<a href="http://nar.oxfordjournals.org/content/42/19/12272" target="_blank">M. Pasi et al. 2014</a>), -->
+	Searching for the tetramer <strong>CTAG</strong>, with 1 nucleotide of flanking region, to avoid terminal parts, we obtain <strong>36 different simulations</strong>. The majority of these simulations have <strong>500ns</strong>, but the important information here is that the sum of all the trajectories go up to <strong>19&micro;s </strong>. 
+
+	<strong>BIGNASim</strong> offers the possibility to generate a meta-trajectory combining all these different simulation trajectories. It is built getting the atomic information (3D-coordinates and topology) of the selected nucleotidic fragment. In this case, a meta-trajectory for the <strong>CTAG</strong> tetramer, representing <strong>19&micro;s </strong> of simulation data will be generated.
+
+	For that, the first thing we need is to select all the trajectories obtained in the search. That implies two different steps, first show all the results in the <strong>browse page</strong>, selecting an appropiate number of rows to be displayed in the selector placed in the top-left corner of the screen:
+</p>
+
+<img src="htmlib/help/img/Tut2_FirstShown.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Then, we select all the simulations (or just the ones we are interested in), clicking at the respective checkboxes. A single click to the checkbox placed in the top-left corner of the table, next to the <strong>Id. title</strong> will automatically select all trajectories. This can also be done with a button placed at the bottom of the <strong>browse page</strong> named <strong>Mark All</strong>.
+</p>
+
+<img src="htmlib/help/img/Tut2_FirstShown2.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Once we have the desired trajectories selected, the next step is clicking at the <strong>Retrieve Metatrajectory</strong> button placed at the top-right part of the screen (next to the <strong>Cassandra</strong>'s logo, representing an eye). 
+</p>
+
+<img src="htmlib/help/img/Tut2_FirstShown3.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The next step for generating the meta-trajectory is to define a desired frame step. In this case, we want to extract <strong>100 snapshots</strong> as representatives of each trajectory. For that, we type in the <strong>Frame</strong> input section: <strong>1:5000:50</strong> (<i>for snapshot 1 to snapshot 5000, every 50 snapshots</i>). 
+
+	At this step, we can choose between <strong>downloading</strong> the new generated trajectory or send it directly to the <strong>NAFlex</strong> nucleic acid flexibility server. As this trajectory is going to be quite big, we will download it to work in our own machines.
+
+	The download section offers different possible trajectory formats. We will choose the one by default, <strong>DCD binary</strong>, because is one of the most lighweight formats, and it will accelerate the process.
+</p>
+
+<img src="htmlib/help/img/Tut2_MetaTraj.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	And now we need to add the asynchronous download management... :(
+</p>
+

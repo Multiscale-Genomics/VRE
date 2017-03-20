@@ -1,0 +1,28 @@
+
+.carousel { position:relative; min-height: 20px; height:auto !important; height: 20px;  background:url(../anoslide/images/loader.gif) center center no-repeat; }
+
+.carousel .next,
+.carousel .prev { display:none; width:56px; height:56px; position:absolute; bottom:20px; left:50%; margin-top:-28px; z-index:9999; cursor:pointer; }
+
+.carousel .prev { margin-left:-60px; background:url(../anoslide/images/prev.png) 0 0 no-repeat;  }
+
+.carousel .next { margin-right:-60px;  background:url(../anoslide/images/next.png) 0 0 no-repeat; }
+
+.carousel li { display:none; }
+.carousel li img { height:auto; }
+
+.paging { position:absolute; z-index:9998; }
+.paging > a { display:block; cursor:pointer; width:40px; height:40px; float:left; background:url(../anoslide/images/dots.png) 0px -40px no-repeat; }
+.paging > a:hover,
+.paging > a.current { background:url(../anoslide/images/dots.png) 0px 0px no-repeat;  }
+
+.badge { display:block; width:104px; height:104px; background:url(../anoslide/images/badge.png) 0 0 no-repeat; z-index:9000; position:absolute; top:-3px; left:-3px; }
+
+.carousel img {
+-webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  -o-user-select: none;
+  user-select: none;
+}
+

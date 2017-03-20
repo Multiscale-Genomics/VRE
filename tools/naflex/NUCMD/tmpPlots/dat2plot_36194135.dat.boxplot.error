@@ -1,0 +1,50 @@
+"H3-N1","H61-O4","N1-H3","O4-H61"
+"H3-N1","H61-O4","N1-H3","O4-H61"
+"n1","n2","n3","n4"
+n1,n2,n3,n4
+
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(Cairo)
+> CairoPNG(file="dat2plot_36194135.dat.png",width=1000,height=600)
+> par(cex=1,xpd=NA,mgp = c(4,1,0),mar = c(7.0,5.1,4.1,2.1))
+> n1 <- read.table("dat2plot_36194135.dat.H3-N1.HB.dat")
+> n1 <- n1[[1]]
+> n1 <- n1[!n1 %in% boxplot.stats(n1)$out]
+> n2 <- read.table("dat2plot_36194135.dat.H61-O4.HB.dat")
+> n2 <- n2[[1]]
+> n2 <- n2[!n2 %in% boxplot.stats(n2)$out]
+> n3 <- read.table("dat2plot_36194135.dat.N1-H3.HB.dat")
+> n3 <- n3[[1]]
+> n3 <- n3[!n3 %in% boxplot.stats(n3)$out]
+> n4 <- read.table("dat2plot_36194135.dat.O4-H61.HB.dat")
+> n4 <- n4[[1]]
+> n4 <- n4[!n4 %in% boxplot.stats(n4)$out]
+> title <- c("H3-N1","H61-O4","N1-H3","O4-H61")
+> z <- c("n1","n2","n3","n4")
+> list <- lapply(z,get, envir=environment())
+> names(list) <- title 
+> data <- list(n1,n2,n3,n4)
+> final <- data[order(-sapply(data, median))]
+> title2 <- title[order(-sapply(data, median))]
+> names(final)<-title2
+> boxplot(final,ylab="Distance (Angstroms)",xlab="",main="HB distances",las=2,cex.names=1.2,cex.axis=1.2)
+> dev.off()
+null device 
+          1 
+> 

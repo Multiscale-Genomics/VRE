@@ -1,0 +1,35 @@
+<?php
+/*
+ *
+ */
+
+require_once "/var/www/BigNASim/BNSdatamanager/phplib/mongoDB.inc.php";
+
+
+$today  =  date("Y-m-d",strtotime("now"));
+$grace =   date('Y-m-d',strtotime('+5 days'));
+print "TODAY IS $today ... estra time given: --> $grace \n";
+
+$files = $GLOBALS['cassandraIds']->find(array('expiration' => array( '$gte' => new MongoDate($today))));
+if ($files->count() > 0 ){
+	foreach ($files as $file){
+		print "FILES IS ".$file['_id']."\n";
+	}
+}else{
+	print "COINT US ".$files->count()."\n";
+}
+
+#NO expiration
+$files2 = $GLOBALS['cassandraIds']->find(array('expiration' => array( '$exists' => false)));
+if ($files2->count() > 0 ){
+	foreach ($files2 as $file){
+		if (isset($file['files'])){
+			continue;
+		}
+		print "NO EXPIRATIN FOR FILES IS ".$file['_id']."\n";
+	}
+}else{
+	print "[$today] No files with expiration < $today\n";
+}
+
+?>

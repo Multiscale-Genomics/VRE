@@ -1,0 +1,43 @@
+<tr data-tt-id="##tree_id##" data-tt-parent-id="##tree_id_parent##"  >
+<td>
+	<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+		<input type="checkbox" class="checkboxes" value="##_id##" name="##_id##" onchange="changeCheckbox(this)" id="##_id##" ##state## >
+		<span></span>
+	</label>
+</td>
+
+<td>
+	<a class="##state##"  href="workspace/workspace.php?op=##openFunction##&fn=##_id_URL##" title="open file" target="_blank">##filename##</a>
+	<span class="expand_info" onclick="expandInfo(this)"></span>
+	<div class="extra_info">
+	  <table>
+	  	<tr>
+		    <td style="padding:0px 5px;vertical-align:top;color:#000;font-size:12px;">Description:</td>
+		    <td style="padding:0px 5px;color:#666;font-size:12px;">##description##</td>
+		</tr>
+		##execDetails##
+		##viewLog##
+	</table>
+  </div>
+</td>
+<td><span style="color:#004d66;font-weight:bold;">##pending##</span></td>
+<td>##project##</td>
+<td></td>
+<td></td>
+<td>
+</td>
+<td>
+	<div class="btn-group">
+    		<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
+			<i class="fa fa-angle-down"></i>
+		</button>
+	  <ul class="dropdown-menu pull-right" role="menu">
+			<li><a href="workspace/workspace.php?op=cancelJobSure&pid=##pid##"><i class="fa fa-times-circle"></i>Cancel job</a></li
+		</ul>
+	</div>
+</td>
+<td>1</td>
+<td>##mtime_parent##</td>
+<td>##size_parent##</td>
+</tr> 
+

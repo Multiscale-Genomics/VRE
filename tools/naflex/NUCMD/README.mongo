@@ -1,0 +1,1 @@
+mongo -host ms1 --authenticationDatabase admin -u dataLoader -p mdbwany2015 NUCMDANAL

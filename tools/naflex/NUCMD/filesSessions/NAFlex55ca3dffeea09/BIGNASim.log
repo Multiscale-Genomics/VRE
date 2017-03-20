@@ -1,0 +1,69 @@
+11/08/15 : 20:26:25 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:26:26 |  | Job Array (13211). Your job 13211 ("CURL_queue.sh") has been submitted 
+11/08/15 : 20:26:26 |  | The process CURL_queue.sh is currently running (13211). 
+11/08/15 : 20:26:26 |  | WaitResult: 13211 
+11/08/15 : 20:26:26 |  | Async process currently running!! (13211). 
+11/08/15 : 20:27:27 |  | WaitResult: 13211 
+11/08/15 : 20:27:27 |  | Async process already finished!! 
+11/08/15 : 20:29:42 |  | WaitResult: 13211 
+11/08/15 : 20:29:42 |  | Async process already finished!! 
+11/08/15 : 20:30:03 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:30:04 |  | Job Array (13212). Your job 13212 ("CURL_queue.sh") has been submitted 
+11/08/15 : 20:30:04 |  | The process CURL_queue.sh is currently running (13212). 
+11/08/15 : 20:30:04 |  | WaitResult: 13212 
+11/08/15 : 20:30:04 |  | Async process currently running!! (13212). 
+11/08/15 : 20:31:05 |  | WaitResult: 13212 
+11/08/15 : 20:31:05 |  | Async process currently running!! (13212). 
+11/08/15 : 20:32:06 |  | WaitResult: 13212 
+11/08/15 : 20:32:06 |  | Async process currently running!! (13212). 
+11/08/15 : 20:33:07 |  | WaitResult: 13212 
+11/08/15 : 20:33:07 |  | Async process currently running!! (13212). 
+11/08/15 : 20:34:08 |  | WaitResult: 13212 
+11/08/15 : 20:34:08 |  | Async process currently running!! (13212). 
+11/08/15 : 20:35:09 |  | WaitResult: 13212 
+11/08/15 : 20:35:09 |  | Async process currently running!! (13212). 
+11/08/15 : 20:36:10 |  | WaitResult: 13212 
+11/08/15 : 20:36:10 |  | Async process currently running!! (13212). 
+11/08/15 : 20:37:11 |  | WaitResult: 13212 
+11/08/15 : 20:37:11 |  | Async process currently running!! (13212). 
+11/08/15 : 20:38:13 |  | WaitResult: 13212 
+11/08/15 : 20:38:13 |  | Async process currently running!! (13212). 
+11/08/15 : 20:39:14 |  | WaitResult: 13212 
+11/08/15 : 20:39:14 |  | Async process currently running!! (13212). 
+11/08/15 : 20:40:15 |  | WaitResult: 13212 
+11/08/15 : 20:40:16 |  | Async process currently running!! (13212). 
+11/08/15 : 20:42:04 |  | WaitResult: 13212 
+11/08/15 : 20:42:04 |  | Async process currently running!! (13212). 
+11/08/15 : 20:43:01 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:43:01 |  | Job Array ().  
+11/08/15 : 20:43:01 |  | The process is not running. 
+11/08/15 : 20:43:02 |  | WaitResult: 0 
+11/08/15 : 20:44:05 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:44:05 |  | Job Array ().  
+11/08/15 : 20:44:05 |  | The process is not running. 
+11/08/15 : 20:44:05 |  | WaitResult: 0 
+11/08/15 : 20:44:57 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:44:57 |  | Job Array ().  
+11/08/15 : 20:44:57 |  | The process is not running. 
+11/08/15 : 20:44:57 |  | WaitResult: 0 
+11/08/15 : 20:45:34 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:45:34 |  | Job Array ().  
+11/08/15 : 20:45:35 |  | The process is not running. 
+11/08/15 : 20:45:35 |  | WaitResult: 0 
+11/08/15 : 20:46:36 |  | WaitResult: 0 
+11/08/15 : 20:47:38 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:47:38 |  | Job Array (13215). Your job 13215 ("BIGNaSim_curl_call_NAFlex55ca3dffeea09") has been submitted 
+11/08/15 : 20:47:38 |  | The process CURL_queue.sh is currently running (13215). 
+11/08/15 : 20:47:38 |  | WaitResult: 13215 
+11/08/15 : 20:47:38 |  | Async process currently running!! (13215). 
+11/08/15 : 20:48:39 |  | WaitResult: 13215 
+11/08/15 : 20:48:40 |  | Async process currently running!! (13215). 
+11/08/15 : 20:49:33 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:49:33 |  | Job Array (13216). Your job 13216 ("BIGNaSim_curl_call_NAFlex55ca3dffeea09") has been submitted 
+11/08/15 : 20:49:33 |  | The process CURL_queue.sh is currently running (13216). 
+11/08/15 : 20:49:34 |  | WaitResult: 13216 
+11/08/15 : 20:49:34 |  | Async process currently running!! (13216). 
+11/08/15 : 20:50:16 |  | WaitResult: 13216 
+11/08/15 : 20:50:16 |  | Async process already finished!! 
+11/08/15 : 20:50:46 |  | WaitResult: 13216 
+11/08/15 : 20:50:46 |  | Async process already finished!! 

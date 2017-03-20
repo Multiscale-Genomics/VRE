@@ -1,0 +1,22 @@
+.container {
+    width:97%;
+    margin:10px;
+    border:1px solid #d3d3d3;
+}
+.container div {
+    width:100%;
+}
+.container .header {
+    background-color:#d3d3d3;
+    padding: 2px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.container .content {
+    display: none;
+    padding : 5px;
+}
+
+.container .content input {
+    margin: 10px;
+}

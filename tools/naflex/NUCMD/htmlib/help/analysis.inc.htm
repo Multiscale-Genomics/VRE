@@ -1,0 +1,45 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Analyses</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;<strong>Global Analyses</strong> screen is designed to offer a very easy and intuitive way to access to <strong>base, base-pair</strong> and <strong>base-pair step</strong> analysis, either for the <strong>global set</strong> of trajectories stored in the database or for just a <strong>selection</strong> of interest (from the <a href="help.php?id=browsing">browse</a> page). 
+</p>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Bullets with different colors represent: <strong>bases</strong> (<font color=red>red</font>), <strong>base-pairs</strong> (<font color=green>green</font>) and <strong>base-pair steps</strong> (<font color=blue>blue</font>) in one-letter code, defined below:
+</p>
+
+<ul style="text-align: left;">
+<li>A: Adenine</li>
+<li>C: Cytosine</li>
+<li>G: Guanine</li>
+<li>T: Thymine</li>
+<li>U: Uracil</li>
+<li>R: Purine (Adenine and Guanine) </li>
+<li>Y: Pyrimidine (Cytosine, Thymine, Uracil)</li>
+<li>N: All the previous</li>
+</ul>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Each bullet show together with the <strong>base/base-pair/base-pair step</strong> code the <strong>number of appearances</strong> of it in the selected set of sequences.
+</p>
+
+<a href="htmlib/help/img/Analysis.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/Analysis.png" style="display: block; width: 100%; height:auto; " ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;<strong>Clicking on one of the bullets</strong> will open a new section at the bottom of the page with all the analyses stored in the database for the particular code. As the analyses are defined in a <strong>hierarchical way</strong>, user must select the desired analysis at each step, until finding the final values. <strong>Final results</strong> are shown in different ways, depending on the analysis (histograms, average values, 2D plots, etc.).
+</p>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;As an example, if a user is interested in the <strong><em>Slide</em> helical parameter</strong> values for the particular <strong>CG base-pair step</strong>, the steps to follow are described in the next figure: After clicking on the <strong>CG bullet</strong>, select <strong>Curves analysis</strong>, <strong>helical parameters</strong>, and finally <strong>Slide parameter</strong>.
+</p>
+
+<a href="htmlib/help/img/GlobalAnalysisScheme.png"><img sizes="(min-width: 41.25em) 38.75em,calc(100vw - 2.5em)" src="htmlib/help/img/GlobalAnalysisScheme.png" style="display: block; width: 100%; height:auto; border:1px solid grey;" ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;The values and plots for the final results depend on the type of analysis. Typically, a <strong>distribution</strong> is shown using the <strong>MD simulation time-averaged values</strong> for all the particular groups included in the system corresponding to the ones selected (e.g. CG base-pair step). When available, a vertical line is plotted together with the distribution histogram showing the <strong>experimental average value</strong> for the particular analysis (see <a href="help.php?id=expMD">Experimental Analyses section</a>). <br/><br/>
+&emsp;In analysis where resulting values are not just averages, as could be <strong>percentages</strong> or values per <strong>atom pairs</strong>, plots are represented accordingly (<strong>bar plots</strong> for percentages, <strong>boxplots</strong> for atom pairs).<br/><br/>
+&emsp;Next to the generated plot, a table is shown containing all the values together with their corresponding <strong>simulation id</strong>, <strong>group</strong> (base/base-pair/base-pair step) and <strong>group number</strong> to be identified inside the particular MD simulation sequence.
+</p>
+

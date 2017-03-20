@@ -1,0 +1,11 @@
+
+curl: (6) Couldn't resolve host 'idTraj:NAFlex_1dcw'
+
+curl: (6) Couldn't resolve host 'mask:name *'
+
+curl: (6) Couldn't resolve host 'frames:1:20'
+
+curl: (6) Couldn't resolve host 'format:dcd'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   192  100   192    0     0  23997      0 --:--:-- --:--:-- --:--:-- 23997100   192  100   192    0     0  23997      0 --:--:-- --:--:-- --:--:--     0

@@ -1,0 +1,79 @@
+<p style="font-family: Georgia, serif; font-size: 1.5em;" align="center"><strong>BIGNASim:</strong> A noSQL database structure and analysis portal for nucleic acids simulation data</p>
+
+<h4 STYLe="border-bottom: 1px solid; font-size: 1.2em;" align="justify">Estructure of the database</h4>
+
+<p align="justify" style="font-size: 1.0em;">BigNaSim is based on the combination two database engines, <a href="http://cassandra.apache.org/" target="_blank">Cassandra</a>  and <a href="https://www.mongodb.org">MongoDB</a>, and an adapted version of the analysis section of our Nucleic Acids MD portal NAFlex <a href="#R1">(1)</a>. For trajectory data manipulation, the platform uses MDPlus, an in-house python library that integrates MDAnalysis tools  <a href="#R2">(2)</a> with a developed Cassandra interface. </p>
+<p><strong>Cassandra. The trajectory subsystem.  </strong></p>
+<p>Cassandra <a href="#R3">(3)</a>  is a distributed and highly scalable key-value database with a strong user community. Cassandra implements a non-centralized architecture, based on peer-to-peer communication, in which all nodes of the cluster are able to receive and serve queries. Data is stored in tables by rows, which are identified by a key value chosen by the database user. In each row, users can add different attributes also identified by a chosen name. Each node of the cluster is assigned a token and it is responsible for hosting specific set of rows. The target node for each row is chosen through the partitioner algorithm and the decision is based on the row key and the node token. Cassandra also allows using compound keys and thus, more than one attributes to identify a row. In this case, the users have to specify which is the partition key (i.e. the attribute that will guide the node assignment) and which are the clustering keys. When a node receives a query, it finds out which node is responsible for each row involved in the query and partitions and forwards appropriately the data request. This means that data modelling has a huge influence on query performance (<a href="#R4">4</a>). For this reason, users are encouraged to define their data models considering which queries they are going to perform. Moreover, a common practice is to replicate data in different data models to accommodate different queries. Recently, in (<a href="#R5">5</a>) the authors propose a mechanism to alleviate users from this requirement. The Cassandra subsystem was organized in two tables </p>
+<p><strong><a name="TableS2"></a>Table S2. Cassandra  trajectory database structure.</strong></p>
+<table border="1" cellspacing="0" cellpadding="4" width="100%">
+  <tr>
+    <td width="50%" valign="top"><p><strong>Topology table    (idSimulation)</strong></p></td>
+    <td width="49%" valign="top"><p><strong>Trajectory table    (idSimulation)</strong></p></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><p>atom_num (Partition Key) <br>
+      atom_name <br>
+      atom_type<br>
+      chain_code<br>
+      residue_code<br>
+      residue_num </p></td>
+    <td width="49%" valign="top"><p>frame (Partition Key) <br>
+      atom_id (Clustering Key) <br>
+      x <br>
+      y <br>
+      z<br>
+      (Box size data is included in the same frame as    additional pseudo-atoms)</p></td>
+  </tr>
+</table>
+<p>Topology holds description of the molecular system using atom number as main indexing key, and storing the atom details, and the usual logical ways of grouping them (residue, chain). Trajectory table stores the coordinates themselves indexed using frame and atom numbers. Cassandra is a distributed system, and the selection of the partition key has a strong influence on the retrieval efficiency. In our implementation trajectory data is distributed using frame numbers what gives preference to the efficient retrieval of frame blocks. Indeed, by defining the frame number as Partition Key, we ensure that all the atoms' positions at a given snapshot are stored contingently in the same node. Additionally, each frame has a second level index on the atoms' identifier, so allowing efficient access to any subset of atoms.   We have chosen to prioritize frame access after analyzing the accessing pattern of the algorithms present in MDAnalysis, which, constrained by its interface, always access to trajectory a frame at a time. Consequently, with our model the existing algorithms can access to a trajectory in Cassandra seamless, as it was a common file. At the same time, algorithms that require data of only a subset of atoms, may be optimized by taking advantage of the second level indexing. To handle trajectory data in and out of the Cassandra subsystem, the use of the Python package MDPlus assures a full compatibility with existing molecular dynamics software. Still, when dealing with massive bulk loading of data into the database, the overhead introduced by the network communications and the data marshalling between different platforms can be a problem. For that reason, we developed a utility program that takes as input a trajectory file and converts it directly into SSTables, the Cassandra internal data format. I</p>
+<p><strong>MongoDB. The analysis and metadata subsystem </strong></p>
+<p>MongoDB database holds simulation metadata and pre-calculated analysis results. MongoDB is a fully flexibly engine and can store heterogeneous collections of documents. The internal structure of each document does need to be defined beforehand and can match the data structure used in the interacting software, thus simplifying the use of database documents and external analysis software. MongoDB also allows to partition data among different servers (data sharding), using any of the fields as partition key. In the present case, as analysis data requires both frame-based and atom-based access, we have chosen the complete document key (See Table S3) as sharding key.  Although MongoDB is configured with a single entry point, it processes access queries in parallel among the available nodes, so maximum efficiency is achieved when data is spread evenly among them.   A condition to make the database usable is a very consistent indexing schema, which allow an easy recovery of such documents. Table S3 shows the database collection list together with coordinates used to store the different objects. </p>
+<p><strong><a name="TableS3"></a>Table S3. Structure of main MongoDB collections</strong></p>
+<table border="1" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="218"><p><strong>MongoDB collection</strong></p></td>
+    <td width="361"><p><strong>Main Index components</strong></p></td>
+    <td width="294"><p><strong>Description</strong></p></td>
+  </tr>
+  <tr>
+    <td width="218"><p>simData</p></td>
+    <td width="361"><p>idSim</p></td>
+    <td width="294"><p>Simulation metadata, following a specifically defined <a href="http://mmb.irbbarcelona.org/BigNASim/help.php?id=onto">ontology</a> </p></td>
+  </tr>
+  <tr>
+    <td width="218"><p>analDefs</p></td>
+    <td width="361"><p>idSim, IdAnal</p></td>
+    <td width="294"><p>Analysis description, one document stored for every analysis result    item available. Analysis available could differ from one simulation to    another</p></td>
+  </tr>
+  <tr>
+    <td width="218"><p>groupDef</p></td>
+    <td width="361"><p>IdSim, (idGroup,nGroup)</p></td>
+    <td width="294"><p>Molecular groups (bases, base pairs, base-pair steps, molecular    fragments) defined in the simulated system</p></td>
+  </tr>
+  <tr>
+    <td width="218"><p>analData</p></td>
+    <td width="361"><p>idSim, (idGroup,nGroup), nFrame</p>
+        <p>(nFrame = 0: Averaged analysis data)<br>
+          (nGroup = 0: All system analysis)</p></td>
+    <td width="294"><p>Analysis results. The most appropriate data model for each analysis    type is used. </p></td>
+  </tr>
+  <tr>
+    <td width="218"><p>analBinFiles</p></td>
+    <td width="361"><p>Id. Above</p></td>
+    <td width="294"><p>Binary files with pre-calculated analysis results (plots, images,    etc.)</p></td>
+  </tr>
+</table>
+<strong><br clear="all">
+</strong>
+<p><a href="help.php?id=TableS4">Table S4</a> shows representative data objects as stored in the DB. MongoDB BigNaSim database is populated using in-house scripts parsing results from the series of well-known analysis software implemented in NAFlex <a href="#R1">(1)</a>. Definition of residues and standard groups (base-pair, base-pair steps) are generated automatically from the simulated sequence and stored in groupDef. Besides of predefined standard groups, the collection can store the definition of any relevant fragment of the molecular system. As a representative example or groupDef structure, Figure S2 shows the complete hierarchy derived from the central tetramer of a Drew-Dickerson dodecamer. </p>
+<p><img src="Figure S2" alt="Figure S2" width="816" height="452" /><br>
+<strong>Figure S3. Example of  fragment definition on the analysis database.</strong> Database entries in groupDef collection derived  from the central tetramer of a Drew-Dickerson dodecamer. Primary keys of each  data item are indicated. Arrows indicate a “container” relationship between  data objects. Simulation id has been deleted from keys for simplicity. Full  object structures are available in <a href="help.php?id=TableS4">Supplementary Table S4</a>.</p>
+<p>Complete structure of such objects can be found in <a href="help.php?id=TableS5">Supplementary Table S5</a>. Once fragments are defined, its id (composed by idSim, idGroup and nGroup, see <a href="file.php?id=TableS3">Table S3</a>) is used to index analysis results in analData and analBinFiles collections. As seen in Figure S3, and <a href="file.php?id=TableS5">Table S5</a>, the collection also holds hierarchic relationships indicating the components of each fragment from the lower level, allowing to navigate from any group down to its composing parts and to the individual bases (see <a href="help.php?id=UCase4">use case 4</a>, for an example of such usage).  This would allow to link together analysis corresponding to the related hierarchical levels. At the level of residue, the analysis subsystem is consistent with data hold in the trajectory database (i.e. idGroup + nGroup corresponds to residue_code + residue_num).  As shown in Table S2, analysis results are again stored in a 3 axes space: Simulation, the analysed group (split in group id and sequence number for convenience), and frame number. This layout will easily allow to retrieve any set of results (helical parameters for instance) for any given set of groups and frames and perform the appropriate post-process, in a similar way as the corresponding trajectory data can be retrieved from the Cassandra subsystem. See examples of use below, for examples of MongoDB JavaScript code usage. Any combination of such analysis results can be obtained from this structure. Also, trajectory long averages and analysis spanning the whole system can be stored in the same structure. Analysis that may lead to non-numerical results (XY plots, 3D grids, etc.) are also stored under the same coordinate system, although they are kept in a separate collection (analBinFiles) for efficiency reasons.  This database layout could be extended without modification to any new analysis type, after the appropriate mapping of each individual data item in the group/frame axes.  Additionally, the GridFS system provided by MongoDB has been used to handle file based data transfers between application modules, and to hold the temporary user space used for downloading data. </p>
+<p>References</p>
+<p><a name="R1"></a>1.           Hospital, A., Faustino, I.,  Collepardo-Guevara, R., Gonzalez, C., Gelpi, J.L. and Orozco, M. (2013) NAFlex:  a web server for the study of nucleic acid flexibility. <em>Nucleic Acids Research</em>, <strong>41</strong>,  W47-W55.<br>
+  <a name="R2"></a>2.           Michaud-Agrawal,  N., Denning, E.J., Woolf, T.B. and Beckstein, O. (2011) Software News and  Updates MDAnalysis: A Toolkit for the Analysis of Molecular Dynamics  Simulations. <em>Journal of Computational  Chemistry</em>, <strong>32</strong>, 2319-2327.<br>
+  <a name="R3"></a>3.           Lakshman, A. and  Malik, P. (2010), SIGOPS Oper. Syst. Rev, Vol. 44, pp. 35-40.<br>
+  <a name="R4"></a>4.           Hernandez, R.,  Cugnasco, C., Becerra, Y., Torres, J. and Ayguade, E. (2015), Proceedings of  the 23rd Euromicro International Conference on Parallel, Distributed, and  Network-Based Processing, pp. 288-295.<br>
+  <a name="R5"></a>5.           Hernandez, R.,  Becerra, Y., Torres, J. and Ayguade, E. (2015), Proceedings of the  International Conference on Computational Science, ICCS 2015, pp. 2822-2826.<br>
+</p>

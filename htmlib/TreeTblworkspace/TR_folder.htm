@@ -1,0 +1,44 @@
+<tr data-tt-id="##tree_id##" >
+<td>
+	 <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+		<input type="checkbox" class="checkboxes foldercheck" value="1"       name="directory" id="##_id##"/>
+		 <span></span>
+	 </label>
+</td>
+<td>
+	##filename##
+	<!--  span style="font-weight:bold;" search="yes"   type="project" -->
+	<span class="expand_info" onclick="expandInfo(this)"></span>
+	<div class="extra_info">
+		<table style="border:none;border-left:dashed 1px gray;margin:10px 22px;padding:0 3px;">
+			<tr><td>Description:</td><td>##description##</td></tr>
+			##tool##
+			##inPaths##
+			##execDetails##
+  		</table>
+	</div>
+</td>
+<td>&nbsp;</td>
+<td>##filename##</td>
+<td>##mtime##</td>
+<td>##size##</td>
+<td>&nbsp;</td>
+<td>
+	<div class="btn-group">
+		<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
+			<i class="fa fa-angle-down"></i>
+		</button>
+		<ul class="dropdown-menu pull-right" role="menu">
+			<li><a href="javascript:deleteFolder('##_id_URL##');"><i class="fa fa-trash-o"></i> Delete Folder</a></li>
+			<li><a href="workspace/workspace.php?op=downloadtgz&fn=##_id_URL##"><i class="fa fa-download"></i> Download Folder</a></li>
+			##viewResultsLink##
+			##rerunLink##
+		</ul>
+	</div>
+</td>
+<td>-1000</td>
+<td>##mtime_parent##</td>
+<td>##size_parent##</td>
+</tr>
+
+

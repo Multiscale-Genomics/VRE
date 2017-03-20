@@ -1,0 +1,112 @@
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+    The example shows the procedure to extract information from the <strong>Global Analyses</strong> section of <strong>BIGNASim</strong> portal. The simple study shown here can be extended to a real use case: the importance of flanking nucleotides in the flexibility of base-pair steps. The effect of the <strong>tetranucleotide environment</strong> in the sequence-dependent polymorphism of particular base-pair steps has been the target of recent studies. The <strong>CG base pair step</strong> used for example, shows an interesting bimodal behaviour in one of the six helical <a href="images/helical_bpstep.png" target="_blank">base-pair step parameters</a>: <strong>Twist</strong> <a href="SuppMaterial.php?id=references#R11">(11)</a>. In the study, authors claim that the effect of the flanking bases in the <strong>CG base pair step</strong> is crucial for the existence of two different conformers: <strong>High Twist</strong> (HT: ~40º) and <strong>Low Twist</strong> (LT: ~ 20º). Behaviors for each of the 16 possible tetramers including <strong>CG</strong> are reported. To illustrate the power of <strong>BIGNASim</strong> database and its interface, two analysis have been chosen: <i>ACGC</i> showing almost no bimodality, and <i>GCGA</i> showing a clear bimodality. The first step uses the <strong>Search section</strong> of the portal &#8594; Search by sequence (GCGA).
+</p>
+
+<img src="htmlib/help/img/headerBIGNASim_Search.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<img src="htmlib/help/img/Tut3_GCGA_Search.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p>Javascript equivalent code</p>
+<pre>
+// Direct search of GCGA fragments on both strands
+SimulationList = db.simData.find({$or: [{'sequence':/GCGA/}, {'rev-sequence': /GCGA/}]})
+// Alternatively search both on only one strand using complementarity
+SimulationList = db.simData.find({'sequence':/(GCGA|TCGC)/})
+</pre>
+
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+    In this case, more than 40 simulations containing this particular fragment are available for selection. 
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Results.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+    <strong>Retrieve Analysis for the selected simulations</strong> at the bottom of the page, leads to a <strong>Global Analyses</strong> page, showing the results for the particular <strong>GCGA</strong> fragment. Since the interest is studying the possible bimodality showed by the <strong>CG</strong> base pair step in its <strong>Twist</strong> parameter when it is surrounded by G and A (<strong>G</strong>CG<strong>A</strong>), the <strong>CG</strong> button should be selected:
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Analysis.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p>Javascript code hint</p>
+<pre>
+// Available data for all CpG bpstep (in any simulation, and any sequence
+// position) can be retrieved at using just its idGroup: CGCG
+DataforAllCpG = db.analData.find( {'_id.idGroup' : 'CGCG} )
+// For a simulation SIM and position POS
+Datafor1CpG = db.analData.find( {'_id.idSim': SIM, '_id.nGroup': POS, '_id.idGroup' : 'CGCG} )
+</pre>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+    Twist data can be obtained from <strong>"Curves &#8594; Helical_bpstep"</strong>:
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Analysis_Curves.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<img src="htmlib/help/img/Tut3_GCGA_Analysis_Curves_BPS.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+    <strong>BIGNASim</strong> in its current version contains two kinds of analysis for each of the <strong>six helical base-pair step parameters</strong>: one with the values for every snapshot of all the selected simulations, and one with the <strong>time-averaged</strong> values for each simulation. To show the bimodality, histogram with all the values for the <strong>Twist</strong> parameter should be chosen: 
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Analysis_Curves_Twist.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+    In the histogram plot, the average is represented as a vertical blue line, and the experimental value, used as reference, is represented as a vertical red line (see <a href="SuppMaterial.php?id=usecase5" target="_blank">Example of use 5</a> for a detailed description of the use of experimental data).
+</p>
+
+<img src="htmlib/help/img/Tut3_GCGA_Twist_plot.png" style="display: block; width: 70%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p> Javascript code</p>
+<pre>
+// Code to retrieve twist values for a complete trajectory for a given Simulation SIM, CpG POS
+twistData_C = db.analData.find( 
+    {'_id.idSim': SIM, '_id.nGroup': POS, '_id.idGroup': 'CGCG'}
+).sort('_id.frame':1};
+while (twistData_C.hasNext() {
+    Data = twistData_c.next();
+    printjson (Data._id.frame + ' ' + Data.CURVES.helical_bpstep.twist);
+}
+</pre>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+    The histogram shows two well defined populations, centered at ~25º and ~35º, in good agreement with the previously presented study <a href="SuppMaterial.php?id=references#R11">(11)</a>. To analyse the influence of the surrounding bases in the <strong>CG</strong> base pair step (tetramer influence), the procedure will be repeated seeking for the fragment <strong>ACGC</strong>. (<i>Search by Sequence &#8594; Select All &#8594; Open Analysis for the selected simulations</i>). 
+</p>
+
+<img src="htmlib/help/img/Tut3_ACGC_Analysis.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+    And <i>CG &#8594; Curves &#8594; Helical_bpstep Analysis &#8594; Twist Analysis</i>. 
+</p>	
+
+<img src="htmlib/help/img/Tut3_ACGC_Twist_plot.png" style="display: block; width: 70%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+    The new histogram do seems to follow a <strong>normal distribution</strong>, although a small shoulder to the <strong>low twist</strong> conformation can still be identified. The clear difference between the two plots shows that the <strong>GCGA</strong> tetramer shows a clear bimodality, whereas the <strong>ACGC</strong> tetramer is more inclined to be in a <strong>High Twist</strong> conformation. Additionally, raw histogram data can be downloaded for further analysis.
+</p>
+<p>Complete Javascript code to retrieve twist data from ACGC tetramers</p>
+<pre>
+SEQ = 'ACGC';
+RSEQ = 'GCGT'; 
+// Search for simulations bearing ACGC
+SimualtionList = db.simData.find(
+    {$or: [
+        {'sequence': {$regex: SEQ}},
+        {'rev-sequence': {$regex: RSEQ}},
+        {'_id':1}
+    ]}
+).toArray(); 
+// search for CpG fragments
+FragsList = db.groupDef.find(
+    {'_id.idSim': {$in: SimulationList}, 'class': 'CGCG'}
+).toArray()
+// Iterate over fragments
+for (i=0; i < FragsList.length; i++) {
+    twistData_c = db.analData.find( 
+        {'_id.idSim': FragsList[i]._id.idSim,
+        '_id.nGroup': FragsList[i]._id.n,
+        '_id.idGroup' : 'CGCG}
+    ).sort('_id.frame':1};
+    while (twistData_C.hasNext() {
+        Data = twistData_c.next();
+        printjson (Data._id.frame + ' ' + Data.CURVES.helical_bpstep.twist);
+    }
+}
+</pre>

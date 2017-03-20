@@ -1,0 +1,12 @@
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/bin/gff3_from_fasta
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/lib/perl5/Bio/GFF3/LowLevel.pm
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/lib/perl5/Bio/GFF3/LowLevel/Parser.pm
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/lib/perl5/Bio/GFF3/LowLevel/Parser/1_0_backcompat.pm
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/lib/perl5/Bio/GFF3/Transform/FromFasta.pm
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/lib/perl5/Bio/GFF3/Transform/SyncDirectives.pm
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/man/man1/gff3_from_fasta.1
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/man/man3/Bio::GFF3::LowLevel.3pm
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/man/man3/Bio::GFF3::LowLevel::Parser.3pm
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/man/man3/Bio::GFF3::LowLevel::Parser::1_0_backcompat.3pm
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/man/man3/Bio::GFF3::Transform::FromFasta.3pm
+/data2/www/inb/JBrowse/JBrowse-1.11.6/extlib/man/man3/Bio::GFF3::Transform::SyncDirectives.3pm

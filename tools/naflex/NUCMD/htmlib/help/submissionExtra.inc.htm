@@ -1,0 +1,161 @@
+<h4 style="text-align:justify;border-bottom: 1px solid; font-size: 1.2em;">Metadata for deposited trajectories</h4>
+
+<p style="text-align:justify;font-size: 1.0em; white-space: pre-wrap;">
+All trajectory data submitted to <strong>BIGNASim</strong> needs to be accompanied by its metadata. It can be easily generated through the web site forms, following the standard deposition procedure. However, a more authomatic way to produce such information is also made available though the use of metadata files. They are CSV files composed by:</p>
+
+<ul style="padding-left: 50px;text-align:justify;">
+    <li><u>BIGNASim ontology terms</u>: a single <a href="SuppMaterial.php?id=ontology" target="_blank">identifier</a> per line is enough, though the label can also be included on the second column for the sake of clarity</li>
+    <li><u>Specific tags</u></li>
+</ul>
+<p style="text-align:justify;font-size: 1.0em; white-space: pre-wrap;">
+The list of accepted tags are the following:
+</p>
+<table>
+<!---
+<tr>
+    <td>submissionID</td>
+    <td>Accession number for the submission petition. Format: BNS_[datasetName]_[4digits]</td>
+</tr>
+---!>
+<tr>
+    <td>datasetName</td>
+    <td>Acronim for a dataset which groups one or several trajectory files. Format: alphanumeric chain of 4&gt;length&gt;7</td>
+<tr>
+    <td>datasetDescription</td>
+    <td>Short title or description for the dataset</td>
+</tr>
+<!---
+<tr>
+    <td>submissionState</td>
+    <td>Status of the submission. Options are &quot;READY TO BE SENT&quot;: submission is not yet created nor data stored, &quot;COMITTED&quot;: data has been sent and submitted files blocked, &quot;EDITABLE&quot;:validation procedure found issues and files are unlooked to allow user modify them, &quot;ACCEPTED&quot;:validation is passed and data accepted to be part of BIGNASim, &quot;REJECTED&quot;: submission files are considered inadequate, &quot;FAILED&quot;: errors occurred during the submission process</td>
+</tr>
+---!>
+<tr>
+    <td>publDateSys</td>
+    <td>Method to define the dataset publication date. Options are &quot;release&quot;: submitted data will be made public immediately after validation, &quot;hold&quot;: data will be on-hold until [publDate] is reached</td>
+</tr>
+<tr>
+    <td>publDate</td>
+    <td>Date on which submitted data will be release given [publDateSys]=&quot;hold&quot;. Format: yyy/mm/dd</td>
+</tr>
+<tr>
+    <td>pubSys</td>
+    <td>Method to define how the dataset reference publication is given. Options are &quot;document&quot;: the dataset is referenced by uploaded files. &quot;reference&quot;: the dataset is referenced by a public study. [pubTitle], [pubAuth], [pubJourn], [pubYear], [pubVol] and [pubDOI] require to be specified</td>
+</tr>
+<tr>
+    <td>pubTitle</td>
+    <td>Title of the dataset reference publication. Mantadory if [pubSys]=&quot;reference&quot;</td>
+</tr>
+<tr>
+    <td>pubAuth</td>
+    <td>List of authors (comma separated) if the dataset reference publication. Mantadory if [pubSys]=&quot;reference&quot;</td>
+</tr>
+<tr>
+    <td>pubJourn</td>
+    <td>Journal where the dataset reference publication is published. Mantadory if [pubSys]=&quot;reference&quot;</td>
+</tr>
+<tr>
+    <td>pubYear</td>
+    <td>Year of the dataset reference publication year. Mantadory if [pubSys]=&quot;reference&quot;</td>
+</tr>
+<tr>
+    <td>pubVol</td>
+    <td>Volume of the Journal where the dataset reference publication is published. Mantadory if [pubSys]=&quot;reference&quot;</td>
+</tr>
+<tr>
+    <td>pubDOI</td>
+    <td>DOI identifier for the the dataset reference publication. Mantadory if [pubSys]=&quot;reference&quot;</td>
+</tr>
+<tr>
+    <td>trajFormat</td>
+    <td>Format of the trajectory file uploaded. Options are &quot;traj_crd&quot;: AMBER CRD, &quot;traj_dcd&quot;: CHARMM/NAMD DCD, &quot;traj_cdf&quot;:  AMBER NetCDF, &quot;traj_gro&quot;: AMBER BINPOS, &quot;traj_xtc&quot;: Gromacs XTC.</td>
+</tr>
+<tr>
+    <td>topFormat</td>
+    <td>Format of the topology file uploaded. Options are &quot;top_pdb&quot;: PDB, &quot;top_prmtop&quot;: AMBER PRMTOP, &quot;top_psf&quot;: NAMD PSF, &quot;top_top&quot;: GROMACS TOPi, &quot;top_itp&quot;: GROMACS ITP, &quot;top_rtp&quot;: GROMACS RTP</td>
+</tr>
+<tr>
+    <td>PDB</td>
+    <td>Protein Data Bank identifier for the reference experimental structure of the trajectory</td>
+</tr>
+<tr>
+    <td>NDB</td>
+    <td>Nucleic Data Bank identifier for the reference experimental structure of the trajectory</td>
+</tr>
+<tr>
+    <td>ligandNames</td>
+    <td>Comma separated list of ligands included in the trajectory</td>
+</tr>
+<tr>
+    <td>additionalSolvent</td>
+    <td>Comma separated list of additional solvent molecules of the trajectory</td>
+</tr>
+<tr>
+    <td>counterions</td>
+    <td>Comma separated list of counterions molecules and their concentrations</td>
+</tr>
+<tr>
+    <td>trajLength</td>
+    <td>Total trajectory length in nanoseconds. If the trajectory is splitted into multiple files, the sum of them.</td>
+</tr>
+<tr>
+    <td>frames</td>
+    <td>Number of frames</td>
+</tr>
+<tr>
+    <td>frameStep</td>
+    <td>Time step taken between frames in nanoseconds</td>
+</tr>
+<tr>
+    <td>trajTemperature</td>
+    <td>Trajectory temperature in kelvin degrees</td>
+</tr>
+<tr>
+    <td>comments</td>
+    <td>Any comment valuable for the submission that may help to the correct classification of the data</td>
+</tr>
+<tr>
+    <td>rmsd</td>
+    <td>all-heavy atoms mass weighted RMSD (&#37;)</td>
+</tr>
+<tr>
+    <td>rmsd_bp</td>
+    <td>all-heavy atoms mass weighted RMSD per base pair (&#37;/bp)</td>
+</tr>
+<tr>
+    <td>Rgyr</td>
+    <td>Radius of gyration (&#37;/bp)</td>
+</tr>
+<tr>
+    <td>lostWC</td>
+    <td>Percentage of lost Watson and Crick bonds</td>
+</tr>
+<tr>
+    <td>lostContacts</td>
+    <td>Percentage of lost 3D contacts</td>
+</tr>
+<tr>
+    <td>fraying</td>
+    <td>Presence of fraying. Options are &quot;yes&quot;, &quot;no&quot;</td>
+</tr>
+<tr>
+    <td>avgTwist</td>
+    <td>Global average Twist (degrees)</td>
+</tr>
+<tr>
+    <td>avgRoll</td>
+    <td>Global average Roll (degrees)</td>
+</tr>
+<tr>
+    <td>minorGrooveSize</td>
+    <td>Minor groove dimensions . Format: width x depth</td>
+</tr>
+<tr>
+    <td>majorGrooveSize</td>
+    <td>Major groove dimensions . Format: width x depth</td>
+</tr>
+<tr>
+    <td>grooveSizeMethod</td>
+    <td>Method use to compute the groove dimensions</td>
+</tr>
+</table>

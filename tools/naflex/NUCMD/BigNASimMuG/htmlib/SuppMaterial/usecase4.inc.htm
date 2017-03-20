@@ -1,0 +1,67 @@
+<p><strong>Analysis  using fragments hierarchy. Correlation between CpG twist and ζ torsions.</strong></p>
+<p>The analysis  of nucleic acids flexibility involves a large number of properties, from  helical parameters, to hydrogen bonding or stacking energies, dihedral  torsions, and distances, among others. Expert users usually combine such  analyses in consistent ways, as they are highly correlated, and the combined  study gives additional insight in the basis of conformational shifts. This practice requires to combine analyses  done at different levels, the base-pair step (two contiguous base pairs), like  twist or roll and analysis at the base pair level, like the hydrogen bonding  pattern, or backbone torsions of the involved nucleotides. An expert DNA  modeller has no problem on doing this manually, but it is a tedious and error-prone  activity. <strong>BIGNASim</strong> includes the hierarchic relationships between sequence  fragments (from individual bases to bp-steps), taken automatically (see <a href="SuppMaterial.php?id=FigureS2">Figure S2</a>  and <a href="SuppMaterial.php?id=TableS5">Table S5</a>) from the simulation topology, and can be used to  perform this kind of analysis in a straightforward way. We present here the  necessary pipeline to analyse the correlation between CpG step twist and the ζ  torsions of the neighbouring nucleotides. The high twist/low twist  conformational change in the d(CpG) base pair step is one of the most  surprising sources of polymorphism in B-DNA. A detailed study of the phenomena (<a href="SuppMaterial.php?id=references#R11">11</a>) is available. The  study relates the twist polymorphism with the BI/BII transitions related to ζ/ε  backbone torsions. The key correlation analysis (See Figure 3 on reference (<a href="SuppMaterial.php?id=references#R11">11</a>) implies to obtain the  Twist helical parameter of the CpG bp-step and the ζ torsion of the two G bases  at 3’ of the CpG step. This specific analysis could be done through the portal, obtaining the twist and ζ as described in the previous examples, and downloading the corresponding raw data. However to illustrate the power of the <strong>MongoDB database</strong> structure the following Javascript code shows the pipeline required to obtain such combined set of data from <strong>BIGNASim</strong> database. 
+<p><strong>Javascript code pipeline to  generate a combined analysis of a CpG base pair step Twist and </strong>ζ<strong> torsions of 3’ G  nucleotides in NAFlex_DDD_800ns simulation</strong>.</p>
+<pre>
+//
+//Step 1. Locate available CpG bp-steps
+// CpG bpsteps are indicated with a idGroup of CGCG. CpG is symmetrical, but in other 
+// cases both strands should be considered. The “Class” field combines both possible 
+// orientations.
+
+var IDSIM = "NAFlex_DDD_800ns";
+var BPStep = "CGCG";
+var BP1 = "CG";
+
+Bpstps = db.groupDef.find({'_id.idSim': IDSIM, 'class': BPStep}).sort({'_id.n': 1}).toArray();
+
+//Alternatively search can be extended to “All simulations” with CG bpSteps available 
+//Bpstps = db.groupDef.find({'class': BPStep}).sort({'_id.n': 1}).toArray();
+
+var TwCG = [];
+var ZetaW = [];
+var ZetaC = [];
+printjson(Bpstps.length + ' ' + BPStep + ' found')
+
+// Iterate over all CpG steps in the sequence.
+for (i = 0; i < Bpstps.length; i++) {
+    IDSIM = Bpstps[i]._id.idSim;
+
+//Step 2. Obtain relevant sequence positions. 
+// CGpos: Sequence position of first nucleotide in Watson strand. Used in the _id.
+// G1pos: Sequence position of the Watson 3'G. n+1 nucleotide
+// G2pos: Sequence position of the Crick 3'G. Corresponds to the complementary 
+//        nucleotide on the first (n) base pair in the CpG step.
+//        “comps” field relates CG base pair with its component nucleotides, in 
+//        this case comps[1] is the G nucleotide.   
+    CGpos = Bpstps[i]._id.n;
+    G1pos = CGpos + 1;
+    G2pos = db.groupDef.findOne({'_id.n': CGpos, '_id.idSim': IDSIM, '_id.idGroup': BP1}).comps[1].n;
+
+//Step 3. Collect twist values ordered by frame number. 
+    TwCG[i] = db.analData.find(
+            {'_id.idSim': IDSIM,
+                '_id.nGroup': CGpos,
+                '_id.idGroup': Bpstps[i]._id.idGroup},
+    {'CURVES.helical_bpstep.twist': 1,
+        'CURVES.helical_bpstep.twist_avg': 1}).sort({'_id.frame': 1}).toArray();
+// Step 4. Obtain ζ torsions values ordered by frame number
+    ZetaW[i] = db.analData.find(
+            {'_id.idSim': IDSIM,'_id.nGroup': G1pos,'_id.idGroup': 'G'},
+    {'CURVES.backbone_torsions.zeta': 1}).sort({'_id.frame': 1}).toArray();
+    ZetaC[i] = db.analData.find(
+            {'_id.idSim': IDSIM,'_id.nGroup': G2pos, '_id.idGroup': 'G'},
+    {'CURVES.backbone_torsions.zeta': 1}).sort({'_id.frame': 1}).toArray();
+// Step 4.Output “Frame Twist G1Zeta G2Zeta”
+    for (i = 0; i < TwCG.length; i++) {
+        printjson(Bpstps[i]._id.idSim + ' ' + Bpstps[i]._id.idGroup + ' ' + Bpstps[i]._id.n)
+        for (k in TwCG[i]) {
+            if (TwCG[i][k]._id.frame > 0) {
+                printjson(TwCG[i][k]._id.frame + ' ' + 
+                    TwCG[i][k].CURVES.helical_bpstep.twist + ' ' +
+                    ZetaW[i][k].CURVES.backbone_torsions.zeta + ' ' +
+                    ZetaC[i][k].CURVES.backbone_torsions.zeta);
+            }
+        }
+    }
+}
+</pre>

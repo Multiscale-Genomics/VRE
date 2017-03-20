@@ -1,0 +1,21 @@
+/* PYDOCK DNA */
+
+.help-block-form { color: #737373;margin-top:5px; }
+.display-block { display:block; }
+
+.bootstrap-switch .bootstrap-switch-label { color:#ccc; }
+
+#tablePDNAD { display:none;  } 
+#tablePDNAD th, #tablePDNAD td { text-align:center;font-size:10px }
+#tablePDNAD th { background-color:#779abd; color:#fff; border-left:1px solid #fff; }
+#tablePDNAD.table-striped>tbody>tr:nth-of-type(odd) { background-color: #e9f4ff; }
+
+/* NAFLEX */
+/*.select2-container--default.select2-container--focus .select2-selection--multiple { border: solid #c2cad8 1px; }*/
+
+/* ND */
+
+.nd-accordion { background:#fafafa; }
+.nd-accordion img, .nd-accordion table { border:1px solid #e7ecf1; }
+
+

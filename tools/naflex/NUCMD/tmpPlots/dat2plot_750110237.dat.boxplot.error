@@ -1,0 +1,62 @@
+"J1p2p-DNA","J1p2p-RNA","J1p2pp-DNA","J2p3p-DNA","J2p3p-RNA","J2pp3p-DNA","J3p4p-DNA","J3p4p-RNA"
+"J1p2p-DNA","J1p2p-RNA","J1p2pp-DNA","J2p3p-DNA","J2p3p-RNA","J2pp3p-DNA","J3p4p-DNA","J3p4p-RNA"
+"n1","n2","n3","n4","n5","n6","n7","n8"
+n1,n2,n3,n4,n5,n6,n7,n8
+
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(Cairo)
+> CairoPNG(file="dat2plot_750110237.dat.png",width=1000,height=600)
+> par(cex=1,xpd=NA,mgp = c(4,1,0),mar = c(7.0,5.1,4.1,2.1))
+> n1 <- read.table("dat2plot_750110237.dat.J1p2p-DNA.HB.dat")
+> n1 <- n1[[1]]
+> n1 <- n1[!n1 %in% boxplot.stats(n1)$out]
+> n2 <- read.table("dat2plot_750110237.dat.J1p2p-RNA.HB.dat")
+> n2 <- n2[[1]]
+> n2 <- n2[!n2 %in% boxplot.stats(n2)$out]
+> n3 <- read.table("dat2plot_750110237.dat.J1p2pp-DNA.HB.dat")
+> n3 <- n3[[1]]
+> n3 <- n3[!n3 %in% boxplot.stats(n3)$out]
+> n4 <- read.table("dat2plot_750110237.dat.J2p3p-DNA.HB.dat")
+> n4 <- n4[[1]]
+> n4 <- n4[!n4 %in% boxplot.stats(n4)$out]
+> n5 <- read.table("dat2plot_750110237.dat.J2p3p-RNA.HB.dat")
+> n5 <- n5[[1]]
+> n5 <- n5[!n5 %in% boxplot.stats(n5)$out]
+> n6 <- read.table("dat2plot_750110237.dat.J2pp3p-DNA.HB.dat")
+> n6 <- n6[[1]]
+> n6 <- n6[!n6 %in% boxplot.stats(n6)$out]
+> n7 <- read.table("dat2plot_750110237.dat.J3p4p-DNA.HB.dat")
+> n7 <- n7[[1]]
+> n7 <- n7[!n7 %in% boxplot.stats(n7)$out]
+> n8 <- read.table("dat2plot_750110237.dat.J3p4p-RNA.HB.dat")
+> n8 <- n8[[1]]
+> n8 <- n8[!n8 %in% boxplot.stats(n8)$out]
+> title <- c("J1p2p-DNA","J1p2p-RNA","J1p2pp-DNA","J2p3p-DNA","J2p3p-RNA","J2pp3p-DNA","J3p4p-DNA","J3p4p-RNA")
+> z <- c("n1","n2","n3","n4","n5","n6","n7","n8")
+> list <- lapply(z,get, envir=environment())
+> names(list) <- title 
+> data <- list(n1,n2,n3,n4,n5,n6,n7,n8)
+> final <- data[order(-sapply(data, median))]
+> title2 <- title[order(-sapply(data, median))]
+> names(final)<-title2
+> boxplot(final,ylab="J-Coupling (Hz)",xlab="",main="NMR J-Coupling",las=2,cex.names=1.2,cex.axis=1.2)
+> dev.off()
+null device 
+          1 
+> 
