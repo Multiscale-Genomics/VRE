@@ -1,0 +1,92 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Frequently Asked Questions</h4>
+
+<section class="faq-section">
+    <input type="checkbox" id="q1">
+    <label for="q1">How many snapshots do you store for each simulation?</label>
+    <p>	To allow an easy but still representative data download, data directly available from the web portal consist on <strong>5,000 frames</strong> of dry, imaged trajectories. 
+
+	Downloadable trajectories are <strong>fully consistent</strong> with the pre-calculated analysis available at the web site. 
+
+	<strong>Full trajectories</strong> are available <strong>on-request</strong>.
+    </p>
+</section>
+
+<section class="faq-section">
+    <input type="checkbox" id="q2">
+    <label for="q2">Why do you use two different noSQL databases?</label>           
+    <p>
+	In this project we have chosen two of such database managers: <strong>Cassandra</strong>, to store trajectory data and <strong>MongoDB</strong>, to store analysis results and metadata.
+
+	The two kind of database managers show characteristics that are appropriate for the <strong>BIGNASim DB</strong> purposes.
+
+	On one side, <strong>Cassandra</strong> is a <strong>column-oriented database</strong>, especially efficient in the retrieval of key-value pairs. Simplicity of data structure is key to boost that retrieval efficiency. This makes it ideal to store trajectory data that is composed by a uniform series of Cartesian coordinates that should be obtained in well-defined data blocks.
+
+	On the other hand, <strong>MongoDB</strong> is a <strong>document oriented database</strong>, where data should not follow a rigid schema. MongoDB may store from single values, to 2D or 3D data, or even full length trajectory videos within a single document. Additionally, MongoDB provides GridFS, a file-system like platform to store files in its original format. Its flexibility, especially with respect to the structure of the stored documents, allows using a common data structure both in the database and in the analysis 
+
+	Capacity of both systems scales horizontally and they may coexist in the same computer equipment.
+    </p>
+    <p style="text-align:center"><a href="http://cassandra.apache.org/" target="_blank"><img src="images/cassandra_logo_small.png" style="height: 70px; width:125px; padding-bottom: 25px;"></img></a><a href="https://www.mongodb.org/" target="_blank"><img src="images/MongoDB_Logo_Full.png" style="height: 105px; width:230px;"></img></a>
+    </p>   
+</section>
+
+<section class="faq-section">
+    <input type="checkbox" id="q3">
+    <label for="q3">Can I upload my own simulation?</label>
+    <p> <strong>BIGNASim</strong> server offers the possibility to upload <strong>nucleic acids molecular dynamics trajectories</strong> using our <a href="help.php?id=datamanager">user workspace</a>. To upload a trajectory, user must be registered in myBIGNASim as an uploader user (see <a href="help.php?id=submission">help section</a>). 
+
+	This service is still under development, and some of the functionalities might still not be enabled. 
+    </p>
+</section>
+
+<section class="faq-section">
+    <input type="checkbox" id="q4">
+    <label for="q4">How many simulations do you have stored? </label>
+    <p>	The number of simulations stored, types of nucleic acid structures, simulation lengths, etc. are graphically summarized in the <a href='stats.php'>statistics section</a> of <strong>BIGNASim portal</strong>. 
+
+	In any case, <strong>BIGNASim</strong> is already, with a large difference, the largest database of nucleic acid trajectories, and we plan to continue extending it.
+    </p>
+</section>
+
+<section class="faq-section">
+    <input type="checkbox" id="q5">
+    <label for="q5">Which simulations can I find in the database? </label>
+    <p>	Nucleic Acids simulations stored in this initial stage of <strong>BIGNASim</strong> database come mostly from trajectories prepared during the development and validation of the <a href='http://mmb.pcb.ub.es/www/ParmBSC1' target='_blank'>parmBSC1 forcefield</a> in our group.
+
+	However, its structure is open to grow to include new simulations and analysis strategies: the system is neither limited in size, as database managers scale horizontally, nor complexity, as <strong>MongoDB</strong> offers a fully flexible data schema.
+    </p>
+</section>
+
+<section class="faq-section">
+    <input type="checkbox" id="q6">
+    <label for="q6">Do you plan to have more representation of RNA molecules? </label>
+    <p>	As explained in the previous question, simulations stored in this initial stage of <strong>BIGNASim</strong> database come mostly from trajectories prepared during the development and validation of the <a href='http://mmb.pcb.ub.es/www/ParmBSC1' target='_blank'>parmBSC1 forcefield</a> in our group. As this forcefield was designed to work with <strong>DNA</strong> structures, most of the simulations stored in the database are from <strong>DNA</strong> molecules. 
+
+	However, the next step in the <a href='http://mmb.pcb.ub.es/www/ParmBSC1' target='_blank'>parmBSC1 forcefield</a> project is the possibility to use it in <strong>RNA</strong> simulations, so in a short period of time <strong>BIGNASim</strong> will store the complete set of RNA simulations used in this new benchmarking, covering most of the representative <strong>RNA</strong> motifs. For that, we are already working on new <strong>RNA-specific</strong> analysis to integrate in the server, and we have already enriched our <a href="help.php?id=onto">Nucleic Acids Ontology</a> with new <strong>RNA-specific</strong> terms.
+    </p>
+</section>
+
+<section class="faq-section">
+    <input type="checkbox" id="q7">
+    <label for="q7">Can I install <strong>BIGNASim</strong> infrastructure in my own lab? </label>
+    <p>	We should be aware that <strong>BIGNASim</strong> is a large and complex system, including a production installation of two <strong>noSQL databases</strong>, two <strong>web servers</strong>, one public, and another for internal communications, and a complex set of <strong>analysis software</strong>. Also, a significant amount of disk space is required to handle temporary data. It is almost impossible to design an installation procedure that covers all the system, and does not need a skilled system administrator. 
+
+	However, we are preparing a series of pre-packed <strong>Docker images</strong> (DB and analysis site, analysis software), covering all analysis functionality, which would allow most users to set a local installation, of course with limited capacity. We are still testing the procedure, but detailed information about the download and installation procedure will be available from the site.
+ 
+	We understand that <strong>BIGNASim</strong> infrastructure may have a value not only to share final results, but also to perform in-house analysis, or simply to store data in an ordered manner. Moreover, in the present context, most major journals require for public sharing of results, like is customary with <strong>PDB</strong>, or <strong>sequence databases</strong>. <strong>BIGNASim</strong> will be an excellent place to do so. 
+    </p>
+</section>
+
+<section class="faq-section">
+    <input type="checkbox" id="q8">
+    <label for="q8">Should I register in myBIGNASim? </label>
+    <p><strong>BIGNASim</strong> user workspace was designed only to keep users' data in a temporary basis to facilitate downloading of potentially large trajectories or meta-trajectories, providing a link to recover this temporary workspace at any moment (within a browser session). Thus, browsing as an <strong>Anonymous user</strong> is completely fine for a typical use of the server. 
+
+	However, <strong>myBIGNASim</strong> offers the possibility to register and work as a logged user, with a permanent workspace (with time and size limits), that is maintained and can be accessed from any machine and at any moment. Users interested in uploading simulations must be registered in <strong>myBIGNASim</strong>. 
+    </p>
+</section>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;
+</p>

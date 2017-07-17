@@ -1,0 +1,209 @@
+<!-- Adding a new ontology search item:
+
+	1/ Include new term in table $ontoHash (phplib/global.inc.php)
+	2/ Include new term in the respective ontology hierarchy (onto1,2,3...)
+-->
+
+<script>
+function unMarkAllOnto(t,any) {
+	$a = t.parentNode;
+	$.each($a.children, function () {
+		if (this.value && this.value != any)
+			this.checked = false;
+	});
+}
+</script>
+
+<div class="container">
+    <div class="header" id="onto1">> Nucleic Acid Type</div>
+    <div class="content">
+	<input name='typeForm[NAType][NAType]' value="NAType" id='NAType' type='checkbox' onclick="unMarkAllOnto(this,'NAType')" checked>Any 
+	<input name='typeForm[NAType][Dna]' value="DNA" onclick="document.searchForm.NAType.checked=false" type='checkbox'>DNA <i>(<?=$ontoCount[DNA]?>)</i>
+	<input name='typeForm[NAType][Rna]' value="RNA" onclick="document.searchForm.NAType.checked=false" type='checkbox'>RNA <i>(<?=$ontoCount[RNA]?>)</i>
+	<input name='typeForm[NAType][Hybrid]' value="DNA-RNA_Hybrid" onclick="document.searchForm.NAType.checked=false" type='checkbox'>DNA-RNA Hybrid <i>(<?=$ontoCount['DNA-RNA_Hybrid']?>)</i>
+	<input name='typeForm[NAType][Other]' value="OtherOnto1" onclick="document.searchForm.NAType.checked=false" type='checkbox'>Other
+    </div>
+</div>
+
+<div class="container">
+    <div class="header" id="onto2">> Structure</div>
+    <div class="content">
+	<input name="typeForm[Structure]" value='Structure' id='Structure' type='radio' checked>Any
+	<input name="typeForm[Structure]" value='Lineal (Single Strand)' type='radio'>Lineal (Single Strand) <i>(<?=$ontoCount['Lineal (Single Strand)']?>)</i>
+	<input name="typeForm[Structure]" value='Duplex' type='radio'>Duplex <i>(<?=$ontoCount[Duplex]?>)</i>
+	<input name="typeForm[Structure]" value='Triplex' type='radio'>Triplex <i>(<?=$ontoCount[Triplex]?>)</i>
+	<input name="typeForm[Structure]" value='Quadruplex' type='radio'>Quadruplex <i>(<?=$ontoCount[Quadruplex]?>)</i>
+	<input name="typeForm[Structure]" value='HollidayJnt' type='radio'>Holliday Junction <i>(<?=$ontoCount[HollidayJnt]?>)</i>
+	<input name="typeForm[Structure]" value='3-WayJnt' type='radio'>3-Way Junction <i>(<?=$ontoCount['3WayJnt']?>)</i>
+	<input name="typeForm[Structure]" value='RNA PseudoKnot' type='radio'>RNA Pseudoknot <i>(<?=$ontoCount['RNA PseudoKnot']?>)</i>
+	<input name="typeForm[Structure]" value='Ribozymes' type='radio'>Ribozymes <i>(<?=$ontoCount[Ribozymes]?>)</i>
+	<input name="typeForm[Structure]" value='Large Ribosomal RNA' type='radio'>Large Ribosomal RNA <i>(<?=$ontoCount['Large Ribosomal RNA']?>)</i>
+	<input name="typeForm[Structure]" value='Riboswitch' type='radio'>Riboswitch <i>(<?=$ontoCount[Riboswitch]?>)</i>
+	<input name="typeForm[Structure]" value='tRNA' type='radio'>tRNA <i>(<?=$ontoCount[tRNA]?>)</i>
+	<input name="typeForm[Structure]" value='G1introns' type='radio'>G1introns <i>(<?=$ontoCount[G1introns]?>)</i>
+	<input name="typeForm[Structure]" value='G2introns' type='radio'>G2introns <i>(<?=$ontoCount[G2introns]?>)</i>
+	<input name="typeForm[Structure]" value='RNA nanostructures' type='radio'>RNA nanostructures <i>(<?=$ontoCount['RNA nanostructures']?>)</i>
+	<input name="typeForm[Structure]" value='OtherOnto2' type='radio'>Other
+    </div>
+</div>
+
+<div class="container">
+    <div class="header" id="onto3">> System Type</div>
+    <div class="content" id="onto3sel">
+	<input name='typeForm[SystemType][SystemType]' value="SystemType" id='SystemType' type='checkbox' onclick="unMarkAllOnto(this,'SystemType')" checked>Any
+	<input name='typeForm[SystemType][Naked]' value="Naked" onclick="document.searchForm.SystemType.checked=false" type='checkbox'>Naked  <i>(<?=$ontoCount[Naked]?>)</i>
+	<input name='typeForm[SystemType][ProteinNuc]' value="Protein-nuc" onclick="document.searchForm.SystemType.checked=false" type='checkbox'>Complex: Protein-Nuc <i>(<?=$ontoCount['Protein-nuc']?>)</i>
+	<input name='typeForm[SystemType][LigandNuc]' value="Ligand-nuc" onclick="document.searchForm.SystemType.checked=false" type='checkbox'>Complex: LigandNuc <i>(<?=$ontoCount['Ligand-nuc']?>)</i>
+	<input name='typeForm[SystemType][Other]' value="OtherOnto3" onclick="document.searchForm.SystemType.checked=false" type='checkbox'>Other
+    </div>
+</div>
+
+<div class="container">
+    <div class="header" id="onto4">> Trajectory Type</div>
+    <div class="content">
+	<input name="typeForm[TrajectoryType]" value='TrajectoryType' id='TrajectoryType' type='radio' checked>Any
+	<input name="typeForm[TrajectoryType]" value='Equilibrium' type='radio'>Equilibrium <i>(<?=$ontoCount[Equilibrium]?>)</i>
+	<input name="typeForm[TrajectoryType]" value='Folding' type='radio'>Un/Folding <i>(<?=$ontoCount[Folding]?>)</i>
+	<input name="typeForm[TrajectoryType]" value='Transition' type='radio'>Transition <i>(<?=$ontoCount[Transition]?>)</i>
+	<input name="typeForm[TrajectoryType]" value='OtherOnto4' type='radio'>Other
+    </div>
+</div>
+
+<div class="container">
+    <div class="header" id="onto5">> Original Helical Conformation</div>
+    <div class="content">
+	<input name="typeForm[HelicalConf]" value='OriginalHelicalConformation' id='OriginalHelicalConformation' type='radio' checked>Any
+	<input name="typeForm[HelicalConf]" value='A' type='radio'>A <i>(<?=$ontoCount[A]?>)</i>
+	<input name="typeForm[HelicalConf]" value='B' type='radio'>B <i>(<?=$ontoCount[B]?>)</i>
+	<input name="typeForm[HelicalConf]" value='Z' type='radio'>Z <i>(<?=$ontoCount[Z]?>)</i>
+	<input name="typeForm[HelicalConf]" value='Hoogsteen' type='radio'>Hoogsteen <i>(<?=$ontoCount[Hoogsteen]?>)</i>
+	<input name="typeForm[HelicalConf]" value='MixedHConf' type='radio'>Mixed <i>(<?=$ontoCount[MixedHConf]?>)</i>
+	<input name="typeForm[HelicalConf]" value='OtherOnto5' type='radio'>Other
+    </div>
+</div>
+
+<div class="container">
+    <div class="header" id="onto6">> Sequence Modifications</div>
+    <div class="content">
+	<input name='typeForm[SequenceModifications][SequenceModifications]' value="SequenceModifications" id='SequenceModifications' type='checkbox' onclick="unMarkAllOnto(this,'SequenceModifications')" checked>Any
+	<input name='typeForm[SequenceModifications][ModifiedNucleotides]' value="ModifiedNucleotides" onclick="document.searchForm.SequenceModifications.checked=false" type='checkbox'>Modified Nucleotides <i>(<?=$ontoCount[ModifiedNucleotides]?>)</i>
+	<input name='typeForm[SequenceModifications][CrossLinked]' value="CrossLinked" onclick="document.searchForm.SequenceModifications.checked=false" type='checkbox'>Cross Linked <i>(<?=$ontoCount[CrossLinked]?>)</i>
+	<input name='typeForm[SequenceModifications][EpigeneticVariants]' value="EpigeneticVariants" onclick="document.searchForm.SequenceModifications.checked=false" type='checkbox'>Epigenetic Variants <i>(<?=$ontoCount[EpigeneticVariants]?>)</i>
+<!--	<input name='typeForm[SequenceModifications][SequenceMismatches]' value="SequenceMismatches" onclick="document.searchForm.SequenceModifications.checked=false" type='checkbox'>SequenceMismatches <i>(<?=$ontoCount[SequenceMismatches]?>)</i> -->
+	<input name='typeForm[SequenceModifications][Other]' value="OtherOnto6" onclick="document.searchForm.SequenceModifications.checked=false" type='checkbox'>Other
+    </div>
+</div>
+
+<div class="container">
+    <div class="header" id="onto7">> Sequence Features</div>
+    <div class="content">
+	<input name="typeForm[SeqFeatures][SeqFeatures]" value='SequenceFeatures' id='SequenceFeatures' type='checkbox' onclick="unMarkAllOnto(this,'SequenceFeatures')" checked>Any
+	<input name="typeForm[SeqFeatures][PolyA]" value='PolyA' onclick="document.searchForm.SequenceFeatures.checked=false" type='checkbox'>Poly Adenine Track <i>(<?=$ontoCount[PolyA]?>)</i>
+	<input name="typeForm[SeqFeatures][PolyG]" value='PolyG' onclick="document.searchForm.SequenceFeatures.checked=false" type='checkbox'>Poly Guanine Track <i>(<?=$ontoCount[PolyG]?>)</i>
+	<input name="typeForm[SeqFeatures][DDD]" value='DrewDickersonD' onclick="document.searchForm.SequenceFeatures.checked=false" type='checkbox'>Drew Dickerson Dodecamer <i>(<?=$ontoCount[DrewDickersonD]?>)</i>
+	<input name="typeForm[SeqFeatures][Mismatch]" value='SeqMismatch' onclick="document.searchForm.SequenceFeatures.checked=false" type='checkbox'>Sequence Mismatch <i>(<?=$ontoCount[SeqMismatch]?>)</i>
+	<input name="typeForm[SeqFeatures][Other]" value='OtherOnto7' onclick="document.searchForm.SequenceFeatures.checked=false" type='checkbox'>Other
+    </div>
+</div>
+
+<div class="container">
+    <div class="header" id="onto8">> Local Structures</div>
+    <div class="content">
+	<input name="typeForm[LocalStructures][LocalStructures]" value='LocalStructures' id='LocalStructures' type='checkbox' onclick="unMarkAllOnto(this,'LocalStructures')" checked>Any
+	<input name="typeForm[LocalStructures][KinkTurn]" value='Kink Turn' onclick="document.searchForm.LocalStructures.checked=false" type='checkbox'>Kink Turn <i>(<?=$ontoCount['Kink Turn']?>)</i>
+	<input name="typeForm[LocalStructures][Bulges]" value='Bulges' onclick="document.searchForm.LocalStructures.checked=false" type='checkbox'>Bulges <i>(<?=$ontoCount['Bulges']?>)</i>
+	<input name="typeForm[LocalStructures][InternalLoops]" value='Internal Loops' onclick="document.searchForm.LocalStructures.checked=false" type='checkbox'>Internal Loops <i>(<?=$ontoCount['Internal Loops']?>)</i>
+	<input name="typeForm[LocalStructures][InteractingLoops]" value='Interacting loops' onclick="document.searchForm.LocalStructures.checked=false" type='checkbox'>Interacting Loops <i>(<?=$ontoCount['Interacting loops']?>)</i>
+	<input name="typeForm[LocalStructures][triloops]" value='triloops' onclick="document.searchForm.LocalStructures.checked=false" type='checkbox'>Triloops <i>(<?=$ontoCount['triloops']?>)</i>
+	<input name="typeForm[LocalStructures][tetraloops]" value='tetraloops' onclick="document.searchForm.LocalStructures.checked=false" type='checkbox'>Tetraloops <i>(<?=$ontoCount['tetraloops']?>)</i>
+	<input name="typeForm[LocalStructures][hexaloops]" value='hexaloops' onclick="document.searchForm.LocalStructures.checked=false" type='checkbox'>Hexaloops <i>(<?=$ontoCount['hexaloops']?>)</i>
+	<input name="typeForm[LocalStructures][tRNAFragments]" value='tRNA Fragments' onclick="document.searchForm.LocalStructures.checked=false" type='checkbox'>tRNAFragments <i>(<?=$ontoCount['tRNA Fragments']?>)</i>
+	<input name="typeForm[LocalStructures][Sarcin-Ricin]" value='Sarcin-Ricin' onclick="document.searchForm.LocalStructures.checked=false" type='checkbox'>Sarcin-Ricin <i>(<?=$ontoCount['Sarcin-Ricin']?>)</i>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header" id="onto9">> Simulation Conditions</div>
+    <div class="content">
+
+<!--	<input name='typeForm[SimulationConditions]' id='SimulationConditions' type='checkbox' checked>Any -->
+	<br/>
+        <select class="select-style" name="typeForm[forceField]"> 
+        <?php
+        foreach ($listFFList as $key => $value){
+		$count = $ontoCount[$value];
+		if($count)
+	                echo "<option title='".$key."' value='".$value."'>".$key." <i>(".$count.")</i></option>";
+		else
+	                echo "<option title='".$key."' value='".$value."'>".$key."</option>";
+        }
+        ?>
+        </select>
+<!--
+	<br/>
+	<input name='typeForm[Microsecond]' onclick="document.searchForm.SimulationConditions.checked=false" type='checkbox'> Microsecond-length Simulations 
+	<input name='typeForm[Nanosecond]' onclick="document.searchForm.SimulationConditions.checked=false" type='checkbox'> Nanosecond-length Simulations
+-->
+	<br/>
+        <select class="select-style" name="typeForm[length]"> 
+        <?php
+        foreach ($listLengthList as $key => $value){
+		$count = $ontoCount[$value];
+		if($count)
+	                echo "<option title='".$key."' value='".$value."'>".$key." <i>(".$count.")</i></option>";
+		else
+	                echo "<option title='".$key."' value='".$value."'>".$key."</option>";
+        }
+        ?>
+        </select>
+	<br/>
+        <select class="select-style" name="typeForm[temperature]"> 
+        <?php
+        foreach ($listTempList as $key => $value){
+		$count = $ontoCount[$value];
+		if($count)
+	                echo "<option title='".$key."' value='".$value."'>".$key." <i>(".$count.")</i></option>";
+		else
+	                echo "<option title='".$key."' value='".$value."'>".$key."</option>";
+        }
+        ?>
+        </select>
+	<br/>
+        <select class="select-style" name="typeForm[waterType]"> 
+        <?php
+        foreach ($listWaterList as $key => $value){
+		$count = $ontoCount[$value];
+		if($count)
+	                echo "<option title='".$key."' value='".$value."'>".$key." <i>(".$count.")</i></option>";
+		else
+	                echo "<option title='".$key."' value='".$value."'>".$key."</option>";
+        }
+        ?>
+        </select>
+	<br/>
+        <select class="select-style" name="typeForm[ionicConc]"> 
+        <?php
+        foreach ($listIonicConcList as $key => $value){
+		$count = $ontoCount[$value];
+		if($count)
+	                echo "<option title='".$key."' value='".$value."'>".$key." <i>(".$count.")</i></option>";
+		else
+	                echo "<option title='".$key."' value='".$value."'>".$key."</option>";
+        }
+        ?>
+        </select>
+	<br/>
+        <select class="select-style" name="typeForm[ionsParams]"> 
+        <?php
+        foreach ($listIonsList as $key => $value){
+		$count = $ontoCount[$value];
+		if($count)
+	                echo "<option title='".$key."' value='".$value."'>".$key." <i>(".$count.")</i></option>";
+		else
+	                echo "<option title='".$key."' value='".$value."'>".$key."</option>";
+        }
+        ?>
+        </select>
+	<br/>
+    </div>
+</div>

@@ -1,0 +1,1 @@
+<?php# libraries.inc.phprequire_once "phplib/genlib.inc.php";require_once "phplib/libform.inc.php";require_once "phplib/log.inc.php";require_once "phplib/errors.inc.php";require_once "phplib/templates.inc.php";require_once "phplib/libTPLANT.inc.php";?>

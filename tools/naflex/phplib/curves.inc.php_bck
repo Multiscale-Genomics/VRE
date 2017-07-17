@@ -1,0 +1,573 @@
+<!--
+# MDWeb for Nucleic Acids
+# Helical Parameter Analysis with Curves+.
+-->
+
+<?php
+
+  # Strand  1 has  12 bases (5'-3'): CGCGAGGACGCG
+  # Strand  2 has  12 bases (3'-5'): GCGCTCCTGCGC
+
+	$curvesLis = "/userData/$user/$proj/Curves/${op}_curvesOut.lis";
+	$curvesCda = "/userData/$user/$proj/Curves/${op}_curvesOut.cda";
+
+	$cmd = "grep 'Strand  1' $curvesFile";
+	$out = exec($cmd,$strand1);
+	$cmd = "grep 'Strand  2' $curvesFile";
+	$out = exec($cmd,$strand2);
+
+	$l1 = preg_split ("/:/",$strand1[0]);
+	$seq1 = $l1[sizeof($l1)-1];
+	$l2 = preg_split ("/:/",$strand2[0]);
+	$seq2 = $l2[sizeof($l2)-1];
+
+	#$seq1 = "GATTACAGATTACA";
+	#$seq2 = "CTAATGTCTAATGT";
+
+	$seq1 = preg_replace("/ /","",$seq1);
+	$seq2 = preg_replace("/ /","",$seq2);
+
+	logger("Curves Seq1: -$seq1-");
+	logger("Curves Seq2: -$seq2-");
+
+	$arrSeq1 = preg_split("//",$seq1);
+	array_shift($arrSeq1);
+	array_pop($arrSeq1);
+	$arrSeq2 = preg_split("//",$seq2);
+	array_shift($arrSeq2);
+	array_pop($arrSeq2);
+
+	$length1 = count($arrSeq1);
+	$length2 = count($arrSeq2);
+
+	# Initializing Nucleotide Selection Arrays.
+	for($i=0;$i<$length1;$i++){
+		$_SESSION['userData']['seq1'][$i] = 0;
+		$_SESSION['userData']['seqBPS'][$i] = 0;
+		$_SESSION['userData']['seq2'][$i] = 0;
+	}
+
+?>
+
+	<div id="divSeq2">
+		<!--<?php echo "$seq1" ?><br/>-->
+		<!--<?php echo "$seq2" ?><br/>-->
+		<!--<br/><br/>-->
+
+		<table cellpadding="5" align="center" border="0">
+		<tr>
+			<?php  
+				echo "<td></td>\n";
+				for($i=0;$i<$length2;$i++){
+					$num = $i+1;
+					echo "<td id='divTableSeqNum'> $num </td>\n";
+					echo "<td></td>\n";
+				}
+				echo "</tr>\n";
+				echo "<tr>\n";
+				echo "<td width='30' class='divTableSeqPrimes'>5'</td>\n";
+				for($i=0;$i<$length1;$i++){
+					$letter1 = $arrSeq1[$i];
+					$letter2 = $arrSeq1[$i+1];
+					$j = $i+1;
+					$code = "$j-$letter1";
+					$codeBP = "$j-";
+					logger("Seq1: -$letter1-");
+					echo "<td id='divTableSeq1' class='divTableSeq'><a id='$code' class='unselected' href=\"javascript:selectNucleotide('$code','$userPath');\" title='Nucleotide Helical Parameters'> $letter1 </a></td>\n";
+					if($i != $length1-1)
+						echo "<td id='divTableSeq1Seps' class='divTableSeqSeps'><a id='$codeBP' class='unselected' title='Backbone Helical Parameters'> - </a></td>\n";
+					$_SESSION['userData']['seq1'][$i] = 0;
+				}
+				echo "<td width='30' class='divTableSeqPrimes'>3'</td>\n";
+				echo "</tr>\n";
+				echo "<tr>\n";
+				echo "<td></td>\n";
+				echo "<td></td>\n";
+				echo "<td></td>\n";
+				for($i=0;$i<$length1;$i++){
+					$letter1 = $arrSeq1[$i];
+					$letter4 = $arrSeq2[$i];
+					$j = $i + 1;
+					$codeBPS = "$j-$letter1$letter4";
+					$letter2 = $arrSeq1[$j];
+					$letter3 = $arrSeq2[$j];
+					$codeTet = "$j-$letter1$letter2$letter3$letter4";
+					if($i > 0 and $i < $length1 - 1)
+						echo "<td id='divTableSepsUpDown' class='divTableSeqSepsX'><a id='$codeBPS' name='BPS' class='unselected' href=\"javascript:selectNucleotide('$codeBPS','$userPath');javascript:selectBasePairStep('$codeBPS','$length1');\" title='Base Pair Helical Parameters'> | </a></td>\n";
+					if($i > 0 and $i < $length1 - 2)
+						echo "<td id='divTableSepsX' class='divTableSeqSepsX' ><a id='$codeTet' name='TET' class='unselected' href=\"javascript:selectNucleotide('$codeTet','$userPath');javascript:selectTetramer('$codeTet','$length1');\" title='Base Pair Step Helical Parameters'> x </a></td>\n";
+					$_SESSION['userData']['seqBPS'][$i] = 0;
+				}
+				echo "</tr>\n";
+				echo "<tr>\n";
+				echo "<td class='divTableSeqPrimes'>3'</td>\n";
+				for($i=0;$i<$length2;$i++){
+					$letter1 = $arrSeq2[$i];
+					$letter2 = $arrSeq2[$i];
+					$j = ($length1 * 2) - $i;
+					$code = "$j-$letter2";
+					$codeBP = "$j-";
+					echo "<td id='divTableSeq2' class='divTableSeq'><a id='$code' class='unselected' href=\"javascript:selectNucleotide('$code','$userPath');\" title='Nucleotide Helical Parameters'> $letter2 </a></td>\n";
+					if($i != $length2-1)
+						echo "<td id='divTableSeq2Seps' class='divTableSeqSeps'><a id='$codeBP' class='unselected' title='Backbone Helical Parameters'> - </a></td>\n";
+					$_SESSION['userData']['seq2'][$i] = 0;
+				}
+				echo "<td class='divTableSeqPrimes'>5'</td>\n";
+				echo "</tr>\n";
+				echo "<tr>\n";
+				echo "<td></td>\n";
+				for($i=$length1;$i>0;$i--){
+					$num = $length1 + $i ;
+					echo "<td id='divTableSeqNum'> $num </td>\n";
+					echo "<td></td>\n";
+				}
+			?>
+		</tr>
+		</table>
+<!--		
+		<table cellpadding="5" align="center" border="0">
+			<td><input type="button" onclick="javascript: selectAll(<?php echo $length1 ?>);" value="Select All"/></td>
+			<td><input type="button" onclick="javascript: unselectAll(<?php echo $length1 ?>);" value="Unselect All" /></td>
+			<td><input type="button" onclick="javascript: computeNuc();" value="Compute" /></td>
+		</table>
+-->
+	</div>
+
+	<br/><br/>	
+
+	<div id="AvgVsTime">
+
+         <table cellpadding="15" align="center" border="0" class="avgParms">
+                <tr>
+                        <td class="curvesText"><a id='AVGSel' class='unselected' href="javascript:unhideSections('AVGSel','HelicalParams');" title='AVG Results'>Average Results</a></td>
+                        <td class="curvesText"><a id='TIMESel' class='unselected' href="javascript:unhideSections('TIMESel','TimeParams');" title='TIME Results'>Results by Time</a></td>
+		</tr>
+	</table>
+	</div>
+
+	<br/><br/>	
+
+	<div id="CurvesParams">
+	<div id="HelicalParams" class="hidden">
+	 <table cellpadding="15" align="center" border="0" class="avgParms">
+                <tr>
+			<td class="curvesText"><a id='bckTorsionsSel' class='unselected' href="javascript:unhideSections('bckTorsionsSel','backboneTorsions');" title='Backbone Torsions'>Backbone Torsions</a></td>
+			<td class="curvesText"><a id='BP_HelicalParmsSel' class='unselected' href="javascript:unhideSections('BP_HelicalParmsSel','BP_HelicalParms');" title='Base Pair Helical Parameters'>Base Pair Helical Parameters </a></td>
+			<td class="curvesText"><a id='BPS_HelicalParmsSel' class='unselected' href="javascript:unhideSections('BPS_HelicalParmsSel','BPS_HelicalParms');" title='Base Pair Step Helical Parameters'>Base Pair Step Helical Parameters </a></td>
+			<td class="curvesText"><a id='GroovesSel' class='unselected' href="javascript:unhideSections('GroovesSel','Grooves');" title='Grooves'>Grooves </a></td>
+		</tr>
+	</table>
+	</div>
+        <div id="TimeParams" class="hidden">
+         <table cellpadding="15" align="center" border="0" class="avgParms">
+                <tr>
+                        <td class="curvesText"><a id='bckTorsionsTimeSel' class='unselected' href="javascript:unhideSections('bckTorsionsTimeSel','backboneTorsionsTime');" title='Backbone Torsions'>Backbone Torsions</a></td>
+                        <td class="curvesText"><a id='BP_HelicalParmsTimeSel' class='unselected' href="javascript:unhideSections('BP_HelicalParmsTimeSel','BP_HelicalParmsTime');" title='Base Pair Helical Parameters'>Base Pair Helical Parameters </a></td>
+                        <td class="curvesText"><a id='BPS_HelicalParmsTimeSel' class='unselected' href="javascript:unhideSections('BPS_HelicalParmsTimeSel','BPS_HelicalParmsTime');" title='Base Pair Step Helical Parameters'>Base Pair Step Helical Parameters </a></td>
+                        <td class="curvesText"><a id='GroovesTimeSel' class='unselected' href="javascript:unhideSections('GroovesTimeSel','GroovesTime');" title='Grooves'>Grooves </a></td>
+                </tr>
+        </table>
+	</div>
+	</div>
+
+	<br/><br/>
+
+	<!-- List of Different Curves Parameters -->
+
+	<div id="CurvesHelicalParamsSections" style="text-align:center;">
+
+	<div id="HelicalParamsSectionsTime" style="text-align:center;">
+
+        <div id="backboneTorsionsTime" class="hidden">
+
+		<table align="center" cellpadding="10">
+		<tr>
+                <td>
+                <ul>
+                <li class="curvesText"><a id='AlphaSel' class='unselected' href="javascript:unhideSelPlots('AlphaSel','alphaTimeSelPlot');" title='Alpha Torsions'>Alpha Torsions</a></li><br/><br/>
+                <li class="curvesText"><a id='BetaSel' class='unselected' href="javascript:unhideSelPlots('BetaSel','betaTimeSelPlot');" title='Beta Torsions'>Beta Torsions</a></li><br/><br/>
+                <li class="curvesText"><a id='GammaSel' class='unselected' href="javascript:unhideSelPlots('GammaSel','gammaTimeSelPlot');" title='Gamma Torsions'>Gamma Torsions</a></li><br/><br/>
+                <li class="curvesText"><a id='EpsilonSel' class='unselected' href="javascript:unhideSelPlots('EpsilonSel','epsilTimeSelPlot');" title='Epsilon Torsions'>Epsilon Torsions</a></li><br/><br/>
+                <li class="curvesText"><a id='ZetaSel' class='unselected' href="javascript:unhideSelPlots('ZetaSel','zetaTimeSelPlot');" title='Zeta Torsions'>Zeta Torsions</a></li><br/><br/>
+                <li class="curvesText"><a id='ChiSel' class='unselected' href="javascript:unhideSelPlots('ChiSel','chiTimeSelPlot');" title='Chi Torsions'>Chi Torsions</a></li><br/><br/>
+                <li class="curvesText"><a id='PhaseSel' class='unselected' href="javascript:unhideSelPlots('PhaseSel','phaseTimeSelPlot');" title='Phase Torsions'>Phase Torsions</a></li>
+                </ul>
+		</td>
+		<td rowspan="7">
+                <img src="images/backboneAngles.png" width="70%" align="center">
+		<i style="font-size:8pt"><br/><br/>[Image courtesy of Neidle, S. (2007). Principles of nucleic acid structure.]</i> 
+		</td></tr>
+		</table>
+        </div>
+
+        <div id="BP_HelicalParmsTime" class="hidden">
+		<table align="center" cellpadding="50">
+		<tr>
+                <td>
+                <ul>
+                <li class="curvesText"><a id='TimeBuckleSel' class='unselected' href="javascript:unhideSelPlots('TimeBuckleSel','buckleTimeSelPlot');" title='Base Pair Helical Params: Buckle'>Buckle</a></li><br/><br/>
+                <li class="curvesText"><a id='TimeOpeningSel' class='unselected' href="javascript:unhideSelPlots('TimeOpeningSel','openingTimeSelPlot');" title='Base Pair Helical Params: Opening'>Opening</a></li><br/><br/>
+                <li class="curvesText"><a id='TimePropelSel' class='unselected' href="javascript:unhideSelPlots('TimePropelSel','propelTimeSelPlot');" title='Base Pair Helical Params: Propel'>Propel</a></li><br/><br/>
+                <li class="curvesText"><a id='TimeShearSel' class='unselected' href="javascript:unhideSelPlots('TimeShearSel','shearTimeSelPlot');" title='Base Pair Helical Params: Shear'>Shear</a></li><br/><br/>
+                <li class="curvesText"><a id='TimeStaggerSel' class='unselected' href="javascript:unhideSelPlots('TimeStaggerSel','staggerTimeSelPlot');" title='Base Pair Helical Params: Stagger'>Stagger</a></li><br/><br/>
+                <li class="curvesText"><a id='TimeStretchSel' class='unselected' href="javascript:unhideSelPlots('TimeStretchSel','stretchTimeSelPlot');" title='Base Pair Helical Params: Stretch'>Stretch</a></li>
+                </ul>
+		</td>
+		<td rowspan="6">
+                <img src="images/helicalParamsBP.png" align="center">
+		<a href="http://gbio-pbil.ibcp.fr/Curves_plus/Helical_parameters.html"><i style="font-size:8pt"><br/><br/>[Image courtesy of Curves+]</i></a> 
+		</td></tr>
+		</table>
+        </div>
+
+        <div id="BPS_HelicalParmsTime" class="hidden">
+		<table align="center" cellpadding="50">
+		<tr>
+                <td>
+                <ul>
+		  <li class="curvesText"><a id='TimeRiseSel' class='unselected' href="javascript:unhideSelPlots('TimeRiseSel','riseTimeSelPlot');" title='Base Pair Step Helical Params: Rise'>Rise</a></li><br/><br/>
+                  <li class="curvesText"><a id='TimeRollSel' class='unselected' href="javascript:unhideSelPlots('TimeRollSel','rollTimeSelPlot');" title='Base Pair Step Helical Params: Roll'>Roll</a></li><br/><br/>
+		  <li class="curvesText"><a id='TimeShiftSel' class='unselected' href="javascript:unhideSelPlots('TimeShiftSel','shiftTimeSelPlot');" title='Base Pair Step Helical Params: Shift'>Shift</a></li><br/><br/>
+	          <li class="curvesText"><a id='TimeSlideSel' class='unselected' href="javascript:unhideSelPlots('TimeSlideSel','slideTimeSelPlot');" title='Base Pair Step Helical Params: Slide'>Slide</a></li><br/><br/>
+        	  <li class="curvesText"><a id='TimeTiltSel' class='unselected' href="javascript:unhideSelPlots('TimeTiltSel','tiltTimeSelPlot');" title='Base Pair Step Helical Params: Tilt'>Tilt</a></li><br/><br/>
+               	  <li class="curvesText"><a id='TimeTwistSel' class='unselected' href="javascript:unhideSelPlots('TimeTwistSel','twistTimeSelPlot');" title='Base Pair Step Helical Params: Twist'>Twist</a></li><br/>
+                </ul>
+		</td>
+		<td rowspan="6">
+                <img src="images/helicalParamsBPS.png" align="center">
+		<a href="http://gbio-pbil.ibcp.fr/Curves_plus/Helical_parameters.html"><i style="font-size:8pt"><br/><br/>[Image courtesy of Curves+]</i></a> 
+		</td></tr>
+		</table>
+        </div>
+        <div id="GroovesTime" class="hidden">
+		<table align="center" cellpadding="50">
+		<tr>
+                <td>
+                <ul>
+                <li class="curvesText"><a id='TimeMajDepthSel' class='unselected' href="javascript:unhideSelPlots('TimeMajDepthSel','majdTimeSelPlot');" title='Groove Params: Major Groove Depth'>Major Groove Depth</a></li><br/><br/>
+                <li class="curvesText"><a id='TimeMajWidthSel' class='unselected' href="javascript:unhideSelPlots('TimeMajWidthSel','majwTimeSelPlot');" title='Groove Params: Major Groove Width'>Major Groove Width</a></li><br/><br/>
+                <li class="curvesText"><a id='TimeMinDepthSel' class='unselected' href="javascript:unhideSelPlots('TimeMinDepthSel','mindTimeSelPlot');" title='Groove Params: Minor Groove Depth'>Minor Groove Depth</a></li><br/><br/>
+                <li class="curvesText"><a id='TimeMinWidthSel' class='unselected' href="javascript:unhideSelPlots('TimeMinWidthSel','minwTimeSelPlot');" title='Groove Params: Minor Groove Width'>Minor Groove Width</a></li>
+                </ul>
+		</td>
+		<td rowspan="4">
+                <img src="images/DnaMajorMinorGroove.gif" width="60%" align="center">
+		<a href="http://en.wikibooks.org/wiki/Structural_Biochemistry/Nucleic_Acid/DNA/DNA_structure#Major_and_Minor_Grooves"><i style="font-size:8pt"><br/><br/>[Image courtesy of Wikibooks]</i></a> 
+		</td></tr>
+		</table>
+        </div>
+
+	</div>
+
+	<div id="HelicalParamsSections">
+
+	<div id="backboneTorsions" class="hidden">
+		<table align="center" cellpadding="50">
+		<tr>
+                <td>
+		<ul>
+		<li class="curvesText"><a id='BISel' class='unselected' href="javascript:unhidePlots('BISel','BIPlot');" title='Backbone Torsions: BI/II Population'>BI / BII Population</a></li><br/><br/>
+		<li class="curvesText"><a id='AGSel' class='unselected' href="javascript:unhidePlots('AGSel','AGPlot');" title='Backbone Torsions: Canonical Alpha-Gamma'>Canonical Alpha-Gamma</a></li><br/><br/>
+		<li class="curvesText"><a id='PuckSel' class='unselected' href="javascript:unhidePlots('PuckSel','PuckPlot');" title='Backbone Torsions: Puckering'>Puckering</a></li>
+		</ul>
+		</td>
+		<td rowspan="3">
+                <div id="BI-BII-graphic-div" > <div id="BI-BII-graphic" class="hidden"> <img src="images/BI-BII.png" width="500" align="center">
+		<a href="http://www.sciencedirect.com/science/article/pii/S0022283609012637?via=ihub"><i style="font-size:8pt"><br/><br/>[Image courtesy of Heddi B. et al, JMB 2010, 395:1, 123-133]</i></a> </div></div>
+                <div id="Alpha-Gamma-graphic-div" > <div id="Alpha-Gamma-graphic" class="hidden"> <img src="images/AlphaGamma.png" width="400" align="center">
+		<i style="font-size:8pt"><br/><br/>[Image courtesy of Neidle, S. (2007). Principles of nucleic acid structure.]</i> </div></div>
+                <div id="Puckering-graphic-div" > <div id="Puckering-graphic" class="hidden"> <img src="images/Puckering2.png" width="600" align="center">
+		<i style="font-size:8pt"><br/><br/>[Image courtesy of Neidle, S. (2007). Principles of nucleic acid structure.]</i> </div></div>
+		</td></tr>
+		</table>
+	</div>
+
+	<div id="BP_HelicalParms" class="hidden">
+		<table align="center" cellpadding="50">
+		<tr>
+                <td>
+		<ul>
+		<li class="curvesText"><a id='BuckleSel' class='unselected' href="javascript:unhidePlots('BuckleSel','BucklePlot');" title='Base Pair Helical Params: Buckle'>Buckle</a></li><br/><br/>
+		<li class="curvesText"><a id='OpeningSel' class='unselected' href="javascript:unhidePlots('OpeningSel','OpeningPlot');" title='Base Pair Helical Params: Opening'>Opening</a></li><br/><br/>
+		<li class="curvesText"><a id='PropelSel' class='unselected' href="javascript:unhidePlots('PropelSel','PropelPlot');" title='Base Pair Helical Params: Propel'>Propeller</a></li><br/><br/>
+		<li class="curvesText"><a id='ShearSel' class='unselected' href="javascript:unhidePlots('ShearSel','ShearPlot');" title='Base Pair Helical Params: Shear'>Shear</a></li><br/><br/>
+		<li class="curvesText"><a id='StaggerSel' class='unselected' href="javascript:unhidePlots('StaggerSel','StaggerPlot');" title='Base Pair Helical Params: Stagger'>Stagger</a></li><br/><br/>
+		<li class="curvesText"><a id='StretchSel' class='unselected' href="javascript:unhidePlots('StretchSel','StretchPlot');" title='Base Pair Helical Params: Stretch'>Stretch</a></li>
+		</ul>
+		</td>
+		<td rowspan="6">
+                <img src="images/helicalParamsBP.png" align="center">
+		<a href="http://gbio-pbil.ibcp.fr/Curves_plus/Helical_parameters.html"><i style="font-size:8pt"><br/>[Image courtesy of Curves+]</i></a> 
+		</td></tr>
+		</table>
+	</div>
+
+	<div id="BPS_HelicalParms" class="hidden">
+		<table align="center" cellpadding="50">
+		<tr>
+                <td>
+		<ul>
+		<li class="curvesText"><a id='RiseSel' class='unselected' href="javascript:unhidePlots('RiseSel','RisePlot');" title='Base Pair Step Helical Params: Rise'>Rise</a></li><br/><br/>
+		<li class="curvesText"><a id='RollSel' class='unselected' href="javascript:unhidePlots('RollSel','RollPlot');" title='Base Pair Step Helical Params: Roll'>Roll</a></li><br/><br/>
+		<li class="curvesText"><a id='ShiftSel' class='unselected' href="javascript:unhidePlots('ShiftSel','ShiftPlot');" title='Base Pair Step Helical Params: Shift'>Shift</a></li><br/><br/>
+		<li class="curvesText"><a id='SlideSel' class='unselected' href="javascript:unhidePlots('SlideSel','SlidePlot');" title='Base Pair Step Helical Params: Slide'>Slide</a></li><br/><br/>
+		<li class="curvesText"><a id='TiltSel' class='unselected' href="javascript:unhidePlots('TiltSel','TiltPlot');" title='Base Pair Step Helical Params: Tilt'>Tilt</a></li><br/><br/>
+		<li class="curvesText"><a id='TwistSel' class='unselected' href="javascript:unhidePlots('TwistSel','TwistPlot');" title='Base Pair Step Helical Params: Twist'>Twist</a></li>
+		</ul>
+		</td>
+		<td rowspan="6">
+                <img src="images/helicalParamsBPS.png" align="center">
+		<a href="http://gbio-pbil.ibcp.fr/Curves_plus/Helical_parameters.html"><i style="font-size:8pt"><br/>[Image courtesy of Curves+]</i></a> 
+		</td></tr>
+		</table>
+	</div>
+
+	<div id="Grooves" class="hidden">
+		<table align="center" cellpadding="50">
+		<tr>
+                <td>
+		<ul>
+		<li class="curvesText"><a id='MajDepthSel' class='unselected' href="javascript:unhidePlots('MajDepthSel','MajDepthPlot');" title='Groove Params: Major Groove Depth'>Major Groove Depth</a></li><br/><br/>
+		<li class="curvesText"><a id='MajWidthSel' class='unselected' href="javascript:unhidePlots('MajWidthSel','MajWidthPlot');" title='Groove Params: Major Groove Width'>Major Groove Width</a></li><br/><br/>
+		<li class="curvesText"><a id='MinDepthSel' class='unselected' href="javascript:unhidePlots('MinDepthSel','MinDepthPlot');" title='Groove Params: Minor Groove Depth'>Minor Groove Depth</a></li><br/><br/>
+		<li class="curvesText"><a id='MinWidthSel' class='unselected' href="javascript:unhidePlots('MinWidthSel','MinWidthPlot');" title='Groove Params: Minor Groove Width'>Minor Groove Width</a></li>
+		</ul>
+		</td>
+		<td rowspan="4">
+                <img src="images/DnaMajorMinorGroove.gif" width="60%" align="center">
+		<a href="http://en.wikibooks.org/wiki/Structural_Biochemistry/Nucleic_Acid/DNA/DNA_structure#Major_and_Minor_Grooves"><i style="font-size:8pt"><br/><br/>[Image courtesy of Wikibooks]</i></a>
+		</td></tr>
+		</table>
+	</div>
+
+	</div>
+
+	<!-- PLOTS -->
+
+	<!-- Backbone Torsions -->
+
+	<div id="CurvesPlots">
+
+	<div id="HelicalParamsPlotsTime">
+
+	<div id="Time_backbone_torsions">
+        <div id="alphaTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="betaTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="gammaTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="epsilTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="zetaTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="chiTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="phaseTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+	</div>
+
+	<div id="Time_helical_bp">
+        <div id="buckleTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="openingTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="propelTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="shearTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="staggerTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="stretchTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+	</div>
+	<div id="Time_helical_bpstep">
+        <div id="riseTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="rollTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="shiftTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="slideTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="tiltTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="twistTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+	</div>
+
+	<div id="Time_grooves">
+        <div id="majdTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="majwTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="mindTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="minwTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+	</div>
+
+        </div>
+
+	</div>
+
+	<div id="HelicalParamsPlots">
+
+	<div id="BIPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/backbone_torsions/BI_population.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/backbone_torsions/BI_population.dat.png','BI_population','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/backbone_torsions/BI_population.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="AGPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/backbone_torsions/canonical_alpha_gamma.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/backbone_torsions/BI_population.dat.png","CanonicalAlphaGamma","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/backbone_torsions/canonical_alpha_gamma.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+ 
+	<div id="PuckPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/backbone_torsions/puckering.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/backbone_torsions/puckering.dat.png","Puckering","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/backbone_torsions/puckering.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<!-- Base Pair Helical Parameters -->
+
+	<div id="BucklePlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bp/buckle_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bp/buckle_avg.dat.png","Buckle","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bp/buckle_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="OpeningPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bp/opening_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bp/opening_avg.dat.png","Opening","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bp/opening_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="PropelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bp/propel_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bp/propel_avg.dat.png","Propel","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bp/propel_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="ShearPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bp/shear_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bp/shear_avg.dat.png","Shear","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bp/shear_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="StaggerPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bp/stagger_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bp/stagger_avg.dat.png","Stagger","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bp/stagger_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="StretchPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bp/stretch_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bp/stretch_avg.dat.png","Stretch","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bp/stretch_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<!-- Base Pair Step Helical Parameters -->
+
+	<div id="RisePlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bpstep/rise_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bpstep/rise_avg.dat.png","Rise","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bpstep/rise_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="RollPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bpstep/roll_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bpstep/roll_avg.dat.png","Roll","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bpstep/roll_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="ShiftPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bpstep/shift_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bpstep/shift_avg.dat.png","Shift","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bpstep/shift_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="SlidePlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bpstep/slide_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bpstep/slide_avg.dat.png","Slide","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bpstep/slide_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="TiltPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bpstep/tilt_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bpstep/tilt_avg.dat.png","Tilt","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bpstep/tilt_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="TwistPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/helical_bpstep/twist_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/helical_bpstep/twist_avg.dat.png","Twist","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/helical_bpstep/twist_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<!-- Grooves Parameters -->
+
+	<div id="MajDepthPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/grooves/majd_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/grooves/majd_avg.dat.png","Major Groove Depth","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/grooves/majd_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="MajWidthPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/grooves/majw_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/grooves/majw_avg.dat.png","Major Groove Width","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/grooves/majw_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="MinDepthPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/grooves/mind_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/grooves/mind_avg.dat.png","Minor Groove Depth","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/grooves/mind_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	<div id="MinWidthPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+		<img border="0" src="<?php echo $userPath ?>/grooves/minw_avg.dat.png">
+		</td><td>
+		<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/grooves/minw_avg.dat.png","Minor Groove Width","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>
+		<a href="getFile.php?fileloc=<?php echo $userPath ?>/grooves/minw_avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+
+	</div>
+
+	</div>
+

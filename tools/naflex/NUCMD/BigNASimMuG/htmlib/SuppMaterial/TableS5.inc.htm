@@ -1,0 +1,157 @@
+<p><strong>Table  S5. Complete structure of data objects showing hierarchical relationships  derived from the central tetramer of the Drew-Dickerson dodecamer (A<sup>5</sup>ATT) </strong></p>
+<table border="1" cellspacing="0" cellpadding="0" style="width:100%">
+    <tr>
+        <td valign="top"><br>
+            <pre>
+//Fragment definition
+// 5-AATT
+//   TTAA
+{
+    _id:   {n: 5, idSim: ’0001’, idGroup: ’frag1’}, 
+    type: ’fragment’, 
+    fragment_end: 8, 
+    comps: [
+	{n: 5, idSim: ’0001’, idGroup: ’AATT’},
+	{n: 6, idSim: ’0001’, idGroup: ’ATAT’}, 
+	{n: 7, idSim: ’0001’, idGroup: ’TTAA’},
+    ]
+}
+            </pre>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <pre>
+//Base pair step definitions
+// 5-AA
+//   TT
+{
+    _id:  {n: 5, idSim: ’0001’, idGroup: ’AATT’}, 
+    class: ’AATT’, 
+    type: ’stepid’, 
+    id: ’5-AATT’, 
+    comps: [
+    	{n: 5, idSim: ’0001’, idGroup’: ’AT’},
+	{n: 6, idSim: ’0001’, idGroup’: ’AT’}
+    ]
+}
+// 6-AT
+//   TA
+{
+    _id:   {n: 6, idSim: ’0001’, idGroup: ’ATAT’}, 
+    class: ’ATAT’, 
+    type: ’stepid’,
+    id: ’6-ATAT’, 
+    comps: [
+	{n: 6, idSim: ’0001’, idGroup: ’AT’},
+	{n: 7, idSim: ’0001’, idGroup: ’TA’}
+    ] 
+}
+// 7-TT
+//   AA
+{ 
+    _id:   {n: 7, idSim: ’0001’, idGroup: ’TTAA’}, 
+    class: ’AATT’, 
+    type: ’stepid’, 
+    id: ’7-TTAA’, 
+    comps: [
+	{n: 7, idSim: ’0001’, idGroup: ’TA’},
+	{n: 8, idSim: ’0001’, idGroup: ’TA’}
+    ] 
+}
+            </pre>    
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <pre>
+//Base pair definitions 
+// 5-A
+//   T
+{
+    _id:   {n: 5, idSim: ’0001’, idGroup: ’AT’}, 	
+    class: ’AT’, 
+    type: ’bpid’, 
+    id: ’5-AT’, 
+    comps: [
+        {n: 5,  idSim: ’0001’, idGroup: ’A’},
+    	{n: 20, idSim: ’0001’, idGroup: ’T’}
+    ] 
+}
+// 6-T
+//   A
+{ 
+    _id:   {n: 6, idSim: ’0001’, idGroup: ’AT’},
+    class: ’AT’, 
+    type: ’bpid’, 
+    id: ’6-AT’, 
+    comps: [
+    	{n: 6,  idSim: ’0001’, idGroup: ’A’},  
+	{n: 19, idSim: ’0001’, idGroup: ’T’}
+    ]
+}
+// 7-T
+//   A 
+{
+    _id:   {n: 7, idSim: ’0001’, idGroup: ’TA’}, 	
+    class: ’AT’, 
+    type: ’bpid’, 
+    id: ’7-TA’, 
+    comps: [ 
+	{n: 8,  idSim: ’0001’, idGroup: ’T’},
+	{n: 18, idSim: ’0001’, idGroup: ’A’}
+    ] 
+}
+// 8-T
+//   A
+{
+    _id:   {n: 8, idSim: ’0001’, idGroup: ’TA’},
+    class: ’AT’, 
+    type: ’bpid’, 
+    id: ’8-AT’, 
+    comps: [
+        {n: 8,  idSim: ’0001’, idGroup: ’T’},
+	{n: 17, idSim: ’0001’, idGroup: ’A’}
+    ] 
+}
+            </pre></td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <pre>
+//Base definitions
+{
+    _id:  {n: 6, idSim: ’0001’, idGroup: ’A’}, 
+    class: ’A’, type: ’bid’, id: ’6-A’ 
+}   
+{
+    _id:  {n: 7, idSim: ’0001’, idGroup: ’A’}, 
+    class: ’A’, type: ’bid’, id: ’7-A’
+}
+{
+    _id:  {n: 8, idSim: ’0001’, idGroup: ’T’}, 
+    class: ’T’, type: ’bid’, id: ’8-A’ 
+}
+{
+    _id:  {n: 9, idSim: ’0001’, idGroup: ’T’}, 
+    class: ’A’, type: ’bid’, id: ’6-A’
+}
+{
+    _id:  {n: 17, idSim: ’0001’, idGroup: ’A’}, 
+    class: ’A’, type: ’bid’, id: ’17-A’ 
+}
+{ 
+    _id:  {n: 18, idSim: ’0001’, idGroup: ’A’}, 
+    class: ’A’, type: ’bid’, id: ’18-A’ 
+}
+{
+    _id:  {n: 19, idSim: 0001’, idGroup: ’T’}, 
+    class: ’T’, type: ’bid’, id: ’19-T’ 
+}
+{
+    _id:  {n: 20, idSim: ’0001’, idGroup: ’T’}, 
+    class: ’T’, type: ’bid’, id: ’20-T’ 
+}
+</pre></td>
+  </tr>
+</table>

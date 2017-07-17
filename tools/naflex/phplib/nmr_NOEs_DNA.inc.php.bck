@@ -1,0 +1,598 @@
+<?php
+
+  # Strand  1 has  12 bases (5'-3'): CGCGAGGACGCG
+  # Strand  2 has  12 bases (3'-5'): GCGCTCCTGCGC
+
+	$cmd = "grep 'Strand  1' $curvesFile";
+	$out = exec($cmd,$strand1);
+	$cmd = "grep 'Strand  2' $curvesFile";
+	$out = exec($cmd,$strand2);
+	$cmd = "grep 'NucType:' $curvesFile";
+	$out = exec($cmd,$nucleicType);
+	logger("Stiffness: $curvesFile");
+
+	$p = preg_split ("/:/",$nucleicType[0]);
+	$naType = $p[sizeof($p)-1];
+	logger("Nucleic Type: $naType");
+
+	$l1 = preg_split ("/:/",$strand1[0]);
+	$seq1 = $l1[sizeof($l1)-1];
+	$l2 = preg_split ("/:/",$strand2[0]);
+	$seq2 = $l2[sizeof($l2)-1];
+
+	#$seq1 = "GATTACAGATTACA";
+	#$seq2 = "CTAATGTCTAATGT";
+
+	$seq1 = preg_replace("/ /","",$seq1);
+	$seq2 = preg_replace("/ /","",$seq2);
+
+	logger("Curves Seq1: -$seq1-");
+	logger("Curves Seq2: -$seq2-");
+
+	$arrSeq1 = preg_split("//",$seq1);
+	array_shift($arrSeq1);
+	array_pop($arrSeq1);
+	$arrSeq2 = preg_split("//",$seq2);
+	array_shift($arrSeq2);
+	array_pop($arrSeq2);
+
+	$length1 = count($arrSeq1);
+	$length2 = count($arrSeq2);
+
+	# Initializing Nucleotide Selection Arrays.
+	for($i=0;$i<$length1;$i++){
+		$_SESSION['userData']['seq1'][$i] = 0;
+		$_SESSION['userData']['seqBPS'][$i] = 0;
+		$_SESSION['userData']['seq2'][$i] = 0;
+	}
+
+?>
+
+	<div id="divSeq2">
+		<!--<?php echo "$seq1" ?><br/>-->
+		<!--<?php echo "$seq2" ?><br/>-->
+		<!--<br/><br/>-->
+
+		<table cellpadding="5" align="center" border="0">
+		<tr>
+			<?php  
+				echo "<td></td>\n";
+				for($i=0;$i<$length2;$i++){
+					$num = $i+1;
+					echo "<td id='divTableSeqNum'> $num </td>\n";
+					echo "<td></td>\n";
+				}
+				echo "</tr>\n";
+				echo "<tr>\n";
+				echo "<td width='30' class='divTableSeqPrimes'>5'</td>\n";
+				for($i=0;$i<$length1;$i++){
+					$letter1 = $arrSeq1[$i];
+					$letter2 = $arrSeq1[$i+1];
+					$j = $i+1;
+					$k = $j+1;
+					$code = "$j-$letter1";
+					$code2 = "$k-$letter2";
+					$codeBP = "$code:$code2";
+					logger("Seq1: -$letter1-");
+					echo "<td id='divTableSeq1' class='divTableSeq'><a id='$code' class='unselected' href=\"javascript:selectNucleotideNew('nmrNOE','$code','$userPath');\" title='Nucleotide Helical Parameters'> $letter1 </a></td>\n";
+					if($i != $length1-1)
+						echo "<td id='divTableSeq1Seps' class='divTableSeqSeps'><a id='$codeBP' name='BS' class='unselected' href=\"javascript:selectNucleotideNew('nmrNOE','$codeBP','$userPath');javascript:selectBaseStep('$codeBP');\" title='Backbone Helical Parameters'> - </a></td>\n";
+					$_SESSION['userData']['seq1'][$i] = 0;
+				}
+				echo "<td width='30' class='divTableSeqPrimes'>3'</td>\n";
+				echo "</tr>\n";
+				echo "<tr>\n";
+				echo "<td></td>\n";
+				echo "<td></td>\n";
+				echo "<td></td>\n";
+				for($i=0;$i<$length1;$i++){
+					$letter1 = $arrSeq1[$i];
+					$letter4 = $arrSeq2[$i];
+					$j = $i + 1;
+					$codeBPS = "$j-$letter1$letter4";
+					$letter2 = $arrSeq1[$j];
+					$letter3 = $arrSeq2[$j];
+					$codeTet = "$j-$letter1$letter2$letter3$letter4";
+					if($i > 0 and $i < $length1 - 1)
+						echo "<td id='divTableSepsUpDown' class='divTableSeqSepsX'><a id='$codeBPS' name='BPS' class='unselected' href=\"javascript:selectNucleotideNew('nmrNOE','$codeBPS','$userPath');javascript:selectBasePairStep('$codeBPS','$length1');\" title='Base Pair Helical Parameters'> | </a></td>\n";
+					if($i > 0 and $i < $length1 - 2)
+						echo "<td id='divTableSepsX' class='divTableSeqSepsX' ><a id='$codeTet' name='TET' class='unselected' href=\"javascript:selectNucleotideNew('nmrNOE','$codeTet','$userPath');javascript:selectTetramer('$codeTet','$length1');\" title='Base Pair Step Helical Parameters'> x </a></td>\n";
+					$_SESSION['userData']['seqBPS'][$i] = 0;
+				}
+				echo "</tr>\n";
+				echo "<tr>\n";
+				echo "<td class='divTableSeqPrimes'>3'</td>\n";
+				for($i=0;$i<$length2;$i++){
+					$letter1 = $arrSeq2[$i];
+					$letter2 = $arrSeq2[$i+1];
+					$j = ($length1 * 2) - $i - 1;
+					$k = $j + 1;
+					$p = ($length1 * 2) - $i;
+					$code = "$p-$letter1";
+					$code1 = "$j-$letter2";
+					$code2 = "$k-$letter1";
+					$codeBP = "$code1:$code2";
+					echo "<td id='divTableSeq2' class='divTableSeq'><a id='$code' class='unselected' href=\"javascript:selectNucleotideNew('nmrNOE','$code','$userPath');\" title='Nucleotide Helical Parameters'> $letter1 </a></td>\n";
+					if($i != $length2-1)
+						echo "<td id='divTableSeq2Seps' class='divTableSeqSeps'><a id='$codeBP' name='BS' class='unselected' href=\"javascript:selectNucleotideNew('nmrNOE','$codeBP','$userPath');javascript:selectBaseStep('$codeBP');\" title='Backbone Helical Parameters'> - </a></td>\n";
+					$_SESSION['userData']['seq2'][$i] = 0;
+				}
+				echo "<td class='divTableSeqPrimes'>5'</td>\n";
+				echo "</tr>\n";
+				echo "<tr>\n";
+				echo "<td></td>\n";
+				for($i=$length1;$i>0;$i--){
+					$num = $length1 + $i ;
+					echo "<td id='divTableSeqNum'> $num </td>\n";
+					echo "<td></td>\n";
+				}
+			?>
+		</tr>
+		</table>
+	</div>
+
+	<br/><br/>	
+
+	<div id="AvgVsTime">
+
+         <table cellpadding="15" align="center" border="0" class="avgParms">
+                <tr>
+                        <td class="curvesText"><a id='AVGSel' class='unselected' href="javascript:unhideNmrAvgPlots('AVGSel','Proton_Pairs_Avg');" title='AVG Results'>Average Results</a></td>
+			<td width="50"></td>
+                        <td class="curvesText"><a id='TIMESel' class='unselected' href="javascript:unhideNmrTimePlots('TIMESel','Proton_Pairs_Params');" title='TIME Results'>Results by Time</a></td>
+		</tr>
+	</table>
+	</div>
+
+	<br/>
+	
+	<div id="Avg_Params">
+
+        <div id="Proton_Pairs_Avg" class="hidden" style="text-align:center;">
+		<table align="center" cellpadding="0" width="950">
+		<tr><td>
+                  <p class="curvesText"><a id='J1p2pSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J1p2pSel_Avg','J1p2p-DNAAvgSelPlot');" title='NOEs: J1p2p'>H1'-H2'</a></p><br/>
+                  <p class="curvesText"><a id='J1p2ppSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J1p2ppSel_Avg','J1p2pp-DNAAvgSelPlot');" title='NOEs: J1p2pp'>H1'-H2''</a></p><br/>
+                  <p class="curvesText"><a id='J1p3pSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J1p3pSel_Avg','J1p3p-DNAAvgSelPlot');" title='NOEs: J1p3p'>H1'-H3'</a></p><br/>
+                  <p class="curvesText"><a id='J1p4pSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J1p4pSel_Avg','J1p4p-DNAAvgSelPlot');" title='NOEs: J1p4p'>H1'-H4'</a></p><br/>
+	          <p class="curvesText"><a id='J2p3pSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2p3pSel_Avg','J2p3p-DNAAvgSelPlot');" title='NOEs: J2p3p'>H2'-H3'</a></p><br/>
+	          <p class="curvesText"><a id='J2pp3pSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2pp3pSel_Avg','J2pp3p-DNAAvgSelPlot');" title='NOEs: J2pp3p'>H2''-H3'</a></p><br/>
+        	  <p class="curvesText"><a id='J3p4pSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J3p4pSel_Avg','J3p4p-DNAAvgSelPlot');" title='NOEs: J3p4p'>H3'-H4'</a></p><br/>
+		</td><td>
+        	  <p class="curvesText"><a id='J1p6Sel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J1p6Sel_Avg','J1p6-DNAAvgSelPlot');" title='NOEs: J1p6'>H1'-H6</a></p><br/>
+        	  <p class="curvesText"><a id='J1p8Sel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J1p8Sel_Avg','J1p8-DNAAvgSelPlot');" title='NOEs: J1p8'>H1'-H8</a></p><br/>
+        	  <p class="curvesText"><a id='J2p6Sel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2p6Sel_Avg','J2p6-DNAAvgSelPlot');" title='NOEs: J2p6'>H2'-H6</a></p><br/>
+        	  <p class="curvesText"><a id='J2pp6Sel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2pp6Sel_Avg','J2pp6-DNAAvgSelPlot');" title='NOEs: J2pp6'>H2''-H6</a></p><br/>
+        	  <p class="curvesText"><a id='J2p8Sel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2p8Sel_Avg','J2p8-DNAAvgSelPlot');" title='NOEs: J2p8'>H2'-H8</a></p><br/>
+        	  <p class="curvesText"><a id='J2pp8Sel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2pp8Sel_Avg','J2pp8-DNAAvgSelPlot');" title='NOEs: J2pp8'>H2''-H8</a></p><br/>
+        	  <p class="curvesText"><a id='J3p6Sel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J3p6Sel_Avg','J3p6-DNAAvgSelPlot');" title='NOEs: J3p6'>H3'-H6</a></p><br/>
+		</td><td>
+        	  <p class="curvesText"><a id='J3p8Sel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J3p8Sel_Avg','J3p8-DNAAvgSelPlot');" title='NOEs: J3p8'>H3'-H8</a></p><br/>
+        	  <p class="curvesText"><a id='J4p8Sel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J4p8Sel_Avg','J4p8-DNAAvgSelPlot');" title='NOEs: J4p8'>H4'-H8</a></p><br/>
+        	  <p class="curvesText"><a id='J1p6-StepSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J1p6-StepSel_Avg','J1p6-Step-DNAAvgSelPlot');" title='NOEs: J1p6'>H1'-H6 (+1)</a></p><br/>
+        	  <p class="curvesText"><a id='J2p6-StepSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2p6-StepSel_Avg','J2p6-Step-DNAAvgSelPlot');" title='NOEs: J2p6'>H2'-H6 (+1)</a></p><br/>
+        	  <p class="curvesText"><a id='J2pp6-StepSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2pp6-StepSel_Avg','J2pp6-Step-DNAAvgSelPlot');" title='NOEs: J2pp6'>H2''-H6 (+1)</a></p><br/>
+        	  <p class="curvesText"><a id='J3p6-StepSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J3p6-StepSel_Avg','J3p6-Step-DNAAvgSelPlot');" title='NOEs: J3p6'>H3'-H6 (+1)</a></p><br/>
+        	  <p class="curvesText_hidden hidden"><a id='H1-H5_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J56Sel_Avg','J56-DNAAvgSelPlot');" title='NOEs: J56'>H5-H6</a></p><br/>
+		</td><td>
+        	  <p class="curvesText"><a id='J1p8-StepSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J1p8-StepSel_Avg','J1p8-Step-DNAAvgSelPlot');" title='NOEs: J1p8'>H1'-H8 (+1)</a></p><br/>
+        	  <p class="curvesText"><a id='J2p8-StepSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2p8-StepSel_Avg','J2p8-Step-DNAAvgSelPlot');" title='NOEs: J2p8'>H2'-H8 (+1)</a></p><br/>
+        	  <p class="curvesText"><a id='J2pp8-StepSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J2pp8-StepSel_Avg','J2pp8-Step-DNAAvgSelPlot');" title='NOEs: J2pp8'>H2''-H8 (+1)</a></p><br/>
+        	  <p class="curvesText"><a id='J3p8-StepSel_Avg' class='unselected' href="javascript:unhideSelNmrAVGPlots('J3p8-StepSel_Avg','J3p8-Step-DNAAvgSelPlot');" title='NOEs: J3p8'>H3'-H8 (+1)</a></p><br/>
+        	  <p class="curvesText"><a id='ALLSel_Avg' class='unselected' href="javascript:unhideSelNmrALL('ALLSel_Avg','nmrJ.ALL');" title='J-couplings: ALL'>ALL</a></p>
+		</td>
+		<td id="Rib_Avg_images" rowspan="6" align="center">
+                <p id="Rib_Avg" class="unhidden"><img src="images/desoxyribose_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="J1p2ppSel_AvgRib" class="hidden"><img src="images/desoxyribose_J1p2pp_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="J1p2pSel_AvgRib" class="hidden"><img src="images/desoxyribose_J1p2p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="J2pp3pSel_AvgRib" class="hidden"><img src="images/desoxyribose_J2pp3p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="J2p3pSel_AvgRib" class="hidden"><img src="images/desoxyribose_J2p3p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="J3p4pSel_AvgRib" class="hidden"><img src="images/desoxyribose_J3p4p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="J1p3pSel_AvgRib" class="hidden"><img src="images/desoxyribose_J1p3p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="J1p4pSel_AvgRib" class="hidden"><img src="images/desoxyribose_J1p4p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="J1p6Sel_AvgRib" class="hidden"><img src="images/DPyrimidines_1p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA Pyrimidine (segment)</i></p>
+                <p id="J1p8Sel_AvgRib" class="hidden"><img src="images/DPurines_1p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA Purine (segment)</i></p>
+                <p id="J2p6Sel_AvgRib" class="hidden"><img src="images/DPyrimidines_2p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA Pyrimidine (segment)</i></p>
+                <p id="J2pp6Sel_AvgRib" class="hidden"><img src="images/DPyrimidines_2pp6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA Pyrimidine (segment)</i></p>
+                <p id="J2p8Sel_AvgRib" class="hidden"><img src="images/DPurines_2p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA Purine (segment)</i></p>
+                <p id="J2pp8Sel_AvgRib" class="hidden"><img src="images/DPurines_2pp8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA Purine (segment)</i></p>
+                <p id="J3p6Sel_AvgRib" class="hidden"><img src="images/DPyrimidines_3p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA Pyrimidine (segment)</i></p>
+                <p id="J3p8Sel_AvgRib" class="hidden"><img src="images/DPurines_3p8_trans.png" align="center" width="300"><i style="font-size:12pt"><br/>DNA Purine (segment)</i></p>
+                <p id="J4p8Sel_AvgRib" class="hidden"><img src="images/DPurines_4p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA Purine (segment)</i></p>
+                <p id="J1p8-StepSel_AvgRib" class="hidden"><img src="images/DPyrimidines_Purines_1p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Pyrimidine-Purine Step (Segment)</i></p>
+                <p id="J2p8-StepSel_AvgRib" class="hidden"><img src="images/DPyrimidines_Purines_2p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Pyrimidine-Purine Step (Segment)</i></p>
+                <p id="J2pp8-StepSel_AvgRib" class="hidden"><img src="images/DPyrimidines_Purines_2pp8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Pyrimidine-Purine Step (Segment)</i></p>
+                <p id="J3p8-StepSel_AvgRib" class="hidden"><img src="images/DPyrimidines_Purines_3p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Pyrimidine-Purine Step (Segment)</i></p>
+                <p id="J4p8-StepSel_AvgRib" class="hidden"><img src="images/DPyrimidines_Purines_4p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Pyrimidine-Purine Step (Segment)</i></p>
+                <p id="J1p6-StepSel_AvgRib" class="hidden"><img src="images/DPurines_Pyrimidines_1p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purine-Pyrimidine Step (Segment)</i></p>
+                <p id="J2p6-StepSel_AvgRib" class="hidden"><img src="images/DPurines_Pyrimidines_2p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purine-Pyrimidine Step (Segment)</i></p>
+                <p id="J2pp6-StepSel_AvgRib" class="hidden"><img src="images/DPurines_Pyrimidines_2pp6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purine-Pyrimidine Step (Segment)</i></p>
+                <p id="J3p6-StepSel_AvgRib" class="hidden"><img src="images/DPurines_Pyrimidines_3p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purine-Pyrimidine Step (Segment)</i></p>
+                <p id="J4p6-StepSel_AvgRib" class="hidden"><img src="images/DPurines_Pyrimidines_4p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purine-Pyrimidine Step (Segment)</i></p>
+		</td></tr>
+		</table>
+        </div>
+	</div>
+
+	<div id="Time_Params">
+
+        <div id="Proton_Pairs_Params" class="hidden" style="text-align:center;">
+		<table align="center" cellpadding="0" width="950">
+		<tr><td>
+		  <p class="curvesText"><a id='Nuc_H1p-Nuc_H2pSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H1p-Nuc_H2pSel','Nuc_H1p-Nuc_H2pTimeSelPlot');" title='NOEs: H1p-H2p'>H1'-H2'</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H1p-Nuc_H2ppSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H1p-Nuc_H2ppSel','Nuc_H1p-Nuc_H2ppTimeSelPlot');" title='NOEs: H1p-H2pp'>H1'-H2''</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H1p-Nuc_H3pSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H1p-Nuc_H3pSel','Nuc_H1p-Nuc_H3pTimeSelPlot');" title='NOEs: H1p-H3p'>H1'-H3'</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H1p-Nuc_H4pSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H1p-Nuc_H4pSel','Nuc_H1p-Nuc_H4pTimeSelPlot');" title='NOEs: H1p-H4p'>H1'-H4'</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H2p-Nuc_H3pSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H2p-Nuc_H3pSel','Nuc_H2p-Nuc_H3pTimeSelPlot');" title='NOEs: H2p-H3p'>H2'-H3'</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H2pp-Nuc_H3pSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H2pp-Nuc_H3pSel','Nuc_H2pp-Nuc_H3pTimeSelPlot');" title='NOEs: H2pp-H3p'>H2''-H3'</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H3p-Nuc_H4pSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H3p-Nuc_H4pSel','Nuc_H3p-Nuc_H4pTimeSelPlot');" title='NOEs: H3p-H4p'>H3'-H4'</a></p><br/>
+		</td><td>
+		  <p class="curvesText"><a id='Nuc_H1p-Nuc_H6Sel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H1p-Nuc_H6Sel','Nuc_H1p-Nuc_H6TimeSelPlot');" title='NOEs: H1p-H6'>H1'-H6/H8</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H2p-Nuc_H6Sel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H2p-Nuc_H6Sel','Nuc_H2p-Nuc_H6TimeSelPlot');" title='NOEs: H2p-H6'>H2'-H6/H8</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H2pp-Nuc_H6Sel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H2pp-Nuc_H6Sel','Nuc_H2pp-Nuc_H6TimeSelPlot');" title='NOEs: H2pp-H6'>H2''-H6/H8</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H3p-Nuc_H6Sel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H3p-Nuc_H6Sel','Nuc_H3p-Nuc_H6TimeSelPlot');" title='NOEs: H3p-H6'>H3'-H6/H8</a></p><br/>
+		  <p class="curvesText_hidden hidden" id="H5-H6"><a id='Nuc_H5-Nuc_H6Sel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H5-Nuc_H6Sel','Nuc_H5-Nuc_H6TimeSelPlot');" title='NOEs: H5-H6'>H5-H6</a></p><br/>
+		</td><td>
+		  <p class="curvesText"><a id='Nuc_H1p-Nuc_H6-StepSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H1p-Nuc_H6-StepSel','Nuc_H1p-Nuc_H6-StepTimeSelPlot');" title='NOEs: H1p-H6-Step'>H1'-H6/H8 (+1)</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H2p-Nuc_H6-StepSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H2p-Nuc_H6-StepSel','Nuc_H2p-Nuc_H6-StepTimeSelPlot');" title='NOEs: H2p-H6-Step'>H2'-H6/H8 (+1)</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H2pp-Nuc_H6-StepSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H2pp-Nuc_H6-StepSel','Nuc_H2pp-Nuc_H6-StepTimeSelPlot');" title='NOEs: H2pp-H6-Step'>H2''-H6/H8 (+1)</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H3p-Nuc_H6-StepSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H3p-Nuc_H6-StepSel','Nuc_H3p-Nuc_H6-StepTimeSelPlot');" title='NOEs: H3p-H6-Step'>H3'-H6/H8 (+1)</a></p><br/>
+		  <p class="curvesText"><a id='Nuc_H4p-Nuc_H6-StepSel' class='unselected' href="javascript:unhideSelNmrPlots('Nuc_H4p-Nuc_H6-StepSel','Nuc_H4p-Nuc_H6-StepTimeSelPlot');" title='NOEs: H4p-H6-Step'>H4'-H6/H8 (+1)</a></p><br/>
+		</td>
+		<td id="Rib_images" rowspan="6" align="center">
+                <p id="Rib" class="unhidden"><img src="images/desoxyribose_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="Nuc_H1p-Nuc_H2pSelRib" class="hidden"><img src="images/desoxyribose_J1p2p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="Nuc_H1p-Nuc_H2ppSelRib" class="hidden"><img src="images/desoxyribose_J1p2pp_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="Nuc_H1p-Nuc_H3pSelRib" class="hidden"><img src="images/desoxyribose_J1p3p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="Nuc_H1p-Nuc_H4pSelRib" class="hidden"><img src="images/desoxyribose_J1p4p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="T_Nuc_H1p-Nuc_H6SelRib" class="hidden"><img src="images/DT_1p6_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Thymine</i></p>
+                <p id="T_Nuc_H2p-Nuc_H6SelRib" class="hidden"><img src="images/DT_2p6_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Thymine</i></p>
+                <p id="T_Nuc_H2pp-Nuc_H6SelRib" class="hidden"><img src="images/DT_2pp6_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Thymine</i></p>
+                <p id="T_Nuc_H3p-Nuc_H6SelRib" class="hidden"><img src="images/DT_3p6_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Thymine</i></p>
+                <p id="C_Nuc_H1p-Nuc_H6SelRib" class="hidden"><img src="images/DC_1p6_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Cytosine</i></p>
+                <p id="C_Nuc_H2p-Nuc_H6SelRib" class="hidden"><img src="images/DC_2p6_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Cytosine</i></p>
+                <p id="C_Nuc_H2pp-Nuc_H6SelRib" class="hidden"><img src="images/DC_2pp6_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Cytosine</i></p>
+                <p id="C_Nuc_H3p-Nuc_H6SelRib" class="hidden"><img src="images/DC_3p6_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Cytosine</i></p>
+                <p id="C_Nuc_H5-Nuc_H6SelRib" class="hidden"><img src="images/DC_56_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Cytosine</i></p>
+                <p id="G_Nuc_H1p-Nuc_H8SelRib" class="hidden"><img src="images/DG_1p8_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Guanine</i></p>
+                <p id="G_Nuc_H2p-Nuc_H8SelRib" class="hidden"><img src="images/DG_2p8_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Guanine</i></p>
+                <p id="G_Nuc_H2pp-Nuc_H8SelRib" class="hidden"><img src="images/DG_2pp8_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Guanine</i></p>
+                <p id="G_Nuc_H3p-Nuc_H8SelRib" class="hidden"><img src="images/DG_3p8_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Guanine</i></p>
+                <p id="A_Nuc_H1p-Nuc_H8SelRib" class="hidden"><img src="images/DA_1p8_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Adenine</i></p>
+                <p id="A_Nuc_H2p-Nuc_H8SelRib" class="hidden"><img src="images/DA_2p8_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Adenine</i></p>
+                <p id="A_Nuc_H2pp-Nuc_H8SelRib" class="hidden"><img src="images/DA_2pp8_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Adenine</i></p>
+                <p id="A_Nuc_H3p-Nuc_H8SelRib" class="hidden"><img src="images/DA_3p8_trans.png" width="400" align="center"><i style="font-size:12pt"><br/>DNA Adenine</i></p>
+                <p id="Nuc_H2p-Nuc_H3pSelRib" class="hidden"><img src="images/desoxyribose_J2p3p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="Nuc_H2pp-Nuc_H3pSelRib" class="hidden"><img src="images/desoxyribose_J2pp3p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="Nuc_H3p-Nuc_H4pSelRib" class="hidden"><img src="images/desoxyribose_J3p4p_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>DNA 2-Deoxyribose</i></p>
+                <p id="Nuc_H1p-Nuc_H6-StepSelRib" class="hidden"><img src="images/DPurines_Pyrimidines_1p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+                <p id="Nuc_H2p-Nuc_H6-StepSelRib" class="hidden"><img src="images/DPurines_Pyrimidines_2p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+                <p id="Nuc_H2pp-Nuc_H6-StepSelRib" class="hidden"><img src="images/DPurines_Pyrimidines_2pp6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+                <p id="Nuc_H3p-Nuc_H6-StepSelRib" class="hidden"><img src="images/DPurines_Pyrimidines_3p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+                <p id="Nuc_H4p-Nuc_H6-StepSelRib" class="hidden"><img src="images/DPurines_Pyrimidines_4p6_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+                <p id="Nuc_H1p-Nuc_H8-StepSelRib" class="hidden"><img src="images/DPyrimidines_Purines_1p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+                <p id="Nuc_H2p-Nuc_H8-StepSelRib" class="hidden"><img src="images/DPyrimidines_Purines_2p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+                <p id="Nuc_H2pp-Nuc_H8-StepSelRib" class="hidden"><img src="images/DPyrimidines_Purines_2pp8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+                <p id="Nuc_H3p-Nuc_H8-StepSelRib" class="hidden"><img src="images/DPyrimidines_Purines_3p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+                <p id="Nuc_H4p-Nuc_H8-StepSelRib" class="hidden"><img src="images/DPyrimidines_Purines_4p8_trans.png" width="300" align="center"><i style="font-size:12pt"><br/>Purines-Pyrimidines (Segment)</i></p>
+		</td></tr>
+		</table>
+        </div>
+        </div>
+	
+	<!-- PLOTS -->
+
+        <div id="NmrParams">
+
+        <div id="HelicalParamsPlots">
+
+                <div id="J1p2p-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H1p-H2p.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H1p-H2p.avg.dat.png','J1p2p','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H1p-H2p.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J1p2pp-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H1p-H2pp.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H1p-H2pp.avg.dat.png','J1p2pp','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H1p-H2pp.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J1p3p-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H1p-H3p.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H1p-H3p.avg.dat.png','J1p3p','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H1p-H3p.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J1p4p-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H1p-H4p.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H1p-H4p.avg.dat.png','J1p4p','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H1p-H4p.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J1p6-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H1p-H6.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H1p-H6.avg.dat.png','J1p6','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H1p-H6.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J1p8-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H1p-H8.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H1p-H8.avg.dat.png','J1p8','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H1p-H8.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2p3p-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2p-H3p.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2p-H3p.avg.dat.png','J2p3p','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2p-H3p.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2pp3p-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2pp-H3p.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2pp-H3p.avg.dat.png','J2p3p','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2pp-H3p.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2p6-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2p-H6.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2p-H6.avg.dat.png','J2p6','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2p-H6.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2pp6-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2pp-H6.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2pp-H6.avg.dat.png','J2pp6','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2pp-H6.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2p8-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2p-H8.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2p-H8.avg.dat.png','J2p8','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2p-H8.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2pp8-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2pp-H8.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2pp-H8.avg.dat.png','J2pp8','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2pp-H8.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J3p4p-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H3p-H4p.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H3p-H4p.avg.dat.png','J3p4p','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H3p-H4p.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J3p6-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H3p-H6.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H3p-H6.avg.dat.png','J3p6','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H3p-H6.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J3p8-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H3p-H8.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H3p-H8.avg.dat.png','J3p8','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H3p-H8.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J4p8-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H4p-H8.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H4p-H8.avg.dat.png','J4p8','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H4p-H8.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J56-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H5-H6.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H5-H6.avg.dat.png','J56','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H5-H6.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J1p6-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H1p-H6-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H1p-H6-Step.avg.dat.png','J1p6-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H1p-H6-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2p6-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2p-H6-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2p-H6-Step.avg.dat.png','J2p6-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2p-H6-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2pp6-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2pp-H6-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2pp-H6-Step.avg.dat.png','J2pp6-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2pp-H6-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J3p6-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H3p-H6-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H3p-H6-Step.avg.dat.png','J3p6-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H3p-H6-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J4p6-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H4p-H6-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H4p-H6-Step.avg.dat.png','J3p6-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H4p-H6-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J1p8-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H1p-H8-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H1p-H8-Step.avg.dat.png','J1p8-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H1p-H8-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2p8-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2p-H8-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2p-H8-Step.avg.dat.png','J2p8-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2p-H8-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J2pp8-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H2pp-H8-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H2pp-H8-Step.avg.dat.png','J2pp8-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H2pp-H8-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J3p8-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H3p-H8-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H3p-H8-Step.avg.dat.png','J3p8-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H3p-H8-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+                <div id="J4p8-Step-DNAAvgSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
+		<table border="0"><tr><td>
+                <img border="0" src="<?php echo $userPath ?>/H4p-H8-Step.avg.dat.png">
+                </td><td>
+                <p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$userPath ?>/H4p-H8-Step.avg.dat.png','J3p8-Step','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+                <a href="getFile.php?fileloc=<?php echo $userPath ?>/H4p-H8-Step.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+                </td></tr></table>
+                </div>
+        </div>
+
+        <div id="StatsTable">
+	<?php
+
+		$cmd = "ls */*.stats";
+		$out = exec($cmd,$files);
+		$length = count($files);
+
+		for($cont=0;$cont<$length;$cont++){
+			# 22/J1p2p-RNA.stats
+			$file = $files[$cont];
+			$dirs = preg_split('/\//',$file);
+			$realFile = $dirs[1];
+			$parts = preg_split('/\./',$realFile);
+			$num = $parts[0]."-".$dirs[0];
+			print "<div id='nmrJ.".$num."' class='hidden'>";
+			#print "<table cellpadding='15' align='center' border='0' style='background-color:#dcdcdc;text-align:center'>\n";	
+			print "<table cellpadding='15' align='center' border='0' class='tableNMR'>\n";	
+
+			$cmd = "cat $file";
+			$out = exec($cmd,$content);
+
+			$dirs = preg_split('/,/',$out);
+			$value1 = preg_split('/:/',$dirs[0]);
+			$value2 = preg_split('/:/',$dirs[1]);
+			$mean = sprintf("%8.3f",$value1[1]);
+			$stdev = sprintf("%8.3f",$value2[1]);
+
+			print "<tr><td></td><td>Mean</td><td>Stdev</td></tr><tr><td>$num</td><td>$mean</td><td>$stdev</td></tr>\n";
+
+			print "</table>\n";
+			print "</div>\n";
+		}		
+?>
+
+		<!-- Plot for ALL J-couplings -->
+		<div id="nmrJ.ALL" class="hidden">
+<?php
+			$cmd = "cat Jcoupling.stats";
+			$out = exec($cmd,$lines);
+			$length = count($lines);
+
+			print "<table cellpadding='15' align='center' border='0' class='tableNMR'>\n";
+			print "<tr><td>Nucleotide Number</td><td>Jcoupling Type</td><td>Mean</td><td>Stdev</td></tr>\n";
+
+			for($cont=0;$cont<$length;$cont++){
+				# 18 J1p2pp-DNA    5.320    1.504
+				$line = $lines[$cont];
+				if(preg_match('/^#/',$line)) continue;
+				$arr = preg_split('/\s+/',$line);
+				print "<tr><td>$arr[0]</td><td>$arr[1]</td><td>$arr[2]</td><td>$arr[3]</td></tr>\n";
+			}
+			print "</table>\n";
+	?>
+
+		<table align="center" border="0"><tr><td>
+		<a href="getFile.php?fileloc=<?php echo $userPath."/Jcoupling.stats" ?>&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
+		</td></tr></table>
+	</div>
+	</div>
+	</div>
+
+        <div id="HelicalParamsPlotsTime">
+
+        <div id="Time_helical_bpstep">
+        <div id="Nuc_H1p-Nuc_H2pTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H1p-Nuc_H2ppTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H1p-Nuc_H3pTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H1p-Nuc_H4pTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H1p-Nuc_H6TimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H1p-Nuc_H8TimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H2p-Nuc_H3pTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H2p-Nuc_H6TimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H2pp-Nuc_H3pTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H2pp-Nuc_H6TimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H3p-Nuc_H4pTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H3p-Nuc_H6TimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H5-Nuc_H6TimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H1p-Nuc_H6-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H2p-Nuc_H6-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H2pp-Nuc_H6-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H3p-Nuc_H6-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H4p-Nuc_H6-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H1p-Nuc_H8-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H2p-Nuc_H8-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H2pp-Nuc_H8-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H3p-Nuc_H8-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        <div id="Nuc_H4p-Nuc_H8-StepTimeSelPlot" class="hidden" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;"></div>
+        </div>
+
+	</div>
+
+	<br/><br/>	

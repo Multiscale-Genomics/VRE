@@ -1,0 +1,136 @@
+<p><strong>Table S4. Representative data structures stored in the MongoDB analysis subsystem.</strong></p>
+<p>Examples correspond to NAFlex_DDD_bsc1 simulation (Drew Dickerson dodecamer). Analysis correspond to fragments labelled at position 5. 
+</p>
+<div style="border: 1px; text-align: left">
+<pre>
+{
+    _id: ‘NAFlex_DDD_bsc1’,
+    dataset: ‘ParmBSC1’,
+    NucType: ‘DNA’,
+    moleculeType: ‘Dna’,
+    SubType: ‘B’,
+    PDB: ‘1naj’,
+    sequence: ‘CGCGAATTCGCG’,
+    rev_sequence: ‘CGCGAATTCGCG’,
+    Parts: ‘DNA+iones’,
+    Chains: ‘duplex’,
+    soluteResidues: 24,
+    soluteAtoms: 758,
+    soluteCharge: -22,
+    CounterIons: ‘Na+’,
+    IonicConcentration: ‘Electroneutrality’,
+    totalIons: 0,
+    totalAtoms: 758,
+    AdditionalSolvent: ‘No’,
+    solventResidues: 0,
+    solventAtoms: 0,
+    totalResidues: 24,
+    AdditionalMolecules: ‘No’,
+    Ligands: ‘No’,
+    AdditionalIons: ‘No’,
+    IonsParameters: ‘Dang’,
+    ionsModel: ‘-’,
+    Water: ‘TIP3P’,
+    Author: ‘P.D.’,
+    Temperature: 298,
+    forceField: ‘parmbsc0’,
+    date: ‘06/23/15’,
+    saltConcentration: 0,
+    totalCharge: -22,
+    time: 10000,
+    Format: ‘netcdf’,
+    FrameStep: ‘20ps’,
+    Frames: 500000,
+    Trajectory: ‘DDD10micros_nowat.nc’,
+    Topology: ‘DDD10micros_nowat.prmtop’,
+    RMSd_avg: 1.734,
+    RMSd_stdev: 0.368,
+    Comments: ,
+    ontology: [‘101’,’202’,’301’,’401’,’502’,’703’,
+	’80102’,’80202’,’80301’,‘80401’, ‘80501’, ‘80601’],
+    description: ‘DNA-B|Duplex|Naked|DDD|ParmBSC1|TIP3P|Electroneutral’
+}
+
+// Analyses at base level (5-A)
+
+{
+    _id: {frame: 0,idSim: ‘NAFlex_DDD_bsc1’,idGroup: ‘A’,nGroup: 5},
+    CURVES: {
+	backbone_torsions: {
+            BI_population: [82.26],
+            canonical_alpha_gamma: [97.22],
+            puckering: [4.34,6.64,88.96,0.06]
+        }
+    },
+    NMR_JC: {
+	J1p2p-DNA: [10.011,1.764], J1p2pp-DNA: [5.213,1.430],
+	J2p3p-DNA:  [6.309,0.999], J2pp3p-DNA: [2.276,1.734],
+	J3p4p-DNA:  [1.883,1.693]
+    },
+    NMR_NOE: {
+	H1p-H2p:  [3.0252,0.0806], H1p-H2pp: [2.3772,0.1157],
+	H2p-H3p:  [2.3771,0.1072], H2p-H4p:  [3.7905,0.0933],
+	H2pp-H3p: [2.7312,0.1112], H2pp-H4p: [3.9616,0.3060],
+	H3p-H4p:  [2.7804,0.1090], H1p-H4p:  [3.1969,0.2762],
+	H1p-H3p:  [3.7813,0.1239], H1p-H8:   [3.5212,0.6081],
+	H2p-H8:   [3.6553,0.5865], H2pp-H8:  [2.4727,0.4316],
+	H3p-H8:   [4.6430,0.4418], H4p-H8:   [5.7722,0.6122]
+    }
+}
+
+// Analyses at base pair level (5 – AT)
+
+{
+    _id: {frame: 0,idSim: ‘NAFlex_DDD_bsc1’,idGroup: ‘AT’,nGroup: 5},
+    CURVES: {
+	axis_bp: {
+            inclin_avg: [3.44,4.6],
+            xdisp_avg:  [-0.96,0.7],
+            ydisp_avg:  [0.14,0.5]
+	},
+	helical_bp: {
+            buckle_avg:  [5.62,10.2],  opening_avg: [1.87,5.4],
+            propel_avg:  [-14.99,7.7], shear_avg:   [0.14,0.4],
+            stagger_avg: [-0.01,0.4],  stretch_avg: [0.03,0.1]
+	}
+    }
+}
+// Analyses at base-pair step level (5 – AATT)
+{
+    _id: {frame: 0,’idSim: ‘NAFlex_DDD_bsc1’,idGroup: ‘AATT’,nGroup: 5},
+	CURVES: {
+            grooves: {
+                majd_avg: [5.71,1.4], majw_avg: [11.93,1.6],
+                mind_avg: [4.95,0.7], minw_avg: [5.22,1.4]
+            },
+            helical_bpstep: {
+                rise_avg:  [3.37,0.3],  roll_avg:  [1.21,5],
+                shift_avg: [-0.27,0.6], slide_avg: [-0.48,0.5],
+                tilt_avg:  [-2.38,4],   twist_avg: [36.35,4.6]
+            }   
+        },
+	STACKING: {
+            stW: [-7.1088648,0.982759350869257],
+            stC: [-1.43531339999999,0.731727353308896],
+            HB:  [-11.045809,1.11398008443553]
+	}
+    },
+    STIFFNESS: {
+	FORCE_CTES: {
+            PROD: [0.01606],
+            MAT: [
+                2.31756, 0,	   0,	    0.00173, 0,	       0,
+                0,       5.57878,  2.97746, 0,      -0.01652, -0.20697,
+                0,	 2.97747, 11.11783, 0,	     0.04616, -0.16052,
+                0.00173, 0,        0,	    0.04624, 0,	       0,
+                0,	-0.01652,  0.04616, 0,	     0.03597,  0.0064,
+                0,	-0.20696, -0.16051, 0,	     0.0064,   0.06717
+            ],
+            rise_avg:  [11.11783], roll_avg:  [0.03597],
+            shift_avg: [2.31756],  slide_avg: [5.57878],
+            tilt_avg:  [0.04624],  twist_avg: [0.06717]
+        }
+    }
+}
+</pre>
+</div>

@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Fri, 14 Aug 2015 16:25:27 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 136
+Content-Type: application/json
+
+{
+  "top_name": "BIGNASim55ce1a0e9a3f5-AAAA-1_5000_100-4trajs.pdb", 
+  "traj_name": "BIGNASim55ce1a0e9a3f5-AAAA-1_5000_100-4trajs.dcd"
+}

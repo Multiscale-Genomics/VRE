@@ -1,0 +1,24 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">BIGNASim<i>lite</i> Download</h4>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	<strong>BIGNASim</strong> is composed of a rather large and complex set of software units, including two <strong>NoSQL database platforms</strong> and two web servers. The installation of local copy of the server is not generally recommended. However, in cases where data is sensitive, and must be kept private, or for testing purposes, an installable <strong>reduced</strong> version of the software is available. Local stand-alone installations will not be connected with the main <strong>BIGNASim databases</strong>, unless specific agreement. </p>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">Downloadable software is tuned to avoid the need of an external database system, although the full functionality of the analysis portal is provided. This would obviously limit the amount of data to be handled, but offers a system capable enough to fulfil the needs of a simulations group to a certain extent. The installable package is being prepared in prepacked <a href="https://www.docker.com/" target="_blank">Docker images</a>.
+</p>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+<strong>BNSLite</strong> could be installed in any modern <strong>Linux system</strong> (it has been tested on <strong>Ubuntu</strong>, and <strong>openSuSE</strong>). Note that the installation procedure may require reasonable skills in system administration, and also root privileges due to the use of Docker engine. The downloadable system is designed to run in a single computer or inside a virtual machine. 
+</p>
+<p align="justify">1.To run <strong>BNSLite Docker images</strong>, a <strong>Docker engine</strong> is required. Instructions to install Docker can be found at Docker web site (<a href="https://www.docker.com/" target="_blank">http://www.docker.com</a>). Note that Docker requires root privileges to be installed. <strong>Docker images</strong> can be run as part of a virtualized system, refer to <strong>Docker</strong> instructions to choose the appropriate configuration.  
+</p>
+
+<p align="justify">2.Download the <a href="download/bnslite.tar.gz">installation package</a>.The provided installation script will gather the necessary information about your system and create the configuration file. <strong>Docker images</strong> will be downloaded automatically in the first run, but they can be installed also beforehand. This is recommended for slow networks.
+</p>
+
+<p align="justify">3.Several data directories should be created: raw trajectory data, analysis results, and database files. These directories could be accessible locally or <strong>NFS</strong> mounted. If directories do not exist, they will be created by the installation script. Raw trajectory data could be removed after trajectories are loaded and the analysis is performed, but analysis results and databases should be a permanent storage. Data in analysis and database directories is managed by the application. Do not erase or modify any files. A test directory containing the necessary files is provided as example of the needed input files. 
+</p>
+
+<p align="justify">Terminal example of the installation process: (From [03:00] to [121:05] the user unassisted analysis is performed)</p>
+
+<script type="text/javascript" src="https://asciinema.org/a/aqqnzcqxsz7cgev5d6e6kklge.js" id="asciicast-aqqnzcqxsz7cgev5d6e6kklge" async></script>

@@ -1,0 +1,96 @@
+/* Container DIV - automatically generated */
+.simply-scroll-container { 
+	position: relative;
+}
+
+/* Clip DIV - automatically generated */
+.simply-scroll-clip { 
+	position: relative;
+	overflow: hidden;
+	z-index: 2;
+}
+
+/* UL/OL/DIV - the element that simplyScroll is inited on
+Class name automatically added to element */
+.simply-scroll-list { 
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+	
+.simply-scroll-list li {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+	
+.simply-scroll-list li img {
+	border: none;
+	display: block;
+}
+
+/* Master button styles - note that up and down versions 
+have been removed in this example */
+
+.simply-scroll-btn {
+	position: absolute;
+	background-image: url(buttons.png);
+	width: 42px;
+	height: 44px;
+	z-index:3;
+	cursor: pointer;
+}
+	
+.simply-scroll-btn-left {
+	left: 6px;
+	bottom: 6px;
+	background-position: 0 -44px;
+}
+.simply-scroll-btn-left.disabled {
+	background-position: 0 0 !important;
+}
+.simply-scroll-btn-left:hover {
+	background-position: 0 -88px;
+}
+
+.simply-scroll-btn-right {
+	right: 6px;
+	bottom: 6px;
+	background-position: 84px -44px;
+}
+.simply-scroll-btn-right.disabled {
+	background-position: 84px 0 !important;
+}
+.simply-scroll-btn-right:hover {
+	background-position: 84px -88px;
+}
+
+/* Custom class modifications - adds to / overrides above
+
+.simply-scroll is default base class */
+
+/* Container DIV */
+.simply-scroll { 
+	width: 576px;
+	height: 200px;
+	margin-bottom: 1em;
+}
+
+/* Clip DIV */
+.simply-scroll .simply-scroll-clip {
+	width: 576px;
+	height: 200px;
+}
+	
+/* Explicitly set height/width of each list item */	
+.simply-scroll .simply-scroll-list li {
+	float: left; /* Horizontal scroll only */
+	width: 290px;
+	height: 200px;
+}
+

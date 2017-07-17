@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <base href="http://mmb.irbbarcelona.org/BigNASim/">
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/png" href="images/DNA_extrusion.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>Molecular Modeling and Bioinformatics Group</title>
+
+        <!--        -->
+        <!-- STYLES -->
+        <!--        -->
+
+        <!-- Drupal mmb style -->
+        <link rel="stylesheet" href="css/style.css">
+
+        <!-- Own style -->
+        <link rel="stylesheet" href="css/estil.css">
+
+        <!-- Make tables responsive -->
+        <link rel="stylesheet" href="css/responsiveTables.css">
+        <link rel="stylesheet" href="css/responstables.css">
+
+        <!-- TinyAccordion style -->
+        <link rel="stylesheet" href="css/tinyAccordion.css">
+
+        <!-- Ontology Search style -->
+        <link rel="stylesheet" href="css/onto.css">
+
+        <!-- Static MD traj info (getStruc.php) style -->
+        <link rel="stylesheet" href="css/getStruct.css">
+
+        <!-- Global Search (advSearch.php) style -->
+        <link rel="stylesheet" href="css/advSearch.css">
+
+        <!-- Global Search (advSearch.php) style -->
+        <link rel="stylesheet" href="js/video-js/video-js.css">
+
+        <!-- Transforming Table to Divs -->
+        <link rel="stylesheet" href="css/table2divs.css">
+
+        <!-- Styling Search Form -->
+        <link rel="stylesheet" href="css/formStyle.css">
+
+        <!-- Styling Stats Table -->
+        <link rel="stylesheet" href="css/stats.css">
+
+        <!-- jqplot css -->
+        <link rel="stylesheet" type="text/css" href="js/jqplot/jquery.jqplot.css" />
+
+        <!-- tooltip css -->
+        <link rel="stylesheet" type="text/css" href="css/simptip-master/simptip.min.css" />
+
+        <!-- F.A.Q. css -->
+        <link rel="stylesheet" type="text/css" href="css/faq.css" />
+
+	<!-- BNSdatamanager -->
+        <style type="text/css">
+        #folderName {visibility: hidden}
+        #fileUpload {visibility: hidden}
+        #td,th {padding:0px 7px;}
+	ul {list-style-type: none; margin-left:50px;}
+	ul li span { display: inline-block; vertical-align:middle; }
+
+	.linkButton {
+		color:white;
+		border: thin solid;
+		border-radius: 5px;
+		text-decoration: none;
+		background-color: #3779ac;
+		display: inline-block;
+		padding:4px 8px;
+	}
+
+	.disabled {
+	   pointer-events: none;
+	   cursor: default;
+	}
+	
+        .progress {
+                float:left;
+                border: 2px solid #387da8;
+                height: 16px;
+                width: 30%;
+        }
+        .progress .prgbar {
+                background: #387da8;
+                width: 30%;
+                position: relative;
+                height: 16px;
+                z-index: 999;
+        }
+        .progress .prgtext {
+                color: #ffffff;
+		text-shadow: -1px 0 #5b5b5b, 0 1px #5b5b5b, 1px 0 #5b5b5b, 0 -1px #5b5b5b;
+                text-align: left;
+                font-size: 13px;
+                font-weight: bold;
+                width: 30%;
+                position: absolute;
+                z-index: 1000;
+        }
+        .progress .prginfo {
+                margin: 3px 0;
+        }
+        .notify {
+            background-color:#fefbfa;
+            border:.1em solid;
+            border-color: #387da8;
+            border-radius:10px;
+            padding:5px 5px 5px 5px;
+            margin:10px;
+            cursor: default;
+        }
+	.not-active {
+	   pointer-events: none;
+	   cursor: default;
+           opacity:0.4;
+	   filter: alpha(opacity=40);
+        }
+
+	#tabs ul {
+	    -list-style-type: none;
+	    border-bottom: 1px solid #024457;
+	    margin: 0;
+	    padding-left:0;
+	    padding-right:0;
+	    padding-bottom: 28px;
+	}
+
+	#tabs ul li {
+	    display: inline;
+	    float: left;
+	    height: 24px;
+	    min-width:80px;
+	    text-align:center;
+	    padding:0;
+	    margin: 1px 0px 0px 0px;
+	    border: 1px solid #024457;
+	
+	}
+
+	#tabs ul li.selected  {
+	    border-bottom: none;
+	    background-color: none;
+	    z-index:2;
+	}
+
+
+	#tabs ul li a 	{
+	    float: left;
+	    color: #666;
+	    text-decoration: none;
+	    padding: 4px;
+	    text-align:center;
+	    background-color:#eee;
+	    min-width:80px;
+	    border-bottom: 1px solid #024457;
+	}
+
+	#tabs ul li a.selected 	{
+	    color: #000;
+	    font-weight:bold;
+            border-bottom: none;
+	    border-color: #eee;
+            text-shadow: none;
+	}
+
+	#tabs ul li a:hover 	{
+	    color: #000;
+	    font-weight:bold;
+	    background-color: #fff;
+	}
+	
+
+        </style>
+
+
+
+        <!--             -->
+        <!-- JavaScripts -->
+        <!--             -->
+
+        <!-- JQuery -->
+        <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+        <!-- Image Preview -->
+        <script type="text/javascript" src="js/imagePreview.js"></script>
+
+        <!-- Image/Video visualization with jQuery -->
+        <script type="text/javascript" src="js/jqueryImages/jqueryImages.js"></script>
+
+        <!-- Tiny Nav for Responsive Menu -->
+        <script type="text/javascript" src="js/main-menu.js"></script>
+
+        <!-- JSMol -->
+        <script type="text/javascript" src="jsmol/JSmol.min.nojq.js"></script>
+
+        <!-- JSMol auxiliar Scripts -->
+        <script type="text/javascript" src="js/jmolScripts.js"></script>
+
+        <!-- Miscellanious Aux Scripts -->
+        <script type="text/javascript" src="js/auxScripts.js"></script>
+
+        <!-- Accordion Scripts -->
+        <!--<script type="text/javascript" src="js/tinyAccordion/script.js"></script>-->
+
+        <!-- jqplot Scripts -->
+        <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/jqplot/excanvas.js"></script><![endif]-->
+        <script language="javascript" type="text/javascript" src="js/jqplot/jquery.jqplot.min.js"></script>
+        <script type="text/javascript" src="js/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+
+    </head>
+    <body class="html front logged-in one-sidebar sidebar-first page-node left-sidebar">
+        <div id="wrapper">
+            <header id="header" class="clearfix">
+                <div id="site-logo">
+                    <a href="/www/" title="Home">
+                        <img src="http://mmb.pcb.ub.es/www/sites/web.mmb.pcb.ub.es.www/files/logo_0.png" alt="Home" />
+                    </a>
+                    <a href="index.php" title="Home">
+                        <img src="images/BigNASim_rot.png" style="height: 100px; float:right; margin-bottom:10px; margin-right:10px;" alt="BigNASim" />
+                    </a>
+                </div>            
+                <nav id="navigation" role="navigation">
+                    <div id="main-menu">
+                        <ul class="menu">
+                            <li id="HomeLiTab" class="first collapsed"><a href="index.php" id="HomeTab" class="active">Home</a></li>
+                            <li id="BrowseLiTab" class="leaf"><a href="browsePag.php" id="BrowseTab" title="">Browse</a></li>
+                            <li id="SearchLiTab" class="leaf"><a href="newSearch.php" id="SearchTab" title="">Search</a></li>
+                            <!--<li id="advSearchLiTab" class="leaf"><a href="retrAdvSearch.php" id="advSearchTab">Global Analyses</a></li>-->
+                            <li id="advSearchLiTab" class="leaf"><a href="analyses.php" id="advSearchTab">Global Analyses</a></li>
+                            <li id="statsLiTab" class="leaf"><a href="stats.php" id="statsTab">Statistics</a></li>
+                            <li id="HelpLiTab" class="leaf"><a href="help.php" id="HelpTab" >Help</a></li>
+			    <li id="SuppMatLiTab" class="leaf"><a href="SuppMaterial.php" id="SupplMatTab" >Suppl. Material</a></li>
+                        </ul>      
+                    </div>
+                </nav>                
+            </header>
+            <script type="text/javascript">
+                function toggleVis(a) {
+                    ob  = document.getElementById(a);
+                    if (ob.style.visibility == 'hidden') {
+                        ob.style.visibility = 'visible';
+                        //ob.style.display = 'inline';
+                        ob.style.display = 'table-row';
+                    } else {
+                        ob.style.visibility = 'hidden';
+                        ob.style.display = 'none';
+                    }
+                }
+                function toggleVisLink(a,link) {
+                    ob  = document.getElementById(a);
+                    //link= document.getElementById(linkId);
+                    if (ob.style.visibility == 'hidden') {
+                        ob.style.visibility = 'visible';
+                        ob.style.display = 'table-row';
+			link.innerHTML="(-)";
+                    } else {
+                        ob.style.visibility = 'hidden';
+                        ob.style.display = 'none';
+			link.innerHTML="(+)";
+                    }
+		}
+                function ClipBoard() {
+                    holdtext.innerText = copytext.innerText;
+                    Copied = holdtext.createTextRange();
+                    Copied.execCommand("Copy");
+                }
+
+                function validateUpload(form, max) {
+                    input = document.getElementById('fn');
+                    for (idx = 0; idx < input.files.length; ++idx) {
+                        file = input.files[idx];
+                        if (file && file.size > max) {
+                            alert("Not enough space to upload " + file.name + " (" + file.size + "b). Free space is only " + max + "b.");
+                            form.fn.value = null;
+                            return FALSE;
+                        }
+                    }
+                    form.op.value = 'uploadFile';
+                    form.submit();
+                }
+
+		function addRow(tableID) {
+		    var table = document.getElementById(tableID);
+		    var rowCount = table.tBodies[0].rows.length;
+	 	    if(rowCount < 10){                            // limit number of files
+			var row = table.insertRow(rowCount);
+			var colCount = table.tBodies[0].rows[rowCount-1].cells.length;
+			for(var i=0; i<colCount; i++) {
+				var newcell = row.insertCell(i);
+				newcell.innerHTML = table.tBodies[0].rows[rowCount-1].cells[i].innerHTML;
+			}
+		    }else{
+			 alert("Maximum number of files per deposition is 10");
+		    }
+		}
+		function deleteRow(tableID,r) {
+ 		   var i = r.parentNode.parentNode.rowIndex;
+		   var table = document.getElementById(tableID);
+		   var rowCount = table.rows.length;
+		   if (rowCount > 2){
+		  	document.getElementById(tableID).deleteRow(i);
+		   }else{
+			alert("Al least one file should be selected");
+		   }
+		}
+                function disableFromRadio(radio,radioVal,targetID){
+                    ob  = document.getElementById(targetID);
+                    inputs = ob.getElementsByTagName('input');
+                    links  = ob.getElementsByTagName('a');
+                    ob.classList.add("not-active");
+                    if (radio.value == radioVal &&  radio.checked == true){
+                        for (i=0; i < inputs.length; ++i) {
+                                inputs[i].disabled=true;
+                        }
+                        for (i=0; i < links.length; ++i) {
+                                links[i].classList.add("disabled");
+                        }
+
+                    }else{
+                        for (i=0; i < inputs.length; ++i) {
+                                links[i].classList.add("disabled");
+                                inputs[i].disabled=false;
+                        }
+                    }
+                }
+                function hiddenFromRadio(radio,radioVal,targetID){
+                    ob  = document.getElementById(targetID);
+                    if (radio.value == radioVal &&  radio.checked == true){
+                        ob.style.visibility="hidden";
+                        ob.style.display="none";
+                    }else{
+                        ob.style.visibility = 'visible';
+                        //ob.style.display = 'inline';
+                        ob.style.display = 'table-row';
+                    }
+                }
+
+                </script>
+
+            <h3>BIGNaSim database structure and analysis portal for nucleic acids simulation data</h3>
+
+            <div class="metaImageSection">   

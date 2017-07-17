@@ -1,0 +1,1456 @@
+11/08/15 : 00:13:44 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:14:01 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:17:02 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:17:02 |  | Job Array ().  
+11/08/15 : 00:17:02 |  | The process is not running. 
+11/08/15 : 00:18:34 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:18:34 |  | Job Array ().  
+11/08/15 : 00:18:34 |  | The process is not running. 
+11/08/15 : 00:19:31 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:19:31 |  | Job Array ().  
+11/08/15 : 00:19:31 |  | The process is not running. 
+11/08/15 : 00:19:59 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:19:59 |  | Job Array ().  
+11/08/15 : 00:19:59 |  | The process is not running. 
+11/08/15 : 00:20:55 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:20:55 |  | Job Array ().  
+11/08/15 : 00:20:55 |  | The process is not running. 
+11/08/15 : 00:21:55 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:21:55 |  | Job Array ().  
+11/08/15 : 00:21:55 |  | The process is not running. 
+11/08/15 : 00:22:04 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:22:04 |  | Job Array ().  
+11/08/15 : 00:22:04 |  | The process is not running. 
+11/08/15 : 00:22:37 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:22:37 |  | Job Array ().  
+11/08/15 : 00:22:37 |  | The process is not running. 
+11/08/15 : 00:23:00 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:23:00 |  | Job Array ().  
+11/08/15 : 00:23:00 |  | The process is not running. 
+11/08/15 : 00:23:45 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:23:45 |  | Job Array ().  
+11/08/15 : 00:23:45 |  | The process is not running. 
+11/08/15 : 00:26:08 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:26:08 |  | Job Array ().  
+11/08/15 : 00:26:08 |  | The process is not running. 
+11/08/15 : 00:30:47 |  | WaitResult: 0 
+11/08/15 : 00:31:21 |  | WaitResult: 0 
+11/08/15 : 00:35:41 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:35:41 |  | Job Array ().  
+11/08/15 : 00:35:41 |  | The process is not running. 
+11/08/15 : 00:35:42 |  | WaitResult: 0 
+11/08/15 : 00:40:01 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:40:01 |  | Job Array ().  
+11/08/15 : 00:40:02 |  | The process is not running. 
+11/08/15 : 00:40:02 |  | WaitResult: 0 
+11/08/15 : 00:41:03 |  | WaitResult: 0 
+11/08/15 : 00:42:06 |  | WaitResult: 0 
+11/08/15 : 00:43:07 |  | WaitResult: 0 
+11/08/15 : 00:44:08 |  | WaitResult: 0 
+11/08/15 : 00:45:09 |  | WaitResult: 0 
+11/08/15 : 00:45:59 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:45:59 |  | Job Array (13199). Your job 13199 ("CURL_queue.sh") has been submitted 
+11/08/15 : 00:45:59 |  | The process CURL_queue.sh is currently running (13199). 
+11/08/15 : 00:45:59 |  | WaitResult: 13199 
+11/08/15 : 00:46:00 |  | Async process currently running!! (13199). 
+11/08/15 : 00:47:01 |  | WaitResult: 13199 
+11/08/15 : 00:47:01 |  | Async process already finished!! 
+11/08/15 : 00:48:34 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:48:35 |  | Job Array (13200). Your job 13200 ("CURL_queue.sh") has been submitted 
+11/08/15 : 00:48:35 |  | The process CURL_queue.sh is currently running (13200). 
+11/08/15 : 00:48:35 |  | WaitResult: 13200 
+11/08/15 : 00:48:35 |  | Async process currently running!! (13200). 
+11/08/15 : 00:49:36 |  | WaitResult: 13200 
+11/08/15 : 00:49:36 |  | Async process currently running!! (13200). 
+11/08/15 : 00:50:37 |  | WaitResult: 13200 
+11/08/15 : 00:50:37 |  | Async process currently running!! (13200). 
+11/08/15 : 00:51:38 |  | WaitResult: 13200 
+11/08/15 : 00:51:38 |  | Async process currently running!! (13200). 
+11/08/15 : 00:52:32 |  | Executing script: CURL_queue.sh 
+11/08/15 : 00:52:33 |  | Job Array (13201). Your job 13201 ("CURL_queue.sh") has been submitted 
+11/08/15 : 00:52:33 |  | The process CURL_queue.sh is currently running (13201). 
+11/08/15 : 00:52:33 |  | WaitResult: 13201 
+11/08/15 : 00:52:33 |  | Async process currently running!! (13201). 
+11/08/15 : 00:53:34 |  | WaitResult: 13201 
+11/08/15 : 00:53:34 |  | Async process currently running!! (13201). 
+11/08/15 : 00:54:35 |  | WaitResult: 13201 
+11/08/15 : 00:54:35 |  | Async process currently running!! (13201). 
+11/08/15 : 00:55:36 |  | WaitResult: 13201 
+11/08/15 : 00:55:36 |  | Async process currently running!! (13201). 
+11/08/15 : 00:56:38 |  | WaitResult: 13201 
+11/08/15 : 00:56:38 |  | Async process currently running!! (13201). 
+11/08/15 : 00:57:40 |  | WaitResult: 13201 
+11/08/15 : 00:57:40 |  | Async process currently running!! (13201). 
+11/08/15 : 00:58:41 |  | WaitResult: 13201 
+11/08/15 : 00:58:41 |  | Async process currently running!! (13201). 
+11/08/15 : 00:59:42 |  | WaitResult: 13201 
+11/08/15 : 00:59:42 |  | Async process currently running!! (13201). 
+11/08/15 : 01:00:43 |  | WaitResult: 13201 
+11/08/15 : 01:00:43 |  | Async process currently running!! (13201). 
+11/08/15 : 01:01:44 |  | WaitResult: 13201 
+11/08/15 : 01:01:44 |  | Async process currently running!! (13201). 
+11/08/15 : 01:02:45 |  | WaitResult: 13201 
+11/08/15 : 01:02:45 |  | Async process currently running!! (13201). 
+11/08/15 : 01:03:46 |  | WaitResult: 13201 
+11/08/15 : 01:03:46 |  | Async process currently running!! (13201). 
+11/08/15 : 01:04:47 |  | WaitResult: 13201 
+11/08/15 : 01:04:47 |  | Async process currently running!! (13201). 
+11/08/15 : 01:05:48 |  | WaitResult: 13201 
+11/08/15 : 01:05:48 |  | Async process currently running!! (13201). 
+11/08/15 : 01:06:48 |  | WaitResult: 13201 
+11/08/15 : 01:06:49 |  | Async process currently running!! (13201). 
+11/08/15 : 01:07:49 |  | WaitResult: 13201 
+11/08/15 : 01:07:50 |  | Async process currently running!! (13201). 
+11/08/15 : 01:08:50 |  | WaitResult: 13201 
+11/08/15 : 01:08:50 |  | Async process currently running!! (13201). 
+11/08/15 : 01:09:51 |  | WaitResult: 13201 
+11/08/15 : 01:09:51 |  | Async process currently running!! (13201). 
+11/08/15 : 01:10:52 |  | WaitResult: 13201 
+11/08/15 : 01:10:52 |  | Async process currently running!! (13201). 
+11/08/15 : 01:11:53 |  | WaitResult: 13201 
+11/08/15 : 01:11:53 |  | Async process currently running!! (13201). 
+11/08/15 : 01:12:54 |  | WaitResult: 13201 
+11/08/15 : 01:12:54 |  | Async process currently running!! (13201). 
+11/08/15 : 01:13:55 |  | WaitResult: 13201 
+11/08/15 : 01:13:55 |  | Async process currently running!! (13201). 
+11/08/15 : 01:14:56 |  | WaitResult: 13201 
+11/08/15 : 01:14:56 |  | Async process currently running!! (13201). 
+11/08/15 : 01:15:57 |  | WaitResult: 13201 
+11/08/15 : 01:15:57 |  | Async process currently running!! (13201). 
+11/08/15 : 01:16:58 |  | WaitResult: 13201 
+11/08/15 : 01:16:58 |  | Async process currently running!! (13201). 
+11/08/15 : 01:17:59 |  | WaitResult: 13201 
+11/08/15 : 01:17:59 |  | Async process currently running!! (13201). 
+11/08/15 : 01:19:00 |  | WaitResult: 13201 
+11/08/15 : 01:19:00 |  | Async process currently running!! (13201). 
+11/08/15 : 01:20:01 |  | WaitResult: 13201 
+11/08/15 : 01:20:01 |  | Async process currently running!! (13201). 
+11/08/15 : 01:21:02 |  | WaitResult: 13201 
+11/08/15 : 01:21:02 |  | Async process currently running!! (13201). 
+11/08/15 : 01:22:03 |  | WaitResult: 13201 
+11/08/15 : 01:22:03 |  | Async process currently running!! (13201). 
+11/08/15 : 01:23:04 |  | WaitResult: 13201 
+11/08/15 : 01:23:04 |  | Async process currently running!! (13201). 
+11/08/15 : 01:24:05 |  | WaitResult: 13201 
+11/08/15 : 01:24:05 |  | Async process currently running!! (13201). 
+11/08/15 : 01:25:06 |  | WaitResult: 13201 
+11/08/15 : 01:25:06 |  | Async process currently running!! (13201). 
+11/08/15 : 01:26:06 |  | WaitResult: 13201 
+11/08/15 : 01:26:07 |  | Async process currently running!! (13201). 
+11/08/15 : 01:27:08 |  | WaitResult: 13201 
+11/08/15 : 01:27:08 |  | Async process currently running!! (13201). 
+11/08/15 : 01:28:09 |  | WaitResult: 13201 
+11/08/15 : 01:28:09 |  | Async process currently running!! (13201). 
+11/08/15 : 01:29:10 |  | WaitResult: 13201 
+11/08/15 : 01:29:10 |  | Async process currently running!! (13201). 
+11/08/15 : 01:30:11 |  | WaitResult: 13201 
+11/08/15 : 01:30:11 |  | Async process currently running!! (13201). 
+11/08/15 : 01:31:13 |  | WaitResult: 13201 
+11/08/15 : 01:31:14 |  | Async process currently running!! (13201). 
+11/08/15 : 01:32:14 |  | WaitResult: 13201 
+11/08/15 : 01:32:15 |  | Async process currently running!! (13201). 
+11/08/15 : 01:33:15 |  | WaitResult: 13201 
+11/08/15 : 01:33:15 |  | Async process currently running!! (13201). 
+11/08/15 : 01:34:16 |  | WaitResult: 13201 
+11/08/15 : 01:34:16 |  | Async process currently running!! (13201). 
+11/08/15 : 01:35:17 |  | WaitResult: 13201 
+11/08/15 : 01:35:17 |  | Async process currently running!! (13201). 
+11/08/15 : 01:36:18 |  | WaitResult: 13201 
+11/08/15 : 01:36:18 |  | Async process currently running!! (13201). 
+11/08/15 : 01:37:19 |  | WaitResult: 13201 
+11/08/15 : 01:37:19 |  | Async process currently running!! (13201). 
+11/08/15 : 01:38:20 |  | WaitResult: 13201 
+11/08/15 : 01:38:20 |  | Async process currently running!! (13201). 
+11/08/15 : 01:39:21 |  | WaitResult: 13201 
+11/08/15 : 01:39:21 |  | Async process currently running!! (13201). 
+11/08/15 : 01:40:22 |  | WaitResult: 13201 
+11/08/15 : 01:40:22 |  | Async process currently running!! (13201). 
+11/08/15 : 01:41:23 |  | WaitResult: 13201 
+11/08/15 : 01:41:23 |  | Async process currently running!! (13201). 
+11/08/15 : 01:42:23 |  | WaitResult: 13201 
+11/08/15 : 01:42:24 |  | Async process currently running!! (13201). 
+11/08/15 : 01:43:24 |  | WaitResult: 13201 
+11/08/15 : 01:43:25 |  | Async process currently running!! (13201). 
+11/08/15 : 01:44:25 |  | WaitResult: 13201 
+11/08/15 : 01:44:26 |  | Async process currently running!! (13201). 
+11/08/15 : 01:45:26 |  | WaitResult: 13201 
+11/08/15 : 01:45:27 |  | Async process currently running!! (13201). 
+11/08/15 : 01:46:27 |  | WaitResult: 13201 
+11/08/15 : 01:46:27 |  | Async process currently running!! (13201). 
+11/08/15 : 01:47:28 |  | WaitResult: 13201 
+11/08/15 : 01:47:28 |  | Async process currently running!! (13201). 
+11/08/15 : 01:48:29 |  | WaitResult: 13201 
+11/08/15 : 01:48:29 |  | Async process currently running!! (13201). 
+11/08/15 : 01:49:30 |  | WaitResult: 13201 
+11/08/15 : 01:49:30 |  | Async process currently running!! (13201). 
+11/08/15 : 01:50:35 |  | WaitResult: 13201 
+11/08/15 : 01:50:35 |  | Async process currently running!! (13201). 
+11/08/15 : 01:51:36 |  | WaitResult: 13201 
+11/08/15 : 01:51:36 |  | Async process currently running!! (13201). 
+11/08/15 : 01:52:37 |  | WaitResult: 13201 
+11/08/15 : 01:52:37 |  | Async process currently running!! (13201). 
+11/08/15 : 01:53:38 |  | WaitResult: 13201 
+11/08/15 : 01:53:38 |  | Async process currently running!! (13201). 
+11/08/15 : 01:54:39 |  | WaitResult: 13201 
+11/08/15 : 01:54:39 |  | Async process currently running!! (13201). 
+11/08/15 : 01:55:40 |  | WaitResult: 13201 
+11/08/15 : 01:55:40 |  | Async process currently running!! (13201). 
+11/08/15 : 01:56:40 |  | WaitResult: 13201 
+11/08/15 : 01:56:41 |  | Async process currently running!! (13201). 
+11/08/15 : 01:57:41 |  | WaitResult: 13201 
+11/08/15 : 01:57:41 |  | Async process currently running!! (13201). 
+11/08/15 : 01:58:42 |  | WaitResult: 13201 
+11/08/15 : 01:58:42 |  | Async process currently running!! (13201). 
+11/08/15 : 01:59:43 |  | WaitResult: 13201 
+11/08/15 : 01:59:43 |  | Async process currently running!! (13201). 
+11/08/15 : 02:00:44 |  | WaitResult: 13201 
+11/08/15 : 02:00:44 |  | Async process currently running!! (13201). 
+11/08/15 : 02:01:45 |  | WaitResult: 13201 
+11/08/15 : 02:01:45 |  | Async process currently running!! (13201). 
+11/08/15 : 02:02:46 |  | WaitResult: 13201 
+11/08/15 : 02:02:46 |  | Async process currently running!! (13201). 
+11/08/15 : 02:03:47 |  | WaitResult: 13201 
+11/08/15 : 02:03:47 |  | Async process currently running!! (13201). 
+11/08/15 : 02:04:48 |  | WaitResult: 13201 
+11/08/15 : 02:04:48 |  | Async process currently running!! (13201). 
+11/08/15 : 02:05:49 |  | WaitResult: 13201 
+11/08/15 : 02:05:49 |  | Async process currently running!! (13201). 
+11/08/15 : 02:06:50 |  | WaitResult: 13201 
+11/08/15 : 02:06:50 |  | Async process currently running!! (13201). 
+11/08/15 : 02:07:51 |  | WaitResult: 13201 
+11/08/15 : 02:07:51 |  | Async process currently running!! (13201). 
+11/08/15 : 02:08:52 |  | WaitResult: 13201 
+11/08/15 : 02:08:52 |  | Async process currently running!! (13201). 
+11/08/15 : 02:09:52 |  | WaitResult: 13201 
+11/08/15 : 02:09:53 |  | Async process currently running!! (13201). 
+11/08/15 : 02:10:53 |  | WaitResult: 13201 
+11/08/15 : 02:10:54 |  | Async process currently running!! (13201). 
+11/08/15 : 02:11:54 |  | WaitResult: 13201 
+11/08/15 : 02:11:55 |  | Async process currently running!! (13201). 
+11/08/15 : 02:12:55 |  | WaitResult: 13201 
+11/08/15 : 02:12:55 |  | Async process currently running!! (13201). 
+11/08/15 : 02:13:56 |  | WaitResult: 13201 
+11/08/15 : 02:13:56 |  | Async process currently running!! (13201). 
+11/08/15 : 02:14:57 |  | WaitResult: 13201 
+11/08/15 : 02:14:57 |  | Async process currently running!! (13201). 
+11/08/15 : 02:15:58 |  | WaitResult: 13201 
+11/08/15 : 02:15:58 |  | Async process currently running!! (13201). 
+11/08/15 : 02:16:59 |  | WaitResult: 13201 
+11/08/15 : 02:16:59 |  | Async process currently running!! (13201). 
+11/08/15 : 02:18:00 |  | WaitResult: 13201 
+11/08/15 : 02:18:00 |  | Async process currently running!! (13201). 
+11/08/15 : 02:19:01 |  | WaitResult: 13201 
+11/08/15 : 02:19:01 |  | Async process currently running!! (13201). 
+11/08/15 : 02:20:02 |  | WaitResult: 13201 
+11/08/15 : 02:20:02 |  | Async process currently running!! (13201). 
+11/08/15 : 02:21:02 |  | WaitResult: 13201 
+11/08/15 : 02:21:03 |  | Async process currently running!! (13201). 
+11/08/15 : 02:22:03 |  | WaitResult: 13201 
+11/08/15 : 02:22:04 |  | Async process currently running!! (13201). 
+11/08/15 : 02:23:04 |  | WaitResult: 13201 
+11/08/15 : 02:23:04 |  | Async process currently running!! (13201). 
+11/08/15 : 02:24:05 |  | WaitResult: 13201 
+11/08/15 : 02:24:05 |  | Async process currently running!! (13201). 
+11/08/15 : 02:25:06 |  | WaitResult: 13201 
+11/08/15 : 02:25:06 |  | Async process currently running!! (13201). 
+11/08/15 : 02:26:07 |  | WaitResult: 13201 
+11/08/15 : 02:26:07 |  | Async process currently running!! (13201). 
+11/08/15 : 02:27:08 |  | WaitResult: 13201 
+11/08/15 : 02:27:08 |  | Async process currently running!! (13201). 
+11/08/15 : 02:28:09 |  | WaitResult: 13201 
+11/08/15 : 02:28:09 |  | Async process currently running!! (13201). 
+11/08/15 : 02:29:10 |  | WaitResult: 13201 
+11/08/15 : 02:29:10 |  | Async process currently running!! (13201). 
+11/08/15 : 02:30:11 |  | WaitResult: 13201 
+11/08/15 : 02:30:11 |  | Async process currently running!! (13201). 
+11/08/15 : 02:31:12 |  | WaitResult: 13201 
+11/08/15 : 02:31:12 |  | Async process currently running!! (13201). 
+11/08/15 : 02:32:13 |  | WaitResult: 13201 
+11/08/15 : 02:32:13 |  | Async process currently running!! (13201). 
+11/08/15 : 02:33:13 |  | WaitResult: 13201 
+11/08/15 : 02:33:14 |  | Async process currently running!! (13201). 
+11/08/15 : 02:34:14 |  | WaitResult: 13201 
+11/08/15 : 02:34:15 |  | Async process currently running!! (13201). 
+11/08/15 : 02:35:15 |  | WaitResult: 13201 
+11/08/15 : 02:35:15 |  | Async process currently running!! (13201). 
+11/08/15 : 02:36:16 |  | WaitResult: 13201 
+11/08/15 : 02:36:16 |  | Async process currently running!! (13201). 
+11/08/15 : 02:37:17 |  | WaitResult: 13201 
+11/08/15 : 02:37:17 |  | Async process currently running!! (13201). 
+11/08/15 : 02:38:18 |  | WaitResult: 13201 
+11/08/15 : 02:38:18 |  | Async process currently running!! (13201). 
+11/08/15 : 02:39:19 |  | WaitResult: 13201 
+11/08/15 : 02:39:20 |  | Async process currently running!! (13201). 
+11/08/15 : 02:40:21 |  | WaitResult: 13201 
+11/08/15 : 02:40:21 |  | Async process currently running!! (13201). 
+11/08/15 : 02:41:22 |  | WaitResult: 13201 
+11/08/15 : 02:41:22 |  | Async process currently running!! (13201). 
+11/08/15 : 02:42:23 |  | WaitResult: 13201 
+11/08/15 : 02:42:23 |  | Async process currently running!! (13201). 
+11/08/15 : 02:43:23 |  | WaitResult: 13201 
+11/08/15 : 02:43:24 |  | Async process currently running!! (13201). 
+11/08/15 : 02:44:28 |  | WaitResult: 13201 
+11/08/15 : 02:44:28 |  | Async process currently running!! (13201). 
+11/08/15 : 02:45:29 |  | WaitResult: 13201 
+11/08/15 : 02:45:29 |  | Async process currently running!! (13201). 
+11/08/15 : 02:46:29 |  | WaitResult: 13201 
+11/08/15 : 02:46:30 |  | Async process currently running!! (13201). 
+11/08/15 : 02:47:30 |  | WaitResult: 13201 
+11/08/15 : 02:47:31 |  | Async process currently running!! (13201). 
+11/08/15 : 02:48:31 |  | WaitResult: 13201 
+11/08/15 : 02:48:31 |  | Async process currently running!! (13201). 
+11/08/15 : 02:49:32 |  | WaitResult: 13201 
+11/08/15 : 02:49:32 |  | Async process currently running!! (13201). 
+11/08/15 : 02:50:33 |  | WaitResult: 13201 
+11/08/15 : 02:50:33 |  | Async process currently running!! (13201). 
+11/08/15 : 02:51:34 |  | WaitResult: 13201 
+11/08/15 : 02:51:34 |  | Async process currently running!! (13201). 
+11/08/15 : 02:52:35 |  | WaitResult: 13201 
+11/08/15 : 02:52:35 |  | Async process currently running!! (13201). 
+11/08/15 : 02:53:36 |  | WaitResult: 13201 
+11/08/15 : 02:53:36 |  | Async process currently running!! (13201). 
+11/08/15 : 02:54:37 |  | WaitResult: 13201 
+11/08/15 : 02:54:37 |  | Async process currently running!! (13201). 
+11/08/15 : 02:55:38 |  | WaitResult: 13201 
+11/08/15 : 02:55:38 |  | Async process currently running!! (13201). 
+11/08/15 : 02:56:39 |  | WaitResult: 13201 
+11/08/15 : 02:56:39 |  | Async process currently running!! (13201). 
+11/08/15 : 02:58:00 |  | WaitResult: 13201 
+11/08/15 : 02:58:00 |  | Async process currently running!! (13201). 
+11/08/15 : 02:59:01 |  | WaitResult: 13201 
+11/08/15 : 02:59:01 |  | Async process currently running!! (13201). 
+11/08/15 : 03:00:02 |  | WaitResult: 13201 
+11/08/15 : 03:00:02 |  | Async process currently running!! (13201). 
+11/08/15 : 03:01:03 |  | WaitResult: 13201 
+11/08/15 : 03:01:03 |  | Async process currently running!! (13201). 
+11/08/15 : 03:02:04 |  | WaitResult: 13201 
+11/08/15 : 03:02:04 |  | Async process currently running!! (13201). 
+11/08/15 : 03:03:05 |  | WaitResult: 13201 
+11/08/15 : 03:03:05 |  | Async process currently running!! (13201). 
+11/08/15 : 03:04:06 |  | WaitResult: 13201 
+11/08/15 : 03:04:06 |  | Async process currently running!! (13201). 
+11/08/15 : 03:05:07 |  | WaitResult: 13201 
+11/08/15 : 03:05:07 |  | Async process currently running!! (13201). 
+11/08/15 : 03:06:08 |  | WaitResult: 13201 
+11/08/15 : 03:06:08 |  | Async process currently running!! (13201). 
+11/08/15 : 03:07:09 |  | WaitResult: 13201 
+11/08/15 : 03:07:09 |  | Async process currently running!! (13201). 
+11/08/15 : 03:08:09 |  | WaitResult: 13201 
+11/08/15 : 03:08:10 |  | Async process currently running!! (13201). 
+11/08/15 : 03:09:10 |  | WaitResult: 13201 
+11/08/15 : 03:09:11 |  | Async process currently running!! (13201). 
+11/08/15 : 03:10:11 |  | WaitResult: 13201 
+11/08/15 : 03:10:11 |  | Async process currently running!! (13201). 
+11/08/15 : 03:11:12 |  | WaitResult: 13201 
+11/08/15 : 03:11:12 |  | Async process currently running!! (13201). 
+11/08/15 : 03:12:13 |  | WaitResult: 13201 
+11/08/15 : 03:12:13 |  | Async process currently running!! (13201). 
+11/08/15 : 03:13:14 |  | WaitResult: 13201 
+11/08/15 : 03:13:14 |  | Async process currently running!! (13201). 
+11/08/15 : 03:14:15 |  | WaitResult: 13201 
+11/08/15 : 03:14:15 |  | Async process currently running!! (13201). 
+11/08/15 : 03:15:16 |  | WaitResult: 13201 
+11/08/15 : 03:15:16 |  | Async process currently running!! (13201). 
+11/08/15 : 03:16:17 |  | WaitResult: 13201 
+11/08/15 : 03:16:17 |  | Async process currently running!! (13201). 
+11/08/15 : 03:17:18 |  | WaitResult: 13201 
+11/08/15 : 03:17:18 |  | Async process currently running!! (13201). 
+11/08/15 : 03:18:19 |  | WaitResult: 13201 
+11/08/15 : 03:18:19 |  | Async process currently running!! (13201). 
+11/08/15 : 03:19:19 |  | WaitResult: 13201 
+11/08/15 : 03:19:20 |  | Async process currently running!! (13201). 
+11/08/15 : 03:20:20 |  | WaitResult: 13201 
+11/08/15 : 03:20:20 |  | Async process currently running!! (13201). 
+11/08/15 : 03:21:21 |  | WaitResult: 13201 
+11/08/15 : 03:21:21 |  | Async process currently running!! (13201). 
+11/08/15 : 03:22:22 |  | WaitResult: 13201 
+11/08/15 : 03:22:22 |  | Async process currently running!! (13201). 
+11/08/15 : 03:23:23 |  | WaitResult: 13201 
+11/08/15 : 03:23:23 |  | Async process currently running!! (13201). 
+11/08/15 : 03:24:24 |  | WaitResult: 13201 
+11/08/15 : 03:24:24 |  | Async process currently running!! (13201). 
+11/08/15 : 03:25:25 |  | WaitResult: 13201 
+11/08/15 : 03:25:25 |  | Async process currently running!! (13201). 
+11/08/15 : 03:26:26 |  | WaitResult: 13201 
+11/08/15 : 03:26:26 |  | Async process currently running!! (13201). 
+11/08/15 : 03:27:27 |  | WaitResult: 13201 
+11/08/15 : 03:27:27 |  | Async process currently running!! (13201). 
+11/08/15 : 03:28:27 |  | WaitResult: 13201 
+11/08/15 : 03:28:28 |  | Async process currently running!! (13201). 
+11/08/15 : 03:29:28 |  | WaitResult: 13201 
+11/08/15 : 03:29:29 |  | Async process currently running!! (13201). 
+11/08/15 : 03:30:29 |  | WaitResult: 13201 
+11/08/15 : 03:30:30 |  | Async process currently running!! (13201). 
+11/08/15 : 03:31:30 |  | WaitResult: 13201 
+11/08/15 : 03:31:30 |  | Async process currently running!! (13201). 
+11/08/15 : 03:32:31 |  | WaitResult: 13201 
+11/08/15 : 03:32:31 |  | Async process currently running!! (13201). 
+11/08/15 : 03:33:32 |  | WaitResult: 13201 
+11/08/15 : 03:33:32 |  | Async process currently running!! (13201). 
+11/08/15 : 03:34:33 |  | WaitResult: 13201 
+11/08/15 : 03:34:33 |  | Async process currently running!! (13201). 
+11/08/15 : 03:35:34 |  | WaitResult: 13201 
+11/08/15 : 03:35:34 |  | Async process currently running!! (13201). 
+11/08/15 : 03:36:35 |  | WaitResult: 13201 
+11/08/15 : 03:36:35 |  | Async process currently running!! (13201). 
+11/08/15 : 03:37:36 |  | WaitResult: 13201 
+11/08/15 : 03:37:36 |  | Async process currently running!! (13201). 
+11/08/15 : 03:38:37 |  | WaitResult: 13201 
+11/08/15 : 03:38:37 |  | Async process currently running!! (13201). 
+11/08/15 : 03:39:38 |  | WaitResult: 13201 
+11/08/15 : 03:39:38 |  | Async process currently running!! (13201). 
+11/08/15 : 03:40:39 |  | WaitResult: 13201 
+11/08/15 : 03:40:39 |  | Async process currently running!! (13201). 
+11/08/15 : 03:41:40 |  | WaitResult: 13201 
+11/08/15 : 03:41:40 |  | Async process currently running!! (13201). 
+11/08/15 : 03:42:41 |  | WaitResult: 13201 
+11/08/15 : 03:42:41 |  | Async process currently running!! (13201). 
+11/08/15 : 03:43:41 |  | WaitResult: 13201 
+11/08/15 : 03:43:42 |  | Async process currently running!! (13201). 
+11/08/15 : 03:44:42 |  | WaitResult: 13201 
+11/08/15 : 03:44:42 |  | Async process currently running!! (13201). 
+11/08/15 : 03:45:43 |  | WaitResult: 13201 
+11/08/15 : 03:45:43 |  | Async process currently running!! (13201). 
+11/08/15 : 03:46:44 |  | WaitResult: 13201 
+11/08/15 : 03:46:44 |  | Async process currently running!! (13201). 
+11/08/15 : 03:47:45 |  | WaitResult: 13201 
+11/08/15 : 03:47:45 |  | Async process currently running!! (13201). 
+11/08/15 : 03:48:46 |  | WaitResult: 13201 
+11/08/15 : 03:48:46 |  | Async process currently running!! (13201). 
+11/08/15 : 03:49:47 |  | WaitResult: 13201 
+11/08/15 : 03:49:47 |  | Async process currently running!! (13201). 
+11/08/15 : 03:50:48 |  | WaitResult: 13201 
+11/08/15 : 03:50:48 |  | Async process currently running!! (13201). 
+11/08/15 : 03:51:49 |  | WaitResult: 13201 
+11/08/15 : 03:51:49 |  | Async process currently running!! (13201). 
+11/08/15 : 03:52:50 |  | WaitResult: 13201 
+11/08/15 : 03:52:50 |  | Async process currently running!! (13201). 
+11/08/15 : 03:53:50 |  | WaitResult: 13201 
+11/08/15 : 03:53:51 |  | Async process currently running!! (13201). 
+11/08/15 : 03:54:51 |  | WaitResult: 13201 
+11/08/15 : 03:54:52 |  | Async process currently running!! (13201). 
+11/08/15 : 03:55:52 |  | WaitResult: 13201 
+11/08/15 : 03:55:52 |  | Async process currently running!! (13201). 
+11/08/15 : 03:56:53 |  | WaitResult: 13201 
+11/08/15 : 03:56:53 |  | Async process currently running!! (13201). 
+11/08/15 : 03:57:54 |  | WaitResult: 13201 
+11/08/15 : 03:57:54 |  | Async process currently running!! (13201). 
+11/08/15 : 03:58:55 |  | WaitResult: 13201 
+11/08/15 : 03:58:55 |  | Async process currently running!! (13201). 
+11/08/15 : 03:59:56 |  | WaitResult: 13201 
+11/08/15 : 03:59:56 |  | Async process currently running!! (13201). 
+11/08/15 : 04:00:57 |  | WaitResult: 13201 
+11/08/15 : 04:00:57 |  | Async process currently running!! (13201). 
+11/08/15 : 04:01:58 |  | WaitResult: 13201 
+11/08/15 : 04:01:58 |  | Async process currently running!! (13201). 
+11/08/15 : 04:02:59 |  | WaitResult: 13201 
+11/08/15 : 04:02:59 |  | Async process currently running!! (13201). 
+11/08/15 : 04:03:59 |  | WaitResult: 13201 
+11/08/15 : 04:04:00 |  | Async process currently running!! (13201). 
+11/08/15 : 04:05:00 |  | WaitResult: 13201 
+11/08/15 : 04:05:01 |  | Async process currently running!! (13201). 
+11/08/15 : 04:06:01 |  | WaitResult: 13201 
+11/08/15 : 04:06:02 |  | Async process currently running!! (13201). 
+11/08/15 : 04:07:02 |  | WaitResult: 13201 
+11/08/15 : 04:07:02 |  | Async process currently running!! (13201). 
+11/08/15 : 04:08:03 |  | WaitResult: 13201 
+11/08/15 : 04:08:03 |  | Async process currently running!! (13201). 
+11/08/15 : 04:09:04 |  | WaitResult: 13201 
+11/08/15 : 04:09:04 |  | Async process currently running!! (13201). 
+11/08/15 : 04:10:05 |  | WaitResult: 13201 
+11/08/15 : 04:10:05 |  | Async process currently running!! (13201). 
+11/08/15 : 04:11:06 |  | WaitResult: 13201 
+11/08/15 : 04:11:06 |  | Async process currently running!! (13201). 
+11/08/15 : 04:12:07 |  | WaitResult: 13201 
+11/08/15 : 04:12:07 |  | Async process currently running!! (13201). 
+11/08/15 : 04:13:08 |  | WaitResult: 13201 
+11/08/15 : 04:13:08 |  | Async process currently running!! (13201). 
+11/08/15 : 04:14:09 |  | WaitResult: 13201 
+11/08/15 : 04:14:09 |  | Async process currently running!! (13201). 
+11/08/15 : 04:15:10 |  | WaitResult: 13201 
+11/08/15 : 04:15:10 |  | Async process currently running!! (13201). 
+11/08/15 : 04:16:10 |  | WaitResult: 13201 
+11/08/15 : 04:16:11 |  | Async process currently running!! (13201). 
+11/08/15 : 04:17:11 |  | WaitResult: 13201 
+11/08/15 : 04:17:11 |  | Async process currently running!! (13201). 
+11/08/15 : 04:18:12 |  | WaitResult: 13201 
+11/08/15 : 04:18:12 |  | Async process currently running!! (13201). 
+11/08/15 : 04:19:13 |  | WaitResult: 13201 
+11/08/15 : 04:19:13 |  | Async process currently running!! (13201). 
+11/08/15 : 04:20:14 |  | WaitResult: 13201 
+11/08/15 : 04:20:14 |  | Async process currently running!! (13201). 
+11/08/15 : 04:21:15 |  | WaitResult: 13201 
+11/08/15 : 04:21:15 |  | Async process currently running!! (13201). 
+11/08/15 : 04:22:16 |  | WaitResult: 13201 
+11/08/15 : 04:22:16 |  | Async process currently running!! (13201). 
+11/08/15 : 04:23:17 |  | WaitResult: 13201 
+11/08/15 : 04:23:17 |  | Async process currently running!! (13201). 
+11/08/15 : 04:24:18 |  | WaitResult: 13201 
+11/08/15 : 04:24:18 |  | Async process currently running!! (13201). 
+11/08/15 : 04:25:19 |  | WaitResult: 13201 
+11/08/15 : 04:25:19 |  | Async process currently running!! (13201). 
+11/08/15 : 04:26:20 |  | WaitResult: 13201 
+11/08/15 : 04:26:20 |  | Async process currently running!! (13201). 
+11/08/15 : 04:27:21 |  | WaitResult: 13201 
+11/08/15 : 04:27:21 |  | Async process currently running!! (13201). 
+11/08/15 : 04:28:22 |  | WaitResult: 13201 
+11/08/15 : 04:28:22 |  | Async process currently running!! (13201). 
+11/08/15 : 04:29:22 |  | WaitResult: 13201 
+11/08/15 : 04:29:23 |  | Async process currently running!! (13201). 
+11/08/15 : 04:30:23 |  | WaitResult: 13201 
+11/08/15 : 04:30:24 |  | Async process currently running!! (13201). 
+11/08/15 : 04:31:24 |  | WaitResult: 13201 
+11/08/15 : 04:31:24 |  | Async process currently running!! (13201). 
+11/08/15 : 04:32:25 |  | WaitResult: 13201 
+11/08/15 : 04:32:25 |  | Async process currently running!! (13201). 
+11/08/15 : 04:33:27 |  | WaitResult: 13201 
+11/08/15 : 04:33:27 |  | Async process currently running!! (13201). 
+11/08/15 : 04:34:28 |  | WaitResult: 13201 
+11/08/15 : 04:34:28 |  | Async process currently running!! (13201). 
+11/08/15 : 04:35:29 |  | WaitResult: 13201 
+11/08/15 : 04:35:29 |  | Async process currently running!! (13201). 
+11/08/15 : 04:36:29 |  | WaitResult: 13201 
+11/08/15 : 04:36:30 |  | Async process currently running!! (13201). 
+11/08/15 : 04:37:30 |  | WaitResult: 13201 
+11/08/15 : 04:37:31 |  | Async process currently running!! (13201). 
+11/08/15 : 04:38:31 |  | WaitResult: 13201 
+11/08/15 : 04:38:31 |  | Async process currently running!! (13201). 
+11/08/15 : 04:39:32 |  | WaitResult: 13201 
+11/08/15 : 04:39:33 |  | Async process currently running!! (13201). 
+11/08/15 : 04:40:34 |  | WaitResult: 13201 
+11/08/15 : 04:40:34 |  | Async process currently running!! (13201). 
+11/08/15 : 04:41:35 |  | WaitResult: 13201 
+11/08/15 : 04:41:35 |  | Async process currently running!! (13201). 
+11/08/15 : 04:42:36 |  | WaitResult: 13201 
+11/08/15 : 04:42:36 |  | Async process currently running!! (13201). 
+11/08/15 : 04:43:36 |  | WaitResult: 13201 
+11/08/15 : 04:43:37 |  | Async process currently running!! (13201). 
+11/08/15 : 04:44:37 |  | WaitResult: 13201 
+11/08/15 : 04:44:38 |  | Async process currently running!! (13201). 
+11/08/15 : 04:45:38 |  | WaitResult: 13201 
+11/08/15 : 04:45:38 |  | Async process currently running!! (13201). 
+11/08/15 : 04:46:39 |  | WaitResult: 13201 
+11/08/15 : 04:46:39 |  | Async process currently running!! (13201). 
+11/08/15 : 04:47:40 |  | WaitResult: 13201 
+11/08/15 : 04:47:40 |  | Async process currently running!! (13201). 
+11/08/15 : 04:48:41 |  | WaitResult: 13201 
+11/08/15 : 04:48:41 |  | Async process currently running!! (13201). 
+11/08/15 : 04:49:42 |  | WaitResult: 13201 
+11/08/15 : 04:49:42 |  | Async process currently running!! (13201). 
+11/08/15 : 04:50:43 |  | WaitResult: 13201 
+11/08/15 : 04:50:44 |  | Async process currently running!! (13201). 
+11/08/15 : 04:51:44 |  | WaitResult: 13201 
+11/08/15 : 04:51:45 |  | Async process currently running!! (13201). 
+11/08/15 : 04:52:45 |  | WaitResult: 13201 
+11/08/15 : 04:52:46 |  | Async process currently running!! (13201). 
+11/08/15 : 04:53:46 |  | WaitResult: 13201 
+11/08/15 : 04:53:46 |  | Async process currently running!! (13201). 
+11/08/15 : 04:54:47 |  | WaitResult: 13201 
+11/08/15 : 04:54:47 |  | Async process currently running!! (13201). 
+11/08/15 : 04:55:48 |  | WaitResult: 13201 
+11/08/15 : 04:55:49 |  | Async process currently running!! (13201). 
+11/08/15 : 04:56:49 |  | WaitResult: 13201 
+11/08/15 : 04:56:50 |  | Async process currently running!! (13201). 
+11/08/15 : 04:57:50 |  | WaitResult: 13201 
+11/08/15 : 04:57:50 |  | Async process currently running!! (13201). 
+11/08/15 : 04:58:51 |  | WaitResult: 13201 
+11/08/15 : 04:58:51 |  | Async process currently running!! (13201). 
+11/08/15 : 04:59:52 |  | WaitResult: 13201 
+11/08/15 : 04:59:52 |  | Async process currently running!! (13201). 
+11/08/15 : 05:00:53 |  | WaitResult: 13201 
+11/08/15 : 05:00:53 |  | Async process currently running!! (13201). 
+11/08/15 : 05:01:54 |  | WaitResult: 13201 
+11/08/15 : 05:01:54 |  | Async process currently running!! (13201). 
+11/08/15 : 05:02:55 |  | WaitResult: 13201 
+11/08/15 : 05:02:55 |  | Async process currently running!! (13201). 
+11/08/15 : 05:03:56 |  | WaitResult: 13201 
+11/08/15 : 05:03:56 |  | Async process currently running!! (13201). 
+11/08/15 : 05:04:57 |  | WaitResult: 13201 
+11/08/15 : 05:04:57 |  | Async process currently running!! (13201). 
+11/08/15 : 05:05:58 |  | WaitResult: 13201 
+11/08/15 : 05:05:58 |  | Async process currently running!! (13201). 
+11/08/15 : 05:06:59 |  | WaitResult: 13201 
+11/08/15 : 05:06:59 |  | Async process currently running!! (13201). 
+11/08/15 : 05:07:59 |  | WaitResult: 13201 
+11/08/15 : 05:08:00 |  | Async process currently running!! (13201). 
+11/08/15 : 05:09:00 |  | WaitResult: 13201 
+11/08/15 : 05:09:01 |  | Async process currently running!! (13201). 
+11/08/15 : 05:10:01 |  | WaitResult: 13201 
+11/08/15 : 05:10:01 |  | Async process currently running!! (13201). 
+11/08/15 : 05:11:02 |  | WaitResult: 13201 
+11/08/15 : 05:11:02 |  | Async process currently running!! (13201). 
+11/08/15 : 05:12:03 |  | WaitResult: 13201 
+11/08/15 : 05:12:03 |  | Async process currently running!! (13201). 
+11/08/15 : 05:13:04 |  | WaitResult: 13201 
+11/08/15 : 05:13:04 |  | Async process currently running!! (13201). 
+11/08/15 : 05:14:05 |  | WaitResult: 13201 
+11/08/15 : 05:14:05 |  | Async process currently running!! (13201). 
+11/08/15 : 05:15:06 |  | WaitResult: 13201 
+11/08/15 : 05:15:06 |  | Async process currently running!! (13201). 
+11/08/15 : 05:16:07 |  | WaitResult: 13201 
+11/08/15 : 05:16:07 |  | Async process currently running!! (13201). 
+11/08/15 : 05:17:08 |  | WaitResult: 13201 
+11/08/15 : 05:17:08 |  | Async process currently running!! (13201). 
+11/08/15 : 05:18:09 |  | WaitResult: 13201 
+11/08/15 : 05:18:09 |  | Async process currently running!! (13201). 
+11/08/15 : 05:19:09 |  | WaitResult: 13201 
+11/08/15 : 05:19:10 |  | Async process currently running!! (13201). 
+11/08/15 : 05:20:10 |  | WaitResult: 13201 
+11/08/15 : 05:20:11 |  | Async process currently running!! (13201). 
+11/08/15 : 05:21:13 |  | WaitResult: 13201 
+11/08/15 : 05:21:13 |  | Async process currently running!! (13201). 
+11/08/15 : 05:22:13 |  | WaitResult: 13201 
+11/08/15 : 05:22:14 |  | Async process currently running!! (13201). 
+11/08/15 : 05:23:14 |  | WaitResult: 13201 
+11/08/15 : 05:23:15 |  | Async process currently running!! (13201). 
+11/08/15 : 05:24:15 |  | WaitResult: 13201 
+11/08/15 : 05:24:16 |  | Async process currently running!! (13201). 
+11/08/15 : 05:25:16 |  | WaitResult: 13201 
+11/08/15 : 05:25:17 |  | Async process currently running!! (13201). 
+11/08/15 : 05:26:20 |  | WaitResult: 13201 
+11/08/15 : 05:26:20 |  | Async process currently running!! (13201). 
+11/08/15 : 05:27:21 |  | WaitResult: 13201 
+11/08/15 : 05:27:21 |  | Async process currently running!! (13201). 
+11/08/15 : 05:28:22 |  | WaitResult: 13201 
+11/08/15 : 05:28:22 |  | Async process currently running!! (13201). 
+11/08/15 : 05:29:22 |  | WaitResult: 13201 
+11/08/15 : 05:29:23 |  | Async process currently running!! (13201). 
+11/08/15 : 05:30:23 |  | WaitResult: 13201 
+11/08/15 : 05:30:24 |  | Async process currently running!! (13201). 
+11/08/15 : 05:31:25 |  | WaitResult: 13201 
+11/08/15 : 05:31:25 |  | Async process currently running!! (13201). 
+11/08/15 : 05:32:26 |  | WaitResult: 13201 
+11/08/15 : 05:32:27 |  | Async process currently running!! (13201). 
+11/08/15 : 05:33:27 |  | WaitResult: 13201 
+11/08/15 : 05:33:28 |  | Async process currently running!! (13201). 
+11/08/15 : 05:34:28 |  | WaitResult: 13201 
+11/08/15 : 05:34:28 |  | Async process currently running!! (13201). 
+11/08/15 : 05:35:30 |  | WaitResult: 13201 
+11/08/15 : 05:35:30 |  | Async process currently running!! (13201). 
+11/08/15 : 05:36:32 |  | WaitResult: 13201 
+11/08/15 : 05:36:32 |  | Async process currently running!! (13201). 
+11/08/15 : 05:37:33 |  | WaitResult: 13201 
+11/08/15 : 05:37:33 |  | Async process currently running!! (13201). 
+11/08/15 : 05:38:35 |  | WaitResult: 13201 
+11/08/15 : 05:38:35 |  | Async process currently running!! (13201). 
+11/08/15 : 05:39:36 |  | WaitResult: 13201 
+11/08/15 : 05:39:36 |  | Async process currently running!! (13201). 
+11/08/15 : 05:40:37 |  | WaitResult: 13201 
+11/08/15 : 05:40:37 |  | Async process currently running!! (13201). 
+11/08/15 : 05:41:38 |  | WaitResult: 13201 
+11/08/15 : 05:41:38 |  | Async process currently running!! (13201). 
+11/08/15 : 05:42:40 |  | WaitResult: 13201 
+11/08/15 : 05:42:40 |  | Async process currently running!! (13201). 
+11/08/15 : 05:43:41 |  | WaitResult: 13201 
+11/08/15 : 05:43:41 |  | Async process currently running!! (13201). 
+11/08/15 : 05:44:42 |  | WaitResult: 13201 
+11/08/15 : 05:44:42 |  | Async process currently running!! (13201). 
+11/08/15 : 05:45:43 |  | WaitResult: 13201 
+11/08/15 : 05:45:43 |  | Async process currently running!! (13201). 
+11/08/15 : 05:46:44 |  | WaitResult: 13201 
+11/08/15 : 05:46:44 |  | Async process currently running!! (13201). 
+11/08/15 : 05:47:45 |  | WaitResult: 13201 
+11/08/15 : 05:47:45 |  | Async process currently running!! (13201). 
+11/08/15 : 05:48:46 |  | WaitResult: 13201 
+11/08/15 : 05:48:46 |  | Async process currently running!! (13201). 
+11/08/15 : 05:49:46 |  | WaitResult: 13201 
+11/08/15 : 05:49:47 |  | Async process currently running!! (13201). 
+11/08/15 : 05:50:49 |  | WaitResult: 13201 
+11/08/15 : 05:50:49 |  | Async process currently running!! (13201). 
+11/08/15 : 05:51:50 |  | WaitResult: 13201 
+11/08/15 : 05:51:50 |  | Async process currently running!! (13201). 
+11/08/15 : 05:52:51 |  | WaitResult: 13201 
+11/08/15 : 05:52:51 |  | Async process currently running!! (13201). 
+11/08/15 : 05:53:52 |  | WaitResult: 13201 
+11/08/15 : 05:53:52 |  | Async process currently running!! (13201). 
+11/08/15 : 05:54:53 |  | WaitResult: 13201 
+11/08/15 : 05:54:53 |  | Async process currently running!! (13201). 
+11/08/15 : 05:55:54 |  | WaitResult: 13201 
+11/08/15 : 05:55:54 |  | Async process currently running!! (13201). 
+11/08/15 : 05:56:55 |  | WaitResult: 13201 
+11/08/15 : 05:56:55 |  | Async process currently running!! (13201). 
+11/08/15 : 05:57:56 |  | WaitResult: 13201 
+11/08/15 : 05:57:56 |  | Async process currently running!! (13201). 
+11/08/15 : 05:59:00 |  | WaitResult: 13201 
+11/08/15 : 05:59:01 |  | Async process currently running!! (13201). 
+11/08/15 : 06:00:02 |  | WaitResult: 13201 
+11/08/15 : 06:00:02 |  | Async process currently running!! (13201). 
+11/08/15 : 06:01:03 |  | WaitResult: 13201 
+11/08/15 : 06:01:03 |  | Async process currently running!! (13201). 
+11/08/15 : 06:02:04 |  | WaitResult: 13201 
+11/08/15 : 06:02:04 |  | Async process currently running!! (13201). 
+11/08/15 : 06:03:05 |  | WaitResult: 13201 
+11/08/15 : 06:03:05 |  | Async process currently running!! (13201). 
+11/08/15 : 06:04:06 |  | WaitResult: 13201 
+11/08/15 : 06:04:06 |  | Async process currently running!! (13201). 
+11/08/15 : 06:05:06 |  | WaitResult: 13201 
+11/08/15 : 06:05:07 |  | Async process currently running!! (13201). 
+11/08/15 : 06:06:07 |  | WaitResult: 13201 
+11/08/15 : 06:06:08 |  | Async process currently running!! (13201). 
+11/08/15 : 06:07:08 |  | WaitResult: 13201 
+11/08/15 : 06:07:08 |  | Async process currently running!! (13201). 
+11/08/15 : 06:08:09 |  | WaitResult: 13201 
+11/08/15 : 06:08:09 |  | Async process currently running!! (13201). 
+11/08/15 : 06:09:10 |  | WaitResult: 13201 
+11/08/15 : 06:09:10 |  | Async process currently running!! (13201). 
+11/08/15 : 06:10:11 |  | WaitResult: 13201 
+11/08/15 : 06:10:11 |  | Async process currently running!! (13201). 
+11/08/15 : 06:11:12 |  | WaitResult: 13201 
+11/08/15 : 06:11:12 |  | Async process currently running!! (13201). 
+11/08/15 : 06:12:13 |  | WaitResult: 13201 
+11/08/15 : 06:12:13 |  | Async process currently running!! (13201). 
+11/08/15 : 06:13:14 |  | WaitResult: 13201 
+11/08/15 : 06:13:14 |  | Async process currently running!! (13201). 
+11/08/15 : 06:14:15 |  | WaitResult: 13201 
+11/08/15 : 06:14:15 |  | Async process currently running!! (13201). 
+11/08/15 : 06:15:16 |  | WaitResult: 13201 
+11/08/15 : 06:15:16 |  | Async process currently running!! (13201). 
+11/08/15 : 06:16:17 |  | WaitResult: 13201 
+11/08/15 : 06:16:17 |  | Async process currently running!! (13201). 
+11/08/15 : 06:17:18 |  | WaitResult: 13201 
+11/08/15 : 06:17:18 |  | Async process currently running!! (13201). 
+11/08/15 : 06:18:19 |  | WaitResult: 13201 
+11/08/15 : 06:18:19 |  | Async process currently running!! (13201). 
+11/08/15 : 06:19:19 |  | WaitResult: 13201 
+11/08/15 : 06:19:20 |  | Async process currently running!! (13201). 
+11/08/15 : 06:20:20 |  | WaitResult: 13201 
+11/08/15 : 06:20:21 |  | Async process currently running!! (13201). 
+11/08/15 : 06:21:21 |  | WaitResult: 13201 
+11/08/15 : 06:21:21 |  | Async process currently running!! (13201). 
+11/08/15 : 06:22:22 |  | WaitResult: 13201 
+11/08/15 : 06:22:22 |  | Async process currently running!! (13201). 
+11/08/15 : 06:23:23 |  | WaitResult: 13201 
+11/08/15 : 06:23:23 |  | Async process currently running!! (13201). 
+11/08/15 : 06:24:24 |  | WaitResult: 13201 
+11/08/15 : 06:24:24 |  | Async process currently running!! (13201). 
+11/08/15 : 06:25:25 |  | WaitResult: 13201 
+11/08/15 : 06:25:25 |  | Async process currently running!! (13201). 
+11/08/15 : 06:26:26 |  | WaitResult: 13201 
+11/08/15 : 06:26:26 |  | Async process currently running!! (13201). 
+11/08/15 : 06:27:27 |  | WaitResult: 13201 
+11/08/15 : 06:27:27 |  | Async process currently running!! (13201). 
+11/08/15 : 06:28:28 |  | WaitResult: 13201 
+11/08/15 : 06:28:28 |  | Async process currently running!! (13201). 
+11/08/15 : 06:29:29 |  | WaitResult: 13201 
+11/08/15 : 06:29:29 |  | Async process currently running!! (13201). 
+11/08/15 : 06:30:30 |  | WaitResult: 13201 
+11/08/15 : 06:30:30 |  | Async process currently running!! (13201). 
+11/08/15 : 06:31:31 |  | WaitResult: 13201 
+11/08/15 : 06:31:31 |  | Async process currently running!! (13201). 
+11/08/15 : 06:32:32 |  | WaitResult: 13201 
+11/08/15 : 06:32:32 |  | Async process currently running!! (13201). 
+11/08/15 : 06:33:36 |  | WaitResult: 13201 
+11/08/15 : 06:33:36 |  | Async process currently running!! (13201). 
+11/08/15 : 06:34:37 |  | WaitResult: 13201 
+11/08/15 : 06:34:37 |  | Async process currently running!! (13201). 
+11/08/15 : 06:35:38 |  | WaitResult: 13201 
+11/08/15 : 06:35:38 |  | Async process currently running!! (13201). 
+11/08/15 : 06:36:39 |  | WaitResult: 13201 
+11/08/15 : 06:36:39 |  | Async process currently running!! (13201). 
+11/08/15 : 06:37:40 |  | WaitResult: 13201 
+11/08/15 : 06:37:40 |  | Async process currently running!! (13201). 
+11/08/15 : 06:38:41 |  | WaitResult: 13201 
+11/08/15 : 06:38:41 |  | Async process currently running!! (13201). 
+11/08/15 : 06:39:42 |  | WaitResult: 13201 
+11/08/15 : 06:39:42 |  | Async process currently running!! (13201). 
+11/08/15 : 06:40:43 |  | WaitResult: 13201 
+11/08/15 : 06:40:43 |  | Async process currently running!! (13201). 
+11/08/15 : 06:41:44 |  | WaitResult: 13201 
+11/08/15 : 06:41:44 |  | Async process currently running!! (13201). 
+11/08/15 : 06:42:45 |  | WaitResult: 13201 
+11/08/15 : 06:42:45 |  | Async process currently running!! (13201). 
+11/08/15 : 06:43:45 |  | WaitResult: 13201 
+11/08/15 : 06:43:46 |  | Async process currently running!! (13201). 
+11/08/15 : 06:44:46 |  | WaitResult: 13201 
+11/08/15 : 06:44:47 |  | Async process currently running!! (13201). 
+11/08/15 : 06:45:48 |  | WaitResult: 13201 
+11/08/15 : 06:45:48 |  | Async process currently running!! (13201). 
+11/08/15 : 06:46:49 |  | WaitResult: 13201 
+11/08/15 : 06:46:49 |  | Async process currently running!! (13201). 
+11/08/15 : 06:47:49 |  | WaitResult: 13201 
+11/08/15 : 06:47:50 |  | Async process currently running!! (13201). 
+11/08/15 : 06:48:50 |  | WaitResult: 13201 
+11/08/15 : 06:48:51 |  | Async process currently running!! (13201). 
+11/08/15 : 06:49:51 |  | WaitResult: 13201 
+11/08/15 : 06:49:51 |  | Async process currently running!! (13201). 
+11/08/15 : 06:50:52 |  | WaitResult: 13201 
+11/08/15 : 06:50:52 |  | Async process currently running!! (13201). 
+11/08/15 : 06:51:53 |  | WaitResult: 13201 
+11/08/15 : 06:51:53 |  | Async process currently running!! (13201). 
+11/08/15 : 06:52:54 |  | WaitResult: 13201 
+11/08/15 : 06:52:54 |  | Async process currently running!! (13201). 
+11/08/15 : 06:53:55 |  | WaitResult: 13201 
+11/08/15 : 06:53:55 |  | Async process currently running!! (13201). 
+11/08/15 : 06:54:56 |  | WaitResult: 13201 
+11/08/15 : 06:54:56 |  | Async process currently running!! (13201). 
+11/08/15 : 06:55:57 |  | WaitResult: 13201 
+11/08/15 : 06:55:57 |  | Async process currently running!! (13201). 
+11/08/15 : 06:56:58 |  | WaitResult: 13201 
+11/08/15 : 06:56:58 |  | Async process currently running!! (13201). 
+11/08/15 : 06:57:59 |  | WaitResult: 13201 
+11/08/15 : 06:57:59 |  | Async process currently running!! (13201). 
+11/08/15 : 06:59:00 |  | WaitResult: 13201 
+11/08/15 : 06:59:00 |  | Async process currently running!! (13201). 
+11/08/15 : 07:00:01 |  | WaitResult: 13201 
+11/08/15 : 07:00:01 |  | Async process currently running!! (13201). 
+11/08/15 : 07:01:01 |  | WaitResult: 13201 
+11/08/15 : 07:01:02 |  | Async process currently running!! (13201). 
+11/08/15 : 07:02:02 |  | WaitResult: 13201 
+11/08/15 : 07:02:03 |  | Async process currently running!! (13201). 
+11/08/15 : 07:03:03 |  | WaitResult: 13201 
+11/08/15 : 07:03:04 |  | Async process currently running!! (13201). 
+11/08/15 : 07:04:04 |  | WaitResult: 13201 
+11/08/15 : 07:04:04 |  | Async process currently running!! (13201). 
+11/08/15 : 07:05:05 |  | WaitResult: 13201 
+11/08/15 : 07:05:05 |  | Async process currently running!! (13201). 
+11/08/15 : 07:06:06 |  | WaitResult: 13201 
+11/08/15 : 07:06:06 |  | Async process currently running!! (13201). 
+11/08/15 : 07:07:07 |  | WaitResult: 13201 
+11/08/15 : 07:07:07 |  | Async process currently running!! (13201). 
+11/08/15 : 07:08:08 |  | WaitResult: 13201 
+11/08/15 : 07:08:08 |  | Async process currently running!! (13201). 
+11/08/15 : 07:09:09 |  | WaitResult: 13201 
+11/08/15 : 07:09:09 |  | Async process currently running!! (13201). 
+11/08/15 : 07:10:10 |  | WaitResult: 13201 
+11/08/15 : 07:10:10 |  | Async process currently running!! (13201). 
+11/08/15 : 07:11:11 |  | WaitResult: 13201 
+11/08/15 : 07:11:11 |  | Async process currently running!! (13201). 
+11/08/15 : 07:12:12 |  | WaitResult: 13201 
+11/08/15 : 07:12:12 |  | Async process currently running!! (13201). 
+11/08/15 : 07:13:12 |  | WaitResult: 13201 
+11/08/15 : 07:13:13 |  | Async process currently running!! (13201). 
+11/08/15 : 07:14:13 |  | WaitResult: 13201 
+11/08/15 : 07:14:14 |  | Async process currently running!! (13201). 
+11/08/15 : 07:15:14 |  | WaitResult: 13201 
+11/08/15 : 07:15:14 |  | Async process currently running!! (13201). 
+11/08/15 : 07:16:15 |  | WaitResult: 13201 
+11/08/15 : 07:16:15 |  | Async process currently running!! (13201). 
+11/08/15 : 07:17:16 |  | WaitResult: 13201 
+11/08/15 : 07:17:16 |  | Async process currently running!! (13201). 
+11/08/15 : 07:18:17 |  | WaitResult: 13201 
+11/08/15 : 07:18:17 |  | Async process currently running!! (13201). 
+11/08/15 : 07:19:18 |  | WaitResult: 13201 
+11/08/15 : 07:19:18 |  | Async process currently running!! (13201). 
+11/08/15 : 07:20:19 |  | WaitResult: 13201 
+11/08/15 : 07:20:19 |  | Async process currently running!! (13201). 
+11/08/15 : 07:21:20 |  | WaitResult: 13201 
+11/08/15 : 07:21:20 |  | Async process currently running!! (13201). 
+11/08/15 : 07:22:21 |  | WaitResult: 13201 
+11/08/15 : 07:22:21 |  | Async process currently running!! (13201). 
+11/08/15 : 07:23:22 |  | WaitResult: 13201 
+11/08/15 : 07:23:22 |  | Async process currently running!! (13201). 
+11/08/15 : 07:24:23 |  | WaitResult: 13201 
+11/08/15 : 07:24:23 |  | Async process currently running!! (13201). 
+11/08/15 : 07:25:23 |  | WaitResult: 13201 
+11/08/15 : 07:25:24 |  | Async process currently running!! (13201). 
+11/08/15 : 07:26:24 |  | WaitResult: 13201 
+11/08/15 : 07:26:24 |  | Async process currently running!! (13201). 
+11/08/15 : 07:27:25 |  | WaitResult: 13201 
+11/08/15 : 07:27:25 |  | Async process currently running!! (13201). 
+11/08/15 : 07:28:26 |  | WaitResult: 13201 
+11/08/15 : 07:28:26 |  | Async process currently running!! (13201). 
+11/08/15 : 07:29:27 |  | WaitResult: 13201 
+11/08/15 : 07:29:27 |  | Async process currently running!! (13201). 
+11/08/15 : 07:30:28 |  | WaitResult: 13201 
+11/08/15 : 07:30:28 |  | Async process currently running!! (13201). 
+11/08/15 : 07:31:29 |  | WaitResult: 13201 
+11/08/15 : 07:31:29 |  | Async process currently running!! (13201). 
+11/08/15 : 07:32:30 |  | WaitResult: 13201 
+11/08/15 : 07:32:30 |  | Async process currently running!! (13201). 
+11/08/15 : 07:33:31 |  | WaitResult: 13201 
+11/08/15 : 07:33:31 |  | Async process currently running!! (13201). 
+11/08/15 : 07:34:32 |  | WaitResult: 13201 
+11/08/15 : 07:34:32 |  | Async process currently running!! (13201). 
+11/08/15 : 07:35:33 |  | WaitResult: 13201 
+11/08/15 : 07:35:33 |  | Async process currently running!! (13201). 
+11/08/15 : 07:36:33 |  | WaitResult: 13201 
+11/08/15 : 07:36:34 |  | Async process currently running!! (13201). 
+11/08/15 : 07:37:34 |  | WaitResult: 13201 
+11/08/15 : 07:37:35 |  | Async process currently running!! (13201). 
+11/08/15 : 07:38:35 |  | WaitResult: 13201 
+11/08/15 : 07:38:35 |  | Async process currently running!! (13201). 
+11/08/15 : 07:39:37 |  | WaitResult: 13201 
+11/08/15 : 07:39:37 |  | Async process currently running!! (13201). 
+11/08/15 : 07:40:38 |  | WaitResult: 13201 
+11/08/15 : 07:40:38 |  | Async process currently running!! (13201). 
+11/08/15 : 07:41:39 |  | WaitResult: 13201 
+11/08/15 : 07:41:39 |  | Async process currently running!! (13201). 
+11/08/15 : 07:42:40 |  | WaitResult: 13201 
+11/08/15 : 07:42:40 |  | Async process currently running!! (13201). 
+11/08/15 : 07:43:41 |  | WaitResult: 13201 
+11/08/15 : 07:43:41 |  | Async process currently running!! (13201). 
+11/08/15 : 07:44:42 |  | WaitResult: 13201 
+11/08/15 : 07:44:42 |  | Async process currently running!! (13201). 
+11/08/15 : 07:45:43 |  | WaitResult: 13201 
+11/08/15 : 07:45:43 |  | Async process currently running!! (13201). 
+11/08/15 : 07:46:44 |  | WaitResult: 13201 
+11/08/15 : 07:46:44 |  | Async process currently running!! (13201). 
+11/08/15 : 07:47:45 |  | WaitResult: 13201 
+11/08/15 : 07:47:45 |  | Async process currently running!! (13201). 
+11/08/15 : 07:48:46 |  | WaitResult: 13201 
+11/08/15 : 07:48:46 |  | Async process currently running!! (13201). 
+11/08/15 : 07:49:47 |  | WaitResult: 13201 
+11/08/15 : 07:49:47 |  | Async process currently running!! (13201). 
+11/08/15 : 07:50:48 |  | WaitResult: 13201 
+11/08/15 : 07:50:48 |  | Async process currently running!! (13201). 
+11/08/15 : 07:51:49 |  | WaitResult: 13201 
+11/08/15 : 07:51:49 |  | Async process currently running!! (13201). 
+11/08/15 : 07:52:50 |  | WaitResult: 13201 
+11/08/15 : 07:52:50 |  | Async process currently running!! (13201). 
+11/08/15 : 07:53:54 |  | WaitResult: 13201 
+11/08/15 : 07:53:54 |  | Async process currently running!! (13201). 
+11/08/15 : 07:55:00 |  | WaitResult: 13201 
+11/08/15 : 07:55:00 |  | Async process currently running!! (13201). 
+11/08/15 : 07:56:04 |  | WaitResult: 13201 
+11/08/15 : 07:56:04 |  | Async process currently running!! (13201). 
+11/08/15 : 07:57:05 |  | WaitResult: 13201 
+11/08/15 : 07:57:05 |  | Async process currently running!! (13201). 
+11/08/15 : 07:58:06 |  | WaitResult: 13201 
+11/08/15 : 07:58:06 |  | Async process currently running!! (13201). 
+11/08/15 : 07:59:06 |  | WaitResult: 13201 
+11/08/15 : 07:59:07 |  | Async process currently running!! (13201). 
+11/08/15 : 08:00:08 |  | WaitResult: 13201 
+11/08/15 : 08:00:08 |  | Async process currently running!! (13201). 
+11/08/15 : 08:01:08 |  | WaitResult: 13201 
+11/08/15 : 08:01:09 |  | Async process currently running!! (13201). 
+11/08/15 : 08:02:09 |  | WaitResult: 13201 
+11/08/15 : 08:02:09 |  | Async process currently running!! (13201). 
+11/08/15 : 08:03:10 |  | WaitResult: 13201 
+11/08/15 : 08:03:10 |  | Async process currently running!! (13201). 
+11/08/15 : 08:04:11 |  | WaitResult: 13201 
+11/08/15 : 08:04:11 |  | Async process currently running!! (13201). 
+11/08/15 : 08:05:12 |  | WaitResult: 13201 
+11/08/15 : 08:05:12 |  | Async process currently running!! (13201). 
+11/08/15 : 08:06:13 |  | WaitResult: 13201 
+11/08/15 : 08:06:13 |  | Async process currently running!! (13201). 
+11/08/15 : 08:07:14 |  | WaitResult: 13201 
+11/08/15 : 08:07:14 |  | Async process currently running!! (13201). 
+11/08/15 : 08:08:15 |  | WaitResult: 13201 
+11/08/15 : 08:08:15 |  | Async process currently running!! (13201). 
+11/08/15 : 08:09:16 |  | WaitResult: 13201 
+11/08/15 : 08:09:16 |  | Async process currently running!! (13201). 
+11/08/15 : 08:10:17 |  | WaitResult: 13201 
+11/08/15 : 08:10:17 |  | Async process currently running!! (13201). 
+11/08/15 : 08:11:18 |  | WaitResult: 13201 
+11/08/15 : 08:11:18 |  | Async process currently running!! (13201). 
+11/08/15 : 08:12:19 |  | WaitResult: 13201 
+11/08/15 : 08:12:19 |  | Async process currently running!! (13201). 
+11/08/15 : 08:13:19 |  | WaitResult: 13201 
+11/08/15 : 08:13:20 |  | Async process currently running!! (13201). 
+11/08/15 : 08:14:20 |  | WaitResult: 13201 
+11/08/15 : 08:14:21 |  | Async process currently running!! (13201). 
+11/08/15 : 08:15:21 |  | WaitResult: 13201 
+11/08/15 : 08:15:21 |  | Async process currently running!! (13201). 
+11/08/15 : 08:16:22 |  | WaitResult: 13201 
+11/08/15 : 08:16:22 |  | Async process currently running!! (13201). 
+11/08/15 : 08:17:23 |  | WaitResult: 13201 
+11/08/15 : 08:17:23 |  | Async process currently running!! (13201). 
+11/08/15 : 08:18:24 |  | WaitResult: 13201 
+11/08/15 : 08:18:24 |  | Async process currently running!! (13201). 
+11/08/15 : 08:19:25 |  | WaitResult: 13201 
+11/08/15 : 08:19:25 |  | Async process currently running!! (13201). 
+11/08/15 : 08:20:26 |  | WaitResult: 13201 
+11/08/15 : 08:20:26 |  | Async process currently running!! (13201). 
+11/08/15 : 08:21:27 |  | WaitResult: 13201 
+11/08/15 : 08:21:27 |  | Async process currently running!! (13201). 
+11/08/15 : 08:22:28 |  | WaitResult: 13201 
+11/08/15 : 08:22:28 |  | Async process currently running!! (13201). 
+11/08/15 : 08:23:29 |  | WaitResult: 13201 
+11/08/15 : 08:23:29 |  | Async process currently running!! (13201). 
+11/08/15 : 08:24:30 |  | WaitResult: 13201 
+11/08/15 : 08:24:30 |  | Async process currently running!! (13201). 
+11/08/15 : 08:25:30 |  | WaitResult: 13201 
+11/08/15 : 08:25:31 |  | Async process currently running!! (13201). 
+11/08/15 : 08:26:31 |  | WaitResult: 13201 
+11/08/15 : 08:26:32 |  | Async process currently running!! (13201). 
+11/08/15 : 08:27:32 |  | WaitResult: 13201 
+11/08/15 : 08:27:32 |  | Async process currently running!! (13201). 
+11/08/15 : 08:28:33 |  | WaitResult: 13201 
+11/08/15 : 08:28:33 |  | Async process currently running!! (13201). 
+11/08/15 : 08:29:34 |  | WaitResult: 13201 
+11/08/15 : 08:29:34 |  | Async process currently running!! (13201). 
+11/08/15 : 08:30:35 |  | WaitResult: 13201 
+11/08/15 : 08:30:35 |  | Async process currently running!! (13201). 
+11/08/15 : 08:31:36 |  | WaitResult: 13201 
+11/08/15 : 08:31:36 |  | Async process currently running!! (13201). 
+11/08/15 : 08:32:37 |  | WaitResult: 13201 
+11/08/15 : 08:32:37 |  | Async process currently running!! (13201). 
+11/08/15 : 08:33:38 |  | WaitResult: 13201 
+11/08/15 : 08:33:38 |  | Async process currently running!! (13201). 
+11/08/15 : 08:34:42 |  | WaitResult: 13201 
+11/08/15 : 08:34:43 |  | Async process currently running!! (13201). 
+11/08/15 : 08:35:46 |  | WaitResult: 13201 
+11/08/15 : 08:35:46 |  | Async process currently running!! (13201). 
+11/08/15 : 08:36:51 |  | WaitResult: 13201 
+11/08/15 : 08:36:51 |  | Async process currently running!! (13201). 
+11/08/15 : 08:37:52 |  | WaitResult: 13201 
+11/08/15 : 08:37:52 |  | Async process currently running!! (13201). 
+11/08/15 : 08:38:53 |  | WaitResult: 13201 
+11/08/15 : 08:38:53 |  | Async process currently running!! (13201). 
+11/08/15 : 08:39:54 |  | WaitResult: 13201 
+11/08/15 : 08:39:54 |  | Async process currently running!! (13201). 
+11/08/15 : 08:40:55 |  | WaitResult: 13201 
+11/08/15 : 08:40:55 |  | Async process currently running!! (13201). 
+11/08/15 : 08:41:56 |  | WaitResult: 13201 
+11/08/15 : 08:41:56 |  | Async process currently running!! (13201). 
+11/08/15 : 08:42:57 |  | WaitResult: 13201 
+11/08/15 : 08:42:57 |  | Async process currently running!! (13201). 
+11/08/15 : 08:43:58 |  | WaitResult: 13201 
+11/08/15 : 08:43:58 |  | Async process currently running!! (13201). 
+11/08/15 : 08:44:59 |  | WaitResult: 13201 
+11/08/15 : 08:44:59 |  | Async process currently running!! (13201). 
+11/08/15 : 08:46:00 |  | WaitResult: 13201 
+11/08/15 : 08:46:00 |  | Async process currently running!! (13201). 
+11/08/15 : 08:47:01 |  | WaitResult: 13201 
+11/08/15 : 08:47:01 |  | Async process currently running!! (13201). 
+11/08/15 : 08:48:05 |  | WaitResult: 13201 
+11/08/15 : 08:48:05 |  | Async process currently running!! (13201). 
+11/08/15 : 08:49:07 |  | WaitResult: 13201 
+11/08/15 : 08:49:07 |  | Async process currently running!! (13201). 
+11/08/15 : 08:50:08 |  | WaitResult: 13201 
+11/08/15 : 08:50:08 |  | Async process currently running!! (13201). 
+11/08/15 : 08:51:09 |  | WaitResult: 13201 
+11/08/15 : 08:51:09 |  | Async process currently running!! (13201). 
+11/08/15 : 08:52:10 |  | WaitResult: 13201 
+11/08/15 : 08:52:11 |  | Async process currently running!! (13201). 
+11/08/15 : 08:53:11 |  | WaitResult: 13201 
+11/08/15 : 08:53:11 |  | Async process currently running!! (13201). 
+11/08/15 : 08:54:12 |  | WaitResult: 13201 
+11/08/15 : 08:54:12 |  | Async process currently running!! (13201). 
+11/08/15 : 08:55:17 |  | WaitResult: 13201 
+11/08/15 : 08:55:18 |  | Async process currently running!! (13201). 
+11/08/15 : 08:56:18 |  | WaitResult: 13201 
+11/08/15 : 08:56:19 |  | Async process currently running!! (13201). 
+11/08/15 : 08:57:20 |  | WaitResult: 13201 
+11/08/15 : 08:57:21 |  | Async process currently running!! (13201). 
+11/08/15 : 08:58:21 |  | WaitResult: 13201 
+11/08/15 : 08:58:22 |  | Async process currently running!! (13201). 
+11/08/15 : 08:59:22 |  | WaitResult: 13201 
+11/08/15 : 08:59:23 |  | Async process currently running!! (13201). 
+11/08/15 : 09:00:23 |  | WaitResult: 13201 
+11/08/15 : 09:00:24 |  | Async process currently running!! (13201). 
+11/08/15 : 09:01:24 |  | WaitResult: 13201 
+11/08/15 : 09:01:25 |  | Async process currently running!! (13201). 
+11/08/15 : 09:02:25 |  | WaitResult: 13201 
+11/08/15 : 09:02:26 |  | Async process currently running!! (13201). 
+11/08/15 : 09:03:26 |  | WaitResult: 13201 
+11/08/15 : 09:03:26 |  | Async process currently running!! (13201). 
+11/08/15 : 09:04:27 |  | WaitResult: 13201 
+11/08/15 : 09:04:27 |  | Async process currently running!! (13201). 
+11/08/15 : 09:05:29 |  | WaitResult: 13201 
+11/08/15 : 09:05:29 |  | Async process currently running!! (13201). 
+11/08/15 : 09:06:30 |  | WaitResult: 13201 
+11/08/15 : 09:06:31 |  | Async process currently running!! (13201). 
+11/08/15 : 09:07:31 |  | WaitResult: 13201 
+11/08/15 : 09:07:32 |  | Async process currently running!! (13201). 
+11/08/15 : 09:08:32 |  | WaitResult: 13201 
+11/08/15 : 09:08:32 |  | Async process currently running!! (13201). 
+11/08/15 : 09:09:33 |  | WaitResult: 13201 
+11/08/15 : 09:09:33 |  | Async process currently running!! (13201). 
+11/08/15 : 09:10:34 |  | WaitResult: 13201 
+11/08/15 : 09:10:34 |  | Async process currently running!! (13201). 
+11/08/15 : 09:11:35 |  | WaitResult: 13201 
+11/08/15 : 09:11:35 |  | Async process currently running!! (13201). 
+11/08/15 : 09:12:36 |  | WaitResult: 13201 
+11/08/15 : 09:12:36 |  | Async process currently running!! (13201). 
+11/08/15 : 09:13:37 |  | WaitResult: 13201 
+11/08/15 : 09:13:37 |  | Async process currently running!! (13201). 
+11/08/15 : 09:14:38 |  | WaitResult: 13201 
+11/08/15 : 09:14:38 |  | Async process currently running!! (13201). 
+11/08/15 : 09:15:39 |  | WaitResult: 13201 
+11/08/15 : 09:15:39 |  | Async process currently running!! (13201). 
+11/08/15 : 09:16:40 |  | WaitResult: 13201 
+11/08/15 : 09:16:40 |  | Async process currently running!! (13201). 
+11/08/15 : 09:17:41 |  | WaitResult: 13201 
+11/08/15 : 09:17:41 |  | Async process currently running!! (13201). 
+11/08/15 : 09:18:43 |  | WaitResult: 13201 
+11/08/15 : 09:18:43 |  | Async process currently running!! (13201). 
+11/08/15 : 09:19:44 |  | WaitResult: 13201 
+11/08/15 : 09:19:44 |  | Async process currently running!! (13201). 
+11/08/15 : 09:20:45 |  | WaitResult: 13201 
+11/08/15 : 09:20:45 |  | Async process currently running!! (13201). 
+11/08/15 : 09:21:46 |  | WaitResult: 13201 
+11/08/15 : 09:21:46 |  | Async process currently running!! (13201). 
+11/08/15 : 09:22:46 |  | WaitResult: 13201 
+11/08/15 : 09:22:47 |  | Async process currently running!! (13201). 
+11/08/15 : 09:23:48 |  | WaitResult: 13201 
+11/08/15 : 09:23:48 |  | Async process currently running!! (13201). 
+11/08/15 : 09:24:48 |  | WaitResult: 13201 
+11/08/15 : 09:24:49 |  | Async process currently running!! (13201). 
+11/08/15 : 09:25:50 |  | WaitResult: 13201 
+11/08/15 : 09:25:50 |  | Async process currently running!! (13201). 
+11/08/15 : 09:26:50 |  | WaitResult: 13201 
+11/08/15 : 09:26:51 |  | Async process currently running!! (13201). 
+11/08/15 : 09:27:51 |  | WaitResult: 13201 
+11/08/15 : 09:27:52 |  | Async process currently running!! (13201). 
+11/08/15 : 09:28:52 |  | WaitResult: 13201 
+11/08/15 : 09:28:53 |  | Async process currently running!! (13201). 
+11/08/15 : 09:29:53 |  | WaitResult: 13201 
+11/08/15 : 09:29:54 |  | Async process currently running!! (13201). 
+11/08/15 : 09:30:54 |  | WaitResult: 13201 
+11/08/15 : 09:30:54 |  | Async process currently running!! (13201). 
+11/08/15 : 09:31:55 |  | WaitResult: 13201 
+11/08/15 : 09:31:55 |  | Async process currently running!! (13201). 
+11/08/15 : 09:32:56 |  | WaitResult: 13201 
+11/08/15 : 09:32:56 |  | Async process currently running!! (13201). 
+11/08/15 : 09:34:28 |  | WaitResult: 13201 
+11/08/15 : 09:34:28 |  | Async process currently running!! (13201). 
+11/08/15 : 09:35:29 |  | WaitResult: 13201 
+11/08/15 : 09:35:29 |  | Async process currently running!! (13201). 
+11/08/15 : 09:36:30 |  | WaitResult: 13201 
+11/08/15 : 09:36:30 |  | Async process currently running!! (13201). 
+11/08/15 : 09:37:31 |  | WaitResult: 13201 
+11/08/15 : 09:37:31 |  | Async process currently running!! (13201). 
+11/08/15 : 09:38:32 |  | WaitResult: 13201 
+11/08/15 : 09:38:32 |  | Async process currently running!! (13201). 
+11/08/15 : 09:39:33 |  | WaitResult: 13201 
+11/08/15 : 09:39:33 |  | Async process currently running!! (13201). 
+11/08/15 : 09:40:33 |  | WaitResult: 13201 
+11/08/15 : 09:40:34 |  | Async process currently running!! (13201). 
+11/08/15 : 09:41:34 |  | WaitResult: 13201 
+11/08/15 : 09:41:35 |  | Async process currently running!! (13201). 
+11/08/15 : 09:42:35 |  | WaitResult: 13201 
+11/08/15 : 09:42:36 |  | Async process currently running!! (13201). 
+11/08/15 : 09:43:36 |  | WaitResult: 13201 
+11/08/15 : 09:43:36 |  | Async process currently running!! (13201). 
+11/08/15 : 09:44:37 |  | WaitResult: 13201 
+11/08/15 : 09:44:37 |  | Async process currently running!! (13201). 
+11/08/15 : 09:45:41 |  | WaitResult: 13201 
+11/08/15 : 09:45:41 |  | Async process currently running!! (13201). 
+11/08/15 : 09:46:44 |  | WaitResult: 13201 
+11/08/15 : 09:46:44 |  | Async process currently running!! (13201). 
+11/08/15 : 09:47:45 |  | WaitResult: 13201 
+11/08/15 : 09:47:45 |  | Async process currently running!! (13201). 
+11/08/15 : 09:48:46 |  | WaitResult: 13201 
+11/08/15 : 09:48:46 |  | Async process currently running!! (13201). 
+11/08/15 : 09:49:47 |  | WaitResult: 13201 
+11/08/15 : 09:49:47 |  | Async process currently running!! (13201). 
+11/08/15 : 09:50:48 |  | WaitResult: 13201 
+11/08/15 : 09:50:48 |  | Async process currently running!! (13201). 
+11/08/15 : 09:51:49 |  | WaitResult: 13201 
+11/08/15 : 09:51:49 |  | Async process currently running!! (13201). 
+11/08/15 : 09:52:50 |  | WaitResult: 13201 
+11/08/15 : 09:52:50 |  | Async process currently running!! (13201). 
+11/08/15 : 09:53:51 |  | WaitResult: 13201 
+11/08/15 : 09:53:51 |  | Async process currently running!! (13201). 
+11/08/15 : 09:54:52 |  | WaitResult: 13201 
+11/08/15 : 09:54:52 |  | Async process currently running!! (13201). 
+11/08/15 : 09:55:53 |  | WaitResult: 13201 
+11/08/15 : 09:55:53 |  | Async process currently running!! (13201). 
+11/08/15 : 09:56:54 |  | WaitResult: 13201 
+11/08/15 : 09:56:54 |  | Async process currently running!! (13201). 
+11/08/15 : 09:57:55 |  | WaitResult: 13201 
+11/08/15 : 09:57:55 |  | Async process currently running!! (13201). 
+11/08/15 : 09:58:55 |  | WaitResult: 13201 
+11/08/15 : 09:58:56 |  | Async process currently running!! (13201). 
+11/08/15 : 09:59:56 |  | WaitResult: 13201 
+11/08/15 : 09:59:57 |  | Async process currently running!! (13201). 
+11/08/15 : 10:00:57 |  | WaitResult: 13201 
+11/08/15 : 10:00:57 |  | Async process currently running!! (13201). 
+11/08/15 : 10:01:58 |  | WaitResult: 13201 
+11/08/15 : 10:01:58 |  | Async process currently running!! (13201). 
+11/08/15 : 10:02:59 |  | WaitResult: 13201 
+11/08/15 : 10:02:59 |  | Async process currently running!! (13201). 
+11/08/15 : 10:04:00 |  | WaitResult: 13201 
+11/08/15 : 10:04:00 |  | Async process currently running!! (13201). 
+11/08/15 : 10:05:01 |  | WaitResult: 13201 
+11/08/15 : 10:05:01 |  | Async process currently running!! (13201). 
+11/08/15 : 10:06:02 |  | WaitResult: 13201 
+11/08/15 : 10:06:02 |  | Async process currently running!! (13201). 
+11/08/15 : 10:07:03 |  | WaitResult: 13201 
+11/08/15 : 10:07:03 |  | Async process currently running!! (13201). 
+11/08/15 : 10:08:04 |  | WaitResult: 13201 
+11/08/15 : 10:08:04 |  | Async process currently running!! (13201). 
+11/08/15 : 10:09:05 |  | WaitResult: 13201 
+11/08/15 : 10:09:05 |  | Async process currently running!! (13201). 
+11/08/15 : 10:10:06 |  | WaitResult: 13201 
+11/08/15 : 10:10:06 |  | Async process currently running!! (13201). 
+11/08/15 : 10:11:06 |  | WaitResult: 13201 
+11/08/15 : 10:11:07 |  | Async process currently running!! (13201). 
+11/08/15 : 10:12:07 |  | WaitResult: 13201 
+11/08/15 : 10:12:08 |  | Async process currently running!! (13201). 
+11/08/15 : 10:13:08 |  | WaitResult: 13201 
+11/08/15 : 10:13:08 |  | Async process currently running!! (13201). 
+11/08/15 : 10:14:09 |  | WaitResult: 13201 
+11/08/15 : 10:14:09 |  | Async process currently running!! (13201). 
+11/08/15 : 10:15:10 |  | WaitResult: 13201 
+11/08/15 : 10:15:10 |  | Async process currently running!! (13201). 
+11/08/15 : 10:16:11 |  | WaitResult: 13201 
+11/08/15 : 10:16:11 |  | Async process currently running!! (13201). 
+11/08/15 : 10:17:12 |  | WaitResult: 13201 
+11/08/15 : 10:17:12 |  | Async process currently running!! (13201). 
+11/08/15 : 10:18:13 |  | WaitResult: 13201 
+11/08/15 : 10:18:13 |  | Async process currently running!! (13201). 
+11/08/15 : 10:19:14 |  | WaitResult: 13201 
+11/08/15 : 10:19:14 |  | Async process currently running!! (13201). 
+11/08/15 : 10:20:15 |  | WaitResult: 13201 
+11/08/15 : 10:20:15 |  | Async process currently running!! (13201). 
+11/08/15 : 10:21:16 |  | WaitResult: 13201 
+11/08/15 : 10:21:16 |  | Async process currently running!! (13201). 
+11/08/15 : 10:22:17 |  | WaitResult: 13201 
+11/08/15 : 10:22:17 |  | Async process currently running!! (13201). 
+11/08/15 : 10:23:18 |  | WaitResult: 13201 
+11/08/15 : 10:23:18 |  | Async process currently running!! (13201). 
+11/08/15 : 10:24:19 |  | WaitResult: 13201 
+11/08/15 : 10:24:19 |  | Async process currently running!! (13201). 
+11/08/15 : 10:25:20 |  | WaitResult: 13201 
+11/08/15 : 10:25:20 |  | Async process currently running!! (13201). 
+11/08/15 : 10:26:22 |  | WaitResult: 13201 
+11/08/15 : 10:26:22 |  | Async process currently running!! (13201). 
+11/08/15 : 10:27:25 |  | WaitResult: 13201 
+11/08/15 : 10:27:25 |  | Async process currently running!! (13201). 
+11/08/15 : 10:28:26 |  | WaitResult: 13201 
+11/08/15 : 10:28:26 |  | Async process currently running!! (13201). 
+11/08/15 : 10:29:27 |  | WaitResult: 13201 
+11/08/15 : 10:29:27 |  | Async process currently running!! (13201). 
+11/08/15 : 10:30:28 |  | WaitResult: 13201 
+11/08/15 : 10:30:28 |  | Async process currently running!! (13201). 
+11/08/15 : 10:31:29 |  | WaitResult: 13201 
+11/08/15 : 10:31:29 |  | Async process currently running!! (13201). 
+11/08/15 : 10:32:29 |  | WaitResult: 13201 
+11/08/15 : 10:32:30 |  | Async process currently running!! (13201). 
+11/08/15 : 10:33:30 |  | WaitResult: 13201 
+11/08/15 : 10:33:31 |  | Async process currently running!! (13201). 
+11/08/15 : 10:34:31 |  | WaitResult: 13201 
+11/08/15 : 10:34:32 |  | Async process currently running!! (13201). 
+11/08/15 : 10:35:32 |  | WaitResult: 13201 
+11/08/15 : 10:35:33 |  | Async process currently running!! (13201). 
+11/08/15 : 10:36:33 |  | WaitResult: 13201 
+11/08/15 : 10:36:34 |  | Async process currently running!! (13201). 
+11/08/15 : 10:37:34 |  | WaitResult: 13201 
+11/08/15 : 10:37:34 |  | Async process currently running!! (13201). 
+11/08/15 : 10:38:35 |  | WaitResult: 13201 
+11/08/15 : 10:38:35 |  | Async process currently running!! (13201). 
+11/08/15 : 10:39:36 |  | WaitResult: 13201 
+11/08/15 : 10:39:36 |  | Async process currently running!! (13201). 
+11/08/15 : 10:40:38 |  | WaitResult: 13201 
+11/08/15 : 10:40:38 |  | Async process currently running!! (13201). 
+11/08/15 : 10:41:39 |  | WaitResult: 13201 
+11/08/15 : 10:41:39 |  | Async process currently running!! (13201). 
+11/08/15 : 10:42:40 |  | WaitResult: 13201 
+11/08/15 : 10:42:41 |  | Async process currently running!! (13201). 
+11/08/15 : 10:43:42 |  | WaitResult: 13201 
+11/08/15 : 10:43:42 |  | Async process currently running!! (13201). 
+11/08/15 : 10:44:43 |  | WaitResult: 13201 
+11/08/15 : 10:44:43 |  | Async process currently running!! (13201). 
+11/08/15 : 10:45:44 |  | WaitResult: 13201 
+11/08/15 : 10:45:44 |  | Async process currently running!! (13201). 
+11/08/15 : 10:46:45 |  | WaitResult: 13201 
+11/08/15 : 10:46:45 |  | Async process currently running!! (13201). 
+11/08/15 : 10:47:46 |  | WaitResult: 13201 
+11/08/15 : 10:47:46 |  | Async process currently running!! (13201). 
+11/08/15 : 10:48:47 |  | WaitResult: 13201 
+11/08/15 : 10:48:47 |  | Async process currently running!! (13201). 
+11/08/15 : 10:49:52 |  | WaitResult: 13201 
+11/08/15 : 10:49:52 |  | Async process currently running!! (13201). 
+11/08/15 : 10:51:05 |  | WaitResult: 13201 
+11/08/15 : 10:51:05 |  | Async process currently running!! (13201). 
+11/08/15 : 10:52:21 |  | WaitResult: 13201 
+11/08/15 : 10:52:21 |  | Async process currently running!! (13201). 
+11/08/15 : 10:53:33 |  | WaitResult: 13201 
+11/08/15 : 10:53:33 |  | Async process currently running!! (13201). 
+11/08/15 : 10:54:44 |  | WaitResult: 13201 
+11/08/15 : 10:54:44 |  | Async process currently running!! (13201). 
+11/08/15 : 10:55:51 |  | WaitResult: 13201 
+11/08/15 : 10:55:51 |  | Async process currently running!! (13201). 
+11/08/15 : 10:56:54 |  | WaitResult: 13201 
+11/08/15 : 10:56:54 |  | Async process currently running!! (13201). 
+11/08/15 : 10:57:56 |  | WaitResult: 13201 
+11/08/15 : 10:57:56 |  | Async process currently running!! (13201). 
+11/08/15 : 10:58:58 |  | WaitResult: 13201 
+11/08/15 : 10:58:58 |  | Async process currently running!! (13201). 
+11/08/15 : 10:59:59 |  | WaitResult: 13201 
+11/08/15 : 10:59:59 |  | Async process currently running!! (13201). 
+11/08/15 : 11:01:00 |  | WaitResult: 13201 
+11/08/15 : 11:01:00 |  | Async process currently running!! (13201). 
+11/08/15 : 11:02:01 |  | WaitResult: 13201 
+11/08/15 : 11:02:01 |  | Async process currently running!! (13201). 
+11/08/15 : 11:02:39 |  | Executing script: CURL_queue.sh 
+11/08/15 : 11:02:39 |  | Job Array (13202). Your job 13202 ("CURL_queue.sh") has been submitted 
+11/08/15 : 11:02:39 |  | The process CURL_queue.sh is currently running (13202). 
+11/08/15 : 11:02:39 |  | WaitResult: 13202 
+11/08/15 : 11:02:39 |  | Async process currently running!! (13202). 
+11/08/15 : 11:03:41 |  | WaitResult: 13202 
+11/08/15 : 11:03:41 |  | Async process currently running!! (13202). 
+11/08/15 : 11:04:42 |  | WaitResult: 13202 
+11/08/15 : 11:04:42 |  | Async process currently running!! (13202). 
+11/08/15 : 11:05:43 |  | WaitResult: 13202 
+11/08/15 : 11:05:43 |  | Async process currently running!! (13202). 
+11/08/15 : 11:06:44 |  | WaitResult: 13202 
+11/08/15 : 11:06:44 |  | Async process currently running!! (13202). 
+11/08/15 : 11:07:45 |  | WaitResult: 13202 
+11/08/15 : 11:07:45 |  | Async process currently running!! (13202). 
+11/08/15 : 11:08:45 |  | WaitResult: 13202 
+11/08/15 : 11:08:46 |  | Async process currently running!! (13202). 
+11/08/15 : 11:09:46 |  | WaitResult: 13202 
+11/08/15 : 11:09:47 |  | Async process currently running!! (13202). 
+11/08/15 : 11:10:47 |  | WaitResult: 13202 
+11/08/15 : 11:10:47 |  | Async process currently running!! (13202). 
+11/08/15 : 11:13:05 |  | Executing script: CURL_queue.sh 
+11/08/15 : 11:13:05 |  | Job Array (13203). Your job 13203 ("CURL_queue.sh") has been submitted 
+11/08/15 : 11:13:05 |  | The process CURL_queue.sh is currently running (13203). 
+11/08/15 : 11:13:05 |  | WaitResult: 13203 
+11/08/15 : 11:13:05 |  | Async process currently running!! (13203). 
+11/08/15 : 11:14:06 |  | WaitResult: 13203 
+11/08/15 : 11:14:06 |  | Async process currently running!! (13203). 
+11/08/15 : 11:15:07 |  | WaitResult: 13203 
+11/08/15 : 11:15:07 |  | Async process currently running!! (13203). 
+11/08/15 : 11:16:08 |  | WaitResult: 13203 
+11/08/15 : 11:16:08 |  | Async process currently running!! (13203). 
+11/08/15 : 11:17:09 |  | WaitResult: 13203 
+11/08/15 : 11:17:09 |  | Async process currently running!! (13203). 
+11/08/15 : 11:18:10 |  | WaitResult: 13203 
+11/08/15 : 11:18:10 |  | Async process currently running!! (13203). 
+11/08/15 : 11:20:59 |  | Executing script: CURL_queue.sh 
+11/08/15 : 11:20:59 |  | Job Array (13204). Your job 13204 ("CURL_queue.sh") has been submitted 
+11/08/15 : 11:20:59 |  | The process CURL_queue.sh is currently running (13204). 
+11/08/15 : 11:20:59 |  | WaitResult: 13204 
+11/08/15 : 11:21:00 |  | Async process currently running!! (13204). 
+11/08/15 : 11:22:01 |  | WaitResult: 13204 
+11/08/15 : 11:22:01 |  | Async process currently running!! (13204). 
+11/08/15 : 11:23:03 |  | WaitResult: 13204 
+11/08/15 : 11:23:03 |  | Async process currently running!! (13204). 
+11/08/15 : 11:36:52 |  | Executing script: CURL_queue.sh 
+11/08/15 : 11:36:52 |  | Job Array (13205). Your job 13205 ("CURL_queue.sh") has been submitted 
+11/08/15 : 11:36:52 |  | The process CURL_queue.sh is currently running (13205). 
+11/08/15 : 11:36:52 |  | WaitResult: 13205 
+11/08/15 : 11:36:53 |  | Async process currently running!! (13205). 
+11/08/15 : 11:37:54 |  | WaitResult: 13205 
+11/08/15 : 11:37:54 |  | Async process already finished!! 
+11/08/15 : 12:15:38 |  | Executing script: CURL_queue.sh 
+11/08/15 : 12:15:38 |  | Job Array (13206). Your job 13206 ("CURL_queue.sh") has been submitted 
+11/08/15 : 12:15:38 |  | The process CURL_queue.sh is currently running (13206). 
+11/08/15 : 12:15:38 |  | WaitResult: 13206 
+11/08/15 : 12:15:38 |  | Async process currently running!! (13206). 
+11/08/15 : 12:16:40 |  | WaitResult: 13206 
+11/08/15 : 12:16:40 |  | Async process currently running!! (13206). 
+11/08/15 : 12:17:42 |  | WaitResult: 13206 
+11/08/15 : 12:17:42 |  | Async process currently running!! (13206). 
+11/08/15 : 12:18:43 |  | WaitResult: 13206 
+11/08/15 : 12:18:43 |  | Async process currently running!! (13206). 
+11/08/15 : 12:19:44 |  | WaitResult: 13206 
+11/08/15 : 12:19:44 |  | Async process currently running!! (13206). 
+11/08/15 : 12:20:45 |  | WaitResult: 13206 
+11/08/15 : 12:20:45 |  | Async process currently running!! (13206). 
+11/08/15 : 12:21:46 |  | WaitResult: 13206 
+11/08/15 : 12:21:46 |  | Async process currently running!! (13206). 
+11/08/15 : 12:22:47 |  | WaitResult: 13206 
+11/08/15 : 12:22:47 |  | Async process currently running!! (13206). 
+11/08/15 : 12:23:48 |  | WaitResult: 13206 
+11/08/15 : 12:23:48 |  | Async process currently running!! (13206). 
+11/08/15 : 12:24:49 |  | WaitResult: 13206 
+11/08/15 : 12:24:49 |  | Async process currently running!! (13206). 
+11/08/15 : 12:25:50 |  | WaitResult: 13206 
+11/08/15 : 12:25:50 |  | Async process currently running!! (13206). 
+11/08/15 : 12:26:51 |  | WaitResult: 13206 
+11/08/15 : 12:26:51 |  | Async process currently running!! (13206). 
+11/08/15 : 12:27:52 |  | WaitResult: 13206 
+11/08/15 : 12:27:52 |  | Async process currently running!! (13206). 
+11/08/15 : 12:28:53 |  | WaitResult: 13206 
+11/08/15 : 12:28:53 |  | Async process currently running!! (13206). 
+11/08/15 : 12:29:54 |  | WaitResult: 13206 
+11/08/15 : 12:29:54 |  | Async process currently running!! (13206). 
+11/08/15 : 12:30:55 |  | WaitResult: 13206 
+11/08/15 : 12:30:55 |  | Async process currently running!! (13206). 
+11/08/15 : 12:31:56 |  | WaitResult: 13206 
+11/08/15 : 12:31:56 |  | Async process currently running!! (13206). 
+11/08/15 : 12:32:56 |  | WaitResult: 13206 
+11/08/15 : 12:32:57 |  | Async process currently running!! (13206). 
+11/08/15 : 12:33:58 |  | WaitResult: 13206 
+11/08/15 : 12:33:58 |  | Async process currently running!! (13206). 
+11/08/15 : 12:34:59 |  | WaitResult: 13206 
+11/08/15 : 12:34:59 |  | Async process currently running!! (13206). 
+11/08/15 : 12:36:01 |  | WaitResult: 13206 
+11/08/15 : 12:36:01 |  | Async process currently running!! (13206). 
+11/08/15 : 13:09:14 |  | Executing script: CURL_queue.sh 
+11/08/15 : 13:09:15 |  | Job Array (13207). Your job 13207 ("CURL_queue.sh") has been submitted 
+11/08/15 : 13:09:15 |  | The process CURL_queue.sh is currently running (13207). 
+11/08/15 : 13:09:15 |  | WaitResult: 13207 
+11/08/15 : 13:09:15 |  | Async process currently running!! (13207). 
+11/08/15 : 13:09:23 |  | WaitResult: 13207 
+11/08/15 : 13:09:23 |  | Async process currently running!! (13207). 
+11/08/15 : 13:10:24 |  | WaitResult: 13207 
+11/08/15 : 13:10:24 |  | Async process already finished!! 
+11/08/15 : 13:11:38 |  | WaitResult: 13207 
+11/08/15 : 13:11:39 |  | Async process already finished!! 
+11/08/15 : 13:12:24 |  | WaitResult: 13207 
+11/08/15 : 13:12:24 |  | Async process already finished!! 
+11/08/15 : 13:12:43 |  | Executing script: CURL_queue.sh 
+11/08/15 : 13:12:43 |  | Job Array (13208). Your job 13208 ("CURL_queue.sh") has been submitted 
+11/08/15 : 13:12:43 |  | The process CURL_queue.sh is currently running (13208). 
+11/08/15 : 13:12:44 |  | WaitResult: 13208 
+11/08/15 : 13:12:44 |  | Async process currently running!! (13208). 
+11/08/15 : 13:12:53 |  | WaitResult: 13208 
+11/08/15 : 13:12:53 |  | Async process currently running!! (13208). 
+11/08/15 : 13:13:40 |  | WaitResult: 13208 
+11/08/15 : 13:13:41 |  | Async process already finished!! 
+11/08/15 : 13:15:02 |  | WaitResult: 13208 
+11/08/15 : 13:15:02 |  | Async process already finished!! 
+11/08/15 : 17:45:39 |  | WaitResult: 13208 
+11/08/15 : 17:45:39 |  | Async process already finished!! 
+11/08/15 : 17:53:20 |  | WaitResult: 13208 
+11/08/15 : 17:53:20 |  | Async process already finished!! 
+11/08/15 : 17:55:49 |  | WaitResult: 13208 
+11/08/15 : 17:55:50 |  | Async process already finished!! 
+11/08/15 : 17:56:28 |  | WaitResult: 13208 
+11/08/15 : 17:56:28 |  | Async process already finished!! 
+11/08/15 : 17:58:19 |  | WaitResult: 13208 
+11/08/15 : 17:58:20 |  | Async process already finished!! 
+11/08/15 : 17:58:32 |  | WaitResult: 13208 
+11/08/15 : 17:58:33 |  | Async process already finished!! 
+11/08/15 : 18:00:03 |  | WaitResult: 13208 
+11/08/15 : 18:00:04 |  | Async process already finished!! 
+11/08/15 : 18:02:58 |  | WaitResult: 13208 
+11/08/15 : 18:02:58 |  | Async process already finished!! 
+11/08/15 : 18:05:12 |  | WaitResult: 13208 
+11/08/15 : 18:05:12 |  | Async process already finished!! 
+11/08/15 : 18:08:03 |  | WaitResult: 13208 
+11/08/15 : 18:08:03 |  | Async process already finished!! 
+11/08/15 : 18:08:38 |  | WaitResult: 13208 
+11/08/15 : 18:08:38 |  | Async process already finished!! 
+11/08/15 : 18:46:16 |  | WaitResult: 13208 
+11/08/15 : 18:46:16 |  | Async process already finished!! 
+11/08/15 : 18:46:50 |  | WaitResult: 13208 
+11/08/15 : 18:46:50 |  | Async process already finished!! 
+11/08/15 : 18:47:48 |  | WaitResult: 13208 
+11/08/15 : 18:47:48 |  | Async process already finished!! 
+11/08/15 : 18:50:23 |  | WaitResult: 13208 
+11/08/15 : 18:50:23 |  | Async process already finished!! 
+11/08/15 : 18:51:19 |  | WaitResult: 13208 
+11/08/15 : 18:51:19 |  | Async process already finished!! 
+11/08/15 : 18:51:23 |  | WaitResult: 13208 
+11/08/15 : 18:51:23 |  | Async process already finished!! 
+11/08/15 : 18:53:18 |  | WaitResult: 13208 
+11/08/15 : 18:53:18 |  | Async process already finished!! 
+11/08/15 : 18:56:16 |  | WaitResult: 13208 
+11/08/15 : 18:56:16 |  | Async process already finished!! 
+11/08/15 : 18:57:05 |  | WaitResult: 13208 
+11/08/15 : 18:57:05 |  | Async process already finished!! 
+11/08/15 : 19:07:41 |  | WaitResult: 13208 
+11/08/15 : 19:07:41 |  | Async process already finished!! 
+11/08/15 : 19:08:33 |  | WaitResult: 13208 
+11/08/15 : 19:08:34 |  | Async process already finished!! 
+11/08/15 : 19:08:40 |  | WaitResult: 13208 
+11/08/15 : 19:08:40 |  | Async process already finished!! 
+11/08/15 : 19:10:07 |  | WaitResult: 13208 
+11/08/15 : 19:10:07 |  | Async process already finished!! 
+11/08/15 : 19:11:28 |  | WaitResult: 13208 
+11/08/15 : 19:11:28 |  | Async process already finished!! 
+11/08/15 : 19:11:54 |  | WaitResult: 13208 
+11/08/15 : 19:11:55 |  | Async process already finished!! 
+11/08/15 : 19:17:54 |  | WaitResult: 13208 
+11/08/15 : 19:17:54 |  | Async process already finished!! 
+11/08/15 : 20:19:21 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:19:22 |  | Job Array (13209). Your job 13209 ("CURL_queue.sh") has been submitted 
+11/08/15 : 20:19:22 |  | The process CURL_queue.sh is currently running (13209). 
+11/08/15 : 20:19:22 |  | WaitResult: 13209 
+11/08/15 : 20:19:22 |  | Async process currently running!! (13209). 
+11/08/15 : 20:20:22 |  | WaitResult: 13209 
+11/08/15 : 20:20:23 |  | Async process currently running!! (13209). 
+11/08/15 : 20:21:23 |  | WaitResult: 13209 
+11/08/15 : 20:21:23 |  | Async process currently running!! (13209). 
+11/08/15 : 20:21:47 |  | WaitResult: 13209 
+11/08/15 : 20:21:47 |  | Async process currently running!! (13209). 
+11/08/15 : 20:22:33 |  | Executing script: CURL_queue.sh 
+11/08/15 : 20:22:33 |  | Job Array (13210). Your job 13210 ("CURL_queue.sh") has been submitted 
+11/08/15 : 20:22:33 |  | The process CURL_queue.sh is currently running (13210). 

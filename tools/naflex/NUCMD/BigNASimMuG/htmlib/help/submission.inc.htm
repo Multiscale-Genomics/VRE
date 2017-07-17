@@ -1,0 +1,207 @@
+<br/>
+
+<h4 style="text-align:justify;border-bottom: 1px solid; font-size: 1.2em;">Deposit new trajectories in BIGNASim</h4>
+
+<p style="text-align:justify;font-size: 1.0em; white-space: pre-wrap;">
+<strong>BIGNASim</strong> accepts submissions to incorporate new trajectory data into the repository. Submitted datasets should correspond ideally to finished studies, described by one or more journal publications. To ensure the consistency and high-quality data of the repository, deposited data shold meet a specific <strong>list of requirements</strong>, and authors should  provide enough metadata to efficiently classify the study within the database.</p>
+
+
+<ul style="text-align:left;">
+    <li><a href="#Requirements">Submission requirements</a></li>
+    <li><a href="#Procedure">Submission procedure</a></li>
+</ul>
+
+
+<a name="Requirements"></a>
+</br></br>
+<h4  style="text-align:justify;border-bottom: 1px solid #ddd; font-size: 1.2em;">Submission requirements</h4>
+
+<ol style="text-align:justify;font-size: 1.0em; white-space: pre-wrap;">
+<li>Datasets should correspond to Molecular Dynamics simulation <strong>trajectories of nucleic acids</strong> (DNA, RNA, PNA), alone or complexed with protein or small ligands.</li>
+<li>Datasets should be <strong>supported by a scientific publication</strong>. Publications <u>in press</u> or <u>submitted</u> could be acceptable, but data will be kept on-hold until the publication is publicly available, and eventually removed if this does not happens after a reasonable time. One or more datasets can be derived from a single publication, but all submitted data should be referred explicitly in the paper or Supplementary Material. In this sense, BIGNASim could be used as on-line Supp. Material for the publication, provide that enough processing time is allowed.</li>
+<li>Submitted trajectories will be <strong>limited  to 5,000 frames</strong> representing the complete simulation time. <strong>Solvent should be removed</strong> but ions may remain when its presences is relevant to the study. Trajectories should be imaged and individual <strong>frames superimposed</strong>. Trajectory can be split in multiple files if necessary. <a href="#TableS7">Table S7</a> indicates the available formats.</li>
+<li>Trajectories should be accompanied by a <strong>topology file</strong> in the appropriate format that should match the contents of the trajectory files. PDB files are acceptable as topologies. BIGNASim uses <a href="http://www.mdanalysis.org/mdanalysis/documentation_pages/topology/init.html/" target="_blank">MDAnalysis</a> for handling trajectory and topology formats. Refer to <a href="#TableS7">Table S7</a> for additional format information.</li>
+<li>Submission should include a series of mandatory <strong>metadata</strong> items (<a href="#TableS7">Table S7</a>), but we encourage to provide metadata covering the entire ontology as a complete annotation of the submitted data allows a better indexation of the same.</li>
+<li>Trajectories should fulfil the <strong>quality requirements</strong> shown in <a href="#TableS7">Table S7</a>. Quality will be further checked for the BNSim team as part of the analysis step carried out after the submission step.</li>
+</ol>
+
+
+<a name="TableS7"></a>
+
+<p><strong> Table S7. Deposition requirements</strong></p>
+<table border="1" cellspacing="0" cellpadding="4">
+	<tr>
+	   <td style="border-bottom: 1px solid #ddd;font-style: oblique;" colspan="2">TRAJECTORY AND TOPOLOGY FORMATS</td>
+	<tr>
+	<tr>
+	   <td>Acceptable trajectory formats</td>
+	   <td>Preferred: DCD, CRD, XTC, PDB (Models), NetCDF, BINPOS<br/>
+		<a href="http://www.mdanalysis.org/mdanalysis/documentation_pages/coordinates/init.html" target="_blank"><i>(Additional format information)</i></a>
+	   </td>
+	<tr>
+	<tr>
+	   <td>Acceptable topology formats</td>
+	   <td>Preferred: PDB, Amber TOP, Gromacs GRO, ITP, RTP, NAMD PSF<br/>
+		<a href="http://www.mdanalysis.org/mdanalysis/documentation_pages/topology/init.html" target="_blank"><i>(Additional format information)</i></a>
+	   </td>
+	<tr>
+	<tr>
+	   <td style="border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;font-style: oblique;" colspan="2">MINIMUM SET OF METADATA</td>
+	<tr>
+	   <td>Dataset Description</td>
+	   <td><ul>
+		<li>Description/aim of the study</li>
+		<li>References for supporting publication(s)</li>
+	   </ul></td>
+	<tr>
+	<tr>
+	   <td>System Description</td>
+	   <td><ul>
+		<li>Reference experimental structure (PDB, NDB id)</li>
+		<li>Type of Nucleic Acid, Main architecture (S. strand, Duplex, etc.), RNA type</li>
+		<li>Composition (Naked NA, Complexes)</li>
+		<li>Relevant sequence modifications or features</li>
+		<li>Relevant local structures</li>
+	   </ul></td>
+	<tr>
+	<tr>
+	   <td>Simulation conditions</td>
+	   <td><ul>
+		<li>Force Field (type and precise version)</li>
+		<li>Simulation length</li>
+		<li>Simulation temperature</li>
+		<li>Solvent and ions</li>
+		<li>Charge settings, added salt</li>
+		<li>Type of trajectory (equilibrium, folding/unfolding, transition)</li>
+		<li>Number of frames, Time per frame</li>
+	   </ul></td>
+	<tr>
+	<tr>
+	   <td>Preliminary Analyses</td>
+	   <td><ul>
+		<li><a name="preAnalyses"></a>RMSd, RMSd/bp, R. Gyration Variation, Lost WC HBonds, Lost 3D contacts</li>
+		<li>Presence of fraying, Global avg. Roll (degrees), Global avg. Twist (degrees), Groove dimensions (specify measurement method)</li>
+	   </ul></td>
+	<tr>
+	<tr>
+	   <td style="border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;font-style: oblique;" colspan="2"><a name="QC"></a>ORIENTATIVE QUALITY CHECKLIST (applicable to equilibrium trajectories)</td>
+	<tr>
+	<tr>
+	   <td>Simulation length</td>
+	   <td>&gt; 200 ns</td>
+	<tr>
+	<tr>
+	   <td>RMSd *</td>
+	   <td>&lt; 5&#8491; </td>
+	<tr>
+	<tr>
+	   <td>RMSd/bp *</td>
+	   <td>&lt; 0.3&#8491;/bp</td>
+	<tr>
+	<tr>
+	   <td>R. Gyration</td>
+	   <td>&lt; 0.4&#8491;/bp</td>
+	<tr>
+	<tr>
+	   <td>Lost of WC Bonds *</td>
+	   <td>&lt; 20&#37;</td>
+	<tr>
+	<tr>
+	   <td>Lost of 3D contacts *</td>
+	   <td>&lt; 30&#37;</td>
+	<tr>
+	<tr>
+	   <td>Maintenance of global fold</td>
+	   <td>&gt; 90&#37; simulation time</td>
+	<tr>
+</table>
+<p  style="text-align:justify;font-size: 0.9m; white-space: pre-wrap;margin:0 30px; ">(*) RMSd: All-heavy atoms mass weighted. References should be the experimental structure when available.When not available refer to canonical fiber data.
+(&) Applicable to average values in duplex segments
+</p>
+
+
+<a name="Procedure"></a>
+</br></br>
+<h4 style="text-align:justify;border-bottom: 1px solid #ddd; font-size: 1.2em;">Submission procedure</h4>
+
+
+<p style="text-align:justify;font-size: 1.0em; white-space: pre-wrap;">
+Before starting the submission procedure, authors should prepare the following material:</p>
+<a name="preAnalyses"></a>
+<a name="QC"></a>
+<ul style="text-align:left;margin-left:50px;">
+	<li><strong>Trajectory</strong>: &nbsp; One or several trajectory files. Check the <a href="#Requirements">requirements section</a> to ensure that your data is prepared for BIGNASim deposition.</li>
+	<li><strong>Topology</strong>: &nbsp; A topology file matching the trajectory file(s). Check accepted formats in <a href="#TableS7">table S7</a>.
+	<li><strong>Analyses</strong>: &nbsp; The result for a set of simple <a href="#preAnalyses">preliminary analyses</a> to validate the quality of the submitted data. Check the orientative<a href="#QC"> quality checklist</a></li>
+	<li><strong>Documentation</strong>: &nbsp; A copy of relevant publications regarding the dataset, unless openly available</li>
+</ul>
+
+<ol style="text-align:justify;font-size: 1.0em;">
+<li>Register in BIGNASim:
+    <div style="padding:0 30px;">Indicate in the registry the intention of depositing new datasets, and follow the instructions.</div>
+</li>
+</br>
+<li>Upload the necessary files:
+    <div style="padding:0 30px;">Trajectories, topology, publication files or any other file willing to be submitted should be first uploaded to the user workspace. HTTP upload is provided. Files and directories can be compressed (<a href="help.php?id=datamanager">view manual</a>) and a trajectory can be splitted into multiple files. However, if large datasets are submitted, please contact the <a href="mailto:adam.hospital@irbbarcelona.org">BNS team</a> as other procedures can be arranged to avoid transmission problems</div>
+</li>
+</br>
+<li>Deposition:
+    <div style="padding:0 30px;">From your workspace, click the button <i>&quot;Initiate Deposition&quot;</i> to open the deposition forms, and follow the instructions herein. In two separated steps, all fields listed at <a href="#TableS7">table S7</a> and others non-mandatory fields are requested.</br>
+    Firstly, the dataset and its associated publication should be defined, together with the uploaded files ready to be included into the deposit.</br>
+    Secondly, the bunch of metadata describing the uploaded files needs to be specified.</br> 
+    Alternatively, a metadata file containing such fields can be directly included into the deposit, so that the second step can be omitted - although the given metadata can always be modified in this second step. In this way, the data can be uploaded or re-used from a previous submission. The metadata file is a CSV (comma-separated file) with a simple <i>&quot;tag&nbsp;;&nbsp;value&quot;</i> format in each line. Accepted tags are:</br>
+    </br>
+    <ul style="padding-left: 50px;">
+    <li><u>BIGNASim ontology terms</u>: a single <a href="SuppMaterial.php?id=ontology" target="_blank">identifier</a> per line is enough, though the label can also be included on the second column for the sake of clarity</li>
+    <li><u>Specific tags</u>: the complete list and their descriptions can be found <a href="help.php?id=submissionExtra">here</a> </li>
+    </ul>
+    </br></br>
+<pre style="padding:20px;width:70%;font-family:Courier New;line-height:90%;letter-spacing:1px;font-size:0.9em;border:1px solid #dddddd;">
+submissionID      ; BNS_pdb1ERE_0000
+datasetName       ; pdb1ERE
+datasetDescription; 1ERE thermal stability
+publDateSys       ; hold
+publDate          ; 2016/01/15
+pubSys            ; document
+PDB               ; 1ere
+counterions       ; Na+ (0.05)
+trajLength        ; 400
+frames            ; 4000
+frameStep         ; 0.1
+trajTemperature   ; 300
+10101             ; DNA
+102020101         ; Linear
+10301             ; Naked
+10402             ; B
+201010104         ; ParmBSC0-OL1
+2010201           ; NanoSecondRange
+2010301           ; PhysiologicalTemp
+2010401           ; Water
+2010501           ; Electroneutral
+2010601           ; Dang
+2010701           ; TIP3P
+20202             ; Folding
+30101             ; Snapshot
+rmsd              ; 4.1
+rmsd_bp           ; 0.14
+Rgyr              ; 0.15
+lostWC            ; 9
+lostContacts      ; 16
+fraying           ; no
+avgTwist          ; 20
+minorGrooveSize   ; 6*8.2
+majorGrooveSize   ; 11.6*8.5
+</pre>
+    </div>
+</li>
+</br>
+<li>Confirm Submission:
+    <div style="padding:0 30px;">Click on <i>&quot;Complete Submission</i>&quot; to finish the process. After completing the submission, an accession number will be issued,  and a log file will be generated to report the progressive status of the petition. Submitted data will be blocked and maintained on-hold until it has been processed. To modify eventually the contents of the submission, contact our <a href="mailto:adam.hospital@irbbarcelona.org">BNS team</a>.</div>
+</li>
+</br>
+<li>Validation:
+    <div style="padding:0 30px;">Trajectories will be checked and complet collection of BIGNASim analyses will be performed. Again, a detailed log of the analysis performed will be available. The status file will be updated accordingly. In the eventual case that any of the analysis failed due to issues in the incoming data, authors will be informed and asked to amend the problem. In the absence of errors, the dataset will be incorporated to the database and made public immediately or at the indicated date if any. Note that analysis procedure may take some time</div>
+</li>
+</ol>
+<br/>
+

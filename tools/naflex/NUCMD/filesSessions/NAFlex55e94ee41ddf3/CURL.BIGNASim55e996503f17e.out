@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Fri, 04 Sep 2015 13:02:19 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 110
+Content-Type: application/json
+
+{
+  "top_name": "Error: The trajectory list is empty", 
+  "traj_name": "Error: The trajectory list is empty"
+}

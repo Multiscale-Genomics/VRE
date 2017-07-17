@@ -1,0 +1,12 @@
+HTTP/1.1 500 INTERNAL SERVER ERROR
+Date: Fri, 14 Aug 2015 19:56:12 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 291
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request.  Either the server is overloaded or there is an error in the application.</p>

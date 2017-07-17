@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Fri, 14 Aug 2015 21:44:11 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 140
+Content-Type: application/json
+
+{
+  "top_name": "naflex_1hlv Has not been uploaded to cassandra yet", 
+  "traj_name": "naflex_1hlv Has not been uploaded to cassandra yet"
+}

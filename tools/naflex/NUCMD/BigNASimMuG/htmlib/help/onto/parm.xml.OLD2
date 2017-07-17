@@ -1,0 +1,668 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://bsc.es/parm"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://bsc.es/parm">
+    <Prefix name="" IRI="http://bsc.es/parm#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdf:langRange"/>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">en</Literal>
+    </Annotation>
+    <Declaration>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="#Analysis"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#System"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <Declaration>
+        <Class IRI="#AA_tRNA_synthetases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Added_Salt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Analysis"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Analysis_type"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AxisBP"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Backbone_torsions"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Base_Pair"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Base_Pair_Step"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Buckle"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cartesian"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Charge"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Charmm"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Crick_Strand"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Crossed"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DNA_ligases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Dehydrogenases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Depth"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Eigenvalues"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Eigenvectors"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Electroneutral"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Experimental"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Force_Constant"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Forcefield"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fragment_scope"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Full_system"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Glucosyltransferases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Groove_analysis"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Group"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HBondBP"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HelicalBP"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HelicalBPStep"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Helical_parameters"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Inclination"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Interactions"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Isomerases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#JC"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Length"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Liases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ligases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MInor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Major"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Major_Depth"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Major_Width"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Metatrajectory"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MicrosecondRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Mixed"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NMR"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NOE"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NanosecondRange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Non-PhysiologicalT"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Non_physiological"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Nucleases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Opening"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PC_Analysis"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Parm99"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ParmBSC0"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ParmBSC1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Phosphodiesterases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Physiological"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysiologicalT"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Polymerases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Projections"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Propeller"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RMSd"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RMSf"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Rad_Gyration"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Rise"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Roll"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Sequence_Fragment"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Shear"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Shift"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Simulation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Single_Base"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Slide"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Snapshot"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Solvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stacking"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stagger"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stiffness"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stretch"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Sugar_puckering"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#System"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Temperature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Tilt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Time_Average"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Time_Scope"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Trajectory_video"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Transferases"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Twist"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Water"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Water-Ethanol"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Watson_Strand"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Width"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#XDisplacement"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#YDisplacement"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Trajectory_type"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BI/BII_population"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="#AA_tRNA_synthetases"/>
+        <Class IRI="#Ligases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Added_Salt"/>
+        <Class IRI="#Charge"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Analysis_type"/>
+        <Class IRI="#Analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AxisBP"/>
+        <Class IRI="#Helical_parameters"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Backbone_torsions"/>
+        <Class IRI="#Helical_parameters"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Base_Pair"/>
+        <Class IRI="#Group"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Base_Pair_Step"/>
+        <Class IRI="#Group"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Buckle"/>
+        <Class IRI="#HelicalBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cartesian"/>
+        <Class IRI="#Analysis_type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Charmm"/>
+        <Class IRI="#Forcefield"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Crick_Strand"/>
+        <Class IRI="#Stacking"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Crossed"/>
+        <Class IRI="#Stacking"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DNA_ligases"/>
+        <Class IRI="#Ligases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Depth"/>
+        <Class IRI="#MInor"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Eigenvalues"/>
+        <Class IRI="#PC_Analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Eigenvectors"/>
+        <Class IRI="#PC_Analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Electroneutral"/>
+        <Class IRI="#Charge"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Experimental"/>
+        <Class IRI="#Fragment_scope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Force_Constant"/>
+        <Class IRI="#Stiffness"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fragment_scope"/>
+        <Class IRI="#Analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Full_system"/>
+        <Class IRI="#Fragment_scope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Glucosyltransferases"/>
+        <Class IRI="#Transferases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Groove_analysis"/>
+        <Class IRI="#Analysis_type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Group"/>
+        <Class IRI="#Fragment_scope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HBondBP"/>
+        <Class IRI="#Interactions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HelicalBP"/>
+        <Class IRI="#Helical_parameters"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HelicalBPStep"/>
+        <Class IRI="#Helical_parameters"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Helical_parameters"/>
+        <Class IRI="#Analysis_type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Inclination"/>
+        <Class IRI="#AxisBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Interactions"/>
+        <Class IRI="#Analysis_type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#JC"/>
+        <Class IRI="#NMR"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MInor"/>
+        <Class IRI="#Groove_analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Major"/>
+        <Class IRI="#Groove_analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Major_Depth"/>
+        <Class IRI="#Major"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Major_Width"/>
+        <Class IRI="#Major"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Metatrajectory"/>
+        <Class IRI="#Fragment_scope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MicrosecondRange"/>
+        <Class IRI="#Length"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Mixed"/>
+        <Class IRI="#Solvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NMR"/>
+        <Class IRI="#Analysis_type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NOE"/>
+        <Class IRI="#NMR"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NanosecondRange"/>
+        <Class IRI="#Length"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Non-PhysiologicalT"/>
+        <Class IRI="#Temperature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Non_physiological"/>
+        <Class IRI="#Added_Salt"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Opening"/>
+        <Class IRI="#HelicalBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PC_Analysis"/>
+        <Class IRI="#Analysis_type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Parm99"/>
+        <Class IRI="#Forcefield"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ParmBSC0"/>
+        <Class IRI="#Forcefield"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ParmBSC1"/>
+        <Class IRI="#Forcefield"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Physiological"/>
+        <Class IRI="#Added_Salt"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysiologicalT"/>
+        <Class IRI="#Temperature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Polymerases"/>
+        <Class IRI="#Transferases"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Projections"/>
+        <Class IRI="#PC_Analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Propeller"/>
+        <Class IRI="#HelicalBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RMSd"/>
+        <Class IRI="#Cartesian"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RMSf"/>
+        <Class IRI="#Cartesian"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Rad_Gyration"/>
+        <Class IRI="#Cartesian"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Rise"/>
+        <Class IRI="#HelicalBPStep"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Roll"/>
+        <Class IRI="#HelicalBPStep"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Sequence_Fragment"/>
+        <Class IRI="#Group"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shear"/>
+        <Class IRI="#HelicalBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shift"/>
+        <Class IRI="#HelicalBPStep"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Single_Base"/>
+        <Class IRI="#Fragment_scope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Slide"/>
+        <Class IRI="#HelicalBPStep"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Snapshot"/>
+        <Class IRI="#Time_Scope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stacking"/>
+        <Class IRI="#Interactions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stagger"/>
+        <Class IRI="#HelicalBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stiffness"/>
+        <Class IRI="#Helical_parameters"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stretch"/>
+        <Class IRI="#HelicalBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Sugar_puckering"/>
+        <Class IRI="#Backbone_torsions"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Tilt"/>
+        <Class IRI="#HelicalBPStep"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Time_Average"/>
+        <Class IRI="#Time_Scope"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Time_Scope"/>
+        <Class IRI="#Analysis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Trajectory_video"/>
+        <Class IRI="#Analysis_type"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Twist"/>
+        <Class IRI="#HelicalBPStep"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Water"/>
+        <Class IRI="#Solvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Water-Ethanol"/>
+        <Class IRI="#Mixed"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Watson_Strand"/>
+        <Class IRI="#Stacking"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Width"/>
+        <Class IRI="#MInor"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#XDisplacement"/>
+        <Class IRI="#AxisBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#YDisplacement"/>
+        <Class IRI="#AxisBP"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Trajectory_type"/>
+        <Class IRI="#Simulation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BI/BII_population"/>
+        <Class IRI="#Backbone_torsions"/>
+    </SubClassOf>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Projections</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral"></Literal>
+    </AnnotationAssertion>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+

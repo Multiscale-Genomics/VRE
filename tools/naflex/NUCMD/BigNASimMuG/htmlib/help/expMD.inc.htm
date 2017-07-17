@@ -1,0 +1,69 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Experimental Average Values</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;In order to compare <strong>global analysis</strong> results stored in our database coming from <strong>MD simulations</strong> with <strong>experimental</strong> values, we have built a complex pipeline to obtain such values. 
+</p>
+
+<a href="htmlib/help/img/CurvesPDB_BigNASim.png"><img src="htmlib/help/img/CurvesPDB_BigNASim.png" style="display: block; width: 100%; height:auto;" ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Starting from all the <strong>PDB</strong> files classified as <strong><i>Nucleic acid</i></strong>, we built a complete dataset of <strong>duplex structures</strong> following these steps: 
+</p>
+
+<ul style="text-align:left";>
+<li>Splitting <strong>NMR models</strong> in different files</li>
+<li>Identifying <strong>DNA/RNA chains</strong> forming duplexes and extracting them to different files</li>
+<li>Applying <strong>symmetry</strong> to those PDB files that need a transformation to obtain the final biomolecule (see <a href="http://www.wwpdb.org/documentation/file-format-content/format23/remarks2.html#REMARK350" target="_blank">PDB REMARK 350</a>)</li>
+</ul>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Next step in the pipeline consists in applying a list of <strong>filters</strong> to the set of <strong>duplex nucleic acid structures</strong> obtained. These filters work as a pre-process to the analyses we are interested in, and include, for example, checking for <strong>different strand lenghts</strong>, possible <strong>sequence mismatches</strong>, presence of <strong>essential atoms</strong> needed for subsequent analyses, etc. The final step consists in running <a href="https://bisi.ibcp.fr/tools/curves_plus/" target="_blank">Curves+</a> program to extract <strong>helical parameters</strong> information from the generated PDB files.<br/><br/> 
+&emsp;As an example of what we obtained, the following table shows the <strong>average results</strong> for the <strong>base-pair steps helical parameters</strong> computed for the complete list of experimental structures, together with values extracted from a similar previous work in the group (<a href="http://nar.oxfordjournals.org/content/40/21/10668.long" target="_blank">P. Dans et. al, NAR 2012 40, 10668-10678</a>).
+</p>
+
+<img src="images/helicalParamsBPS.png" alt="Base Pair Step Helical Parameters" align="right" border="0" style="margin: 20px 20px; width: 50%; height:15%;" class="Help" />
+
+<ul style="text-align:left;">
+<li>Amount of data(N), average values and standard deviation of the six intra-strand base pair parameters for the 10 unique bps. <br/></li>
+<li>For each step, the naked-DNA structures (first row), PDB structures (second row), and results from MD simulations with parmbsc0 (third row) from the paper cited are shown together with our new values computed to the set of filtered PDB files (forth row). <br/></li>
+<li>Values for simulations were obtained from time averages computed for individual steps in each sequence.<br/></li>
+<li>Rotational parameters are in degrees (Twist, Tilt, Roll), and translational ones (Shift, Slide, Rise) in &Aring;.<br/></li>
+<li>Complementary steps (e.g. AG and CT) have the same average except for a change in sign of Shift and Tilt, and the same standard deviation.<br/></li>
+</ul>
+
+<?php
+        $cmd = "cat dat/BasePairStepParamsAvg.table.2015";
+        $out = exec($cmd,$lines);
+        $length = count($lines);
+
+        print "<table cellpadding='15' align='center' border='0'>\n";
+        # Naked AA    60  35.6±4.3 -1.4±2.7  1.0±3.8  0.0±0.3 -0.2±0.4 3.3±0.1
+        print "<tr style='background-color: #dddddd; font-weight:bold;'><td>Step</td><td>Amount of data</td><td>Twist</td><td>Tilt</td><td>Roll</td><td>Shift</td><td>Slide</td><td>Rise</td></tr>\n";
+
+	$i = 0;
+        for($cont=0;$cont<$length;$cont++){
+                $line = $lines[$cont];
+                if(preg_match('/RNA/',$line)) break;
+                if(preg_match('/^#/',$line)) continue;
+                $arr = preg_split('/\s+/',$line);
+		$i++;
+		if($i % 4 != 0){
+	                print "<tr style='background-color:lightgoldenrodyellow;'><td>$arr[1]</td><td>$arr[2]</td><td>$arr[3]</td><td>$arr[4]</td><td>$arr[5]</td><td>$arr[6]</td><td>$arr[7]</td><td>$arr[8]</td></tr>\n";
+		}
+		else{
+	                print "<tr style='background-color:antiquewhite;'><td>$arr[1]</td><td>$arr[2]</td><td>$arr[3]</td><td>$arr[4]</td><td>$arr[5]</td><td>$arr[6]</td><td>$arr[7]</td><td>$arr[8]</td></tr>\n";
+                        print "<tr bgcolor='#dddddd'><td colspan='8'></td></tr>";
+                }
+        }
+        print "</table>\n";
+?>
+<p align='middle'><b>Units:<br/> </b><i> Translational Inter-BP Step Helical Parameters <b>Shift/Slide/Rise</b> in <b>&Aring;</b>, Rotational Inter-BP Helical Parameters <b>Tilt/Roll/Twist</b> in <b>degrees</b></i></p>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;These computed <strong>experimental values</strong> are used as a comparison in global analyses plots (see <a href="help.php?id=analysis" >analyses section</a>). In the following example, vertical red line is showing the experimental average value found for the <strong>Rise helical parameter</strong> together with the histogram of Rise average values stored in the database for a particular base-pair step (in this case <strong>CG</strong>). Blue vertical line is showing the average value of the histogram data (MD simulations data).
+</p>
+
+<a href="htmlib/help/img/RiseHistExp.png"><img src="htmlib/help/img/RiseHistExp.png" style="display: block; width: 100%; height:auto; " ></img></a>
+

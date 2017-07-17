@@ -1,0 +1,151 @@
+.statsContent {
+        border: 1px solid #ddd;
+        border-collapse: separate;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+}
+
+.statsTable {
+  font-family: 'Helvetica Neue', Helvetica, Arial;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: grey;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  background: white;
+}
+
+.statsTable .wrapper {
+  margin: 0 auto;
+  padding: 40px;
+  max-width: 800px;
+}
+
+.statsTable .table {
+  margin: 0 0 40px 0;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  display: table;
+}
+
+@media screen and (max-width: 580px) {
+  .statsTable .table {
+     display: block;
+  }
+}
+
+.statsTable .row {
+  display: table-row;
+  background: #f6f6f6;
+}
+
+.statsTable .row:nth-of-type(odd) {
+  background: #e9e9e9;
+}
+
+.statsTable .row-header {
+  display: table-header-group;
+  font-weight: 900;
+  color: #ffffff;
+  background: #ea6153;
+}
+
+.statsTable .row-header.green {
+  background: #27ae60;
+}
+
+.statsTable .row-header.bluegreen {
+  background: #53CCEA;
+}
+
+.statsTable .row-header.blue {
+  background: #2980b9;
+}
+
+.statsTable .row-header.cyan {
+  background: darkcyan;
+}
+
+@media screen and (max-width: 580px) {
+  .statsTable .row {
+    padding: 8px 0;
+    display: block;
+  }
+}
+
+.statsTable .cell {
+  padding: 6px 12px;
+  display: table-cell;
+}
+@media screen and (max-width: 580px) {
+  .statsTable .cell {
+    padding: 2px 12px;
+    display: block;
+  }
+}
+
+.statsInside
+{
+        display: block;
+        background-color: lightgoldenrodyellow;
+        margin: 15px;
+        padding: 5px 25px 5px 25px;
+        -moz-border-radius: 30px;
+        -webkit-border-radius:30px;
+        -khtml-border-radius:30px;
+        border-radius:30px;
+        border: 2px solid red;
+        display: none;
+}
+
+.statsInsideVis
+{
+        display: block;
+        background-color: lightgoldenrodyellow;
+        margin: 15px;
+        padding: 5px 25px 5px 25px;
+        -moz-border-radius: 30px;
+        -webkit-border-radius:30px;
+        -khtml-border-radius:30px;
+        border-radius:30px;
+        border: 2px solid red;
+}
+
+.statsCharts
+{
+    height:400px;
+    width:600px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.statsChartsBPS
+{
+    height:500px;
+    width:600px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+@media screen and (max-width: 960px) {
+
+        .statsCharts {
+                width: 400px;
+        }
+        .statsChartsBPS {
+                width: 400px;
+        }
+
+}
+
+@media screen and (max-width: 360px) and (orientation: portrait) {
+
+        .statsCharts {
+                display:none;
+        }
+        .statsChartsBPS {
+                display:none;
+        }
+}
+

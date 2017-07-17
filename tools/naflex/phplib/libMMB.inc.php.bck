@@ -1,0 +1,126 @@
+<?php
+/*
+* MDWeb
+* libMMB.inc.php
+* General layout
+*/
+function headerMMB($title, $menu=1) { # menu=1 top menu
+    ob_start();
+    ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title><?php echo $title?></title>
+<link rel="stylesheet" type="text/css" href="<?php echo $GLOBALS['homeURL']?>css/estil.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo $GLOBALS['homeURL']?>css/slider.css" />
+</head>
+<body>
+<div id="divbase">
+  <div id="toplogo"> <a id="top_box_inb_link" href="http://www.inab.org"></a>
+  <a id="top_box_inb_link" href="http://www.inab.org"><img src="<?php echo $GLOBALS['homeURL']?>/images/inb_logo_trans.png" height="90" border="0" alt="Instituto Nacional de Bioinformatica"></a>
+    <?php if ($_SESSION['userData']['login']) {?>
+    <div id="userId">
+      <p><b>User:</b> <?php echo $_SESSION['userData']['name']." ".$_SESSION['userData']['surname']?></p>
+    </div>
+    <?php }?>
+  </div>
+  <?php if ($menu) {?>
+  <div id="menu">
+    <div class="itemmenu"><a href="<?=$GLOBALS['homeURL']?>/main.php">Home</a></div>
+    <div class="itemmenu"><a href="<?=$GLOBALS['homeURL']?>/newProject.php">Start new project</a></div>
+    <div class="itemmenu"><a href="<?=$GLOBALS['homeURL']?>/close.php">Close workspace</a></div>
+    <div class="itemmenu" style='float:right'><a href="<?=$GLOBALS['homeURL']?>/help.php" target="_blank">Help</a></div>
+    <div class="itemmenu" style='float:right'><a href="<?=$GLOBALS['homeURL']?>/help.php?id=tutorial" target="_blank">Setup Tutorial</a></div>
+    <div class="itemmenu" style='float:right'><a href="<?=$GLOBALS['homeURL']?>/help.php?id=tutorialAnalysis" target="_blank">Analysis Tutorial</a></div>
+  </div>
+  <?php }?>
+  <div id="content">
+    <?php $txt = ob_get_contents();
+                ob_end_clean();
+                return $txt;
+            };
+
+function headerNA($title, $menu=1) { # menu=1 top menu
+    ob_start();
+    ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title><?php echo $title?></title>
+<link rel="stylesheet" type="text/css" href="<?php echo $GLOBALS['homeURL']?>css/estil.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo $GLOBALS['homeURL']?>css/slider.css" />
+</head>
+<body>
+<div id="divbase">
+  <div border="1" style="background-color:#ccffff; background: -moz-linear-gradient(top, #55aaee, #ccffff);"> <img src="<?php echo $GLOBALS['homeURL']?>/images/NaFlex5.png" height="120" border="0" style="margin:20px 20px;"><a id="top_box_inb_link" href="http://www.inab.org"></a>
+  <a id="top_box_inb_link" href="http://www.inab.org"><img src="<?php echo $GLOBALS['homeURL']?>/images/inb_logo_trans.png" height="90" border="0" alt="Instituto Nacional de Bioinformatica"></a>
+    <?php if ($_SESSION['userData']['login']) {?>
+    <div id="userId">
+      <p><b>User:</b> <?php echo $_SESSION['userData']['name']." ".$_SESSION['userData']['surname']?></p>
+    </div>
+    <?php }?>
+  </div>
+  <?php if ($menu) {?>
+  <div id="menu">
+    <div class="itemmenu"><a href="<?=$GLOBALS['homeURL']?>/main.php">Home</a></div>
+    <div class="itemmenu"><a href="<?=$GLOBALS['homeURL']?>/newProject.php">Start new project</a></div>
+    <div class="itemmenu"><a href="<?=$GLOBALS['homeURL']?>/close.php">Close workspace</a></div>
+    <div class="itemmenu" style='float:right'><a href="<?=$GLOBALS['homeURL']?>/help.php" target="_blank">Help</a></div>
+    <div class="itemmenu" style='float:right'><a href="<?=$GLOBALS['homeURL']?>/help.php?id=tutorial" target="_blank">Setup Tutorial</a></div>
+    <div class="itemmenu" style='float:right'><a href="<?=$GLOBALS['homeURL']?>/help.php?id=tutorialAnalysis" target="_blank">Analysis Tutorial</a></div>
+  </div>
+  <?php }?>
+  <div id="content">
+    <?php $txt = ob_get_contents();
+                ob_end_clean();
+                return $txt;
+            };
+
+function footerMMB () {
+                ob_start();
+                ?>
+  </div>
+  <div id="bottomlogo">
+    <div id="textBottom">  
+     <a href="http://mmb.irbbarcelona.org"><img src="<?php echo $GLOBALS['homeURL']?>/images/mmb_logo_trans.png" height="50" border="0" alt="MMB group"></a>
+     <br/> &nbsp;&nbsp;&nbsp;&nbsp;&copy; 2012. 
+     <a href="mailto:mdweb@mmb.pcb.ub.es" target="_blank">Contact us.</a>
+     <a id="bottom_box_scalalife_link" href="http://www.scalalife.eu"></a> 
+     <a id="bottom_box_ub_link" href="http://www.ub.edu"></a> 
+     <a id="bottom_box_bsc_link" href="http://www.bsc.es"></a> 
+     <a id="bottom_box_isc3_link" href="http://www.isciii.es"></a> 
+     <a id="bottom_box_irb_link" href="http://www.irbbarcelona.org"></a> 
+     </div>
+  </div>
+</div>
+<script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+<script type="text/javascript">
+            try {
+                var pageTracker = _gat._getTracker("UA-10694300-2");
+                pageTracker._trackPageview();
+            } catch(err) {}
+        </script>
+</body>
+</html>
+<?php
+$txt =ob_get_contents();
+ob_end_clean();
+return $txt;
+}
+
+function errorPage ($title, $text) {
+return headerMMB($title).$text.footerMMB();
+}
+
+function formError ($idErr, $txtErr='') {
+if ($_SESSION['errorData'][$idErr]) {
+    return "<tr><td colspan=\"2\"><span style=\"color:red\">".$GLOBALS['errors']['formErrors'][$idErr]."</span></td></tr>";
+} else
+return '';
+}
+?>

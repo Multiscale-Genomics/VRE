@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="images/DNA_extrusion.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>Molecular Modeling and Bioinformatics Group</title>
+
+	<!--        -->
+	<!-- STYLES -->
+	<!--        -->
+
+	<!-- Drupal mmb style -->
+	<link rel="stylesheet" href="css/style.css">
+
+	<!-- Own style -->
+	<link rel="stylesheet" href="css/estil.css">
+
+	<!-- Make tables responsive -->
+	<link rel="stylesheet" href="css/responsiveTables.css">
+	<link rel="stylesheet" href="css/responstables.css">
+
+	<!-- TinyAccordion style -->
+	<link rel="stylesheet" href="css/tinyAccordion.css">
+
+	<!-- Ontology Search style -->
+	<link rel="stylesheet" href="css/onto.css">
+
+	<!-- Static MD traj info (getStruc.php) style -->
+	<link rel="stylesheet" href="css/getStruct.css">
+
+	<!-- Global Search (advSearch.php) style -->
+	<link rel="stylesheet" href="css/advSearch.css">
+
+	<!-- Global Search (advSearch.php) style -->
+	<link rel="stylesheet" href="js/video-js/video-js.css">
+
+	<!-- Transforming Table to Divs -->
+	<link rel="stylesheet" href="css/table2divs.css">
+
+	<!-- Styling Search Form -->
+	<link rel="stylesheet" href="css/formStyle.css">
+
+	<!-- Styling Stats Table -->
+	<link rel="stylesheet" href="css/stats.css">
+
+	<!-- jqplot css -->
+	<link rel="stylesheet" type="text/css" href="js/jqplot/jquery.jqplot.css" />
+
+	<!-- tooltip css -->
+	<link rel="stylesheet" type="text/css" href="css/simptip-master/simptip.min.css" />
+
+	<!-- F.A.Q. css -->
+	<link rel="stylesheet" type="text/css" href="css/faq.css" />
+
+	<!-- WaitResults Carrousel css -->
+	<!--<link rel="stylesheet" type="text/css" href="css/carrousel.css" />-->
+
+	<!-- User Login Button Dropdown css -->
+	<link rel="stylesheet" type="text/css" href="css/login.css" />
+
+	<!-- Pagination table with jquery (DataTable) -->
+	<link rel="stylesheet" type="text/css" href="DataTable/jquery.dataTables.min.css" />
+
+	<!-- Users Management css (from FlexPortal) -->
+	<link rel="stylesheet" type="text/css" href="css/users.css" />
+
+	<!--             -->
+	<!-- JavaScripts -->
+	<!--             -->
+
+	<!-- JQuery -->
+        <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+	<!-- Image Preview -->
+	<script type="text/javascript" src="js/imagePreview.js"></script>
+
+	<!-- Image/Video visualization with jQuery -->
+	<script type="text/javascript" src="js/jqueryImages/jqueryImages.js"></script>
+
+	<!-- Tiny Nav for Responsive Menu -->
+        <script type="text/javascript" src="js/main-menu.js"></script>
+
+	<!-- JSMol -->
+	<script type="text/javascript" src="jsmol/JSmol.min.nojq.js"></script>
+
+	<!-- JSMol auxiliar Scripts -->
+	<script type="text/javascript" src="js/jmolScripts.js"></script>
+
+	<!-- Miscellanious Aux Scripts -->
+	<script type="text/javascript" src="js/auxScripts.js"></script>
+
+	<!-- Accordion Scripts -->
+	<!--<script type="text/javascript" src="js/tinyAccordion/script.js"></script>-->
+
+	<!-- jqplot Scripts -->
+	<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/jqplot/excanvas.js"></script><![endif]-->
+	<script language="javascript" type="text/javascript" src="js/jqplot/jquery.jqplot.min.js"></script>
+	<script type="text/javascript" src="js/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+
+	<!-- Pagination table with jquery (DataTable)-->
+	<script language="javascript" type="text/javascript" src="DataTable/jquery.dataTables.min.js"></script>
+
+    </head>
+    <body class="html front logged-in one-sidebar sidebar-first page-node left-sidebar">
+<!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-48591078-11', 'auto');
+  ga('send', 'pageview');
+
+</script>
+        <div id="wrapper">
+            <header id="header" class="clearfix">
+                <div id="site-logo">
+
+      <!-- HEADER: MuG logo -->
+      <div style="width: 700px; float: left;">
+        <img src="imgMuG/topWeb.png" alt="MuG" width="700" height="124" />
+        <p align="center"><strong>Molecular Dynamics Simulation Database for MuG project. Powered by <a href="http://mmb.irbbarcelona.org/BigNASim/">BIGNASim</a></strong>. </p>
+      </div>
+		    <div class="dropdown">
+
+		    <!-- trigger button -->
+		    <p style='margin:0px;margin-top:20px;'>User: ##userData##</p>
+		    <button>myBIGNASim</button>
+			    <!-- dropdown menu -->
+			    <ul class="dropdown-menu">
+			        <li><a href="gesUser.php?op=register">Register</a></li>
+			        <li><a href="gesUser.php?op=login">Login</a></li>
+			        <li><a href="gesUser.php?op=logout">Logout</a></li>
+			        <!--<li><a href="#contact">Contact</a></li>-->
+			    </ul>
+		    </div>
+		</div>            
+                <nav id="navigation" role="navigation">
+                    <div id="main-menu">
+                        <ul class="menu">
+                            <li id="HomeLiTab" class="first collapsed"><a href="index.php" id="HomeTab" class="active">Home</a></li>
+			    <li id="BrowseLiTab" class="leaf"><a href="browse.php" id="BrowseTab" title="">Browse</a></li>
+			    <!--<li id="FlexBrowserLiTab" class="leaf"><a href="http://www.multiscalegenomics.eu/flexBrowser.html" id="FlexBrowserTab" title="">FlexBrowser</a></li>-->
+			    <li id="MuGLiTab" class="leaf"><a href="http://www.multiscalegenomics.eu" id="MuGTab" title="">MuG</a></li>
+			    <!--<li id="SearchLiTab" class="leaf"><a href="newSearch.php" id="SearchTab" title="">Search</a></li>-->
+                            <!--<li id="advSearchLiTab" class="leaf"><a href="retrAdvSearch.php" id="advSearchTab">Global Analyses</a></li>-->
+                            <!--<li id="advSearchLiTab" class="leaf"><a href="analyses2.php" id="advSearchTab">Global Analyses</a></li>-->
+                            <!--<li id="statsLiTab" class="leaf"><a href="stats.php" id="statsTab">Statistics</a></li>-->
+                            <!--<li id="HelpLiTab" class="leaf"><a href="help.php" id="HelpTab" >Help</a></li>-->
+			    <!--<li id="SuppMatLiTab" class="leaf"><a style="color:chartreuse;" href="SuppMaterial.php" id="SupplMatTab" >Suppl. Material</a></li>-->
+			    <!--<li id="SuppMatLiTab" class="leaf"><a style="color:chartreuse;" href="dat/SupplMat.pdf" target="_blank" id="SupplMatTab" >Suppl. Material</a></li>-->
+			    <!--<li id="quickSearch" class="leaf">	
+					<a>
+					<form action = "search.php" style="display: -webkit-box;">Quick Search:&nbsp;&nbsp;&nbsp;
+					<input style="margin-bottom:6px;font-size:12px;" name='idQuickSearch' value='' size='12' />
+					</form>
+					</a>
+			    </li>-->
+                        </ul>      
+                    </div>
+                </nav>                
+            </header>

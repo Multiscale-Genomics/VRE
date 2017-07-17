@@ -1,0 +1,165 @@
+        #folderName {visibility: hidden}
+        #fileUpload {visibility: hidden}
+	ul {
+	    list-style-type: none;
+	    margin-left:50px;
+	}
+	ul li span {
+	    display: inline-block; vertical-align:middle; }
+
+	.fs {
+		width:100%;
+		border-collapse:collapse;
+		border:1px solid;
+	}
+	
+	table.fs td {
+		padding:0px 7px;
+		white-space: nowrap;
+	}
+	table.fs tr:hover {
+		background-color: #dddddd;
+	}
+
+	.linkButton {
+		color:white;
+		border: thin solid;
+		border-radius: 5px;
+		text-decoration: none;
+		background-color: #3779ac;
+		display: inline-block;
+		padding:4px 8px;
+	}
+
+	.disabled {
+	   pointer-events: none;
+	   cursor: default;
+	}
+	
+        .progress {
+                float:left;
+                border: 2px solid #387da8;
+                height: 16px;
+                width: 30%;
+        }
+        .progress .prgbar {
+                background: #387da8;
+                width: 30%;
+                position: relative;
+                height: 16px;
+                z-index: 999;
+        }
+        .progress .prgtext {
+                color: #ffffff;
+		text-shadow: -1px 0 #5b5b5b, 0 1px #5b5b5b, 1px 0 #5b5b5b, 0 -1px #5b5b5b;
+                text-align: left;
+                font-size: 13px;
+                font-weight: bold;
+                width: 30%;
+                position: absolute;
+                z-index: 1000;
+        }
+        .progress .prginfo {
+                margin: 3px 0;
+        }
+        .notify {
+            background-color:#fefbfa;
+            border:.1em solid;
+            border-color: #387da8;
+            border-radius:10px;
+            padding:5px 5px 5px 5px;
+            margin:10px;
+            cursor: default;
+        }
+	.not-active {
+	   pointer-events: none;
+	   cursor: default;
+           opacity:0.4;
+	   filter: alpha(opacity=40);
+        }
+
+	.help {
+		color: #1A709D;
+		border: 1px solid #1A709D;
+		vertical-align: baseline;
+		border-radius: 3px;
+		padding: 0 4px;
+		margin: 0 3px;
+		display: inline-block;
+		font-weight: bold;
+	}
+
+.box {
+  width: 20%;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.2);
+  padding: 35px;
+  border: 2px solid #fff;
+  border-radius: 20px/50px;
+  background-clip: padding-box;
+  text-align: center;
+}
+
+.button {
+  font-size: 1em;
+  padding: 10px;
+  color: #fff;
+  border: 2px solid orange;
+  border-radius: 20px/50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+.button:hover {
+  background: orange;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: orange;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+

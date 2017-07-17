@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Fri, 08 Apr 2016 14:50:09 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 174
+Content-Type: application/json
+
+{
+  "top_name": "BNSUSER56b26bca99811/BIGNASim5707c51679d45-NAFlex_1tro-1_2_1.pdb", 
+  "traj_name": "BNSUSER56b26bca99811/BIGNASim5707c51679d45-NAFlex_1tro-1_2_1_multi.pdb"
+}

@@ -1,0 +1,71 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Experimental Trajectories</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;One possible validation of our nucleic acid simulations is the direct comparison with <strong>experimental information</strong>. Unfortunately, in the majority of the cases, we can just compare with one single structure deposited in the <a href="http://www.pdb.org" target="_blank">PDB database</a>, losing the nucleic acid intrinsic flexibility. However, in a small number of cases, the <strong>PDB</strong> has <strong>more than one structure</strong> corresponding to the same nucleic sequence. Here, if we are able to join together these structures, we would be able to reproduce the <strong>experimental flexibility</strong> observed, and thus compare it to the information obtained through our MD simulations. <br/><br/>
+&emsp;For that, we built a pipeline to automatically generate all the possible nucleic acids <strong>experimental trajectories</strong> from the <strong>PDB</strong> database, and obtain a set of helical parameters using <a href="https://bisi.ibcp.fr/tools/curves_plus/" target="_blank">Curves+ program</a>.<br/><br/>
+</p>
+
+<a href="htmlib/help/img/CurvesPDB_expTrajs.png"><img src="htmlib/help/img/CurvesPDB_expTrajs.png" style="display: block; width: 100%; height:auto;" ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Starting from all the <strong>PDB</strong> files including a particular <strong>nucleic acid sequence</strong>, we built a complete dataset of <strong>duplex structures</strong> for this sequence following these steps:
+</p>
+
+<ul style="text-align:left";>
+<li>Splitting <strong>NMR models</strong> in different files</li>
+<li>Identifying <strong>DNA/RNA chains</strong> forming duplexes and extracting them to different files</li>
+<li>Applying <strong>symmetry</strong> to those PDB files that need a transformation to obtain the final biomolecule (see <a href="http://www.wwpdb.org/documentation/file-format-content/format23/remarks2.html#REMARK350" target="_blank">PDB REMARK 350</a>)</li>
+</ul>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;Next step in the pipeline consists in applying a list of <strong>filters</strong> to the set of <strong>duplex nucleic acid structures</strong> obtained. These filters work as a pre-process to the analyses we are interested in, and include, for example, checking for <strong>different strand lenghts</strong>, possible <strong>sequence mismatches</strong>, presence of <strong>essential atoms</strong> needed for subsequent analyses, etc. With these duplex structures, an experimental trajectory is built, joining together all the information and building the corresponding topology file. Finally, <a href="https://bisi.ibcp.fr/tools/curves_plus/" target="_blank">Curves+</a> program is run with this trajectory as input file to extract experimental <strong>helical parameters</strong> information.<br/><br/>
+&emsp;The following table shows all sequences in the PDB database for which we could generate an experimental trajectory.<br/><br/>
+</p>
+
+<table cellpadding='15' align='center' border='0'>
+<tr style='background-color: #dddddd; font-weight:bold;'><td>Sequence</td><td>PDB entries / structures*</td><td>BIGNASim</td><td>Comparison Analysis</td></tr>
+<tr style='background-color:lightgoldenrodyellow;border: 1px solid;'><td>CGCGAATTCGCG (DDD)</td><td>184 / 106</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_DDD_bsc1" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_DDD_bsc1" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<!--<tr style='background-color:gainsboro;font-style:italic;opacity:0.4;'><td>CGCGAATTCGCG (DDD)</td><td>184 / 106</td><td><img src="images/link_blue.png" style="height:40px;width:40px;"/></td><td><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></td></tr>
+<tr style='background-color:gainsboro;font-style:italic;opacity:0.4;'><td></td><td></td><td></td><td style="font-weight:bold;">Analysis under embargo.</td></tr>-->
+<tr><td>CGTACG</td><td>46 / 20</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_1d11" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_1d11" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr style='background-color:lightgoldenrodyellow;'><td>GGCGCC</td><td>14 / 7</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_PYR" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_PYR" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr><td>CGCAAATTTGCG</td><td>13 / 21</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_groovebinder" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_groovebinder" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr style='background-color:lightgoldenrodyellow;'><td>CCCCGGGG</td><td>6 / 2</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_1vt5" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_1vt5" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr><td>CCTCTGGTCTCC</td><td>7 / 19</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_2k0v" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_2k0v" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr style='background-color:lightgoldenrodyellow;'><td>CCTCAGGCCTCC</td><td>6 / 48</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_2nq1" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_2nq1" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr><td>CTCGGCGCCATC</td><td>5 / 38</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_2hkb" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_2hkb" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr style='background-color:lightgoldenrodyellow;'><td>GGATATATCC</td><td>2 / 22</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_2lwg" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_2lwg" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<!--
+<tr><td>GGGGTGATTGTTCAG</td><td>2 / 40</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_1j5n" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_1j5n" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr style='background-color:lightgoldenrodyellow;'><td>GTTAGGGTTAGGG</td><td>2 / 40</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_1iv6" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_1iv6" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+-->
+<tr><td>GCAAAATTTTGC</td><td>1 / 9</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_1rvh" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_1rvh" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr style='background-color:lightgoldenrodyellow;'><td>CACCCTTTGAAGCTC</td><td>1 / 12</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_2lef" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_2lef" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr><td>CGCATGCTACGC</td><td>1 / 10</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_2l8q" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_2l8q" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr style='background-color:lightgoldenrodyellow;'><td>GGCAAAAAACGG</td><td>1 / 10</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_1fzx" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_1fzx" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+<tr><td>GGCAAGAAACGG</td><td>1 / 10</td><td><a href="<?=$GLOBALS[homeNUCMD]?>/getStruc.php?idCode=NAFlex_1g14" target="_blank"><img src="images/link_blue.png" style="height:40px;width:40px;"/></a></td><td><a href="<?=$GLOBALS[NAFlex]?>/nucleicAcidAnalysis2.php?type=EXPvsMD&proj=NAFlex_1g14" target="_blank"><img src="images/NA_Flex_Logo.png" style="height:50px;width:80px;"/></a></td></tr>
+</table>
+<p><i>
+* Some of the PDB files contain more than one nucleic acid duplex structure (e.g. NMR models).
+</i></p>
+<p align="justify" style="font-size: 1.0em;">
+&emsp;In those MD simulations whose nucleic acid sequence has an <strong>experimental trajectory</strong> generated, a new analysis interface is created, with values and plots containing the comparison between experimental and simulation information. Analyses shown are average values for <strong>Backbone torsions</strong>, <strong>Axis Base Pair</strong>, <strong>Intra-Base Pair</strong> Helical Parameters and <strong>Inter-Base Pair</strong> Parameters. <br/><br/>
+&emsp;For the <strong>Backbone torsions</strong> analysis, 2D plots showing &alpha;-&gamma; and &epsilon;-&zeta; angles are shown, with the <strong>MD simulation</strong> values in black, and the <strong>experimental</strong> values in red. 
+</p>
+
+<a href="htmlib/help/img/EpsilonZeta.png"><img src="htmlib/help/img/EpsilonZeta.png" style="margin-left:auto; margin-right:auto; display: block; width: 80%; height:auto;" ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;For the rest of <strong>helical parameters</strong>, two different information plots are generated. The first one is a comparison of average values for individual parameters, experimental versus simulated values, with their corresponding standard deviations (as both averages come from trajectories).<br/><br/>
+</p>
+
+<a href="htmlib/help/img/twist_avg.expTrajs.png"><img src="htmlib/help/img/twist_avg.expTrajs.png" style="margin-left:auto; margin-right:auto; display: block; width: 80%; height:auto;" ></img></a>
+
+<p align="justify" style="font-size: 1.0em;">
+&emsp;The second one is a comparison of average values for <strong>pairs of parameters</strong>, also experimental versus simulated values. In this case, information is shown in a <strong>3D plot</strong>, where colors represent different densities, from <strong>higher density in yellow</strong>, to <strong>lower density in blue</strong>. Experimental values are shown as <strong>asterisks symbols in red color</strong>.<br/><br/>
+</p>
+
+<a href="htmlib/help/img/CG.Roll-Twist.ExpVsMD.png"><img src="htmlib/help/img/CG.Roll-Twist.ExpVsMD.png" style="margin-left:auto; margin-right:auto; display: block; width: 80%; height:auto;" ></img></a>
+

@@ -1,0 +1,37 @@
+Title: Property Histogram
+
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(Cairo)
+> CairoPNG(file="tmpPlots/dat2plot_815021558.dat.png",width=1000,height=400)
+> n1 <- as.matrix(read.table("tmpPlots/dat2plot_815021558.dat"))
+> n1 <- n1[!n1 %in% boxplot.stats(n1)$out]
+> avg <- mean(n1)
+> sd <- sd(n1)
+> cat("NAFlex_avg",avg,"\n")
+NAFlex_avg 33.29479 
+> cat("NAFlex_sd",sd,"\n")
+NAFlex_sd 7.237489 
+> hist(n1,breaks=100,col="lightblue",xlab="twist",ylab="Frequency",main="Property Histogram")
+> abline(v=avg,col="blue",lty=2,lwd=2)
+> abline(v=30.66,col="red",lty=3,lwd=2)
+> legend("topright", c("MD Avg","X-ray Avg"),lty=c(2,3),lwd=c(2.5,2.5),col=c("blue","red"))
+> dev.off()
+null device 
+          1 
+> 

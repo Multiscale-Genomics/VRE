@@ -1,0 +1,133 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Tutorial 1: Search (DDD)</h4>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	This tutorial shows several real examples on how to look for a particular nucleic acid sequence, nucleic acid fragment or base pair step in the <strong>BIGNASim</strong> database using its <strong>search engine</strong>. 
+
+	The <strong>search section</strong> of the portal is accessed through the main menu:
+</p>
+
+<img src="htmlib/help/img/SearchNewMenu.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The <strong>search section</strong> contains three different possibilities (see this help <a href='help.php?id=searching'>searching section</a> for more details): 
+</p>
+	<ul style="text-align: left; padding-left:40px;">
+		<li> Search by <strong>sequence or specific sequence fragments</strong> (using regular expressions)</li>
+		<li> Search by <strong>specific base-pair-steps</strong> (with or without flanking regions)</li>
+		<li> Search by an extensive <strong>nucleic acid ontology</strong></a> (as defined <a href="help.php?id=onto">here</a>)</li>
+	</ul>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Now let's supose that we are interested in finding three different types of information from the database:
+</p>
+	<ul style="text-align: left; padding-left:40px;">
+		<li style="list-style-type: square;"><a href='#seq'>Information related to the well-known Drew-Dickerson Dodecamer (DDD)</a></li>
+		<!--<li style="list-style-type: square;">Information related to the nucleic fragment AATT, present in the center of the DDD structure</li>-->
+		<li style="list-style-type: square;"><a href='#bps'>Information related to the AT Base-Pair Step (central in DDD)</li>  
+		<li style="list-style-type: square;"><a href='#onto'>Information related to a naked duplex B-DNA structure with a particular nucleotidic fragment</li>  
+	</ul>
+
+<br/>
+
+<a name='seq'></a>
+<h4 style="font-size: 1.2em;"> Drew Dickerson Dodecamer (DDD) </h4>
+<hr/>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In this case, as we already know the nucleotidic sequence of the DDD (CGCGAATTCGCG), we can just search for the complete sequence in the <i>"Search by Sequence"</i> section of the portal:
+</p>
+
+<img src="htmlib/help/img/Tut1_SearchBySeqNew.png" style="display: block; width: 80%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	We have another possibility here, as it can be considered a <i>special</i> sequence because of its importance, it is included in our <i>Sequence Features</i> section of the nucleic acids ontology:
+</p>
+
+<img src="htmlib/help/img/Tut1_SearchDDDNew.png" style="display: block; width: 80%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Both possibilities open a <strong>browse page</strong> with all the simulations stored in our database for this particular sequence. In this case, we have 5 different trajectories, the longest one having 10&micro;seconds. 
+
+	Now we could open each of the simulations individually to look at the MD simulation metadata and trajectory analyses or obtain global information from more than one simulations together, selecting the desired entries and clicking at <strong>Open analyses for selected simulations</strong> (see <a href="help.php?id=browsing">browsing section</a> for more information).
+</p>
+
+<img src="htmlib/help/img/Tut1_DDDlistNew.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<br/>
+
+<a name='bps'></a>
+<h4 style="font-size: 1.2em;"> AT Base-Pair Step (central in DDD) </h4>
+<hr/>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	If we are interested in the DDD central base-pair step <i>CGCGA</i><strong>AT</strong><i>TCGCG</i>, the <strong>Search by Base Pair Step</strong> section of the <strong>search engine</strong> can be used: 
+</p>
+
+<img src="htmlib/help/img/Tut1_SearchBPS.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In the selector we just have to choose the desired base-pair step, in this case AT. There's also the possibility to add a number of wanted <strong>flanking nucleotides</strong>, to ensure that information obtained will not be from base-pair steps placed at terminal regions, typically showing distorted flexibility parameters. In this example we will put two nucleotides of flanking region. The same procedure can be applied for every base-pair step.
+</p>
+
+<img src="htmlib/help/img/Tut1_SearchBPS2New.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The results obtained for the <strong>AT</strong> base-pair step with the current content of the database are 51 different simulations. Looking at the sequence column, the interesting <strong>AT pair</strong>, together with the flanking region, can be easily identified thanks to the marking in yellow and orange color, respectively.
+
+	The first thing we can see in this browse page is that there are different sequences stored in the database other than the <strong>DDD</strong> containing the <strong>AT base pair</strong>, specifically 46 sequences (at the moment of writing this tutorial), some of them having more than one occurrence of it. That offers enough information to compare between the flexibility parameters obtained for just the 5 sequences of <strong>DDD</strong> obtained in the previous section of this tutorial with the rest of sequences having the <strong>AT base pair</strong>. To obtain flexibility information for just the sequences other than <strong>DDD</strong>, we can click at the <strong>selector of records shown</strong> in the browse page, at the top-left part of the screen, and choose 100 records:
+</p>
+
+<img src="htmlib/help/img/Tut1_FirstShown.png" style="display: block; width: 40%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Once we have all the records on the screen, we can select them all by clicking at the checkbox placed at the left part of the table header, next to the <strong>Id. title</strong>, and then uncheck the ones corresponding to the <strong>DDD</strong> sequence. The <strong>selector of records</strong> placed in the top part of the Id. column will help in finding the 5 sequences having DDD in their name: 
+</p>
+
+<img src="htmlib/help/img/Tut1_SearchBPS_ResultsNew.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The final step consists on clicking at the <strong>Open Analyses for selected simulations</strong> button at the bottom of the <strong>browse page</strong>, which will send us to the <strong>analysis section</strong> of <strong>BIGNASim</strong> (see <a href='help.php?id=analysis'>analysis section</a>).
+</p>
+
+<img src="htmlib/help/img/OpenAnalysesForSelectedSimulations.png" style="display: block; width: 60%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Now in this section, we can click at the <strong>AT base-pair step</strong> button, and then open every analysis we are interested in. In order to compare the results with the ones corresponding to the <strong>AT base-pairs</strong> from just <strong>DDD sequences</strong>, we can repeat the previous steps (or repeat the steps done in the first section of this tutorial) to retreive the analysis for these particular sequences. The idea is to get to the same analyses page, click at the <strong>AT base-pair button</strong>, and then compare the results with two different browser windows.
+</p>
+
+<img src="htmlib/help/img/Tut1_AT_analysis.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	To obtain more information about the analyses included in the <strong>analyses page</strong>, and how to use it, please refer to the <a href='help.php?id=analysis'>analysis section</a> or the <a href='help.php?id=tut3'>analysis tutorial</a> of this help.
+</p>
+
+<a name='onto'></a>
+<h4 style="font-size: 1.2em;"> Naked duplex B-DNA structure with a particular nucleotidic fragment </h4>
+<hr/>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Now suppose we want to be more specific about the simulations we are interested in study, and we just want to retrieve those trajectories having the <strong>DDD</strong> central tetramer <strong>(AATT)</strong> computed on <strong>naked B-DNA duplex</strong> structures, simulated in <strong>equilibrium</strong> conditions and <strong>electroneutral</strong> charge.
+
+	For that, we need to write the <strong>AATT</strong> tetramer in the <strong>Search by Sequence</strong> section, and refine the search using the <strong>Search by Ontology</strong> section. 
+</p>
+
+<img src="htmlib/help/img/Tut1_AdvSearchSeqNew.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In the <strong>Search by Ontology</strong> section, we can go branch by branch refining the search. In this case, we will click <strong>DNA</strong> in <strong>Nucleic Acid Type</strong> area, <strong>Duplex</strong> in <strong>Structure</strong> area, <strong>Naked</strong> in <strong>System Type</strong> area, <strong>Equilibrium</strong> in <strong>Trajectory Type</strong>, <strong>B</strong> in <strong>Helical Conformation</strong> and finally <strong>Electroneutral</strong> in <strong>Simulation Conditions, Ionic Concentration</strong>.
+
+	Every time a search parameter is chosen, the <strong>search engine</strong> computes the number of results stored for the current selected refinement specification and shows it on-the-fly in the top right part of the <strong>Search by Ontology</strong> section, in red color. 
+</p>
+
+<img src="htmlib/help/img/Tut1_AdvSearchNew.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Again, the results are shown in a <strong>browse page</strong>. In the description we can see that results are indeed <strong>duplex naked B-DNA structure </strong>simulations, as defined in the <strong>search</strong>. Still, results obtained contain a sequence different than the <strong>DDD</strong> having the tetramer we were interested in <strong>(AATT)</strong>: 1rvh (GCAAAATTTTGC). For the rest of <strong>DDD</strong> trajectories, the differences rely on the particular simulation parameters used in the MD, e.g. solvent type, ionic parameters or total length.
+</p>
+
+<img src="htmlib/help/img/Tut1_AdvSearchResultsNew.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Now, with this results, we can go one by one to inspect flexibility properties for each of the simulations independently (see <a href='help.php?id=simulation'>simulation section</a> of this help), we can analyse the global flexibility of our <strong>AATT</strong> tetramer selecting all the trajectories and clicking at <strong>Open Analysis for selected simulations</strong> button, or we can generate a <strong>meta-trajectory</strong> with this particular nucleotidic fragment joining together atomic coordinates of a selection set of simulations from all the resulting ones shown in the <strong>browse page</strong>. More details on how to build a <strong>meta-trajectory</strong> with <strong>BIGNASim</strong> can be found at the <a href='help.php?id=tut2'>meta-trajectory tutorial</a> and the <a href='help.php?id=metatraj'>meta-trajectory section </a>in this help.
+</p>

@@ -1,0 +1,148 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Tutorial 3: Meta-trajectories (XCGY)</h4>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+        This tutorial shows how to build a meta-trajectory containing a particular nucleotidic fragment with <strong>BIGNASim</strong> portal.
+
+	For this tutorial, we will continue with the real example presented in the previous global analyses tutorial: <strong>CG base-pair step</strong> and the influence of the <strong>tetranucleotide environment</strong> in the sequence-dependent polymorphism of particular base-pair steps (<a href="http://nar.oxfordjournals.org/content/42/18/11304" target="_blank">P. Dans et al, NAR 2014</a>).
+
+	We have seen in the previous tutorial how to extract directly from the database the population of a particular helical parameter, recovering the <strong>Twist bimodality</strong> found in the above mentioned research. However, one can be interested in study different properties, not stored in <strong>BIGNASim</strong> database. For that, there is a possibility to generate and download (and also send to <strong>NAFlex server</strong>) a meta-trajectory containing just the nucleotide fragment of interest. It is build joining together the atomic information (3D cartesian coordinates) from all the simulations stored in our database enclosing the fragment.
+
+	To illustrate the power of <strong>BIGNASim</strong> database, we interrogated the DB searching for the <strong>16 possible different tetramers</strong> including <strong>CG</strong> base-pair, and we obtained results for all of them, going from 2 (<strong>TCGG</strong>) to 49 (<strong>TCGC</strong>) occurrences. We must say that for now, <strong> BIGNASim</strong> is populated with just a set of trajectories generated during the development and validation of the <strong>parmBSC1 force-field</strong>, and the information stored is going to be increased with new simulations. 
+
+</p>
+
+<div class="statsTable" style="padding-bottom:0px";>
+<div class="table">
+	<div class="row-header blue">
+        	<div class="cell"> Tetramer </div>
+		<div class="cell"> #Occurrences </div>
+        	<div class="cell"> Tetramer </div>
+		<div class="cell"> #Occurrences </div>
+		<div class="cell"></div>
+        </div>
+        <div class='row'>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=ACGA">A<strong>CG</strong>A</a></div>
+		<div class='cell'> 5 </div>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=ACGG">A<strong>CG</strong>G</a></div>
+		<div class='cell'> 17 </div>
+	</div>
+        <div class='row'>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=CCGA">C<strong>CG</strong>A</a></div>
+		<div class='cell'> 6 </div>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=CCGG">C<strong>CG</strong>G</a></div>
+		<div class='cell'> 7 </div>
+	</div>
+        <div class='row'>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=GCGA">G<strong>CG</strong>A</a></div>
+		<div class='cell'> 43 </div>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=GCGG">G<strong>CG</strong>G</a></div>
+		<div class='cell'> 15 </div>
+	</div>
+        <div class='row'>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=TCGA">T<strong>CG</strong>A</a></div>
+		<div class='cell'> 9 </div>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=TCGG">T<strong>CG</strong>G</a></div>
+		<div class='cell'> 2 </div>
+	</div>
+        <div class='row'><div class='cell'></div><div class='cell'></div><div class='cell'></div><div class='cell'></div></div>
+        <div class='row'>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=ACGC">A<strong>CG</strong>C</a></div>
+		<div class='cell'> 10 </div>
+		<div class='cell' style="font-weight:bolder; color: blue;"> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=ACGT">A<strong>CG</strong>T</a></div>
+		<div class='cell' style="font-weight:bolder; color: blue;"> 4 </div>
+	</div>
+        <div class='row'>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=CCGC">C<strong>CG</strong>C</a></div>
+		<div class='cell'> 6 </div>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=CCGT">C<strong>CG</strong>T</a></div>
+		<div class='cell'> 11 </div>
+	</div>
+        <div class='row'>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=GCGC">G<strong>CG</strong>C</a></div>
+		<div class='cell'> 19 </div>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=GCGT">G<strong>CG</strong>T</a></div>
+		<div class='cell'> 5 </div>
+	</div>
+        <div class='row'>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=TCGC">T<strong>CG</strong>C</a></div>
+		<div class='cell'> 49 </div>
+		<div class='cell'> <a href="<?=$GLOBALS[homeNUCMD]?>/search.php?idSubSeq=TCGT">T<strong>CG</strong>T</a></div>
+		<div class='cell'> 3 </div>
+	</div>
+</div>
+</div>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In this tutorial, we will generate a <strong>meta-trajectory</strong> of one of the tetramers having less occurrences (<strong>ACGT</strong>, 4 occurrences), in order to show a quick example of the steps to be followed. The same example could be used to generate meta-trajectories for all of the possible tetranucleotides including <strong>CG</strong>, thus obtaining a valuable set of ensembles to analyse and compare.
+
+	The first step in this tutorial consists on accessing the <strong>search section</strong> of the portal from the main menu:
+</p>
+
+<img src="htmlib/help/img/SearchNewMenu.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+        The <strong>search section</strong> contains three different possibilities (see this help <a href='help.php?id=searching'>searching section</a> for more details):
+</p>
+        <ul style="text-align: left; padding-left:40px;">
+                <li> Search by <strong>sequence or specific sequence fragments</strong> (using regular expressions)</li>
+                <li> Search by <strong>specific base-pair-steps</strong> (with or without flanking regions)</li>
+                <li> Search by an extensive <strong>nucleic acid ontology</strong></a> (as defined <a href="help.php?id=ontology">here</a>)</li>
+        </ul>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+        To generate a <strong>ACGT</strong> meta-trajectory, we will use the <strong>Search by Sequence Fragment</strong> section of the <strong>search engine</strong>. The <strong>Search by Base-Pair Step</strong> field can also be used if the particular sequence fragment we are interested in is precisely a <strong>base-pair step</strong>. 
+
+</p>
+
+<img src="htmlib/help/img/ACGT_searchNew.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	As we are interested in studying the behavior of the tetramer in just normal duplex B-DNA structures, simulated in equilibrium conditions, we select the corresponding features from the <strong>Search by Ontology</strong> section:
+</p>
+
+<img src="htmlib/help/img/ACGT_ontoNew.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Results for this search are <strong>3 different simulations</strong> (one less because of the filtering done). The information that we will have in the final meta-trajectory is going to be the sum of all these trajectories, so it will have information equivalent to <strong>1.290&micro;s </strong> (500 + 500 + 290 ns). Note that if we would have taken the most represented tetramer including <strong>CG</strong> (<strong>TCGC</strong>), we would be generating a meta-trajectory corresponding to up to <strong>39 &micro;s</strong> of simulated time. 
+
+	<strong>BIGNASim</strong> offers the possibility to generate a meta-trajectory combining all these different simulation trajectories. It is built getting the atomic information (3D-coordinates and topology) of the selected nucleotidic fragment. In this case, a meta-trajectory for the <strong>ACGT</strong> tetramer, representing <strong>1,290&micro;s </strong> of simulation data will be generated.
+</p>
+
+<img src="htmlib/help/img/ACGT_resultsNew.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+
+	For that, the first thing we need is to select all the trajectories obtained in the search. That implies two different steps, first show all the results in the <strong>browse page</strong>, selecting an appropiate number of rows to be displayed in the selector placed in the top-left corner of the screen. In this case, as we are just dealing with 3 different trajectories, that is not necessary, but we should keep that in mind when working with a higher number of results.
+</p>
+
+<img src="htmlib/help/img/ACGT_results_firstShownNew.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Then, we select all the simulations (or just the ones we are interested in), clicking at the respective checkboxes. A single click to the checkbox placed in the top-left corner of the table, next to the <strong>Id. title</strong> will automatically select all trajectories. This can also be done with a button placed at the bottom of the <strong>browse page</strong> named <strong>Mark All</strong>.
+</p>
+
+<img src="htmlib/help/img/ACGT_clickedNew.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Once we have the desired trajectories selected, the next step is clicking at the <strong>Retrieve Metatrajectory</strong> button placed at the top-right part of the screen (next to the <strong>Cassandra</strong>'s logo, representing an eye). 
+</p>
+
+<img src="htmlib/help/img/ACGT_eyeNew.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The next step for generating the meta-trajectory is to define a desired frame step. In this case, we want to extract <strong>100 snapshots</strong> as representatives of each trajectory. For that, we type in the <strong>Frame</strong> input section: <strong>1:5000:50</strong> (<i>for snapshot 1 to snapshot 5000, every 50 snapshots</i>). 
+
+	At this step, we can choose between <strong>downloading</strong> the new generated trajectory or send it directly to the <strong>NAFlex</strong> nucleic acid flexibility server. As this trajectory is going to be quite big, we will download it to work in our own machines.
+
+	The download section offers different possible trajectory formats. We will choose the one by default, <strong>DCD binary</strong>, because is one of the most lighweight formats, and it will accelerate the process.
+</p>
+
+<img src="htmlib/help/img/ACGT_metatraj.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The downloading process will be launched asynchronously. A <strong>waiting page</strong> will be opened informing that the trajectory is currently being generated. This <strong>waiting page</strong> will be automatically redirected to a <strong>data manager</strong> workspace where the resulting trajectory (as well as all the trajectories generated in this browser session) can be found, downloaded, or sent to <strong>NAFlex</strong> server (see <a href="help.php?id=datamanager" target="_blank">data manager help section</a>). 
+</p>
+
+<img src="htmlib/help/img/datamanager.png" style="display: block; width: 100%; height:auto;" ></img>
+

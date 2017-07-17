@@ -1,0 +1,97 @@
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   192  100   192    0     0  23997      0 --:--:-- --:--:-- --:--:-- 23997100   192  100   192    0     0  23997      0 --:--:-- --:--:-- --:--:--     0
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+curl: (3) [globbing] error: bad range specification after pos 2
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   192  100   192    0     0  48000      0 --:--:-- --:--:-- --:--:-- 48000100   192  100   192    0     0  23997      0 --:--:-- --:--:-- --:--:--     0
+
+curl: (6) Couldn't resolve host 'name:NAFlex55cd0c2fe1492-GTAC-1_5000_100-5trajs'
+
+curl: (6) Couldn't resolve host 'description:Metatrajectory of fragment GTAC, with frame selection: 1_5000_100, from 5 trajectories: NAFlex_1d11,NAFlex_1dcw,NAFlex_1tro,NAFlex_36merSPCE,NAFlex_36merTIP3P'
+curl: (3) [globbing] error: bad range specification after pos 11
+
+curl: (3) [globbing] error: bad range specification after pos 14
+
+curl: (3) [globbing] error: bad range specification after pos 19
+
+curl: (3) [globbing] error: bad range specification after pos 20
+
+
+curl: (6) Couldn't resolve host 'frames:1:5000'
+
+curl: (6) Couldn't resolve host 'format:dcd'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   192  100   192    0     0  47988      0 --:--:-- --:--:-- --:--:-- 47988100   192  100   192    0     0  23997      0 --:--:-- --:--:-- --:--:--     0
+
+curl: (6) Couldn't resolve host ''name:NAFlex55cd0c2fe1492-GTAC-1_5000_100-5trajs''
+
+curl: (6) Couldn't resolve host ''description:Metatrajectory of fragment GTAC, with frame selection: 1_5000_100, from 5 trajectories: NAFlex_1d11,NAFlex_1dcw,NAFlex_1tro,NAFlex_36merSPCE,NAFlex_36merTIP3P''
+curl: (3) [globbing] error: bad range specification after pos 12
+
+curl: (3) [globbing] error: bad range specification after pos 15
+
+curl: (3) [globbing] error: bad range specification after pos 20
+
+curl: (3) [globbing] error: bad range specification after pos 21
+
+
+curl: (6) Couldn't resolve host ''frames:1:5000:100''
+
+curl: (6) Couldn't resolve host ''format:dcd''
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   192  100   192    0     0  24000      0 --:--:-- --:--:-- --:--:-- 24000100   192  100   192    0     0  24000      0 --:--:-- --:--:-- --:--:--     0
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:03 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:04 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:05 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:06 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:07 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:08 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:09 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:10 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:11 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:12 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:13 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:14 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:15 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:16 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:17 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:18 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:19 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:20 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:21 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:22 --:--:--     0100   132  100   132    0     0      5      0  0:00:26  0:00:22  0:00:04    28
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   291  100   291    0     0  36370      0 --:--:-- --:--:-- --:--:-- 36370100   291  100   291    0     0  36370      0 --:--:-- --:--:-- --:--:--     0
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:03 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:04 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:05 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:06 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:07 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:08 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:09 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:10 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:11 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:12 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:13 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:14 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:15 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:16 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:17 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:18 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:19 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:20 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:21 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:22 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:23 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:24 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:25 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:26 --:--:--     0100   291  100   291    0     0     10      0  0:00:29  0:00:26  0:00:03    65

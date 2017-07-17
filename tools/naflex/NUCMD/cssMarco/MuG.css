@@ -1,0 +1,52 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	background-color:#006b8f; 
+	font-family:Verdana, Arial, Helvetica, sans-serif; 
+	font-size:10pt;
+	line-height:1.5em
+	}
+#container {
+	width:900px; margin:0 auto; padding:0 60px 10px 60px; 
+	background-color:#fff; min-height:400px; 
+	color:#00506b;
+	}
+#content {width:100%; clear:both; 	min-height:350px;}
+#header {border-bottom: solid 1px}
+#footer {background-color:#006b8f;color:#cccccc; margin-top:20px}
+
+#menu {
+	width:900px;
+	visibility:visible;
+	position: relative;
+	z-index:30;
+	padding-bottom:20px;
+}
+
+
+a {color:#00506b}
+a:hover {text-decoration:none; color:#007a9f}
+.partner {
+	clear:both;
+	padding-bottom:10px;
+	border-bottom: solid 1px;
+}
+h4 {
+	display:block; 
+	color: #ffffff; 
+	background-color:#006b8f; 
+	padding:5px;
+	}
+#news {
+	float:right;
+	width:300px;
+	border: solid 1px;
+}
+#news h4 {margin:0px}
+
+#colesq {
+	width:540px;
+}
+
+.menuItem {width:110px; border-bottom:solid 1px}
+.subMenuItem {width:110px; border-bottom:solid 1px}

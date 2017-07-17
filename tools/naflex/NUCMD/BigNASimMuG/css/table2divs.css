@@ -1,0 +1,112 @@
+.tab2div_container{
+    display: inline-block;
+    vertical-align:top;
+    border-collapse: separate;
+    border-spacing: 5px;
+    }
+.heading{
+     font-weight: bold;
+     //display:table-row;
+     display:inline-table;
+     //background-color:#C91622;
+     text-align: center;
+     line-height: 25px;
+     font-size: 14px;
+     font-family:georgia;
+     //color:#fff; 
+     color: blue; 
+     vertical-align: sub;
+
+     color: rgba(0,0,0,0.6);
+     text-shadow: 2px 8px 6px rgba(0,0,0,0.2),
+                 0px -5px 35px rgba(255,255,255,0.3);
+    
+}
+.table-row{  
+     display:table-row;
+     text-align: center;
+}
+
+.col{
+     display:table-cell;
+     padding: 10px;
+     border: 1px solid #CCC;
+     -webkit-border-radius: 58px 58px 58px 58px;
+     border-radius: 58px;
+     -moz-border-radius: 58px 58px 58px 58px;
+     margin: 5px;
+     background: url(../images/dna_trans.png) no-repeat center;
+     color: rgba(0,0,0,0.6);
+     font-weight:bold;
+     text-shadow: 2px 8px 6px rgba(0,0,0,0.2),
+                 0px -5px 35px rgba(255,255,255,0.3);
+}
+
+.noborder{
+     border: 0px;
+     background: none;
+}
+
+.base{
+    border-color: rgba(255,0,0,0.3);
+}
+
+.base:hover {
+	border-color: rgba(255,0,0,1);
+	text-shadow: 2px 8px 6px rgba(0,0,0,0.2);
+	box-shadow: 3px 3px 2px #888888;
+	text-decoration: none;
+}
+
+.base-head {
+	border-color: rgba(255,0,0,1);
+	text-shadow: 2px 8px 6px rgba(0,0,0,0.2);
+	box-shadow: 3px 3px 2px #888888;
+	text-decoration: none;
+}
+
+.base-pair{
+    border-color: rgba(0,255,0,0.3);
+}
+
+.base-pair:hover {
+	border-color: rgba(0,255,0,1);
+	text-shadow: 2px 8px 6px rgba(0,0,0,0.2);
+	box-shadow: 3px 3px 2px #888888;
+	text-decoration: none;
+}
+
+.base-pair-head {
+	border-color: rgba(0,255,0,1);
+	text-shadow: 2px 8px 6px rgba(0,0,0,0.2);
+	box-shadow: 3px 3px 2px #888888;
+	text-decoration: none;
+}
+
+.base-pair-step{
+    border-color: rgba(0,0,255,0.3);
+}
+
+.base-pair-step:hover {
+	border-color: rgba(0,0,255,1);
+	text-shadow: 2px 8px 6px rgba(0,0,0,0.2);
+	box-shadow: 3px 3px 2px #888888;
+	text-decoration: none;
+}
+
+.base-pair-step-head {
+	border-color: rgba(0,0,255,1);
+	text-shadow: 2px 8px 6px rgba(0,0,0,0.2);
+	box-shadow: 3px 3px 2px #888888;
+	text-decoration: none;
+}
+
+#containerSelection {
+	float: left;
+	text-align: center;
+}
+
+#bulletsSelection {
+	float: left;
+	text-align: center;
+}

@@ -1,0 +1,19 @@
+HTTP/1.1 200 OK
+Date: Fri, 14 Aug 2015 06:31:40 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 126
+Content-Type: application/json
+
+{
+  "top_name": "BIGNASim55cd8ee4e5e25-NAFlex_1fzx-1_4_1.pdb", 
+  "traj_name": "BIGNASim55cd8ee4e5e25-NAFlex_1fzx-1_4_1.crd"
+}HTTP/1.1 200 OK
+Date: Fri, 14 Aug 2015 06:32:55 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 126
+Content-Type: application/json
+
+{
+  "top_name": "BIGNASim55cd8f2d49aa0-NAFlex_1fzx-1_4_1.pdb", 
+  "traj_name": "BIGNASim55cd8f2d49aa0-NAFlex_1fzx-1_4_1.crd"
+}

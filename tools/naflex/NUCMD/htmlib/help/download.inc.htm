@@ -1,0 +1,71 @@
+<script>
+$(document).ready( function() {
+
+        menuTabs("Download");
+
+});
+</script>
+
+
+<p align="center" style="padding: 10px; border-style: solid;border-width: 1px; border-radius:30px;font-size: 1.3em;"><strong>ParmBSC1 forcefield</strong>, a refined force-field for the atomistic simulation of DNA.</p>
+<p align="justify"  style="/*font-family: Georgia, serif; font-size: 1.2em;*/">
+The set of parameters defined in <strong>parmBSC1 forcefield</strong> can be found in the <a href="#download">download</a> section. 
+Also, instructions to use it with <strong>Amber package</strong> are described in the <a href="#instructions">instructions</a> section.
+</p>
+
+<a name='download'></a>
+<h4 align="justify"  style="border-bottom: 1px solid; font-size: 1.2em;">Download files:</h4>
+<p style="font-size: 1.0em;">ParmBSC1 forcefield consists of two different files:</p>
+
+<a href="<?=$GLOBAL['homeMMB']?>/ParmBSC1/parmBSC1/parmBSC1.lib">Library Parameters</a><br/>
+<a href="<?=$GLOBAL['homeMMB']?>/ParmBSC1/parmBSC1/parmBSC1.frcmod">Frcmod Parameters</a><br/><br/>
+
+
+<a href="<?=$GLOBAL['homeMMB']?>/ParmBSC1/parmBSC1/parmBSC1.tgz"><strong>Download ParmBSC1 forcefield parameters</strong></a> 
+<!-- <p><strong>ParmBSC1 forcefield parameters</strong></p> <img src="images/link_blue.png" style="height: 80px; width: 80px;"></img> -->
+</br></br>
+<a name='instructions'></a>
+<h4 align="justify"  style="border-bottom: 1px solid;font-size: 1.2em;">Instructions:</h4>
+
+<p align="justify" style="font-size: 1.0em;">
+Loading the <strong>parmBSC1</strong> force-field using <strong>AmberTools14</strong> (free at <a href="http://ambermd.org" target="_blank">http://ambermd.org</a>):</br>
+----------------------------------------------------------------------------------------------------------------------</br>
+</p>
+
+<ol style="text-align: left";>
+<li>	Source <strong>leaprc.ff14SB</strong>, default <strong>parm99bsc0</strong> parameters for DNA (<strong>$AMBERHOME/dat/leap/cmd/leaprc.ff14SB</strong>).</li>
+</br>
+<li>	Load <strong>parmBSC1.lib</strong>, a library that has all DNA nucleotides but having changed the following atom types:</li>
+</br>
+	<ul>
+		<li>atom name C5' is changed from CT to CI (parmbsc0)</li>
+		<li>atom name C3' is changed from CT to CE.</li>
+		<li>atom name C8 is changed from CK to C1 (adenine).</li>
+		<li>atom name C5 and C6 are changed from CM to C2 (thymine).</li>
+	</ul>
+</br>
+<li>	Load an extra parameters file (<strong>parmBSC1.frcmod</strong>) that includes all the new parameters needed due to the new atom types definition and the new QM-fitted parameters.</li>
+</br>
+<li>Load the pdb of the structure that you want to simulate.</li>
+</br>
+<li>Perform any additional command (addions, solvate, saveamberparm, etc.).</li>
+</ol>
+
+<p align="justify">
+</br></br>
+Example using <strong>Ambertools Leap</strong> program:
+</p>
+<!--<pre style="text-align: left; background: black; color: yellow;"><code>-->
+<div style="text-align:left;padding: 10px; background: rgba(40, 53, 57, 1); color: rgba(217, 225, 233, 1); border-style: solid;border-width: 1px; border-radius:30px; max-width:450px;  font-family: monospace;">
+<pre style="background: rgba(40, 53, 57, 1);text-align: left; font-family:monospace;color:#fff;">
+source $AMBERHOME/dat/leap/cmd/leaprc.ff14SB
+addAtomTypes {
+  { "C1" "C" "sp2" }
+  { "C2" "C" "sp2" }
+  { "CI" "C" "sp3" }
+  { "CE" "C" "sp3" }
+ }
+ loadoff parmBSC1.lib
+ loadamberparams parmBSC1.frcmod
+</pre>
+</div>

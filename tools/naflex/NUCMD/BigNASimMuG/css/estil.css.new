@@ -1,0 +1,191 @@
+BODY {font-family:Verdana,sans-serif;font-size:9pt;background-color:#c1c1ff;color:#000050}
+p, td, th {font-family:Verdana,sans-serif;font-size:12px}
+a {color:#000050;text-decoration:none}
+a:hover {text-decoration:underline}
+.petita {font-size:9px}
+h4 {font-size: 12px; border-bottom:solid 1px;width:90%}
+h3 { color: #0000ff;}
+h3#help a:link {color: #0000FF; background-color:#cccccc;}
+#divbase {
+position:relative; 
+margin:0px auto;
+width:800px;
+background-image:url(../images/ombra.jpg);
+background-repeat:repeat-y;
+}
+#divcheks{
+text-align:left;
+vertical-align:top;
+}
+#divjmol{
+text-align:left;
+vertical-align:top;	
+}
+#toplogo {
+position:relative;
+background-image:url(../images/topLogo.jpg);
+height:100px;
+}
+#userId {
+position:absolute;
+top:60px;
+left:400px;
+font-size:9px;
+}
+#bottomlogo {
+position:relative;
+background-image:url(../images/bottom_new.png);
+height:70px;
+}
+#textBottom{
+position:relative;
+font-size:9px;
+padding:5px;
+}
+#content {
+position:relative;
+padding:20px;
+min-height:300px;
+clear:both;
+}
+#menu{
+position:relative;
+padding-left:20px;
+padding-right:20px;
+z-index:20;
+}
+.itemmenu a {
+float:left;
+width:100px;
+padding:2px;
+font-size:9px;
+border-right: solid 1px;
+text-align:center;
+}
+.itemmenuR a{
+float:right;
+width:50px;
+padding:2px;
+font-size:9px;
+text-align:center;
+}
+.itemmenu a:hover {
+	background-color:#000066; 
+	color:#ffffff;
+	text-decoration:none;
+	}
+.itemmenuR a:hover {
+	background-color:#000066; 
+	color:#ffffff;
+	text-decoration:none;
+}
+
+
+#opsDialog {
+	margin-left:40px;
+	padding:5px;
+	background-color:#eeeeee;
+}
+
+#helpForm {
+	margin-left:40px;
+	padding:5px;
+	background-color:#eeeeee;
+}
+
+#innerForm {
+	margin-left:40px;
+	padding:5px;
+	background-color:#eeeeee;
+}
+
+#MenuHelp {
+	position:absolute;
+	left:0px;
+	width:100px;
+	padding-left:20px;
+	z-index:20;
+	border-right:solid 1px;
+}
+#ContentHelp {
+	margin-left:150px;
+}
+
+.toolbox {
+	visibility:hidden;
+	display:inline;
+	padding:2px;
+	background-color:#cccccc;
+}
+#loginForm {
+	padding:2px;
+	width:90%;
+	border-top:solid 1px;
+}
+#loginForm P, INPUT{
+	font-size:9px;
+}
+
+#help_ops {
+	background-color:#cccccc;
+}
+#top_box_inb_link {
+        position: absolute;
+        top: 20px;
+        left: 680px;
+        width: 100px;
+        height: 50px;
+        background-color: transparent;
+}
+#bottom_box_ub_link { 
+	position: absolute; 
+	top: 0px; 
+	left: 240px; 
+	width: 160px; 
+	height: 53px; 
+	background-color: transparent; 
+/*	border: 1px solid yellow; */
+}
+#bottom_box_bsc_link {
+        position: absolute;
+        top: 0px;
+        left: 400px;
+        width: 200px;
+        height: 53px;
+        background-color: transparent;
+}
+#bottom_box_isc3_link {
+        position: absolute;
+        top: 0px;
+        left: 600px;
+        width: 140px;
+        height: 53px;
+        background-color: transparent;
+}
+#bottom_box_irb_link {
+        position: absolute;
+        top: 0px;
+        left: 740px;
+        width: 50px;
+        height: 53px;
+        background-color: transparent;
+}
+
+.hotspot {color:#900; padding-bottom:1px; border-bottom:1px dotted #900; cursor:pointer}
+/*
+#tt {position:absolute; display:block; background:url(images/tt_left.gif) top left no-repeat}
+#tttop {display:block; height:5px; margin-left:5px; background:url(images/tt_top.gif) top right no-repeat; overflow:hidden}
+#ttcont {display:block; padding:2px 12px 3px 7px; margin-left:5px; background:#666; color:#FFF}
+#ttbot {display:block; height:5px; margin-left:5px; background:url(images/tt_bottom.gif) top right no-repeat; overflow:hidden}*/
+
+/*
+#tt {position:absolute; display:block; top left no-repeat}
+#tttop {display:block; height:5px; margin-left:5px; top right no-repeat; overflow:hidden}
+#ttcont {display:block; padding:2px 12px 3px 7px; margin-left:5px; background:#666; color:#FFF}
+#ttbot {display:block; height:5px; margin-left:5px;  top right no-repeat; overflow:hidden}
+*/
+#tt {position:absolute; display:block; top:auto; left:auto;}
+#tttop {display:block; height:5px; margin-left:5px; overflow:hidden}
+#ttcont {display:block; padding:2px 12px 3px 7px; margin-left:5px; background:#666; color:#FFF}
+#ttbot {display:block; height:5px; margin-left:5px;  overflow:hidden}
+

@@ -1,0 +1,19 @@
+<h3>New password:</h3>
+<form style="width: 500px;margin-left:auto;margin-right:auto;" name="newPass" action="gesUser.php?op=newPass" method="POST">
+    [#oblig,H#]
+    <table style="border: 1px solid #ddd;" cellspacing="0" cellpadding="4">
+        </tr>
+            <td>Login (e-mail):</td>
+            <td>[#Email,T,150#]</td>        
+        </tr>
+        <tr>
+            <td>Old Password:</td>
+            <td>[#oldpass,P,25#]</td>
+        </tr>
+        <tr>
+            <td>New Password (twice):</td>
+            <td>[#pass1,P,25#] [#pass2,P,25#]</td>
+        </tr>
+    </table>    
+    <a href="javascript:document.newPass.submit()" class="buttonclass">Change Password</a> 
+</form>

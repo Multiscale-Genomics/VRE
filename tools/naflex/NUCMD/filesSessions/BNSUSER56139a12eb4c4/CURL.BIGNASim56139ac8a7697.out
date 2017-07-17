@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Tue, 06 Oct 2015 09:56:34 GMT
+Server: Apache/2.2.22 (Debian)
+Content-Length: 140
+Content-Type: application/json
+
+{
+  "top_name": "naflex_1anr Has not been uploaded to cassandra yet", 
+  "traj_name": "naflex_1anr Has not been uploaded to cassandra yet"
+}

@@ -1,0 +1,56 @@
+<style type="text/css">
+    .buttonclass {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#444477;
+	font-family:arial;
+	font-size:13px;
+	font-weight:bold;
+	padding:4px 16px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+color: #997b63;
+}
+.buttonclass:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+.buttonclass:active {
+	position:relative;
+	top:1px;
+}
+body,.ui-widget{font-family:'Trebuchet MS', 'Helvetica Neue', Arial, Helvetica, sans-serif}
+td,tr {border:0px!important;}
+table {border:0;cellspacing:0;cellpadding:0;width:70%;}
+
+</style>
+<form name="login" action="gesUser.php?op=login" method="POST" target='_parent'>
+    [#oblig,H#]
+    <table>
+    <colgroup>
+        <col width="25%"/>
+        <col width="50%"/>
+        <col width="25%"/>
+    </colgroup>
+    <tbody>
+        <tr>
+            <td>Username:</td>
+	    <td><input id="login" name="login"  type="text" value="guest" size="15"/></td>
+            <td rowspan="2"><a href="javascript:document.login.submit()" class="buttonclass">Login</a></td>        
+        </tr>
+        <tr>
+            <td>Password:</td>
+	    <td><input id="password" name="password" type="password" value="gu3st2014" /></td> 
+        </tr>
+    </tbody>
+    </table>    
+</form>

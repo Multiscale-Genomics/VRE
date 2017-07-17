@@ -1,0 +1,66 @@
+<tr data-tt-id="##tree_id##" data-tt-parent-id="##tree_id_parent##">
+
+<td>
+	<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+		<input type="checkbox" class="checkboxes" value="##_id##" name="##_id##" onchange="changeCheckbox(this)" id="##_id##" ##state##/>
+		<span></span>
+	</label>
+</td>
+
+<td>
+	<a class="##state## truncate"  href="workspace/workspace.php?op=##openFunction##&fn=##_id_URL##" title="open file ##filename##" target="_blank">##filename##</a>
+	<span class="expand_info" onclick="expandInfo(this)"></span>
+	<div class="extra_info">
+	  <table>
+	  	<tr>
+			<td style="padding:0px 5px;vertical-align:top;color:#000;font-size:12px;">Description:</td>
+			<td style="padding:0px 5px;color:#666;font-size:12px;">##description##</td>
+		 </tr>
+		##tool##
+		##execDetails##
+		##notes##
+		##refGenome##
+		##paired##
+		##data_type##
+	  </table>
+  	</div>
+</td>
+<td>##format##</td>
+<td>##project##</td>
+<td>##mtime##</td>
+<td>##size##</td>
+<td>
+	<div class="btn-group">
+	##tools##
+<!--		<button class="btn btn-xs blue-oleo dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Tools
+		     <i class="fa fa-angle-down"></i>
+		 </button>
+		 <ul class="dropdown-menu pull-center" role="menu">
+		     	<li><a href="javascript:;"><i class="fa fa-motorcycle"></i> Nucleosome Dynamics</a></li>
+			<li><a href="javascript:;"><i class="fa fa-database"></i> BigNASim</a></li>
+		 </ul>
+-->
+	</div>
+</td>
+<td>
+	<div class="btn-group">
+    	<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
+			<i class="fa fa-angle-down"></i>
+		</button>
+	  <ul class="dropdown-menu pull-right" role="menu">
+			##metadataLink##
+			<li><a href="workspace/workspace.php?op=downloadFile&fn=##_id_URL##"><i class="fa fa-download"></i> Download file </a></li>
+			<li><a href="javascript:deleteFile('##_id_URL##');"><i class="fa fa-trash-o"></i> Delete file </a></li>
+			##compressionLink##
+			##PDBView##
+			##NGLView##
+			##jbrowseLink##
+			##tadkitLink##
+		</ul>
+	</div>
+</td>
+<td>1</td>
+<td>##mtime_parent##</td>
+<td>##size_parent##</td>
+</tr>
+

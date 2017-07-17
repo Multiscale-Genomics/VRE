@@ -1,0 +1,244 @@
+<br/>
+
+<h4 align="justify" style="border-bottom: 1px solid; font-size: 1.2em;">Tutorial 4 - Experimental vs MD Analysis</h4>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	This tutorial shows the information integrated in <strong>BIGNASim</strong> to easily compare <strong>theoretical results</strong> obtained with MD simulations with values obtained from <strong>experimental structures/trajectories</strong>. 
+	
+	Comparison with experimental structures in <strong>BIGNASim</strong> is done at three different levels: 
+</p>
+
+<ol style="text-align:left;padding-left:20px;">
+<li><a href="#pdb">Individual helical parameters obtained from the corresponding experimental structure from the PDB</a></li>
+<br/>
+<li><a href="#pdbCurves">Averaged analysis of helical parameters from a complete dataset made from available nucleic acids experimental structures from the PDB</a></li>
+<br/>
+<li><a href="#trajCurves">Experimental ensembles with PDB structures of equivalent sequences, analyzed as pseudotrajectories, superimposed to the appropriate analysis</a></li>
+</ol>
+
+<br/>
+
+<a name="pdb"></a>
+<h4 style="font-size: 1.1em;"> Individual helical parameters obtained from the corresponding experimental structure from the PDB </h4>
+<hr/>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In those simulations started from a <strong>reference PDB structure</strong>, the most direct analysis are the comparison between geometrical values extracted from the crystallographic structure and those averaged from the simulation trajectory. From the broad range of possible analyses, the <strong>helical parameters</strong>, and more specificaly, the base-pair step helical parameters are the most used in the last scientific studies (see <a href="help.php?id=references" target="_blank">references section</a>, Ascona B-DNA Consortium articles). 
+	
+	In these cases, <strong>BIGNASim</strong> database store not only the analysis for the simulated trajectory, but also the ones computed on the PDB structure. Then, just joining both information, a direct comparison can be obtained. 
+
+	The most interesting cases where this comparison can give valuable information are those <strong>nucleic acids complexed with protein or ligands</strong>. The typical helical conformation of the nucleic acid structure can be <strong>distorted</strong> due to the influence of the attached molecule. Studying the time-averaged values for a determined simulated trajectory, with its standard deviation, can give a clue about whether the nucleic acid structure explore the conformation needed to accept the docking molecule, or it needs a complete change of shape. Additionaly, docking regions can be easily identified due to the helical parameters distortions shown (e.g. <strong>intercalator</strong> ligands). 
+
+	To llustrate the procedure a protein-nucleic acid complex, <strong>PDB Code 1hlv</strong>, will be chosen. The <strong>Quick Search</strong> section can be used to select all simulations available related to such PDB entry. Quick search does a global search in any of fields in the database, including ontology terms, or even sequences. It is particularly useful to identify simulations based on experimental structures. 
+</p>
+
+<img src="htmlib/help/img/Tut4_QuickSearch.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In this case, “1hlv” is found both as PDB reference and in the internal identifier of the simulation. The description column shows the details of the specific simulation, showing that corresponds to “naked” DNA, meaning that the available simulation was done with just the nucleic acid portion of the complex; otherwise, the description would indicate “complex”. This can also be seen in the simulation details, where a straight DNA molecule is depicted.
+</p>
+
+<img src="htmlib/help/img/Tut4_1hlvNew.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	To see the set of pre-computed analyses offered by <strong>BIGNASim</strong>, we click at the <strong>Trajectory Analyses</strong> section. And from those available, we are interested in the ones named <strong>Curves</strong>.
+</p>
+
+<img src="htmlib/help/img/Tut4_Curves.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	This will open a new interface, <strong>NAFlex</strong>. For a <strong>complete description</strong> of <strong>NAFlex analysis interface</strong> and its interactive sequence possibilites, please refer to <a href="http://mmb.irbbarcelona.org/NAFlex/help.php?id=tutorialAnalysisNA" target="_blank">NAFlex</a> help pages or <a href="http://nar.oxfordjournals.org/content/41/W1/W47" target="_blank">NAFlex paper</a>.
+
+	To obtain what we are looking for, we will just select <strong>Average Results</strong> and then <strong>Inter-Base Pair Helical Parameters</strong>. 
+</p>
+
+<img src="htmlib/help/img/Tut4_NAFlex.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	This will show a set of <strong>six different inter-base pair step helical parameters</strong>: <i>Rise, Roll, Shift, Slide, Tilt and Twist</i>. Each of them have an associated plot with the comparison between the time-averaged theoretical results with the experimental ones. Just to see how they look, let's open the <strong>Twist</strong> parameter.
+</p>
+
+<img src="htmlib/help/img/Tut4_Twist.png" style="display: block; width: 60%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	This plot shows the time-averaged <strong>Twist</strong> parameter along the sequence. Four lines with different colors are shown: <strong>NAFlex_1hlv theoretical MD simulation</strong> in red, with standard deviation values; average values coming from a set of <strong>MD simulations</strong> (green) and <strong>X-ray structures</strong> (blue) (see <a href="http://nar.oxfordjournals.org/content/40/21/10668.long" rel="external">P. Dans et al, NAR (2012) 40, 10668-10678</a>) and finally the values computed to the corresponding PDB experimental structure <a href="http://mmb.irbbarcelona.org/pdb/getStruc.php?idCode=1HLV" target="_blank">1HLV</a> in violet.
+	
+	One can easily identify the regions of the nucleic acid where the protein is attached, disturbing the helical conformation. The same analysis can be obtained for the rest of base-pair parameters.
+</p>
+
+<img src="htmlib/help/img/Tut4_twist_avg.png" style="display: block; width: 70%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<a href='' style="float: right;"><img src="images/arrows.png" style="width:10px;height:10px;" onclick="javascript:window.scrollTo(0,0);"><strong style="vertical-align:super;"> Go to Top of the Page</strong></a></br>
+
+<br/><br/>
+
+<a name="pdbCurves"></a>
+<h4 style="font-size: 1.1em;"> Averaged analysis of helical parameters from a complete dataset made from available nucleic acids experimental structures from the PDB </h4>
+<hr/>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The second way <strong>BIGNASim</strong> offers to compare theoretical and experimental values covers a more <strong>global vision</strong> of nucleic acids flexibility. 
+	
+	For that, an <strong>averaged analysis</strong> of standard fragments (<strong>base, base pairs, and base-pairs steps</strong>) of a complete dataset made from available nucleic acids <strong>experimental structures</strong> (taken directly from the <a href="http://www.pdb.org" target="_blank">PDB</a>), is included in global analyses. See the corresponding <a href="help.php?id=expMD" target="_blank">help section</a> for more information.
+
+	These averaged values can be used to compare <strong>global values</strong> extracted from our database having information from many different simulations on a single <strong>base, base pair, and base-pairs step</strong> and thus obtain a direct representation of how much our simulations reproduce the experimental observations.
+
+	To illustrate how this information is added in the <strong>BIGNASim</strong> interface, we are going to see a brief example. First thing to do is go to the <strong>Global analyses</strong> section of the webpage:
+</p>
+
+<img src="htmlib/help/img/Tut4_GlobalAnalysesNew.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Just as an example, we are going to go through the set of global analyses for the <strong>CG</strong> base-pair step, but you could follow this short tutorial choosing any of the base-pair or base-pair steps fragments available. So, in the <strong>global analyses</strong> page, we select the <strong>CG</strong> bullet:
+</p>
+
+<img src="htmlib/help/img/Tut3_CG.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Next step is selecting <strong>CURVES analysis</strong>:
+</p>
+
+<img src="htmlib/help/img/Tut4_CG_Curves.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	From the different <strong>CURVES analyses</strong>, we are interested in the <strong>helical parameters</strong>:
+</p>
+
+<img src="htmlib/help/img/Tut4_CG_Curves_BPS.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Now, from the six helical <strong>base-pair step parameters</strong> <i>(Rise, Roll, Shift, Slide, Tilt and Twist)</i>, we will open the <strong>Roll</strong> one:
+</p>
+
+<img src="htmlib/help/img/Tut4_CG_Curves_BPS_Roll.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	<strong>BIGNASim</strong> automatically generates a histogram with all the <strong>Roll</strong> values extracted from the database. These values correspond to the <strong>Roll angle</strong> (see <a href="http://mmb.irbbarcelona.org/NAFlex/help.php?id=naFlex#InterBP" target="_blank">NAFlex helical parameters description</a> for more information about helical parameters). 
+
+	Two vertical lines are plotted on the histogram: a <strong>blue one</strong>, indicating the <strong>mean</strong> for the represented set of values <strong>(MDs)</strong> and a <strong>red one</strong>, that corresponds to the <strong/>experimental</strong> average value <strong>(PDBs)</strong> explained at the beggining of this section.  
+</p>
+
+<img src="htmlib/help/img/Tut4_CG_Curves_BPS_Roll_hist.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	In this case one can easily see that the observed values from the simulated systems agree pretty well with the <strong>experimental</strong> average. The distribution of values follows an almost perfect <strong>normal distribution</strong>, with the mean value (6.225) distant just 0.5 degrees from the <strong>experimental</strong> average value (7.35).
+
+	Before closing this short tutorial, let's open another base-pair step parameter, the <strong>Twist</strong> one. From (<a href="http://nar.oxfordjournals.org/content/42/18/11304" target="_blank">P. Dans et al, NAR 2014</a>) we know that <strong>CG-Twist</strong> has an interesting behavior, showing a polymorphism between a <strong>high twist (~20º)</strong> and a <strong>low twist (~40º)</strong>. 
+
+	For that, we should click at the <i>[helical_bpstep]</i> section of the navigation <strong>Breadcrumb</strong> to go one step back (please do not use the browser back button, as it will leave the global analyses page) and then select the <strong>Twist</strong> parameter:
+</p>
+
+<img src="htmlib/help/img/Tut4_CG_Curves_BPS_Back.png" style="display: block; width: 40%; height:auto;" ></img>
+<img src="htmlib/help/img/Tut4_CG_Curves_BPS_Twist.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	And that's the generated histogram:
+</p>
+
+<img src="htmlib/help/img/Tut4_CG_Curves_BPS_Twist_hist.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The difference with the previous <strong>Roll</strong> distribution is clear. In this case, two different distributions can be easily identified, centered at ~25º and ~35º (in good agreement with <a href="http://nar.oxfordjournals.org/content/42/18/11304" target="_blank">P. Dans et al, NAR 2014</a>).
+	
+	Another interesting information regarding the comparison with experimental values is that, although the <strong>theoretical mean value</strong> (33.639) is again close to the <strong>experimental</strong> one (30.66), both lose information about the bimodality of the <strong>Twist</strong> parameter, and its values rely in the middle of the two possible observed conformations.
+</p>
+
+<a href='' style="float: right;"><img src="images/arrows.png" style="width:10px;height:10px;" onclick="javascript:window.scrollTo(0,0);"><strong style="vertical-align:super;"> Go to Top of the Page</strong></a>
+
+</br></br></br>
+
+<a name="trajCurves"></a>
+<h4 style="font-size: 1.1em;"> Experimental ensembles with PDB structures of equivalent sequences, analyzed as pseudotrajectories, superimposed to the appropriate analysis </h4>
+<hr/>
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The last <strong>experimental</strong> comparison in <strong>BIGNASim</strong> is done using analysis taken from <strong>experimental ensembles</strong>. To know how we built these ensembles, please see the corresponding <a href="help.php?id=expTraj" target="_blank">experimental trajectories help section</a>.
+
+	Having these <strong>experimental ensembles</strong> allows us to compare our theoretical values not just against experimental static information but also against dynamic behavior. If a particular helical parameter exists in two different conformations (see previous section, <strong>CG-Twist</strong> example), that information can be obtained from the experimental ensemble and, thus, be compared with our MD simulation values. Unfortunately, due to the scarce number of deposited PDB structures for a determined nucleotidic sequence, the number of generated <strong>experimental trajectories</strong> goes just up to 15 different ensembles (see <a href="help.php?id=expTraj" target="_blank">experimental trajectories table</a>). 
+  
+	In this tutorial, we are going to see how this type of comparisons looks like with a particular example: a protein-DNA complex with PDB Code <a href="http://mmb.pcb.ub.es/pdb/getStruc.php?idCode=2LEF" target="_blank">2LEF</a>, the structure of a Lymphoid Enhancer-Binding Factor (Lef1 hmg domain, from mouse), complexed with DNA (15bp). As the deposited structure in the <a href="http://www.pdb.org" target="_blank">PDB</a> was obtained by Nuclear Magnetic Resonance (NMR), it contains 12 different structures, what allows us to construct the experimental ensemble and compute the corresponding helical parameters.  
+
+	Simulation information for this structure stored in our database can be found <a href="http://mmb.pcb.ub.es/BigNASim/getStruc.php?idCode=NAFlex_2lef" target="_blank">here</a>. The simulation can be easily found from our <strong>Quick Search</strong> button.
+
+	Once in the <strong>simulation</strong> page for our 2LEF complex, we are going to open the <strong>Trajectory Analyses</strong>: 
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_2LEF.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	For the nucleotidic sequences in our database having an associated <strong>experimental ensemble</strong>, a new analysis section named <strong>Experimental vs MD Analysis</strong> automatically appears. Clicking on this element will redirect to a <strong>NAFlex</strong> interface with the comparison results. 
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_2LEF_ExpVsMD.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	For a <strong>complete description</strong> of <strong>NAFlex analysis interface</strong> and its interactive sequence possibilites, please refer to <a href="http://mmb.irbbarcelona.org/NAFlex/help.php?id=tutorialAnalysisNA" target="_blank">NAFlex</a> help pages or <a href="http://nar.oxfordjournals.org/content/41/W1/W47" target="_blank">NAFlex paper</a>.
+
+        As in the first section of this tutorial, to obtain what we are looking for we are going to select <strong>Average Results</strong> and then <strong>Inter-Base Pair Helical Parameters</strong>:
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_NAFlex.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Please note that direct access to this <strong>NAFlex interface</strong> for all the sequences having a calculated experimental trajectory is also available in the <a href="help.php?id=expTraj" target="_blank">Experimental Trajectories</a> help section. As this text is intended to be a tutorial, we prefered to explain all the previous steps to get to this point.
+
+	At that point, we have two different kind of comparative analysis: one single parameter (2D), or two parameters (3D). Let's start by choosing a single parameter: <strong>Roll</strong>.
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_NAFlex_Roll.png" style="display: block; width: 100%; height:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	This is the resulting 2D plot:
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_NAFlex_Roll_Plot.png" style="display: block; width: 70%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The plot shows two lines representing <strong>time-averaged</strong> values for the <strong>Roll</strong> parameter: <strong>red line</strong> corresponds to the <strong>MD simulation</strong> and <strong>green line</strong> corresponds to the <strong>experimental ensemble</strong>.  
+
+	It can be clearly identified a <strong>distorted region</strong> of the DNA, from the 4th to the 6th base-pair steps of the sequence, probably influenced by the attached protein. Our MD simulation is not exploring these <strong>Roll</strong> values, so the behavior of the nucleic acid is in this case cleary influenced by the protein. 
+	
+	Now we will go back and select another analysis, in this case, one implying two different parameters: <strong>Roll and Twist</strong> (3D).
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_NAFlex_RollvsTwist.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Analysis of <strong>helical parameters pairs</strong> are done for each of the base-pair steps present in the sequence. In this case, we have <strong>6 different plots</strong>, corresponding to (<i>AA (including TT), AC, AG, CC (including GG), CT, GA, GC and TG</i>).
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_NAFlex_3DPlots.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+	
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	We will choose the one corresponding to the base-pair step <strong>AA (TT)</strong> <strong>Twist vs Roll</strong> to analyse in more detail:
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_NAFlex_3D_RollVsTwist.png" style="display: block; width: 70%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+	
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	Information shown in these <strong>3D plots</strong> are points corresponding to the correlation between both parameters, where colors represent different densities, from <strong>higher density in yellow</strong>, to <strong>lower density in blue</strong>. Experimental values are shown as <strong>asterisks symbols in red color</strong>.
+
+	As expected from the results found in the previous <strong>Roll</strong> plot, there is a strong deviation in the <strong>Roll</strong> parameter for some of the base-pair steps, placed in a region of the plot almost unexplored by the complete MD simulation. Unsurprisingly, they also have distorted values of the <strong>Twist</strong> parameter.
+
+	This is just one example (<strong>inter-base pair step helical parameters</strong>) of the type of comparisons offered in this <strong>NAFlex interface</strong>. But comparisons are made also for <strong>backbone torsions, axis base pairs and intra-base pair helical parameters</strong>. As a last example, going back to the <strong>Average</strong> values selection, we can now choose <strong>Backbone Torsions</strong>:
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_NAFlex_BCK.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	There are 4 different analyses available: <strong>BI/BII population</strong> and <strong>Puckering</strong> percentages, and a couple of <strong>angle analysis: &alpha;/&gamma; &epsilon;/&zeta;</strong>.
+
+	We choose <strong>Backbone &alpha;/&gamma;</strong> analysis:	
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_NAFlex_BCK_AlphaGamma.png" style="display: block; width: 100%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	The resulting plot shows again the <strong>MD (black)</strong> vs the <strong>experimental (red) </strong>values:
+</p>
+
+<img src="htmlib/help/img/Tut4_ExpTraj_NAFlex_BCK_AlphaGamma_plot.png" style="display: block; width: 70%; height:auto; margin-left:auto; margin-right:auto;" ></img>
+
+<p align="justify" style="font-size: 1.0em; white-space: pre-wrap;">
+	No distortion is observed in this case, with the <strong>experimental ensemble</strong> exploring just a <strong>single conformation</strong>, whereas the <strong>MD simulation</strong> is exploring different well-known regions of the space. 
+</p>
+
+<a href='' style="float: right;"><img src="images/arrows.png" style="width:10px;height:10px;" onclick="javascript:window.scrollTo(0,0);"><strong style="vertical-align:super;"> Go to Top of the Page</strong></a></br>
+
