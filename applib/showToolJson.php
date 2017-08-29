@@ -14,6 +14,6 @@ if (empty($tool)){
 }
 $json = json_encode($tool, JSON_PRETTY_PRINT);
 
-print "<pre>$json</pre>";
+print "<pre style='max-height: calc(100vh - 300px);white-space: pre-wrap;'>$json</pre>";
 
 ?>

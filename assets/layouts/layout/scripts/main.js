@@ -10,12 +10,16 @@ jQuery(document).ready(function() {
 			if (windowsize < 1260) {
 				$('body').addClass('page-sidebar-closed');
 				$('ul.page-sidebar-menu').addClass('page-sidebar-menu-closed');
+				$('.beta-short').show();
+				$('.beta-long').hide();
 				if ($.cookie) {
 					$.cookie('sidebar_closed', '1');
 				}	
 			}else {
 				$('body').removeClass('page-sidebar-closed');
 				$('ul.page-sidebar-menu').removeClass('page-sidebar-menu-closed');
+				$('.beta-short').hide();
+				$('.beta-long').show();
 				if ($.cookie) {
 					$.cookie('sidebar_closed', '0');
 				}	
@@ -30,6 +34,15 @@ jQuery(document).ready(function() {
     $(window).resize(checkWidth);
 
 	$('.menu-toggler.sidebar-toggler').on('click', function() {
+		
+		if($('ul.page-sidebar-menu').hasClass('page-sidebar-menu-closed')) {
+			$('.beta-short').hide();
+			$('.beta-long').show();
+		} else {
+			$('.beta-short').show();
+			$('.beta-long').hide();
+		}
+
 		menu_toggler = true;
 	});
 

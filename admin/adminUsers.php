@@ -52,6 +52,35 @@ unset($users['guest@guest']);
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
 
+												<div class="row">
+													<div class="col-md-12">
+													<?php  
+														$error_data = false;
+														if ($_SESSION['errorData']){ 
+															$error_data = true;
+														?>
+														<?php if ($_SESSION['errorData']['Info']) { ?> 
+															<div class="alert alert-info">
+														<?php } else { ?>
+															<div class="alert alert-danger">
+														<?php } ?>
+															
+																	<?php 
+														foreach($_SESSION['errorData'] as $subTitle=>$txts){
+																		print "<strong>$subTitle</strong><br/>";
+																	foreach($txts as $txt){
+																		print "<div>$txt</div>";
+															}
+														}
+															unset($_SESSION['errorData']);
+															?>
+															</div>
+															<?php } ?>
+														</div>
+													</div>
+
+
+
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- BEGIN EXAMPLE TABLE PORTLET-->
@@ -153,7 +182,7 @@ unset($users['guest@guest']);
                                                                       <i class="fa fa-ban"></i> Disable user</a>
                                                               </li>
                                                               <li>
-                                                                  <a href="applib/delUser.php?id=<?php echo $value[8]; ?>">
+                                                                  <a href="javascript:deleteUser('<?php echo $value[8]; ?>');">
                                                                       <i class="fa fa-trash"></i> Delete user</a>
                                                               </li>
                                                           </ul>
@@ -176,6 +205,24 @@ unset($users['guest@guest']);
                     <!-- END CONTENT BODY -->
                 </div>
                 <!-- END CONTENT -->
+
+								<div class="modal fade bs-modal" id="modalDelete" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title">Warning!</h4>
+                            </div>
+                            <div class="modal-body">Are you sure you want to delete the selected file?
+                             </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+								<button type="button" class="btn red btn-modal-del">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+
 
                 <div class="modal fade bs-modal-sm" id="myModal1" tabindex="-1" role="basic" aria-hidden="true">
                     <div class="modal-dialog modal-sm">

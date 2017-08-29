@@ -128,7 +128,7 @@ function getJobDescription($descrip0,$jobSGE,$lastjobs){
 
 	$descrip = ($descrip0?$descrip0."<br/>":"");
         if ($jobSGE['state'] == "RUNNING"){
-		$descrip = "<b>Job in course<b/><br/>".$descrip;
+		$descrip = "<b>Job in course</b><br/>".$descrip;
 
 	}elseif($jobSGE['state'] == "HOLD"){
 	        $descrip .= "<br><strong>Job waiting</strong>";

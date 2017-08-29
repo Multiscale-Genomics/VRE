@@ -13,13 +13,15 @@ $GLOBALS['helpdeskMail'] = "helpdesk@multiscalegenomics.eu";
 $GLOBALS['logFile'] = "/gpfs/VRE.log";
 
 // roles
-$GLOBALS['ROLES'] = array("0"=>"Admin", "1"=>"Tool Dev.", "2"=>"Common", 100=>"Premium Rq", 101=>"Premium Rj");
+//$GLOBALS['ROLES'] = array("0"=>"Admin", "1"=>"Tool Dev.", "2"=>"Common", 100=>"Premium Rq", 101=>"Premium Rj");
+$GLOBALS['ROLES'] = array("0"=>"Admin", "1"=>"Tool Dev.", "2"=>"Common");
 $GLOBALS['ROLES_COLOR'] = array("0"=>"blue", "1"=>"grey-cascade", "2"=>"", 100=>"red-haze", 101=>"yellow-haze");
 $GLOBALS['STATES_COLOR'] = array("0"=>"font-red", "1"=>"font-green-meadow", "2"=>"font-blue-steel", 3=>"font-green-meadow", 4=>"font-yellow-mint");
 $GLOBALS['FILE_MSG_COLOR'] = array("0"=>"note-danger", "1"=>"note-info", "2"=>"note-success", 3=>"note-info");
 $GLOBALS['NO_GUEST'] = array(0,1,2,100,101);
 $GLOBALS['PREMIUM'] = array(0,1);
-$GLOBALS['ADMIN'] = array(0);
+$GLOBALS['ADMIN'] = array(0,1);
+$GLOBALS['TOOLDEV'] = array(1);
 
 
 //SGE

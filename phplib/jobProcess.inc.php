@@ -83,14 +83,17 @@ function getRunningJobInfo($pid,$launcherType=NULL){
 
 	$job=Array();
 	if (! $pid)
-		return $job;
+        return $job;
 
+    // guess launcher
 	if(!$launcherType){
 		if (is_numeric($pid))
 			$launcherType = "SGE";
 		else
 			$launcherType = "PMES";
-	}
+    }
+
+    // create new jobProcess
 	if ($launcherType == "SGE"){
 		$process = new ProcessSGE();
 		$job = $process->getRunningJobInfo($pid);
@@ -101,8 +104,39 @@ function getRunningJobInfo($pid,$launcherType=NULL){
 	}else{
 		$_SESSION['errorData']['Error'][]="Cannot monitor job '$pid' of type '$launcher'. Launcher not implemented.";
 		return $job;
-	}
+    }
+    // return job info
 	return $job;
+}
+
+function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL){
+
+    // guess launcher
+	if(!$launcherType){
+		if (is_numeric($pid))
+			$launcherType = "SGE";
+		else
+			$launcherType = "PMES";
+    }
+    // if PMES, update log content
+    if ($launcherType == "PMES"){
+		$process = new ProcessPMES();
+        $job = $process->getActivityInfo($pid);
+
+        if ($job['jobOutputMessage'] || $job['jobErrorMessage'] ){
+            $F = fopen($logFile, "w");
+            if ($job['jobOutputMessage']){
+                fwrite($F, "##### STDOUT ###############################\n");
+                fwrite($F, $job['jobOutputMessage']);
+            }
+            if ($job['jobErrorMessage']){
+                fwrite($F, "##### STDERR ###############################\n");
+                fwrite($F, $job['jobErrorMessage']);
+            }
+            fclose($F);
+        }
+    }
+    return true;
 }
 
 

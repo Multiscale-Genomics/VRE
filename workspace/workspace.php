@@ -418,7 +418,7 @@ if (isset($_REQUEST['op'])){
 }
 
 
-//header("location:../workspace/");
+header("location:../workspace/");
 
 
 //scan disk to upload Mongo 

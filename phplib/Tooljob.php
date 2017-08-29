@@ -12,7 +12,8 @@ class Tooljob {
     public $pub_dir_virtual;   // Public dir mounted to VMs. Path as seen by VMs  
     public $cloudName;         // Cloud name where tool should be executed. Available clouds set in GLOBALS['clouds']
     public $description;
-    public $working_dir;        
+    public $working_dir;
+    public $launcher;
 
     // Paths to files genereted during ToolJob execution
     public $config_file;
@@ -37,29 +38,30 @@ class Tooljob {
     */
     public function __construct($tool,$project="0",$descrip="0"){
 	
-	// Setting Tooljob
-	$this->toolId    = $tool['_id'];
-	$this->title     = $tool['name'] ." job";
-	$this->project   = $project;
-	$this->root_dir  = $GLOBALS['dataDir']."/".$_SESSION['User']['id'];
-	$this->pub_dir  = $GLOBALS['pubDir'];
+    	// Setting Tooljob
+    	$this->toolId    = $tool['_id'];
+    	$this->title     = $tool['name'] ." job";
+    	$this->project   = $project;
+        $this->root_dir  = $GLOBALS['dataDir']."/".$_SESSION['User']['id'];
+    	$this->pub_dir   = $GLOBALS['pubDir'];
 
-	$this->set_cloudName($tool);
+    	$this->set_cloudName($tool);
 
     	$this->root_dir_virtual = $GLOBALS['clouds'][$this->cloudName]['dataDir_virtual'];
     	$this->pub_dir_virtual  = $GLOBALS['clouds'][$this->cloudName]['pubDir_virtual'];
+	    $this->launcher         = $tool['infrastructure']['clouds'][$this->cloudName]['launcher'];
 
 
-	// Creating project folder
-	if ($project != "0")
-		$this->__setWorking_dir($project,1);
-	else
-		$this->__setWorking_inTmp($tool['_id']);
-
-	if ($descrip != "0")
-		$this->setDescription($descrip,$tool['name']);
-
-	return $this;
+    	// Creating project folder
+    	if ($project != "0")
+    		$this->__setWorking_dir($project,1);
+    	else
+    		$this->__setWorking_inTmp($tool['_id']);
+    
+    	if ($descrip != "0")
+    		$this->setDescription($descrip,$tool['name']);
+    
+    	return $this;
     }
 
 
@@ -211,12 +213,12 @@ class Tooljob {
 	
 		$projDirMeta=array(
 			'description' => $this->description,
-		        //'inPaths'     => array_map(create_function('$o', 'return $o->path;'), $this->input_files),
-		        'input_files' => $input_ids,
-		        'tool'        => $this->toolId,
+	        //'inPaths'     => array_map(create_function('$o', 'return $o->path;'), $this->input_files),
+	        'input_files' => $input_ids,
+	        'tool'        => $this->toolId,
 			'shPath'      => $this->submission_file,
 			'logPath'     => $this->log_file,
-	        	'arguments'   => $this->arguments
+        	'arguments'   => $this->arguments
 		);
 		$r = addMetadataBNS($this->_id, $projDirMeta);
 		if ($r == "0"){
@@ -231,10 +233,9 @@ class Tooljob {
 
     /**
      * Creates tool configuration JSON
-     * @param array $input_files  Input files as received from inputs.php
-      @param array $arguments Arguments as received from inputs.php
+     * @param array $tool Fill in config file: input_files, arguments and output_files
     */
-    public function setConfiguration_file(){
+    public function setConfiguration_file($tool){
 	
 	$config_rfn = $this->config_file;
 
@@ -249,20 +250,35 @@ class Tooljob {
 		'arguments'=>Array(
 			Array("name"=>"project",     "value"=> $this->project),
 			Array("name"=>"description", "value"=> $this->description),
-		)
+		),
+		'output_files'=>Array()
 	);
 	// append input_files
 	//foreach ($this->input_files as $input_file){
 	//	array_push($data['input_files'], Array("name"=>$input_file->input_name, "value"=> $this->getPathRelativeToRoot($input_file->path)));
 	foreach ($this->input_files as $k=>$vs){
 	    foreach ($vs as $v){
-		array_push($data['input_files'], Array("name"=>$k, "value"=> $v));
+            array_push($data['input_files'], Array(
+                                                "name"          => $k,
+                                                "value"         => $v,
+                                                "required"      => $tool['input_files'][$k]['required'],
+                                                "allow_multiple"=> $tool['input_files'][$k]['allow_multiple']
+                                            )
+                       );
 	   }
 	}
 	// append arguments
 	foreach ($this->arguments as $k=>$v){
 		array_push($data['arguments'], Array("name"=>$k, "value"=> $v));
-	}
+    }
+
+    // append output_files from tool json
+    if ($tool['output_files']){
+        var_dump($tool['output_files']);
+        foreach ($tool['output_files'] as $k => $v){
+            $data['output_files'][] = $v;
+        }
+    }
 
 	// write JSON
 	try{
@@ -417,10 +433,10 @@ class Tooljob {
 			}
 		    }   
 	    }
-	    // setting input_files 
+        // setting input_files
 	    $this->input_files[$input_name]=$fns;
-	}
-        return 1;
+    }
+    return 1;
     }
 
 
@@ -528,10 +544,10 @@ class Tooljob {
 
 	$launcher = $tool['infrastructure']['clouds'][$this->cloudName]['launcher'];
 
-	//external tool
-	if ($tool['external'] !== false){
+    //external tool
+    if ($tool['external'] !== false){
 
-		$r = $this->setConfiguration_file();
+		$r = $this->setConfiguration_file($tool);
 		if ($r=="0")
 		    return 0;
 	
@@ -610,7 +626,7 @@ class Tooljob {
 					" --config "         .$this->config_file_virtual .
 					" --root_dir "       .$this->root_dir_virtual .
 					" --public_dir "     .$this->pub_dir_virtual .
-					" --metadata " 	     .$this->metadata_file_virtual .
+					" --in_metadata " 	 .$this->metadata_file_virtual .
 					" --out_metadata "   .$this->stageout_file_virtual ;
 				    //  " --log "            .$this->log_file
 	return $cmd;
@@ -631,7 +647,6 @@ class Tooljob {
 		   $tool['infrastructure']['cpus']     = "1";   //1 core per VM
 
 	$cloud   = $tool['infrastructure']['clouds'][$this->cloudName];
-
 	if (!isset($cloud['minimumVMs']) )
 		   $cloud['minimumVMs'] = "1"; // if workflow_type = "Single" -> 1
 	if (!isset($cloud['maximumVMs']) )
@@ -700,7 +715,7 @@ class Tooljob {
 						"config"      => $this->config_file_virtual,
 						"root_dir"    => $this->root_dir_virtual,
 						"public_dir"  => $this->pub_dir_virtual,
-						"metadata"    => $this->metadata_file_virtual,
+						"in_metadata" => $this->metadata_file_virtual,
 						"out_metadata"=> $this->stageout_file_virtual
 						),
         			"type" => $cloud['workflowType']    // COMPSs || Single

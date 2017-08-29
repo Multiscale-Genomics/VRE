@@ -28,7 +28,7 @@ $GLOBALS['tool_config_file']     = ".config.json";
 $GLOBALS['tool_submission_file'] = ".submit";
 $GLOBALS['tool_log_file']        = ".tool.log";
 $GLOBALS['tool_stageout_file']   = ".results.json";
-$GLOBALS['tool_metadata_file']   = ".metadata.json";
+$GLOBALS['tool_metadata_file']   = ".input_metadata.json";
 
 //Visualizers
 $GLOBALS['jbrowseURL']  = $GLOBALS['URL']."visualizers/jbrowse/";

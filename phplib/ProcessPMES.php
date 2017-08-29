@@ -110,8 +110,8 @@ class ProcessPMES{
 
 		$data_string = json_encode($data);
 	
-		print "<br>POST DATA IS <br>";
-		print "<pre>".json_encode($data, JSON_PRETTY_PRINT)."</pre>";
+		//print "<br>POST DATA IS <br>";
+        //print "<pre>".json_encode($data, JSON_PRETTY_PRINT)."</pre>";
 		
 	
 		if (!strlen($data_string)){
@@ -119,6 +119,7 @@ class ProcessPMES{
 		    return 0;
 		}
 		logger("PMES POST call. POST_DATA = '".json_encode($data). "'");
+        logger("curl -H \"Content-Type: application/json\" -H \"Content-Length: ".strlen($data_string)."\" -X POST -d '".json_encode($data)."'  $url");
         
         $headers = array(
             'Content-Type: application/json',
@@ -139,8 +140,8 @@ class ProcessPMES{
             return 0;
         }
 
-		print "<br>AFTER CURL EXEC RETURNS<br>";
-		var_dump($r);
+		//print "<br>AFTER CURL EXEC RETURNS<br>";
+		//var_dump($r);
 
 		return $r;
 
@@ -158,24 +159,31 @@ class ProcessPMES{
 		return $this->jobid;
 	}
 
-	public function getRunningJobInfo($jobid){
-		$job=array();
+	public function getActivityInfo($jobid){
+		$jobInfo =array();
 		$service = "getActivityReport";
 		$r = $this->post(array($jobid),$service);
 
 		if ($r != "0"){
-			$jobPMES = flattenArray(array_shift(json_decode($r,TRUE)));
-			if ($jobPMES['jobStatus'] && ($jobPMES['jobStatus']=="FINISHED" || $jobPMES['jobStatus']=="ERROR") )
-				return $job;
-				
-			$job = $jobPMES;
-			$job['state']          = ($jobPMES['jobStatus']?$jobPMES['jobStatus']:"UNKNOWN");
-			$job['submission_time']= "";
-		}
+            $jobInfo = flattenArray(array_shift(json_decode($r,TRUE)));
+        }
+        return $jobInfo;
+    }
+
+    public function getRunningJobInfo($jobid){
+		$job=array();
+        $jobPMES = $this->getActivityInfo($jobid);
+        if (count($jobPMES)){
+    		if ($jobPMES['jobStatus'] && in_array($jobPMES['jobStatus'], array("FINISHED","ERROR","FAILED")) )
+       			return $job;
+    		$job = $jobPMES;
+    		$job['state']          = ($jobPMES['jobStatus']?$jobPMES['jobStatus']:"UNKNOWN");
+    		$job['submission_time']= "";
+	    }
 		return $job;
 	}
 
-        public function getSystemStatus(){
+    public function getSystemStatus(){
                 $service= "getSystemStatus";
 		$url = $this->server.$this->APIroot.$service;
 
@@ -186,7 +194,7 @@ class ProcessPMES{
 
 		$r = curl_exec($c);
 		curl_close($c);
-        }
+    }
 
 
 	public function delJob($jobids){

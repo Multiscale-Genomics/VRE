@@ -7,6 +7,15 @@ redirectAdminOutside();
 
 $user = $GLOBALS['usersCol']->findOne(array('id' => $_REQUEST['id']));
 
+if($user['Type'] == 0) {
+	$_SESSION['errorData']['Error'][] = "You are trying to edit an admin user.";
+	redirect($GLOBALS['URL'].'admin/adminUsers.php');
+}
+
+$tools = $GLOBALS['toolsCol']->find();
+
+
+
 ?>
 
 <?php require "../htmlib/header.inc.php"; ?>
@@ -128,25 +137,6 @@ $user = $GLOBALS['usersCol']->findOne(array('id' => $_REQUEST['id']));
                                             </div>
 																						<div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Type of user</label>
-                                                    <select name="Type" id="Type" class="form-control">
-                                                		<?php
-                                                		if (!$user['Type'])
-                                                            $_REQUEST['Type']=2;
-														foreach($GLOBALS['ROLES'] as $k => $v){
-						    							    $selected="";
-                                                    		if ($user['Type'] == $k)
-																$selected = "selected";
-						    								?>
-						    								<option <?php echo $selected; ?> value=<?php echo $k; ?>><?php echo $v; ?></option>
-                                                		<?php } ?>
-                                        			</select>
-                                                </div>
-                                            </div>
-                                        </div>
-																				<div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
                                                     <label class="control-label">Disk Quota</label>
 																										<div class="input-group">
 																										<input type="number" name="diskQuota" id="diskQuota" class="form-control" min="1" max="50" step="1" value="<?php echo ((($user["diskQuota"]/1024)/1024)/1024); ?>" placeholder="">
@@ -154,12 +144,57 @@ $user = $GLOBALS['usersCol']->findOne(array('id' => $_REQUEST['id']));
 																										</div>
                                                 </div>
                                             </div>
+                                        </div>
+																				<div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Type of user</label>
+                                                    <select name="Type" id="Type" class="form-control">
+                                                		<?php
+                                                		if (!$user['Type']) $_REQUEST['Type']=2;
+																											
+																										foreach($GLOBALS['ROLES'] as $k => $v){
+						    																		  $selected="";
+                                                    	if ($user['Type'] == $k) $selected = "selected";
+						    																		?>
+						    																			<option <?php echo $selected; ?> value=<?php echo $k; ?>><?php echo $v; ?></option>
+                                                		<?php } ?>
+                                        			</select>
+                                                </div>
+                                            </div>
 																						<div class="col-md-6">
                                                 
                                             </div>
                                         </div>
 
-																				
+																				<?php 
+																				$dispTools = "";
+																				$stTools = "enabled";
+																				if($user['Type'] != 1) {
+																					$dispTools = "display-hide";
+																					$stTools = "disabled";
+																				}
+																				?>
+
+																				<div class="row tools_select <?php echo $dispTools; ?>">
+                                            <div class="col-md-12">
+                                            	<div class="form-group">
+																								<label class="control-label">Tools permissions <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Select the tools this user will be able to administer.</p>"></i></label>
+																								<select class="form-control form-field-enabled valid select2tools" name="tools[]" id="tools" aria-invalid="false" multiple="multiple" <?php echo $stTools; ?>>
+																									<option value=""></option>
+																									<?php
+																									foreach ( $tools as $id => $value ) {
+																											$selected="";
+                                                    	if (in_array($id, $user['ToolsDev'])) $selected = "selected";
+
+																											echo "<option value='$id' $selected>".$value['name']."</option>";
+																									}
+																									?>
+																								</select>
+																							</div>
+                                            </div>
+                                        </div>
+
                                     </div>
 																		<div class="form-actions">
                                                 <button type="submit" class="btn blue"><i class="fa fa-check"></i> Update</button>

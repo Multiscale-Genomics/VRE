@@ -11,10 +11,27 @@ redirectAdminOutside();
 $tools  = array();
 
 $result = array(); 
-if ($_SESSION['User']['Type'] == 0)
+/*if ($_SESSION['User']['Type'] == 0)
 	$result = $GLOBALS['toolsCol']->find(array());
 else
-	$result = $GLOBALS['toolsCol']->find(array("owner.user"=>$_SESSION['User']['_id']));
+	$result = $GLOBALS['toolsCol']->find(array("owner.user"=>$_SESSION['User']['_id']));*/
+
+switch($_SESSION['User']['Type']) {
+
+	case 0: $result = $GLOBALS['toolsCol']->find(array());
+					break;
+
+	case 1: $GLOBALS['toolsCol']->find(array("_id" => array('$in' => $_SESSION['User']['ToolsDev'])));
+					break;
+
+	default: redirect($GLOBALS['URL']);
+
+}
+
+if ($_SESSION['User']['Type'] == 0)
+	$result = $GLOBALS['toolsCol']->find(array());
+else 
+	$result = $GLOBALS['toolsCol']->find(array("_id" => array('$in' => $_SESSION['User']['ToolsDev'])));
 
 
 foreach (array_values(iterator_to_array($result)) as $v){

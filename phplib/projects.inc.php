@@ -972,13 +972,14 @@ function updatePendingFiles($sessionId,$singleJob=Array()){
 
         //get qstat info
         $j = getRunningJobInfo($pid);
+        
         //job keeps running: maintain original job data 
         if (count($j)){
             //keep monitoring
             $data['state']  = $j['state'];
             $SGE_updated[$pid]= $data;
 
-        //job not running : editi SGE_updated to register the change
+        //job not running : edit SGE_updated to register the change
         // and consequently reload workspace (checkPendingJobs.php)
         }else{
             $SGE_updated[$pid]=$data;
@@ -1024,15 +1025,18 @@ function processPendingFiles($sessionId,$files){
 			print "<br/>\nPID = [$pid] TOOL=".$job['toolId']." WORK_DIR=".$job['working_dir']." <br/>\n";			
 
 		//get qstat info
-		$jobSGE = getRunningJobInfo($pid);
+        $jobProcess = getRunningJobInfo($pid,$job['launcher']);
+
+        // TODO: PMES will redirect log info to log_file. Now, info extracted from $jobProcess
+        updateLogFromJobInfo($job['log_file'],$pid,$job['launcher']);
 	
 		$title   = (isset($job['title'])?$job['title']:"Job ".$job['project']);
-		$descrip = getJobDescription($job['description'],$jobSGE,$lastjobs);
+		$descrip = getJobDescription($job['description'],$jobProcess,$lastjobs);
 
 
 		//set as running job
-		if (0){
-		//if (count($jobSGE)){
+		//if (0){
+		if (count($jobProcess)){
 			if ($debug)
 				print "RUNNING JOB";
 			$dummyId   = createLabel()."_dummy";
@@ -1042,25 +1046,26 @@ function processPendingFiles($sessionId,$files){
 				'pid'     => $pid,
 				//'path'  => outPath,
 				'title'   => $title,
-				'mtime'   => strtotime($jobSGE['submission_time']),
+				'mtime'   => strtotime($jobProcess['submission_time']),
 				'size'    => "",
 				'visible' => 1,
 				'tool'    => $job['toolId'],
 				'parentDir'=> getGSFileId_fromPath($parentDir),
 				'description'=> $descrip,
-				'pending' => $jobSGE['state'],
+				'pending' => $jobProcess['state'],
 				'shPath'  => fromAbsPath_toPath($job['submission_file']),
 				'logPath' => fromAbsPath_toPath($job['log_file'])
 			);
 
-			//print "<br><br/><br/>RUNNING JOB HAS THIS DUMMY FILE <br/>";
-			//var_dump($fileDummy);
+			#print "<br><br/><br/>RUNNING JOB HAS THIS DUMMY FILE <br/>";
+            #var_dump($fileDummy);
+
 
 			//list job in workspace
 			$filesPending[$dummyId] = $fileDummy;
 
 			//update job state in mongo
-			$job['state'] = $jobSGE['state'];
+			$job['state'] = $jobProcess['state'];
 			$SGE_updated[$pid]=$job;
     
         //processing job non running anymore
@@ -1077,7 +1082,7 @@ function processPendingFiles($sessionId,$files){
 				continue;
 			}
 			if ($debug){
-				print "<br>\nBuiding outsput from toolINFO + ".$job['stageout_file']." + stageout_data.\n<br/>STAGEOUT_DATA.<br>";
+				print "<br>\nBuilding outsput from toolINFO + ".$job['stageout_file']." + stageout_data.\n<br/>STAGEOUT_DATA.<br>";
 				var_dump($job['stageout_data']);		
 			}
 	
@@ -1127,16 +1132,26 @@ function processPendingFiles($sessionId,$files){
 				}
 				// get output absolute path
 				// TODO: use URIs instead of paths
-				if (preg_match('/^\//',$out_data['file_path'])){
-					$dataDir_virtual  = "/MUG_USERDATA";
+                $dataDir_virtual  = $GLOBALS['clouds'][$job['cloudName']]['dataDir_virtual'];
+                if (preg_match('/^\//',$out_data['file_path'])){
+                    // file_path is an absolut path, but virtual
 					if (preg_match('/^'.preg_quote($dataDir_virtual,'/').'/',$out_data['file_path'])){
-						//FIX: stageout_file contains abs paths, but virtual. If so, correct them
-						$rfn = str_replace($dataDir_virtual,$GLOBALS['dataDir'].$_SESSION['User']['id'],$out_data['file_path']);
+                        $rfn = str_replace($dataDir_virtual,$GLOBALS['dataDir'].$_SESSION['User']['id'],$out_data['file_path']);
+                    // direct from file_path
 					}else{
 						$rfn = $out_data['file_path'];
 					}
-				}else{
-					$rfn = str_replace("$(working_dir)",$job['working_dir'],$out_data['file_path']);
+                }else{
+                    // file_path is relative to user data directory (dataDir/userid)
+                    if (preg_match('/^'.$job['project'].'/',$out_data['file_path'])){
+                        $rfn = $GLOBALS['dataDir'].$_SESSION['User']['id']."/".$out_data['file_path'];
+                    // file_path contains $(working_dir) tag
+                    }elseif(preg_match('/(working_dir)/',$out_data['file_path'])){
+                        $rfn = str_replace("$(working_dir)",$job['working_dir']."/",$out_data['file_path']);
+                    // file_path is relative to app working directory (dataDir/userid/proj)
+                    }else{ 
+                        $rfn = $job['working_dir']."/".$out_data['file_path'];
+                    }
 				}
 				$outPath  = fromAbsPath_toPath($rfn);
 				$fileId   = getGSFileId_fromPath($outPath);
@@ -1283,7 +1298,8 @@ function processPendingFiles($sessionId,$files){
 
 
 			    }
-			}
+            }
+
 
 			// OJO  Uncomment only for debugging output_files registry
 			//$SGE_updated[$job['pid']]=$job;

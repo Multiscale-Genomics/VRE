@@ -48,6 +48,9 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
         <!-- END PAGE HEADER-->
         <div class="row">
             <div class="col-md-12">
+
+							
+
                 <!-- BEGIN PROFILE SIDEBAR -->
                 <div class="profile-sidebar">
                     <!-- PORTLET MAIN -->
@@ -62,7 +65,9 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
                         <div class="profile-usertitle">
                             <div class="profile-usertitle-name"> <?php echo $_SESSION['User']['Name'].' '.$_SESSION['User']['Surname']; ?> </div>
 							<div class="profile-usertitle-job"> <?php echo $_SESSION['User']['Inst'] ?> </div>
+							<?php if(isset($_SESSION['lastUserLogin'])) { ?>
 							<div class="profile-usertitle-lastlogin"> Last login: <strong><?php echo returnHumanDateDashboard($_SESSION['lastUserLogin']); ?></strong> </div>
+							<?php } ?>
                         </div>
                         <!-- END SIDEBAR USER TITLE -->
                         <!-- SIDEBAR BUTTONS -->
@@ -123,6 +128,9 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
                                     <div class="tab-content">
                                         <!-- PERSONAL INFO TAB -->
 										<div class="tab-pane active" id="tab_1_1">
+												<?php if(!isset($_SESSION['lastUserLogin'])) { ?>
+							<p>As you have signed up the VRE from <?php echo $_SESSION['User']['AuthProvider']; ?>, you should complete some fields of your profile in this form.</p>
+							<?php } ?>
 											<div class="alert alert-danger display-hide" id="err-chg-prf">
  				                            	Something was wrong. Please try again.
 											</div>	
@@ -130,7 +138,10 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
  				                            	Your personal info has been updated.
 											</div>	
 																						<form role="form" action="javascript:void(0);" id="form-change-profile">
-																							<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+																							<input type="hidden" id="base-url" value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+																							<?php if(!isset($_SESSION['lastUserLogin'])) { ?>
+																							<input type="hidden" id="is-first-time" value="1"/>
+																							<?php } ?>
                                                 <div class="form-group">
                                                     <label class="control-label">Name</label>
 													<input name="Name" type="text" value="<?php echo $_SESSION['User']['Name']; ?>" class="form-control" id="name-usr-profile"  /> 
@@ -155,8 +166,12 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
                                                     </select>
                                                 </div>
                                                 <div class="margiv-top-10">
-													<button type="submit" id="submit-changes" class="btn green">Save Changes</button>
-													<button type="reset" class="btn default">Cancel</button>
+																							<?php if(isset($_SESSION['lastUserLogin'])) { ?>
+																					<button type="submit" id="submit-changes" class="btn green">Save Changes</button>
+																					<?php }else{ ?>
+																					<button type="submit" id="submit-changes" class="btn green">Save changes and go to Homepage</button>
+																					<?php } ?>
+													<button type="reset" class="btn default">Reset Form</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -222,7 +237,7 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
                                                     <input type="password" name="pass2" class="form-control" /> </div>
 												<div class="margin-top-10">
 													<button type="submit" id="submit-pwd" class="btn green">Change Password</button>
-													<button type="reset" class="btn default">Cancel</button>
+													<button type="reset" class="btn default">Reset Form</button>
                                                 </div>
                                             </form>
                                         </div>

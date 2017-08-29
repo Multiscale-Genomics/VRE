@@ -90,8 +90,11 @@ function getGSFileId_fromPath($fnPath,$asRoot=0) {
 	}
 }
 
-function getGSFile_fromId($fn,$filter="") {
-	$fileData = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id']));
+function getGSFile_fromId($fn,$filter="",$asRoot=0) {
+    if ($asRoot)
+        $fileData = $GLOBALS['filesCol']->findOne(array('_id' => $fn) );
+    else
+    	$fileData = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id']));
     $fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $fn));
 
     if($filter == "onlyMetadata"){
@@ -636,15 +639,15 @@ function deleteGSFileBNS($fn,$asRoot=0){ //fn == fnId
 		$filePath  = $file['path'];
 		$parentPath = dirname($filePath);
 		if ($parentPath == ".")
-			$parentPath=$_SESSION['User']['id'];
-		$parentId  = getGSFileId_fromPath($parentPath,$asRoot);
+            $parentPath=$_SESSION['User']['id'];
+        $parentId  = getGSFileId_fromPath($parentPath,$asRoot);
 
-	}
-	if ( !$parentId or !isGSDirBNS($GLOBALS['filesCol'], $parentId)){
-		$_SESSION['errorData']['mongoDB'][] = " Cannot remove $filePath. Parent '$parentPath' ($parentId)  is not a directory.";
+    }
+	if (!$parentId or !isGSDirBNS($GLOBALS['filesCol'], $parentId)){
+		$_SESSION['errorData']['mongoDB'][] = " Cannot remove $filePath. 'parentPath' ($parentId)  is not a directory.";
 		return 0;
 	}   
-	if ( $parentPath == $_SESSION['User']['id'] && !$asRoot){
+	if ( ($parentPath == $_SESSION['User']['id'] || $parentId == "0") && !$asRoot){
 		$_SESSION['errorData']['mongoDB'][] = " Cannot remove home directory.";
 		return 0;
 	}   
@@ -670,11 +673,12 @@ function deleteGSDirBNS($fn,$asRoot=0){
 		$dir  = $GLOBALS['filesCol']->findOne(array('_id' => $fn));
 	else
 		$dir  = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id']) );
-	
+
 	if (!isset($dir['parentDir'])){
 		$_SESSION['errorData']['mongoDB'][]= " Cannot find parent directory attribute for $fn . </br> <a href=\"javascript:history.go(-1)\">[ OK ]</a>";
-		return 0;
-	}
+	    return 0;
+    }
+    
 	$parentId= $dir['parentDir'];
 
 	if ( $parentId == "0" && !$asRoot){

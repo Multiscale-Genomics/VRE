@@ -98,7 +98,14 @@
 				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
 				<?php } ?>
-
+			<?php break;
+			case 'jsonValidator': ?>
+				<link href="assets/global/plugins/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css" />
+        <link href="assets/global/plugins/codemirror/addon/lint/lint.css" rel="stylesheet" type="text/css" />
+			<?php break;
+			case 'editUser': ?>
+				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
 			<?php break ?>;
 
 		<?php } ?>
@@ -154,6 +161,7 @@
 			case 'newUser':
 			case 'editUser':
 			case 'adminTools':
+			case 'jsonValidator':
 			case 'dashboard':
 			case 'repositoryList':
 			case 'experiment':

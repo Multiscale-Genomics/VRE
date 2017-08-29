@@ -199,7 +199,8 @@ redirectAdminOutside();
                                     </div>
 																		<div class="form-actions">
                                                 <button type="submit" class="btn blue"><i class="fa fa-check"></i> Create</button>
-                                                <button type="reset" class="btn default">Cancel</button>
+                                                <button type="button" class="btn default" onclick="location.href='admin/adminUsers.php';"><i class="fa fa-th-list" aria-hidden="true"></i> Return to users panel</button>
+                                                <button type="reset"  class="btn default">Reset </button>
                                             </div>
                                   </div>
                               </div>

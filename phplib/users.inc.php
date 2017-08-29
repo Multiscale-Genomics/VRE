@@ -24,6 +24,7 @@ function checkAdmin() {
 	else return false;
 }
 
+// create user - from sign up
 function createUser(&$f) {
 
     // create full user object
@@ -69,6 +70,7 @@ function createUser(&$f) {
     return true;
 }
 
+// create user - after being authentified by the Auth Server
 function createUserFromToken($login,$token,$userinfo=array()){
 
 		//var_dump($userinfo);
@@ -128,6 +130,7 @@ function createUserFromToken($login,$token,$userinfo=array()){
     return true;
 }
 
+// create user - from Admin section
 function createUserFromAdmin(&$f) {
 
     // create full user object
@@ -144,6 +147,7 @@ function createUserFromAdmin(&$f) {
     }
     $_SESSION['errorData']['Info'][] = "New workspace created at '".$aux['id']."' (id=$dataDirId).";
     $aux['dataDir']= $dataDirId;
+    $aux['AuthProvider']= "ldap-cloud";
 
     // register user in mongo
     $r = saveNewUser($aux);
@@ -176,52 +180,98 @@ function updateUser($f) {
 function setUser($f,$lastLogin) {
     $aux = (array)$f;
 	unset($aux['crypPassword']);
-	unset($aux['lastLogin']);
+	//unset($aux['lastLogin']);
     $_SESSION['User']   = $aux;
 	$_SESSION['curDir'] = $_SESSION['User']['id'];
 
 	if(!isset($_SESSION['lastUserLogin'])) $_SESSION['lastUserLogin'] = $lastLogin;
 }
 
-function delUser($id) {
-	//delete user data
-	$data = $GLOBALS['filesCol']->find(array('owner' => $id));
-	if ($data->count() ){
+function delUser($id, $asRoot=1){
+
+    //delete data from Mongo and disk
+    $homeId = getGSFileId_fromPath($id,$asRoot);
+    if (!$homeId)
+        $homeId = getGSFileId_fromPath($id."/",$asRoot);
+
+    $home   = getGSFile_fromId($homeId,"all",$asRoot);
+    $rfn   = $GLOBALS['dataDir']."/".$home['path'];
+/*
+    if (empty($home) || !is_dir($rfn) ){
+	    $_SESSION['errorData']['Error'][]="Cannot delete user ID=$id. Its data in the repository ($rfn) or in the databse ($homeId) is not found";
+      return 0;
+    }
+*/
+
+    $r = deleteGSDirBNS($homeId,$asRoot);
+    if ($r == 0){
+	    $_SESSION['errorData']['Error'][]="Cannot delete user entry in database.";
+        return 0;
+    }
+ 
+
+    if (is_dir($rfn)){
+	    exec ("rm -r \"$rfn\" 2>&1",$output);
+      	// if (is_dir($rfn)){
+	    //   $_SESSION['errorData']['Error'][]="Cannot delete user data in repository. '$rfn' still accessible";
+    	//	 $_SESSION['errorData']['Error'][]=implode(" ",$output);
+        //   return 0;
+        //}
+    }
+
+
+    //delete user from ldap
+    $user = $GLOBALS['usersCol']->findOne(array('id' => $id));
+    $r = delUser_ldap($user['_id']);
+
+	//delete user from mongo
+	$GLOBALS['usersCol']->remove(array('id'=> $id));
+
+    return 1;
+
+
+    //delete data from Mongo and disk
+    $data = $GLOBALS['filesCol']->find(array('owner' => $id));
+	if ($data->count() != 0 ){
 	    foreach ($data as $f){
-		$rfn      = $GLOBALS['dataDir']."/".$f['path'];
-		if ((isset($f['type']) && $f['type']=="dir")  || isset($f['files'])){
-			$r = deleteGSDirBNS($f['_id'],1);
-	                if ($r == 0)
+            $rfn      = $GLOBALS['dataDir']."/".$f['path'];
+    		if ((isset($f['type']) && $f['type']=="dir")  || isset($f['files'])){
+                if (!is_file($rfn))
+                    next;
+    			$r = deleteGSDirBNS($f['_id'],1);
+                if ($r == 0)
          			return 0;
-			if (is_dir($rfn)){
-	                	exec ("rm -r \"$rfn\" 2>&1",$output);
-				if (is_dir($rfn)){
-			                $_SESSION['errorData']['error'][]="Cannot delete user data $rfn";
-			                $_SESSION['errorData']['error'][]=implode(" ",$output);
-				}
-			}
-		}else{
-			$r = deleteGSFileBNS($f['_id'],1);
-	                if ($r == 0)
-         			return 0;
-			if (is_file($rfn)){
+	    		if (is_dir($rfn)){
+	               	exec ("rm -r \"$rfn\" 2>&1",$output);
+				    if (is_dir($rfn)){
+		                $_SESSION['errorData']['error'][]="Cannot delete user data $rfn";
+		                $_SESSION['errorData']['error'][]=implode(" ",$output);
+				    }
+			    }
+		    }else{
+                if (!is_dir($rfn))
+                    next;
+			    $r = deleteGSFileBNS($f['_id'],1);
+	            if ($r == 0)
+         		    return 0;
+			    if (is_file($rfn)){
 		        	unlink ($rfn);
-				if (is_file($rfn)){
-			                $_SESSION['errorData']['error'][]="Cannot delete user file $rfn";
-			                if (error_get_last())
-			                        $_SESSION['errorData']['error'][]=error_get_last()["message"];
-	         			return 0;
-				}
-			}
-		}
+				    if (is_file($rfn)){
+    			        $_SESSION['errorData']['error'][]="Cannot delete user file $rfn";
+    			        if (error_get_last())
+    			            $_SESSION['errorData']['error'][]=error_get_last()["message"];
+    	         		return 0;
+    				}
+			    }
+		    }
 	    }
 	}
-	$data = $GLOBALS['filesCol']->find(array('owner' => $id));
-	if ($data->count()){
+    $data = $GLOBALS['filesCol']->find(array('owner' => $id));
+	if ($data->count() != 0){
 		$_SESSION['errorData']['Error'][]="Cannot delete user. Failed to clean all files onwed by $id. Manual clean required.";
 	    	foreach ($data as $f){
-			$_SESSION['errorData']['Error'][]= "Cannot delete user file ".$f['path'];
-		}
+			    $_SESSION['errorData']['Error'][]= "Cannot delete user file ".$f['path'];
+		    }
 		return 0;
 	}
     //delete user from ldap
@@ -277,6 +327,14 @@ function saveNewUser($userObj) {
         return false;
 
     return true;
+}
+
+function checkUserIDExists($login) {
+	//die("check user login exists");
+    if ($login)
+        $user = $GLOBALS['usersCol']->findOne(array('id' => $login));
+
+    return ($user);
 }
 
 function checkUserLoginExists($login) {

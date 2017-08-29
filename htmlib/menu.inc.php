@@ -46,6 +46,9 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 					  	   break;
 	case 'adminTools': $currentSection = 'ad';
 					  	   $currentSubSection = 'at';
+								 break;
+	case 'jsonValidator': $currentSection = 'ad';
+					  	   $currentSubSection = 'jv';
 					  	   break;
 
 
@@ -253,29 +256,37 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 									<?php if($currentSection == 'up') { ?><span class="selected"></span><?php } ?>
                                     <span class="arrow <?php if($currentSection == 'ad') { ?>open<?php } ?>"></span>
                                 </a>
-                                <ul class="sub-menu">
+																<ul class="sub-menu">
+																		<?php if(!allowedRoles($_SESSION['User']['Type'], $GLOBALS['TOOLDEV'])){ ?>
                                     <li class="nav-item  <?php if($currentSubSection == 'ds') { ?>active open<?php } ?>">
                                         <a href="admin/dashboard.php" class="nav-link ">
                                             <span class="title">Dashboard</span>
                                         </a>
-									</li>
+																		</li>
+																		<?php } ?>
+																		<?php if(!allowedRoles($_SESSION['User']['Type'], $GLOBALS['TOOLDEV'])){ ?>
                                     <li class="nav-item  <?php if($currentSubSection == 'au') { ?>active open<?php } ?>">
                                         <a href="admin/adminUsers.php" class="nav-link ">
                                             <span class="title">Users Administration</span>
                                         </a>
-                                    </li>
-
+																		</li>
+																		<?php } ?>
                                     <li class="nav-item  <?php if($currentSubSection == 'at') { ?>active open<?php } ?>">
                                         <a href="admin/adminTools.php" class="nav-link ">
                                             <span class="title">Tool Administration</span>
                                         </a>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'jv') { ?>active open<?php } ?>">
+                                        <a href="admin/jsonValidator.php" class="nav-link ">
+                                            <span class="title">JSON Validator</span>
+                                        </a>
                                     </li>
-
 								</ul>
                             </li>
 							<?php } ?>
 
-													<li class="nav-item active open" style="color:#b4bcc8;margin-left:18px;margin-top:10px;font-size:12px;">This is a BETA version of MuG VRE</li>
+													<li class="nav-item active open beta-long" style="color:#b4bcc8;margin-left:18px;margin-top:10px;font-size:12px;">This is a BETA version of MuG VRE</li>
+													<li class="nav-item active open beta-short" style="color:#b4bcc8;margin-left:8px;margin-top:10px;font-size:12px;display:none;">BETA</li>
 											
                         </ul>
                         <!-- END SIDEBAR MENU -->

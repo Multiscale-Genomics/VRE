@@ -10,12 +10,17 @@ if($_POST){
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 
+	if (($_POST['Type'] == 1) && (!$_POST['tools'])) {
+		$_SESSION['errorData']['Error'][] = "If Type of user is Tool Dev, you should select at least one tool.";
+		redirect($_SERVER['HTTP_REFERER']);
+	} 
+
 	$login = $_POST['Email'];
 	
 	$user = $GLOBALS['usersCol']->findOne(array('_id' => $login));
 		
 	if ($user['_id']) {
-		$newdata = array('$set' => array('Surname' => ucfirst($_POST['Surname']), 'Name' => ucfirst($_POST['Name']), 'Inst' => $_POST['Inst'], 'Country' => $_POST['Country'], 'diskQuota' => $_POST['diskQuota']*1024*1024*1024, 'Type' => $_POST['Type']));
+		$newdata = array('$set' => array('Surname' => ucfirst($_POST['Surname']), 'Name' => ucfirst($_POST['Name']), 'Inst' => $_POST['Inst'], 'Country' => $_POST['Country'], 'diskQuota' => $_POST['diskQuota']*1024*1024*1024, 'Type' => $_POST['Type'], 'ToolsDev' => $_POST['tools']));
 		$GLOBALS['usersCol']->update(array('_id' => $login), $newdata);
 		$_SESSION['errorData']['Info'][] = "User info successfully updated.";
 		redirect($_SERVER['HTTP_REFERER']);

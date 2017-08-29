@@ -1,6 +1,6 @@
 var baseURL = $('#base-url').val();
 
-console.log(baseURL);
+//console.log(baseURL);
 
 var TableDatatablesEditable = function () {
 
@@ -88,7 +88,7 @@ var TableDatatablesEditable = function () {
 				if (jqSelects[1].value == 0) {
 				oTable.fnUpdate('', nRow, 8, false);
 				}else{
-            	oTable.fnUpdate('<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-pencil"></i> Edit User</a></li>  <li><a class="enable"  href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li>  <li><a class="" href="applib/delUser.php?login='+jqInputs[0].value+'"><i class="fa fa-trash"></i> Delete user</a></li>   </ul></div>', nRow, 8, false);
+            	oTable.fnUpdate('<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-pencil"></i> Edit User</a></li>  <li><a class="enable"  href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li>  <li><a class="" href="javascript:deleteUser(\''+jqInputs[0].value+'\');"><i class="fa fa-trash"></i> Delete user</a></li>   </ul></div>', nRow, 8, false);
 				}
             	oTable.fnDraw();
 				return true;
@@ -128,7 +128,7 @@ var TableDatatablesEditable = function () {
               oTable.fnUpdate('new user', nRow, 6, false);
               oTable.fnUpdate(diskLimit, nRow, 7, false);
               if(jqSelects[1].value == 0) oTable.fnUpdate('', nRow, 8, false);
-              else oTable.fnUpdate('<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-pencil"></i> Edit User</a></li>  <li><a class="enable"  href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li>  <li><a class="" href="applib/delUser.php?login='+jqInputs[0].value+'"><i class="fa fa-trash"></i> Delete user</a></li>  </ul></div>', nRow, 8, false);
+              else oTable.fnUpdate('<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-pencil"></i> Edit User</a></li>  <li><a class="enable"  href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li>  <li><a class="" href="javascript:deleteUser(\''+jqInputs[0].value+'\');"><i class="fa fa-trash"></i> Delete user</a></li>  </ul></div>', nRow, 8, false);
               oTable.fnDraw();
               return true;
             }else{
@@ -353,7 +353,7 @@ var TableDatatablesEditable = function () {
                                                 '<li>'+
                                                 '<a class="enable" href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li>'+
                                                 '<li>'+
-                                                '<a class="" href="applib/delUser.php?id='+$('td:first', nRow)[0].innerText.split('\n')[1]+'"><i class="fa fa-trash"></i> Delete user</a></li>'+
+                                                '<a class="" href="javascript:deleteUser(\''+$('td:first', nRow)[0].innerText.split('\n')[1]+'\');"><i class="fa fa-trash"></i> Delete user</a></li>'+
                                                '</ul>'+
 											   '</div>';
 							oTable.fnUpdate(newActions, nRow, 8, false);
@@ -467,6 +467,20 @@ var TableDatatablesEditable = function () {
 
 }();
 
+var userID;
+
+function deleteUser(user){
+  $('#modalDelete .modal-body').html('Are you sure you want to delete the selected user and ALL her / his data? This operation cannot be undone!');
+  $('#modalDelete').modal({ show: 'true' });
+	userID = user;
+}
+
+
 jQuery(document).ready(function() {
     TableDatatablesEditable.init();
+
+		$('#modalDelete').find('.modal-footer .btn-modal-del').on('click', function(){
+			location.href= baseURL + "applib/delUser.php?id=" + userID;
+		});
+
 });

@@ -105,6 +105,9 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
         	<script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
         	<script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
 			<?php break;
+			case 'editUser': ?>
+				<script src="assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+			<?php break;
 			case 'adminTools': ?>
 			<script src="assets/global/scripts/datatable.js" type="text/javascript"></script>
         	<script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
@@ -207,6 +210,15 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/minimizedStruct'){ ?>
 				<script src="assets/global/plugins/ngl.last.js" type="text/javascript"></script>
 				<?php } ?>
+			<?php break;
+			case 'jsonValidator': ?>
+			<script src="assets/global/plugins/codemirror/lib/codemirror.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/codemirror/addon/edit/matchbrackets.js"></script>
+				<script src="assets/global/plugins/codemirror/addon/display/placeholder.js"></script>
+        <script src="assets/global/plugins/codemirror/mode/javascript/javascript.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/codemirror/lib/jsonlint.js"></script>
+				<script src="assets/global/plugins/codemirror/addon/lint/lint.js"></script>
+				<script src="assets/global/plugins/codemirror/addon/lint/json-lint.js"></script>
 			<?php break;?>
 		<?php } ?>
         <!-- END PAGE LEVEL PLUGINS -->
@@ -289,13 +301,20 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			<script src="assets/pages/scripts/form-validateinput.js" type="text/javascript"></script>
 			<?php break;
 			case 'adminUsers': ?>
-			<script src="assets/pages/scripts/table-datatables-editable.js" type="text/javascript"></script>	
+			<script src="assets/pages/scripts/table-datatables-editable.js" type="text/javascript"></script>
+			<?php break;
+			case 'editUser': 
+			?>	
+			<script src="assets/pages/scripts/edit-user.js" type="text/javascript"></script>	
 			<?php break; 
 			case 'adminTools': ?>
 			<script src="assets/pages/scripts/adminTools.js" type="text/javascript"></script>	
 			<?php break; 
 			case 'dashboard': ?>
-			<script src="assets/pages/scripts/dashboard.js" type="text/javascript"></script>	
+			<script src="assets/pages/scripts/dashboard.js" type="text/javascript"></script>
+			<?php break;
+			case 'jsonValidator': ?>
+			<script src="assets/pages/scripts/json-validator.js" type="text/javascript"></script>	
 			<?php break;?>
 		<?php } ?>
         <!-- END PAGE LEVEL SCRIPTS -->
@@ -316,6 +335,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'newUser': 
 			case 'editUser':
 			case 'adminTools':
+			case 'jsonValidator':
 			case 'dashboard':
 			case 'dataFromTxt':
 			case 'dataFromID':
