@@ -1,10 +1,1662 @@
-{ "_id" : "BAMval", "title" : "BAM preprocessing", "name" : "BAM validation", "short_description" : "BAM chromosome name standarization, sorting and indexing", "url" : "http://vre.multiscalegenomics.eu", "owner" : { "institution" : "Barcelona Supercomputing Center", "author" : "Laia Codo", "contact" : "laia.codo@bsc.es", "url" : "", "user" : "laia.codo@bsc.es" }, "external" : false, "keywords" : [], "launcher" : { "type" : "SGE", "queue" : "wfs.q", "executable" : "/orozco/services/Rdata/MuG/apps/internalTools/BAMval/BAMval.sh", "cpus" : 1 }, "input_files" : [ { "name" : "bam", "description" : "BAM file to be validated", "help" : "", "file_type" : [ "BAM" ], "data_type" : [ "data_chip_seq", "data_atac_seq", "data_mnase_seq ", "hic_sequences" ], "required" : true, "allow_multiple" : false } ], "arguments" : [ { "name" : "sort", "description" : "sort", "help" : "", "type" : "boolean", "allow_multiple" : false, "default" : "true" }, { "name" : "index", "description" : "index", "help" : "", "type" : "boolean", "allow_multiple" : false, "default" : "true" }, { "name" : "replace", "description" : "Chr names replace", "help" : "", "type" : "string", "allow_multiple" : false, "default" : "" }, { "name" : "working_dir", "description" : "Temporal dir for samtools", "help" : "", "type" : "string", "allow_multiple" : false, "default" : "" } ], "control_file" : ".summary.json", "output_files" : [ { "name" : "bam_index", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "BAI", "compressed" : "null", "meta_data" : { "description" : "BAM file index", "tool" : "BAMval", "visible" : false } } }, { "name" : "bam", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "BAM", "compressed" : "null", "meta_data" : { "description" : "BAM aligned sequences", "tool" : "BAMval", "visible" : true } } } ] }
-{ "_id" : "nucldynwf", "name" : "Nucleosome Dynamics", "title" : "Nucleosome Dynamics Worflow", "short_description" : "Nucleosome Dynamics Tools for performing  nucleosome-related analysis based on MNase-seq experimental data", "url" : "http://mmb.pcb.ub.es/NucleosomeDynamics/", "owner" : { "institution" : "IRB", "author" : "Illa Ricard, Buitrago Diana, Brun Isabelle", "contact" : "ricard.illa@irbbarcelona.org", "url" : "http://mmb.pcb.ub.es/www/", "user" : "ricard.illa@irbbarcelona.org" }, "external" : true, "keywords" : [ "dna" ], "launcher" : { "type" : "SGE", "queue" : "nuclDyn.q", "executable" : "/orozco/services/Rdata/Web/apps/nucleServ_MuG/nucleosomeDynamics_wf.py", "cpus" : 1 }, "input_files" : [ { "name" : "MNaseSeq", "description" : "MNAse-seq data ", "help" : "Input MNase-seq data used to compute nucleosome positioning and the subsequent analyses", "file_type" : [ "BAM" ], "data_type" : [ "data_mnase_seq" ], "required" : true, "allow_multiple" : true }, { "name" : "condition1", "description" : "NMase-seq reference state (condition C1)", "help" : "MNase data used to define the initial state  when comparing nucleosome positioning", "file_type" : [ "BAM" ], "data_type" : [ "data_mnase_seq" ], "required" : true, "allow_multiple" : false }, { "name" : "condition2", "description" : "MNAse-seq final state (condition C2)", "help" : "MNase data used to define the final state  when comparing nucleosome positioning", "file_type" : [ "BAM" ], "data_type" : [ "data_mnase_seq" ], "required" : true, "allow_multiple" : false } ], "arguments" : [ { "name" : "nucleR", "description" : "Nucleosome Calling", "help" : "Use NucleR for computing nucleosome positioning", "type" : "boolean", "required" : true, "allow_multiple" : false, "default" : "true" }, { "name" : "nucleR:width", "description" : "Width", "help" : "Size of each nucleosome, in bp, to be considered by NucleR", "type" : "integer", "required" : true, "allow_multiple" : false, "default" : "147" }, { "name" : "nucleR:minoverlap", "description" : "Minimum Overlap", "help" : "", "type" : "integer", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "nucleR:dyad_length", "description" : "Dyad Length", "help" : "", "type" : "integer", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "nucleR:threshold", "description" : "Background Level", "type" : "boolean", "help" : "", "required" : true, "allow_multiple" : false }, { "name" : "nucleR:thresholdPercentage", "description" : "Percentage", "help" : "", "type" : "number", "required" : true, "allow_multiple" : false, "default" : "35", "maximum" : 100, "minimum" : 0 }, { "name" : "nucleR:thresholdValue", "description" : "Absolute value", "help" : "", "type" : "integer", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "nucleR:hthresh", "description" : "Height Threshold", "help" : "", "type" : "number", "required" : true, "allow_multiple" : false, "default" : "0.4" }, { "name" : "nucleR:wthresh", "description" : "Width Threshold", "help" : "", "type" : "number", "required" : true, "allow_multiple" : false, "default" : "0.6" }, { "name" : "nucleR:pcKeepComp", "description" : "Coverage Smoothing", "help" : "", "type" : "number", "required" : true, "allow_multiple" : false, "default" : "0.02" }, { "name" : "nucDyn", "description" : "Nucleosome Dynamics", "help" : "", "type" : "boolean", "required" : true, "allow_multiple" : false, "default" : "true" }, { "name" : "nucDyn:range", "description" : "Range", "help" : "", "type" : "string", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "nucDyn:maxDiff", "description" : "Maximum Diff", "help" : "", "type" : "integer", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "nucDyn:maxLen", "description" : "Maximum Length", "help" : "", "type" : "integer", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "nucDyn:equal_size", "description" : "Equal Size", "help" : "", "type" : "boolean", "required" : true, "allow_multiple" : false }, { "name" : "nucDyn:roundPow", "description" : "Round Power", "help" : "", "type" : "integer", "required" : true, "allow_multiple" : false, "default" : "5" }, { "name" : "nucDyn:readSize", "type" : "integer", "description" : "Read Size", "required" : true, "allow_multiple" : false, "default" : "140" }, { "name" : "nucDyn:same_magnitude", "type" : "boolean", "description" : "Same Magnitude", "required" : true, "allow_multiple" : false, "default" : "true" }, { "name" : "nucDyn:shift_min_nreads", "type" : "integer", "description" : "Shift minimum num. reads", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "nucDyn:shift_threshold", "type" : "integer", "description" : "Shifts threshold", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "nucDyn:indel_min_nreads", "type" : "integer", "description" : "Indels minimum num. reads", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "nucDyn:indel_threshold", "type" : "integer", "description" : "Indels threshold", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "NFR", "description" : "Nucleosome Free Regions", "help" : "", "type" : "boolean", "required" : true, "allow_multiple" : false, "default" : "true" }, { "name" : "NFR:minwidth", "type" : "integer", "description" : "Minimum Width", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "NFR:threshold", "type" : "integer", "description" : "Maximum width", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "periodicity", "description" : "Nucleoseome Gene Phasing", "help" : "", "type" : "boolean", "required" : true, "allow_multiple" : false, "default" : "true" }, { "name" : "periodicity:periodicity", "type" : "integer", "description" : "Period", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "txstart", "description" : "TSS classification", "help" : "", "type" : "boolean", "required" : true, "allow_multiple" : false, "default" : "true" }, { "name" : "txstart:window", "type" : "integer", "description" : "Window", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "txstart:open_thresh", "type" : "integer", "description" : "Open threshold", "required" : true, "allow_multiple" : false, "default" : "" }, { "name" : "gausfitting", "description" : "Stiffness", "help" : "", "type" : "boolean", "required" : true, "allow_multiple" : false, "default" : "true" }, { "name" : "gausfitting:range", "type" : "string", "description" : "Genomic range", "required" : true, "allow_multiple" : false, "default" : "all" } ], "control_file" : ".summary.json", "output_files" : [ { "name" : "NR_gff", "required" : false, "allow_multiple" : true, "file" : { "file_type" : "GFF3", "data_type" : "nucleosome_positioning", "compressed" : "null", "meta_data" : { "description" : "Nuclesome positions predicted by NucleR from MNase-seq data", "tool" : "nucldynwf", "visible" : true } } }, { "name" : "ND_gff", "required" : false, "allow_multiple" : true, "file" : { "file_type" : "GFF3", "data_type" : "nucleosome_dynamics", "compressed" : "null", "meta_data" : { "description" : "Nucleosome positioning differences given two MNAse-seq states", "tool" : "nucldynwf", "visible" : true } } }, { "name" : "NFR_gff", "required" : false, "allow_multiple" : true, "file" : { "file_type" : "GFF3", "data_type" : "nucleosome_free_regions", "compressed" : "null", "meta_data" : { "description" : "Nucleosome Free Regions computed from MNase-seq data", "tool" : "nucldynwf", "visible" : true } } }, { "name" : "TSS_gff", "required" : false, "allow_multiple" : true, "file" : { "file_type" : "GFF3", "data_type" : "tss_classification_by_nucleosomes", "compressed" : "null", "meta_data" : { "description" : "Transcriptions Start Site classification based on nucleosome architecture", "tool" : "nucldynwf", "visible" : true } } }, { "name" : "STF_gff", "required" : false, "allow_multiple" : true, "file" : { "file_type" : "GFF3", "data_type" : "nucleosome_stiffness", "compressed" : "null", "meta_data" : { "description" : "Nucleosome stiffness computed from MNase-seq data", "tool" : "nucldynwf", "visible" : true } } }, { "name" : "P_gff", "required" : false, "allow_multiple" : true, "file" : { "file_type" : "GFF3", "data_type" : "nucleosome_gene_phasing", "compressed" : "null", "meta_data" : { "description" : "Nucleosome phasing along a given gene computed from MNase-seq data", "tool" : "nucldynwf", "visible" : true } } }, { "name" : "P_bw", "required" : false, "allow_multiple" : true, "file" : { "file_type" : "BW", "data_type" : "nucleosome_gene_phasing", "compressed" : "null", "meta_data" : { "description" : "Nucleosome phasing along a given gene computed from MNase-seq data", "tool" : "nucldynwf", "visible" : true } } }, { "name" : "statistics", "required" : true, "allow_multiple" : false, "file" : { "file_type" : "TAR", "data_type" : "tool_statistics", "compressed" : "gzip", "meta_data" : { "description" : "Statistical data from nucleosome analysis workflow", "tool" : "nucldynwf", "visible" : false } } } ] }
-{ "_id" : "tadbit", "name" : "TADbit", "title" : "TADbit", "short_description" : "TADbit is a complete Python library to deal with all steps to analyze, model and explore 3C-based data.", "owner" : { "institution" : "CRG", "author" : "Francois Serra", "contact" : "francois.serra@cnag.crg.eu", "url" : "http://www.cnag.cat/" }, "url" : "https://github.com/3DGenomes/TADbit", "external" : true, "keywords" : [ "3c-based" ], "launcher" : { "type" : "SGE", "queue" : "tadbit.q", "executable" : "/path/wrapper.py", "cpus" : 1 }, "input_files" : [ { "name" : "read1", "description" : "Hi-C Reads (pair 1)", "help" : "from paired-end sequencing. This FASTQ should contain only one of the ends", "file_type" : [ "FASTQ" ], "data_type" : [ "hic_reads" ], "required" : true, "allow_multiple" : false }, { "name" : "read2", "description" : "Hi-C Reads (pair 2)", "help" : "from paired-end sequencing. This FASTQ should contain only one of the ends", "file_type" : [ "FASTQ" ], "data_type" : [ "hic_reads" ], "required" : true, "allow_multiple" : false } ], "arguments" : [ { "name" : "mapping:rest_enzyme", "description" : "Restriction enzyme", "help" : "For fragment-based mapping. Name of the restriction enzyme used to do the Hi-C", "type" : "enum", "enum_items" : { "name" : [ "SpoDI", "BssHII", "EciI", "BssMI", "AsuNHI", "BsrFI", "AgsI", "AxyI", "DpnII", "BstSFI", "SgrBI", "AlwI", "SelI", "MluI", "CseI", "NgoMIV", "SanDI", "CciI", "BmeDI", "BstHHI", "BspLU11I", "HpaII", "Cfr9I", "TspMI", "MreI", "BclI", "MlyI", "BspT107I", "AhlI", "BsaWI", "SacI", "XspI", "KroI", "MwoI", "BfaI", "DrdI", "EcoT38I", "Cgl13032I", "BmgBI", "PspN4I", "PauI", "BglI", "SalI", "Asp718I", "BstOI", "PspEI", "MspI", "UbaF14I", "VneI", "PspPI", "BstH2I", "BisI", "BstPI", "Cdi630V", "BanII", "MslI", "Bsu15I", "SgrTI", "Nli3877I", "EsaSSI", "Mva1269I", "BmtI", "Bsp68I", "PspXI", "LweI", "DsaI", "PmaCI", "AsiGI", "BsaBI", "SnaBI", "CciNI", "Sfr274I", "StsI", "SmiI", "PteI", "Ksp22I", "BshTI", "PabI", "BstEII", "BmgT120I", "TspRI", "TstI", "BssT1I", "TscAI", "NcoI", "MspA1I", "CjeP659IV", "PsyI", "BtgI", "BseJI", "BshFI", "ClaI", "Bsp19I", "MauBI", "Bse1I", "RflFIII", "CviJI", "AspS9I", "BsaI", "BmcAI", "R2_BceSIV", "AbsI", "AsuII", "FauNDI", "BsrBI", "DraII", "BstMWI", "CdiI", "Eco24I", "AlwNI", "Bce83I", "XmnI", "Eco47III", "AclWI", "Eco91I", "UbaPI", "DraI", "RpaBI", "DraRI", "Hpy166II", "BthCI", "Bst2UI", "BseXI", "XmaIII", "AluBI", "Cgl13032II", "Vha464I", "SdeAI", "PsrI", "Hpy99I", "StyD4I", "BstACI", "BstXI", "PspGI", "Psp03I", "AcvI", "BstDEI", "BsiHKAI", "GluI", "CjuII", "BsoBI", "Sth132I", "AcoI", "RruI", "BlpI", "Esp3I", "PshAI", "XmaI", "BstF5I", "CjeFV", "BpvUI", "BseSI", "AdeI", "RceI", "BtsIMutI", "BstENI", "BssECI", "CjePI", "FalI", "BssAI", "EgeI", "Ama87I", "BstDSI", "SauI", "BstV2I", "SwaI", "AarI", "AjnI", "RseI", "AvaI", "PvuI", "BspOI", "BseAI", "DpnI", "CspCI", "AspLEI", "PflFI", "BpuEI", "Hin6I", "PalAI", "WviI", "Van91I", "Zsp2I", "AssI", "DseDI", "Bst1107I", "Bme1390I", "BveI", "BstAUI", "UnbI", "Psp5II", "Bpu14I", "NgoAVIII", "FaeI", "TaqI", "BsiYI", "BscGI", "EaeI", "SexAI", "Eco52I", "BsrI", "BspT104I", "AseI", "BfiI", "BbvII", "KpnI", "Sau96I", "SimI", "BstNI", "FnuDII", "HaeII", "SspDI", "BstSNI", "SsiI", "AclI", "EcoO65I", "ApoI", "ApaBI", "AlwFI", "HpyCH4IV", "MlsI", "NdeI", "HapII", "PpiI", "PinAI", "Cfr13I", "MboII", "AflII", "BmrFI", "BspGI", "SdaI", "EcoT14I", "TseI", "BmsI", "TspEI", "BglII", "TasI", "AjuI", "AloI", "PspPPI", "SetI", "Tsp4CI", "AcsI", "BstNSI", "BmeRI", "BseX3I", "FspBI", "SchI", "RsaNI", "VpaK11AI", "SmlI", "NaeI", "BseBI", "PfoI", "Bpu10I", "AccII", "BshNI", "Hin4II", "Rsr2I", "SacII", "Acc65I", "BspQI", "CjuI", "BmeT110I", "BtuMI", "MseI", "AvrII", "MaeI", "XapI", "TaaI", "Aor51HI", "PscI", "Bsp1407I", "Bst2BI", "NruI", "MvaI", "BaeI", "RdeGBIII", "Sno506I", "MjaIV", "Hpy99XIV", "BtsCI", "ChaI", "PasI", "Ple19I", "TseFI", "SmiMI", "Hin1II", "BssKI", "Sse8387I", "PciI", "Bsh1236I", "MalI", "Pfl1108I", "Bse118I", "MssI", "Asi256I", "AvaIII", "CpoI", "Eco130I", "SlaI", "BcgI", "CspI", "BdaI", "BsaHI", "TaiI", "BsnI", "CstMI", "UbaF13I", "SfoI", "FspAI", "MspJI", "BfmI", "BsuI", "NarI", "BmiI", "BsePI", "Eco47I", "BstMCI", "TaqII", "Bsu36I", "NspBII", "Bme18I", "BoxI", "RsaI", "MaeII", "HincII", "BssNAI", "BstV1I", "AflIII", "HpyF10VI", "Bsp13I", "Bst4CI", "MabI", "BsiSI", "AsuHPI", "BtrI", "BspCNI", "BinI", "BsgI", "XbaI", "RdeGBI", "ArsI", "Lsp1109I", "BsrSI", "Sau3AI", "StrI", "Cfr10I", "BstC8I", "BfuAI", "TfiI", "Hpy99XIII", "TspGWI", "AjiI", "PmlI", "RlaI", "CjeFIII", "BbvI", "Psp124BI", "Bsp119I", "MboI", "GauT27I", "GlaI", "Bsp24I", "TssI", "HgaI", "MvnI", "BanI", "PspOMII", "BstX2I", "AluI", "BaeGI", "SduI", "NmeDI", "ZraI", "SgsI", "BseGI", "Hpy188III", "PenI", "Eco72I", "Bse21I", "RsrII", "Sfr303I", "BspMI", "BcnI", "BstSCI", "MluCI", "UbaF12I", "BpuMI", "SgeI", "AciI", "Mph1103I", "ScrFI", "EcoRII", "Alw21I", "MscI", "HaeI", "BseYI", "CfoI", "CchII", "Hpy8I", "HgiCI", "DrdII", "Bse3DI", "PsuI", "Bso31I", "CviQI", "AccB7I", "PaeI", "BstKTI", "BmrI", "SseBI", "Hpy188I", "AccBSI", "SmaI", "PleI", "BasI", "EcoNI", "NheI", "UcoMSI", "BplI", "BccI", "Ppu21I", "SstI", "SmoI", "FaqI", "FspEI", "BsiEI", "BspACI", "StuI", "AspA2I", "BcoDI", "Bsp1720I", "BcuI", "AspBHI", "BspTI", "Bbr7I", "Bsc4I", "BbrPI", "BsiWI", "SphI", "HpyAV", "Mly113I", "GsuI", "NciI", "PlaDI", "SfeI", "Ppu10I", "BseLI", "FriOI", "MaeIII", "AasI", "FspI", "CviAII", "PvuII", "Eco53kI", "EheI", "MfeI", "MflI", "EsaBC3I", "BsrDI", "CauII", "BssSI", "NhaXI", "ErhI", "SspD5I", "XagI", "BshVI", "FokI", "Sse232I", "Hin1I", "RpaTI", "ApaLI", "Alw26I", "AsuC2I", "ApeKI", "AbaSI", "SpeI", "SgrDI", "GsaI", "Eco31I", "SciI", "HinfI", "BciVI", "HinP1I", "Eam1105I", "BsuRI", "TsoI", "MvrI", "BspNCI", "BscAI", "PpsI", "BstPAI", "BsiHKCI", "XmiI", "Eam1104I", "BceAI", "Ecl136II", "XmaJI", "SfaAI", "MspCI", "HspAI", "RgaI", "HphI", "Psp1406I", "Fsp4HI", "Kzo9I", "Acc36I", "Csp6I", "BsmAI", "DraIII", "EcoO109I", "Hpy178III", "Acc16I", "BetI", "BseMII", "MluNI", "MspR9I", "BtsI", "SapI", "PpuMI", "SgfI", "EcoRV", "PsiI", "AatII", "BfuI", "MroXI", "EcoRI", "BsmFI", "TauI", "XhoI", "ZrmI", "VpaK11BI", "BspD6I", "BseCI", "DinI", "FmuI", "Bsp143I", "Bsp1286I", "BspPI", "SstE37I", "BstFNI", "AfiI", "RpaB5I", "BcefI", "SplI", "PluTI", "BslFI", "Bsa29I", "CfrI", "MnlI", "McrI", "PfeI", "AccIII", "CaiI", "Bpu1102I", "MunI", "Tru1I", "EagI", "Aor13HI", "BspLI", "AscI", "AhdI", "NlaIII", "SbfI", "EclXI", "Eco105I", "NsbI", "MkaDII", "PstI", "LpnI", "Bse8I", "Jma19592I", "FauI", "SfcI", "BspEI", "LguI", "VspI", "BsmI", "BstZI", "AceIII", "PciSI", "Alw44I", "MaqI", "SfiI", "CdpI", "Bst6I", "Hsp92I", "BpiI", "BstUI", "XceI", "CchIII", "PspLI", "BlnI", "Tth111II", "BspFNI", "TsuI", "CjeNIII", "BstZ17I", "HgiJII", "Msp20I", "KasI", "UbaF9I", "Bbv12I", "BseMI", "Eco57MI", "SdeOSI", "HaeIII", "BsmBI", "Kpn2I", "Cfr42I", "McaTI", "XcmI", "SatI", "BsbI", "BciT130I", "LpnPI", "BstAPI", "NdeII", "NlaCI", "Ksp632I", "AccI", "Hin4I", "SspI", "HpyCH4III", "BsrGI", "FinI", "AfeI", "SrfI", "Tth111I", "CspAI", "FbaI", "AsuI", "Eco32I", "KflI", "SgrAI", "SecI", "UbaF11I", "CjeNII", "NsiI", "AquII", "BseDI", "AquIV", "KspAI", "BstMBI", "GdiII", "YkrI", "Eco81I", "BspHI", "BstYI", "PspOMI", "BauI", "AanI", "EcoHI", "PmeI", "ApyPI", "FseI", "BstMAI", "BstSLI", "ApaI", "BlsI", "SaqAI", "PshBI", "EcoT22I", "SfuI", "Eco88I", "BseRI", "FblI", "MmeI", "BmgI", "ScaI", "CviRI", "TspDTI", "AlfI", "BmuI", "PcsI", "RpaI", "Eco57I", "AgeI", "BtgZI", "BarI", "AhaIII", "PctI", "FaiI", "Eco147I", "BpmI", "NspV", "EarI", "PspPRI", "CviKI_1", "CjeI", "PstNI", "BsiI", "AcuI", "OliI", "BfuCI", "BfrI", "NspI", "PacI", "PdmI", "AccB1I", "BstBI", "BalI", "BssNI", "HpyCH4V", "CsiI", "PceI", "NlaIV", "AquIII", "HpySE526I", "XhoII", "Sse9I", "KspI", "HauII", "Tru9I", "Sth302II", "Hsp92II", "MhlI", "BbsI", "MstI", "BstBAI", "DdeI", "PssI", "AfaI", "Bsp120I", "NotI", "BsaXI", "MroI", "DriI", "MroNI", "AoxI", "HgiAI", "MbiI", "Asp700I", "HindIII", "AcyI", "EcoICRI", "FatI", "BamHI", "BslI", "AvaII", "BspDI", "PaeR7I", "Psp6I", "BstAFI", "BfoI", "SnaI", "SfaNI", "RigI", "TatI", "HpaI", "BsaJI", "BbvCI", "RdeGBII", "PspCI", "Fnu4HI", "Cac8I", "HpyF3I", "Tsp45I", "EspI", "Pfl23II", "Bsh1285I", "Sse8647I", "RleAI", "BspMII", "StyI", "PflMI", "HhaI", "HindII", "AsiSI", "NmuCI", "HgiEII", "BseNI", "PagI", "PdiI", "AleI", "NmeAIII", "BsaAI" ] }, "required" : false }, { "name" : "mapping:iterative_mapping", "description" : "Interactive mapping", "help" : "Use iterative mapping instead of fragment-based mapping", "type" : "boolean", "required" : false, "default" : "false" }, { "name" : "mapping:windows", "description" : "Windows", "help" : "for iterative mapping, or to refine fragment-based mapping. Should be like '1:20 1:25 1:30 1:35 1:40 1:45 1:50'", "type" : "string", "required" : false }, { "name" : "mapping:refGenome", "description" : "Reference Genome", "help" : "", "type" : "enum", "enum_items" : { "name" : [ "refGenomes/hg19/GEM/hg19.gem", "refGenomes/R64-1-1/GEM/R64-1-1.gem", "refGenomes/r5.01/GEM/r5.01.gem" ], "description" : [ "Homo Sapiens (hg19)", "Saccharomyces Cerevisiae (R64.1.1)", "Drosophila Melanogaster (r5.01)" ] }, "required" : true }, { "name" : "parsing:chromosomes", "description" : "X", "help" : "'", "type" : "string", "required" : false } ], "control_file" : ".results.json", "output_files" : [ { "name" : "chromatin_ensemble", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "JSON", "data_type" : "chromatin_3dmodel_ensemble", "compressed" : "null", "meta_data" : { "description" : "Ensemble of chromatin 3Dmodels", "tool" : "tadbit", "visible" : true } } }, { "name" : "project_files", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "TAR", "data_type" : "tool_intermediate_file", "compressed" : "gzip", "meta_data" : { "description" : "TADbit internal project files", "tool" : "tadbit", "visible" : true } } }, { "name" : "statistics", "required" : true, "allow_multiple" : false, "custom_visualizer" : true, "file" : { "file_type" : "TAR", "data_type" : "tool_statistics", "compressed" : "gzip", "meta_data" : { "description" : "TADbit statistic plots", "tool" : "tadbit", "visible" : false } } } ] }
-{ "_id" : "dnadyn", "name" : "MC-DNA", "title" : "MC DNA Dynamics", "short_description" : "MC-DNA is a coarse-grained DNA model in which the internal dynamics are described with helical parameters.", "owner" : { "institution" : "IRB", "author" : "Jürgen Walther", "contact" : "juergen.walther@irbbarcelona.org", "url" : "http://mmb.pcb.ub.es/www/" }, "external" : true, "keywords" : [ "dna" ], "launcher" : { "type" : "SGE", "queue" : "naFlex.q", "executable" : "/home/MuG/dnadyn_wf.py", "cpus" : 1 }, "input_files" : [ { "name" : "sequence", "description" : "DNA sequence", "help" : "DNA sequence help", "file_type" : [ "TXT" ], "data_type" : [ "sequence_dna" ], "required" : true, "allow_multiple" : false } ], "arguments" : [ { "name" : "operations", "description" : "Operations", "help" : "Type of model to be created. Select the operation you want to execute", "type" : "enum_multiple", "enum_items" : { "name" : [ "createTrajectory", "createStructure" ] }, "required" : true, "default" : "" }, { "name" : "createTrajectory:numStruct", "description" : "Number of structures", "help" : "bla bla", "type" : "integer", "minimum" : 1, "maximum" : 500, "required" : true, "default" : "100" } ], "control_file" : ".results.json", "output_files" : [ { "name" : "PDB_dna_structure", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_structure", "compressed" : "null", "meta_data" : { "description" : "Equilibrium structure", "tool" : "dnadyn", "visible" : true } } }, { "name" : "dna_trajectory_structure", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_structure", "compressed" : "null", "meta_data" : { "description" : "Final DNA structure", "tool" : "dnadyn", "visible" : true } } }, { "name" : "dna_trajectory", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "DCD", "data_type" : "na_traj_coords", "compressed" : "null", "meta_data" : { "description" : "DNA trajectory", "tool" : "dnadyn", "visible" : true } } }, { "name" : "dna_top", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PARMTOP", "data_type" : "na_traj_top", "compressed" : "null", "meta_data" : { "description" : "DNA trajectory", "tool" : "dnadyn", "visible" : true } } }, { "name" : "summary", "required" : true, "allow_multiple" : false, "custom_visualizer" : true, "file" : { "file_type" : "TAR", "data_type" : "tool_statistics", "compressed" : "gzip", "meta_data" : { "description" : "dnadyn summary plots", "tool" : "dnadyn", "visible" : false } } } ] }
-{ "_id" : "chromatindyn", "name" : "Chromatin Dynamics", "title" : "Chromatin Dynamics", "short_description" : "With the Chromatin Dynamics tool you can create your own 'beads-on-a-string' representation of a chromatin fiber.", "owner" : { "institution" : "IRB", "author" : "Jürgen Walther", "contact" : "juergen.walther@irbbarcelona.org", "url" : "http://mmb.pcb.ub.es/www/" }, "external" : true, "keywords" : [ "chromatin", "dna" ], "launcher" : { "type" : "SGE", "queue" : "naFlex.q", "executable" : "/home/MuG/chromatindyn_wf.py", "cpus" : 1 }, "input_files" : [ { "name" : "sequence", "description" : "DNA sequence", "help" : "DNA linker sequence", "file_type" : [ "TXT" ], "data_type" : [ "sequence_dna" ], "required" : false, "allow_multiple" : false }, { "name" : "nuclPos", "description" : "Positions of nucleosomes", "help" : "Put in position where the nucleosomes are positioned in the linker sequence. Between each number has to be a space: for example '5 15' creates a structure where one nucleosome is put after the 5th bp of the linker sequence and another one after the 15th bp of the linker sequence generating a linker of 10bp between the two nucleosomes. Before the first and after the last nucleosome there have to at least 5 base pairs. Between two nucleosomes there has to be at least 3 base pairs.", "file_type" : [ "TXT" ], "data_type" : [ "nucleosome_positioning" ], "required" : false, "allow_multiple" : false }, { "name" : "gffNucleaR", "description" : "Create a 3D structure from nucleaR output", "help" : "Create a 3D structure from an 'NR_' gff file from Nucleosome Dynamics", "file_type" : [ "GFF3", "GFF" ], "data_type" : [ "nucleosome_positioning" ], "required" : false, "allow_multiple" : false } ], "arguments" : [ { "name" : "operations", "description" : "Operations", "help" : "Type of model to be created. Select the operation you want to execute", "type" : "enum_multiple", "enum_items" : { "name" : [ "createTrajectory", "createStructure", "create3DfromNucleaR" ] }, "required" : true, "default" : "" }, { "name" : "createTrajectory:numStruct", "description" : "Number of structures", "help" : "Number of structures to generate (max 100)", "type" : "integer", "minimum" : 1, "maximum" : 100, "required" : false, "default" : "10" }, { "name" : "create3DfromNucleaR:genRegion", "description" : "3D structure from Nucleosome Dynamics", "help" : "Obtain a structure from nucleosome positions within a genomic region calculated by nucleaR (within Nucleosome Dynamics). Use for example 'chrI:37415..39104'.", "type" : "string", "required" : false, "default" : "chrI:37415..39104" } ], "control_file" : ".results.json", "output_files" : [ { "name" : "PDB_chromatin_structure", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "chromatin_3dmodel", "compressed" : "null", "meta_data" : { "description" : "3D chromatin structure", "tool" : "chromatindyn", "visible" : true } } }, { "name" : "chromatin_trajectory", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "DCD", "data_type" : "chromatin_traj", "compressed" : "null", "meta_data" : { "description" : "Chromatin trajectory", "tool" : "chromatindyn", "visible" : true } } }, { "name" : "PDB_dummy_chromatin_structure", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "chromatin_3dmodel", "compressed" : "null", "meta_data" : { "description" : "3D dummy chromatin structure", "tool" : "chromatindyn", "visible" : true } } }, { "name" : "PDB_chromatin_starting_structure", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "chromatin_3dmodel", "compressed" : "null", "meta_data" : { "description" : "3D chromatin starting structure for trajectory", "tool" : "chromatindyn", "visible" : true } } }, { "name" : "summary", "required" : true, "allow_multiple" : false, "file" : { "file_type" : "TAR", "data_type" : "tool_statistics", "compressed" : "gzip", "meta_data" : { "description" : "chromatindyn summary plots", "tool" : "chromatindyn", "visible" : false } } } ] }
-{ "_id" : "naflex", "title" : "Nucleic Acids Flexibility Analyses", "name" : "NAFlex analyses", "short_description" : "Set of analyses to extract Nucleic Acids flexibility properties from Molecular Dynamics trajectories", "url" : "http://mmb.irbbarcelona.org/NAFlex/", "owner" : { "institution" : "IRB", "logo" : "assets/home/institution.png", "author" : "Hospital Adam, Faustino Ignacio, Collepardo-Guevara Rosana, González Carlos, Gelpí Josep Lluís, Orozco Modesto", "contact" : "adam.hospital@irbbarcelona.org", "url" : "http://mmb.irbbarcelona.org/www/", "user" : "rroyo@bsc.es" }, "external" : true, "keywords" : [ "dna", "rna" ], "launcher" : { "type" : "SGE", "queue" : "naFlex.q", "executable" : "/orozco/services/Rdata/MuG/apps/NAFlex/NAFlex_MuG_Wrapper.pl", "cpus" : 1 }, "input_files" : [ { "name" : "pdb", "description" : "Input Structure, pdb format", "help" : "Input nucleic acid (or protein-na complex) representative structure used in the MD simulation", "file_type" : [ "PDB" ], "data_type" : [ "na_structure" ], "required" : true, "allow_multiple" : false }, { "name" : "top", "description" : "Input Topology, Amber Parmtop v7 format", "help" : "Input nucleic acid (or protein-na complex) topology used in the MD simulation", "file_type" : [ "PARMTOP" ], "data_type" : [ "na_traj_top" ], "required" : true, "allow_multiple" : false }, { "name" : "crd", "description" : "Input Trajectory, Amber mdcrd format", "help" : "Input nucleic acid (or protein-na complex) trajectory obtained from a MD simulation", "file_type" : [ "MDCRD", "DCD", "NETCDF" ], "data_type" : [ "na_traj_coords", "na_traj" ], "required" : true, "allow_multiple" : false } ], "arguments" : [ { "name" : "operations", "description" : "Flexibility operation to be computed", "help" : "Flexibility operation to be computed: CURVES, STIFFNESS, PCAZIP, NMR_NOEs, NMR_JCouplings, HBs, STACKING, Distance Contact Maps, ALL", "type" : "enum_multiple", "enum_items" : { "name" : [ "Curves", "Stiffness", "Pcazip", "Nmr_Jcouplings", "HBs", "Stacking", "DistanceContactMaps", "ALL" ] }, "required" : true, "allow_multiple" : true, "default" : "ALL" } ], "control_file" : ".summary.json", "output_files" : [ { "name" : "NAFlex.report.tgz", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "TAR", "data_type" : "tool_statistics", "compressed" : "gzip", "meta_data" : { "description" : "NAFlex analyses output report to be used in the custom visualization", "tool" : "NAFlex", "visible" : false } } }, { "name" : "CURVES.backbone_torsions", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex CURVES Backbone torsions analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "CURVES.axis_bp", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex CURVES Axis Base Pairs analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "CURVES.helical_bp", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex CURVES Helical Base Pairs analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "CURVES.helical_bps", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex CURVES Helical Base Pair Steps analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "CURVES.grooves", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex CURVES Grooves analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "STIFFNESS.helical_bps_fctes", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex STIFFNESS Helical Base Pair Steps Force Constants analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "STIFFNESS.helical_bps_fctes_tables", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex STIFFNESS Helical Base Pair Steps Force Constants analyses output colour-coded tables", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec1", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 1", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec2", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 2", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec3", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 3", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec4", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 4", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec5", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 5", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec6", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 6", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec7", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 7", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec8", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 8", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec9", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 9", "tool" : "NAFlex", "visible" : true } } }, { "name" : "PCAZIP.animEvec10", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "na_traj", "compressed" : "null", "meta_data" : { "description" : "NAFlex PCAZIP Principal Components animation of Eigen Vector number 10", "tool" : "NAFlex", "visible" : true } } }, { "name" : "NMR_JC", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex NMR_JCouplings analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "NMR_NOE.Sugar-Sugar", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex NMR_NOEs Sugar-Sugar analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "NMR_NOE.Sugar-Base", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex NMR_NOEs Sugar-Base analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "NMR_NOE.Sugar-BaseStep", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex NMR_NOEs Sugar-BaseStep (Sugar step i vs Base step i+1) analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "NMR_NOE.Intensities", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex NMR_NOEs intensity matrices output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "HBs", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex HBs analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "STACKING", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex STACKING analyses output plots", "tool" : "NAFlex", "visible" : true } } }, { "name" : "CONTACTS", "required" : false, "allow_multiple" : false, "file" : { "file_type" : "PDF", "data_type" : "tool_statistics", "compressed" : "null", "meta_data" : { "description" : "NAFlex CONTACTS (Distance Contact Matrices) analyses output plots", "tool" : "NAFlex", "visible" : true } } } ] }
-{ "_id" : "minimizedStruct", "name" : "MD Energy Refinement", "title" : "Structure Energy Refinement using Atomistic Molecular Dynamics", "short_description" : "Molecular Dynamics workflow to energetically minimize a structure. MD Setup + 100ps free MD. Output last structure from the 100ps.", "url" : "https://github.com/bioexcel/pymdsetup", "owner" : { "institution" : "IRB", "logo" : "assets/home/institution.png", "author" : "Andrio Pau, Hospital Adam, Gelpí Josp Lluis", "contact" : "adam.hospital@irbbarcelona.org", "url" : "http://mmb.irbbarcelona.org/www/" }, "external" : true, "keywords" : [ "protein", "dna", "rna" ], "launcher" : { "type" : "SGE", "queue" : "pymdsetup.q", "executable" : "/orozco/services/Rdata/MuG/apps/pymdsetup/pymdsetup_MuG_Wrapper.pl", "cpus" : 4 }, "input_files" : [ { "name" : "pdb", "description" : "Input Structure, pdb format", "help" : "Input PDB structure to be energetically refined", "file_type" : [ "PDB" ], "data_type" : [ "structure", "prot_structure", "prot_dna_structure", "na_structure" ], "required" : true, "allow_multiple" : false } ], "arguments" : [], "output_files" : [ { "name" : "refined_structure.pdb", "required" : true, "allow_multiple" : false, "file" : { "file_type" : "PDB", "taxon_id" : 0, "data_type" : "structure", "compressed" : "null", "meta_data" : { "description" : "Energetically mimimized structure", "tool" : "minimizedStruct", "visible" : true } } } ] }
-{ "_id" : "pydockdna", "name" : "pyDockDNA", "title" : "Protein-DNA docking", "short_description" : "PyDockDNA is a tool for the structural prediction of protein-DNA interactions", "owner" : { "institution" : "BSC", "author" : "Brian Jiménez-García", "contact" : "brian.jimenez@bsc.es", "url" : "https://life.bsc.es/pid/pidweb/default/tools", "user" : "bjimenez@bsc.es" }, "external" : true, "keywords" : [ "protein", "dna" ], "launcher" : { "type" : "SGE", "queue" : "pydock.q", "executable" : "/home/user/bin/mug/pydockdna", "cpus" : 4 }, "input_files" : [ { "name" : "receptor", "description" : "Receptor PDB structure", "help" : "PDB structure help", "file_type" : [ "PDB" ], "data_type" : [ "prot_structure" ], "required" : true, "allow_multiple" : false }, { "name" : "ligand", "description" : "Ligand PDB structure", "help" : "PDB structure help", "file_type" : [ "PDB" ], "data_type" : [ "na_structure", "prot_structure" ], "required" : true, "allow_multiple" : false } ], "arguments" : [ { "name" : "scoring", "description" : "Available energetic scoring functions", "help" : "pyDockDNA is able to use different scoring functions in the step of re-scoring the generated docking poses", "type" : "enum", "enum_items" : { "description" : [ "pyDock-DNA" ], "name" : [ "pydockdna" ] }, "required" : true, "default" : "PyDock DNA" }, { "name" : "models", "description" : "Number of structures to model", "help" : "The number of generated models by this tool", "type" : "enum", "enum_items" : { "name" : [ "1", "5", "10", "50" ] }, "minimum" : 1, "maximum" : 50, "required" : true, "default" : "10" } ], "control_file" : ".results.json", "output_files" : [ { "name" : "energy_table", "required" : true, "allow_multiple" : false, "file" : { "file_type" : "CSV", "data_type" : "docking_ranking", "compressed" : "null", "meta_data" : { "description" : "Ranking of docking poses", "tool" : "pydockdna", "visible" : true } } }, { "name" : "top_structures", "required" : true, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "structure", "compressed" : "null", "meta_data" : { "description" : "Top 10 predictions", "tool" : "pydockdna", "visible" : true } } }, { "name" : "top10", "required" : true, "allow_multiple" : true, "file" : { "file_type" : "PDB", "data_type" : "prot_dna_structure", "compressed" : "null", "meta_data" : { "description" : "Top10 predicted structures", "tool" : "pydockdna", "visible" : true } } }, { "name" : "results", "required" : true, "allow_multiple" : false, "file" : { "file_type" : "TAR", "data_type" : "tool_statistics", "compressed" : "gzip", "meta_data" : { "description" : "Compressed results of the tool", "tool" : "pydockdna", "visible" : false } } } ] }
-{ "_id" : "dnashape", "name" : "DNAShapeScan", "title" : "DNAShapeScan", "short_description" : "Predict binding sites for a protein on a given genome segment by using DNAShape to include information on the shape of DNA.", "url" : "", "owner" : { "institution" : "University of Southern California, University of Nottingham", "author" : "Remo Rohs, Marco Pasi", "contact" : "rohs@usc.edu, marco.pasi@nottingham.ac.uk", "url" : "http://rohslab.cmb.usc.edu" }, "external" : true, "has_custom_viewer" : false, "keywords" : [ "dna", "protein", "interactions" ], "launcher" : { "type" : "SGE", "queue" : "dnashape.q", "executable" : "/opt/wrappers/dnashape_wf.py", "cpus" : 1 }, "input_files" : [ { "name" : "binding_data", "description" : "Experimental data describing the sequence specificity of the protein", "help" : "The tab-separated plain-text file must contain on each line a sequence and the corresponding (relative) binding affinity score.", "file_type" : [ "TSV" ], "data_type" : [ "prot_dna_specificity" ], "required" : true, "allow_multiple" : false }, { "name" : "target", "description" : "Genomic segment on which to predict binding sites for the target protein", "help" : "Binding sites of the target protein will be predicted on the specified segment of the genome.", "file_type" : [ "FASTA" ], "data_type" : [ "sequence_dna" ], "required" : true, "allow_multiple" : false } ], "arguments" : [ { "name" : "kmer1", "description" : "Encode sequence information using a first-order feature", "help" : "Sequence information is encoded using a first-order feature, where each position along the DNA sequence is treated independently.", "type" : "boolean", "required" : true, "allow_multiple" : false, "default" : "true" }, { "name" : "shape", "description" : "Encode DNA shape information", "help" : "Features that encode the shape of DNA (such as Minor Groove width, Roll, Propeller twist and Helical twist) are used to improve the quality of the binding site prediction.", "type" : "boolean", "required" : true, "allow_multiple" : false, "default" : "true" }, { "name" : "max_results", "description" : "Limit the number of identified top-scoring binding sites that are returned", "help" : "The specified number of top-scoring results will be included in the output.", "type" : "integer", "required" : true, "allow_multiple" : false, "default" : "1000" }, { "name" : "dimer", "description" : "Dimer mode: predict binding of dimers of the protein given a fixed spacing and a relative orientation of the binding sites", "help" : "Identify binding sites for a homodimer of the target protein; the relative orientation between the two proteins must be specified, as well as the spacing between the binding sites.", "type" : "boolean", "required" : true, "allow_multiple" : false, "default" : "off" }, { "name" : "dimer:orientation", "description" : "The relative orientation of the binding sites: forward or backward", "help" : "In order to identify binding sites for a homodimer of the target protein, the relative orientation of the two binding sites must be specified: 'forward' indicates the binding sites are in the same orientation; 'backward' indicates they are in reverse (palindromic) orientation.", "type" : "enum", "enum_items" : { "description" : [ "forward", "reverse" ], "name" : [ "forward", "reverse" ] }, "required" : false, "allow_multiple" : false, "default" : "forward" }, { "name" : "dimer:spacing", "description" : "The fixed spacing between the binding sites, measured in base pairs", "help" : "In order to identify binding sites for a homodimer of the target protein, the spacing between the two binding sites must be specified.", "type" : "integer", "required" : true, "allow_multiple" : false, "default" : "0" } ], "control_file" : ".summary.json", "output_files" : [ { "name" : "BindingSites.bw", "required" : true, "allow_multiple" : false, "file" : { "file_type" : "BW", "data_type" : "sequence_dna", "compressed" : "null", "meta_data" : { "description" : "Binding sites of the target protein identified on the specified genome segment.", "tool" : "dnashape", "visible" : true } } } ] }
-{ "_id" : "pdiview", "name" : "3DConsensus", "title" : "3DConsensus", "short_description" : "Analyse a protein-DNA complex 3D structure to identify interactions and study their impact on specific binding by integrating experimental data on the protein's DNA specificity.", "url" : "", "owner" : { "institution" : "University of Nottingham", "author" : "Marco Pasi", "contact" : "marco.pasi@nottingham.ac.uk", "url" : "", "user" : "marco.pasi@nottingham.ac.uk" }, "external" : true, "keywords" : [ "dna", "protein", "interactions" ], "launcher" : { "type" : "SGE", "queue" : "dnashape.q", "executable" : "/opt/wrappers/pdiview_wf.py", "cpus" : 1 }, "input_files" : [ { "name" : "structure", "description" : "3D structure of the protein-DNA complex in PDB format", "help" : "The 3D structure of a protein-DNA complex in PDB format will be used to analyse the molecular determinants of specific binding.", "file_type" : [ "PDB" ], "data_type" : [ "prot_dna_structure" ], "required" : true, "allow_multiple" : false }, { "name" : "binding_data", "description" : "Experimental data describing the sequence specificity of the protein", "help" : "The tab-separated plain-text file must contain on each line a sequence and the corresponding (relative) binding affinity score.", "file_type" : [ "TSV" ], "data_type" : [ "prot_dna_specificity" ], "required" : true, "allow_multiple" : false } ], "arguments" : [ { "name" : "chains", "description" : "Commma-separated list of chains to be analysed from the PDB", "help" : "Specify which chains from the PDB file will be analysed; typically the first three chains (A, B and C) indicate the protein and the two strands of DNA.", "type" : "string", "required" : true, "allow_multiple" : false, "default" : "A,B,C" } ], "control_file" : ".summary.json", "output_files" : [ { "name" : "output.pdb", "required" : true, "allow_multiple" : false, "file" : { "file_type" : "PDB", "data_type" : "prot_dna_structure", "compressed" : "null", "meta_data" : { "description" : "The processed PDB file used for visualisation.", "tool" : "pdiview", "visible" : true } } }, { "name" : "statistics", "required" : true, "allow_multiple" : false, "file" : { "file_type" : "TAR", "data_type" : "tool_statistics", "compressed" : "gzip", "meta_data" : { "description" : "Detailed output of tool for custom visualisation.", "tool" : "pdiview", "visible" : false } } } ] }
+{
+	"_id": "BAMval",
+	"title": "BAM preprocessing",
+	"name": "BAM validation",
+	"short_description": "BAM chromosome name standarization, sorting and indexing",
+	"url": "http://vre.multiscalegenomics.eu",
+	"owner": {
+		"institution": "Barcelona Supercomputing Center",
+		"author": "Laia Codo",
+		"contact": "laia.codo@bsc.es",
+		"url": "",
+		"user": "laia.codo@bsc.es"
+	},
+	"external": false,
+	"keywords": [],
+	"launcher": {
+		"type": "SGE",
+		"queue": "wfs.q",
+		"executable": "/orozco/services/Rdata/MuG/apps/internalTools/BAMval/BAMval.sh",
+		"cpus": 1
+	},
+	"input_files": [{
+		"name": "bam",
+		"description": "BAM file to be validated",
+		"help": "",
+		"file_type": ["BAM"],
+		"data_type": ["data_chip_seq", "data_atac_seq", "data_mnase_seq ", "hic_sequences"],
+		"required": true,
+		"allow_multiple": false
+	}],
+	"arguments": [{
+		"name": "sort",
+		"description": "sort",
+		"help": "",
+		"type": "boolean",
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "index",
+		"description": "index",
+		"help": "",
+		"type": "boolean",
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "replace",
+		"description": "Chr names replace",
+		"help": "",
+		"type": "string",
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "working_dir",
+		"description": "Temporal dir for samtools",
+		"help": "",
+		"type": "string",
+		"allow_multiple": false,
+		"default": ""
+	}],
+	"control_file": ".summary.json",
+	"output_files": [{
+		"name": "bam_index",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "BAI",
+			"compressed": "null",
+			"meta_data": {
+				"description": "BAM file index",
+				"tool": "BAMval",
+				"visible": false
+			}
+		}
+	}, {
+		"name": "bam",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "BAM",
+			"compressed": "null",
+			"meta_data": {
+				"description": "BAM aligned sequences",
+				"tool": "BAMval",
+				"visible": true
+			}
+		}
+	}]
+}
+{
+	"_id": "nucldynwf",
+	"name": "Nucleosome Dynamics",
+	"title": "Nucleosome Dynamics Worflow",
+	"short_description": "Nucleosome Dynamics Tools for performing  nucleosome-related analysis based on MNase-seq experimental data",
+	"url": "http://mmb.pcb.ub.es/NucleosomeDynamics/",
+	"owner": {
+		"institution": "IRB",
+		"author": "Illa Ricard, Buitrago Diana, Brun Isabelle",
+		"contact": "ricard.illa@irbbarcelona.org",
+		"url": "http://mmb.pcb.ub.es/www/",
+		"user": "ricard.illa@irbbarcelona.org"
+	},
+	"external": true,
+	"keywords": ["dna"],
+	"launcher": {
+		"type": "SGE",
+		"queue": "nuclDyn.q",
+		"executable": "/orozco/services/Rdata/Web/apps/nucleServ_MuG/nucleosomeDynamics_wf.py",
+		"cpus": 1
+	},
+	"input_files": [{
+		"name": "MNaseSeq",
+		"description": "MNAse-seq data ",
+		"help": "Input MNase-seq data used to compute nucleosome positioning and the subsequent analyses",
+		"file_type": ["BAM"],
+		"data_type": ["data_mnase_seq"],
+		"required": true,
+		"allow_multiple": true
+	}, {
+		"name": "condition1",
+		"description": "NMase-seq reference state (condition C1)",
+		"help": "MNase data used to define the initial state  when comparing nucleosome positioning",
+		"file_type": ["BAM"],
+		"data_type": ["data_mnase_seq"],
+		"required": true,
+		"allow_multiple": false
+	}, {
+		"name": "condition2",
+		"description": "MNAse-seq final state (condition C2)",
+		"help": "MNase data used to define the final state  when comparing nucleosome positioning",
+		"file_type": ["BAM"],
+		"data_type": ["data_mnase_seq"],
+		"required": true,
+		"allow_multiple": false
+	}],
+	"arguments": [{
+		"name": "nucleR",
+		"description": "Nucleosome Calling",
+		"help": "Use NucleR for computing nucleosome positioning",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "nucleR:width",
+		"description": "Width",
+		"help": "Size of each nucleosome, in bp, to be considered by NucleR",
+		"type": "integer",
+		"required": true,
+		"allow_multiple": false,
+		"default": "147"
+	}, {
+		"name": "nucleR:minoverlap",
+		"description": "Minimum Overlap",
+		"help": "",
+		"type": "integer",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "nucleR:dyad_length",
+		"description": "Dyad Length",
+		"help": "",
+		"type": "integer",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "nucleR:threshold",
+		"description": "Background Level",
+		"type": "boolean",
+		"help": "",
+		"required": true,
+		"allow_multiple": false
+	}, {
+		"name": "nucleR:thresholdPercentage",
+		"description": "Percentage",
+		"help": "",
+		"type": "number",
+		"required": true,
+		"allow_multiple": false,
+		"default": "35",
+		"maximum": 100,
+		"minimum": 0
+	}, {
+		"name": "nucleR:thresholdValue",
+		"description": "Absolute value",
+		"help": "",
+		"type": "integer",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "nucleR:hthresh",
+		"description": "Height Threshold",
+		"help": "",
+		"type": "number",
+		"required": true,
+		"allow_multiple": false,
+		"default": "0.4"
+	}, {
+		"name": "nucleR:wthresh",
+		"description": "Width Threshold",
+		"help": "",
+		"type": "number",
+		"required": true,
+		"allow_multiple": false,
+		"default": "0.6"
+	}, {
+		"name": "nucleR:pcKeepComp",
+		"description": "Coverage Smoothing",
+		"help": "",
+		"type": "number",
+		"required": true,
+		"allow_multiple": false,
+		"default": "0.02"
+	}, {
+		"name": "nucDyn",
+		"description": "Nucleosome Dynamics",
+		"help": "",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "nucDyn:range",
+		"description": "Range",
+		"help": "",
+		"type": "string",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "nucDyn:maxDiff",
+		"description": "Maximum Diff",
+		"help": "",
+		"type": "integer",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "nucDyn:maxLen",
+		"description": "Maximum Length",
+		"help": "",
+		"type": "integer",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "nucDyn:equal_size",
+		"description": "Equal Size",
+		"help": "",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false
+	}, {
+		"name": "nucDyn:roundPow",
+		"description": "Round Power",
+		"help": "",
+		"type": "integer",
+		"required": true,
+		"allow_multiple": false,
+		"default": "5"
+	}, {
+		"name": "nucDyn:readSize",
+		"type": "integer",
+		"description": "Read Size",
+		"required": true,
+		"allow_multiple": false,
+		"default": "140"
+	}, {
+		"name": "nucDyn:same_magnitude",
+		"type": "boolean",
+		"description": "Same Magnitude",
+		"required": true,
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "nucDyn:shift_min_nreads",
+		"type": "integer",
+		"description": "Shift minimum num. reads",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "nucDyn:shift_threshold",
+		"type": "integer",
+		"description": "Shifts threshold",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "nucDyn:indel_min_nreads",
+		"type": "integer",
+		"description": "Indels minimum num. reads",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "nucDyn:indel_threshold",
+		"type": "integer",
+		"description": "Indels threshold",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "NFR",
+		"description": "Nucleosome Free Regions",
+		"help": "",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "NFR:minwidth",
+		"type": "integer",
+		"description": "Minimum Width",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "NFR:threshold",
+		"type": "integer",
+		"description": "Maximum width",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "periodicity",
+		"description": "Nucleoseome Gene Phasing",
+		"help": "",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "periodicity:periodicity",
+		"type": "integer",
+		"description": "Period",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "txstart",
+		"description": "TSS classification",
+		"help": "",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "txstart:window",
+		"type": "integer",
+		"description": "Window",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "txstart:open_thresh",
+		"type": "integer",
+		"description": "Open threshold",
+		"required": true,
+		"allow_multiple": false,
+		"default": ""
+	}, {
+		"name": "gausfitting",
+		"description": "Stiffness",
+		"help": "",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "gausfitting:range",
+		"type": "string",
+		"description": "Genomic range",
+		"required": true,
+		"allow_multiple": false,
+		"default": "all"
+	}],
+	"control_file": ".summary.json",
+	"output_files": [{
+		"name": "NR_gff",
+		"required": false,
+		"allow_multiple": true,
+		"file": {
+			"file_type": "GFF3",
+			"data_type": "nucleosome_positioning",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Nuclesome positions predicted by NucleR from MNase-seq data",
+				"tool": "nucldynwf",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "ND_gff",
+		"required": false,
+		"allow_multiple": true,
+		"file": {
+			"file_type": "GFF3",
+			"data_type": "nucleosome_dynamics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Nucleosome positioning differences given two MNAse-seq states",
+				"tool": "nucldynwf",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "NFR_gff",
+		"required": false,
+		"allow_multiple": true,
+		"file": {
+			"file_type": "GFF3",
+			"data_type": "nucleosome_free_regions",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Nucleosome Free Regions computed from MNase-seq data",
+				"tool": "nucldynwf",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "TSS_gff",
+		"required": false,
+		"allow_multiple": true,
+		"file": {
+			"file_type": "GFF3",
+			"data_type": "tss_classification_by_nucleosomes",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Transcriptions Start Site classification based on nucleosome architecture",
+				"tool": "nucldynwf",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "STF_gff",
+		"required": false,
+		"allow_multiple": true,
+		"file": {
+			"file_type": "GFF3",
+			"data_type": "nucleosome_stiffness",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Nucleosome stiffness computed from MNase-seq data",
+				"tool": "nucldynwf",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "P_gff",
+		"required": false,
+		"allow_multiple": true,
+		"file": {
+			"file_type": "GFF3",
+			"data_type": "nucleosome_gene_phasing",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Nucleosome phasing along a given gene computed from MNase-seq data",
+				"tool": "nucldynwf",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "P_bw",
+		"required": false,
+		"allow_multiple": true,
+		"file": {
+			"file_type": "BW",
+			"data_type": "nucleosome_gene_phasing",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Nucleosome phasing along a given gene computed from MNase-seq data",
+				"tool": "nucldynwf",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "statistics",
+		"required": true,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "TAR",
+			"data_type": "tool_statistics",
+			"compressed": "gzip",
+			"meta_data": {
+				"description": "Statistical data from nucleosome analysis workflow",
+				"tool": "nucldynwf",
+				"visible": false
+			}
+		}
+	}]
+}
+{
+	"_id": "tadbit",
+	"name": "TADbit",
+	"title": "TADbit",
+	"short_description": "TADbit is a complete Python library to deal with all steps to analyze, model and explore 3C-based data.",
+	"owner": {
+		"institution": "CRG",
+		"author": "Francois Serra",
+		"contact": "francois.serra@cnag.crg.eu",
+		"url": "http://www.cnag.cat/"
+	},
+	"url": "https://github.com/3DGenomes/TADbit",
+	"external": true,
+	"keywords": ["3c-based"],
+	"launcher": {
+		"type": "SGE",
+		"queue": "tadbit.q",
+		"executable": "/path/wrapper.py",
+		"cpus": 1
+	},
+	"input_files": [{
+		"name": "read1",
+		"description": "Hi-C Reads (pair 1)",
+		"help": "from paired-end sequencing. This FASTQ should contain only one of the ends",
+		"file_type": ["FASTQ"],
+		"data_type": ["hic_reads"],
+		"required": true,
+		"allow_multiple": false
+	}, {
+		"name": "read2",
+		"description": "Hi-C Reads (pair 2)",
+		"help": "from paired-end sequencing. This FASTQ should contain only one of the ends",
+		"file_type": ["FASTQ"],
+		"data_type": ["hic_reads"],
+		"required": true,
+		"allow_multiple": false
+	}],
+	"arguments": [{
+		"name": "mapping:rest_enzyme",
+		"description": "Restriction enzyme",
+		"help": "For fragment-based mapping. Name of the restriction enzyme used to do the Hi-C",
+		"type": "enum",
+		"enum_items": {
+			"name": ["SpoDI", "BssHII", "EciI", "BssMI", "AsuNHI", "BsrFI", "AgsI", "AxyI", "DpnII", "BstSFI", "SgrBI", "AlwI", "SelI", "MluI", "CseI", "NgoMIV", "SanDI", "CciI", "BmeDI", "BstHHI", "BspLU11I", "HpaII", "Cfr9I", "TspMI", "MreI", "BclI", "MlyI", "BspT107I", "AhlI", "BsaWI", "SacI", "XspI", "KroI", "MwoI", "BfaI", "DrdI", "EcoT38I", "Cgl13032I", "BmgBI", "PspN4I", "PauI", "BglI", "SalI", "Asp718I", "BstOI", "PspEI", "MspI", "UbaF14I", "VneI", "PspPI", "BstH2I", "BisI", "BstPI", "Cdi630V", "BanII", "MslI", "Bsu15I", "SgrTI", "Nli3877I", "EsaSSI", "Mva1269I", "BmtI", "Bsp68I", "PspXI", "LweI", "DsaI", "PmaCI", "AsiGI", "BsaBI", "SnaBI", "CciNI", "Sfr274I", "StsI", "SmiI", "PteI", "Ksp22I", "BshTI", "PabI", "BstEII", "BmgT120I", "TspRI", "TstI", "BssT1I", "TscAI", "NcoI", "MspA1I", "CjeP659IV", "PsyI", "BtgI", "BseJI", "BshFI", "ClaI", "Bsp19I", "MauBI", "Bse1I", "RflFIII", "CviJI", "AspS9I", "BsaI", "BmcAI", "R2_BceSIV", "AbsI", "AsuII", "FauNDI", "BsrBI", "DraII", "BstMWI", "CdiI", "Eco24I", "AlwNI", "Bce83I", "XmnI", "Eco47III", "AclWI", "Eco91I", "UbaPI", "DraI", "RpaBI", "DraRI", "Hpy166II", "BthCI", "Bst2UI", "BseXI", "XmaIII", "AluBI", "Cgl13032II", "Vha464I", "SdeAI", "PsrI", "Hpy99I", "StyD4I", "BstACI", "BstXI", "PspGI", "Psp03I", "AcvI", "BstDEI", "BsiHKAI", "GluI", "CjuII", "BsoBI", "Sth132I", "AcoI", "RruI", "BlpI", "Esp3I", "PshAI", "XmaI", "BstF5I", "CjeFV", "BpvUI", "BseSI", "AdeI", "RceI", "BtsIMutI", "BstENI", "BssECI", "CjePI", "FalI", "BssAI", "EgeI", "Ama87I", "BstDSI", "SauI", "BstV2I", "SwaI", "AarI", "AjnI", "RseI", "AvaI", "PvuI", "BspOI", "BseAI", "DpnI", "CspCI", "AspLEI", "PflFI", "BpuEI", "Hin6I", "PalAI", "WviI", "Van91I", "Zsp2I", "AssI", "DseDI", "Bst1107I", "Bme1390I", "BveI", "BstAUI", "UnbI", "Psp5II", "Bpu14I", "NgoAVIII", "FaeI", "TaqI", "BsiYI", "BscGI", "EaeI", "SexAI", "Eco52I", "BsrI", "BspT104I", "AseI", "BfiI", "BbvII", "KpnI", "Sau96I", "SimI", "BstNI", "FnuDII", "HaeII", "SspDI", "BstSNI", "SsiI", "AclI", "EcoO65I", "ApoI", "ApaBI", "AlwFI", "HpyCH4IV", "MlsI", "NdeI", "HapII", "PpiI", "PinAI", "Cfr13I", "MboII", "AflII", "BmrFI", "BspGI", "SdaI", "EcoT14I", "TseI", "BmsI", "TspEI", "BglII", "TasI", "AjuI", "AloI", "PspPPI", "SetI", "Tsp4CI", "AcsI", "BstNSI", "BmeRI", "BseX3I", "FspBI", "SchI", "RsaNI", "VpaK11AI", "SmlI", "NaeI", "BseBI", "PfoI", "Bpu10I", "AccII", "BshNI", "Hin4II", "Rsr2I", "SacII", "Acc65I", "BspQI", "CjuI", "BmeT110I", "BtuMI", "MseI", "AvrII", "MaeI", "XapI", "TaaI", "Aor51HI", "PscI", "Bsp1407I", "Bst2BI", "NruI", "MvaI", "BaeI", "RdeGBIII", "Sno506I", "MjaIV", "Hpy99XIV", "BtsCI", "ChaI", "PasI", "Ple19I", "TseFI", "SmiMI", "Hin1II", "BssKI", "Sse8387I", "PciI", "Bsh1236I", "MalI", "Pfl1108I", "Bse118I", "MssI", "Asi256I", "AvaIII", "CpoI", "Eco130I", "SlaI", "BcgI", "CspI", "BdaI", "BsaHI", "TaiI", "BsnI", "CstMI", "UbaF13I", "SfoI", "FspAI", "MspJI", "BfmI", "BsuI", "NarI", "BmiI", "BsePI", "Eco47I", "BstMCI", "TaqII", "Bsu36I", "NspBII", "Bme18I", "BoxI", "RsaI", "MaeII", "HincII", "BssNAI", "BstV1I", "AflIII", "HpyF10VI", "Bsp13I", "Bst4CI", "MabI", "BsiSI", "AsuHPI", "BtrI", "BspCNI", "BinI", "BsgI", "XbaI", "RdeGBI", "ArsI", "Lsp1109I", "BsrSI", "Sau3AI", "StrI", "Cfr10I", "BstC8I", "BfuAI", "TfiI", "Hpy99XIII", "TspGWI", "AjiI", "PmlI", "RlaI", "CjeFIII", "BbvI", "Psp124BI", "Bsp119I", "MboI", "GauT27I", "GlaI", "Bsp24I", "TssI", "HgaI", "MvnI", "BanI", "PspOMII", "BstX2I", "AluI", "BaeGI", "SduI", "NmeDI", "ZraI", "SgsI", "BseGI", "Hpy188III", "PenI", "Eco72I", "Bse21I", "RsrII", "Sfr303I", "BspMI", "BcnI", "BstSCI", "MluCI", "UbaF12I", "BpuMI", "SgeI", "AciI", "Mph1103I", "ScrFI", "EcoRII", "Alw21I", "MscI", "HaeI", "BseYI", "CfoI", "CchII", "Hpy8I", "HgiCI", "DrdII", "Bse3DI", "PsuI", "Bso31I", "CviQI", "AccB7I", "PaeI", "BstKTI", "BmrI", "SseBI", "Hpy188I", "AccBSI", "SmaI", "PleI", "BasI", "EcoNI", "NheI", "UcoMSI", "BplI", "BccI", "Ppu21I", "SstI", "SmoI", "FaqI", "FspEI", "BsiEI", "BspACI", "StuI", "AspA2I", "BcoDI", "Bsp1720I", "BcuI", "AspBHI", "BspTI", "Bbr7I", "Bsc4I", "BbrPI", "BsiWI", "SphI", "HpyAV", "Mly113I", "GsuI", "NciI", "PlaDI", "SfeI", "Ppu10I", "BseLI", "FriOI", "MaeIII", "AasI", "FspI", "CviAII", "PvuII", "Eco53kI", "EheI", "MfeI", "MflI", "EsaBC3I", "BsrDI", "CauII", "BssSI", "NhaXI", "ErhI", "SspD5I", "XagI", "BshVI", "FokI", "Sse232I", "Hin1I", "RpaTI", "ApaLI", "Alw26I", "AsuC2I", "ApeKI", "AbaSI", "SpeI", "SgrDI", "GsaI", "Eco31I", "SciI", "HinfI", "BciVI", "HinP1I", "Eam1105I", "BsuRI", "TsoI", "MvrI", "BspNCI", "BscAI", "PpsI", "BstPAI", "BsiHKCI", "XmiI", "Eam1104I", "BceAI", "Ecl136II", "XmaJI", "SfaAI", "MspCI", "HspAI", "RgaI", "HphI", "Psp1406I", "Fsp4HI", "Kzo9I", "Acc36I", "Csp6I", "BsmAI", "DraIII", "EcoO109I", "Hpy178III", "Acc16I", "BetI", "BseMII", "MluNI", "MspR9I", "BtsI", "SapI", "PpuMI", "SgfI", "EcoRV", "PsiI", "AatII", "BfuI", "MroXI", "EcoRI", "BsmFI", "TauI", "XhoI", "ZrmI", "VpaK11BI", "BspD6I", "BseCI", "DinI", "FmuI", "Bsp143I", "Bsp1286I", "BspPI", "SstE37I", "BstFNI", "AfiI", "RpaB5I", "BcefI", "SplI", "PluTI", "BslFI", "Bsa29I", "CfrI", "MnlI", "McrI", "PfeI", "AccIII", "CaiI", "Bpu1102I", "MunI", "Tru1I", "EagI", "Aor13HI", "BspLI", "AscI", "AhdI", "NlaIII", "SbfI", "EclXI", "Eco105I", "NsbI", "MkaDII", "PstI", "LpnI", "Bse8I", "Jma19592I", "FauI", "SfcI", "BspEI", "LguI", "VspI", "BsmI", "BstZI", "AceIII", "PciSI", "Alw44I", "MaqI", "SfiI", "CdpI", "Bst6I", "Hsp92I", "BpiI", "BstUI", "XceI", "CchIII", "PspLI", "BlnI", "Tth111II", "BspFNI", "TsuI", "CjeNIII", "BstZ17I", "HgiJII", "Msp20I", "KasI", "UbaF9I", "Bbv12I", "BseMI", "Eco57MI", "SdeOSI", "HaeIII", "BsmBI", "Kpn2I", "Cfr42I", "McaTI", "XcmI", "SatI", "BsbI", "BciT130I", "LpnPI", "BstAPI", "NdeII", "NlaCI", "Ksp632I", "AccI", "Hin4I", "SspI", "HpyCH4III", "BsrGI", "FinI", "AfeI", "SrfI", "Tth111I", "CspAI", "FbaI", "AsuI", "Eco32I", "KflI", "SgrAI", "SecI", "UbaF11I", "CjeNII", "NsiI", "AquII", "BseDI", "AquIV", "KspAI", "BstMBI", "GdiII", "YkrI", "Eco81I", "BspHI", "BstYI", "PspOMI", "BauI", "AanI", "EcoHI", "PmeI", "ApyPI", "FseI", "BstMAI", "BstSLI", "ApaI", "BlsI", "SaqAI", "PshBI", "EcoT22I", "SfuI", "Eco88I", "BseRI", "FblI", "MmeI", "BmgI", "ScaI", "CviRI", "TspDTI", "AlfI", "BmuI", "PcsI", "RpaI", "Eco57I", "AgeI", "BtgZI", "BarI", "AhaIII", "PctI", "FaiI", "Eco147I", "BpmI", "NspV", "EarI", "PspPRI", "CviKI_1", "CjeI", "PstNI", "BsiI", "AcuI", "OliI", "BfuCI", "BfrI", "NspI", "PacI", "PdmI", "AccB1I", "BstBI", "BalI", "BssNI", "HpyCH4V", "CsiI", "PceI", "NlaIV", "AquIII", "HpySE526I", "XhoII", "Sse9I", "KspI", "HauII", "Tru9I", "Sth302II", "Hsp92II", "MhlI", "BbsI", "MstI", "BstBAI", "DdeI", "PssI", "AfaI", "Bsp120I", "NotI", "BsaXI", "MroI", "DriI", "MroNI", "AoxI", "HgiAI", "MbiI", "Asp700I", "HindIII", "AcyI", "EcoICRI", "FatI", "BamHI", "BslI", "AvaII", "BspDI", "PaeR7I", "Psp6I", "BstAFI", "BfoI", "SnaI", "SfaNI", "RigI", "TatI", "HpaI", "BsaJI", "BbvCI", "RdeGBII", "PspCI", "Fnu4HI", "Cac8I", "HpyF3I", "Tsp45I", "EspI", "Pfl23II", "Bsh1285I", "Sse8647I", "RleAI", "BspMII", "StyI", "PflMI", "HhaI", "HindII", "AsiSI", "NmuCI", "HgiEII", "BseNI", "PagI", "PdiI", "AleI", "NmeAIII", "BsaAI"]
+		},
+		"required": false
+	}, {
+		"name": "mapping:iterative_mapping",
+		"description": "Interactive mapping",
+		"help": "Use iterative mapping instead of fragment-based mapping",
+		"type": "boolean",
+		"required": false,
+		"default": "false"
+	}, {
+		"name": "mapping:windows",
+		"description": "Windows",
+		"help": "for iterative mapping, or to refine fragment-based mapping. Should be like '1:20 1:25 1:30 1:35 1:40 1:45 1:50'",
+		"type": "string",
+		"required": false
+	}, {
+		"name": "mapping:refGenome",
+		"description": "Reference Genome",
+		"help": "",
+		"type": "enum",
+		"enum_items": {
+			"name": ["refGenomes/hg19/GEM/hg19.gem", "refGenomes/R64-1-1/GEM/R64-1-1.gem", "refGenomes/r5.01/GEM/r5.01.gem"],
+			"description": ["Homo Sapiens (hg19)", "Saccharomyces Cerevisiae (R64.1.1)", "Drosophila Melanogaster (r5.01)"]
+		},
+		"required": true
+	}, {
+		"name": "parsing:chromosomes",
+		"description": "X",
+		"help": "'",
+		"type": "string",
+		"required": false
+	}],
+	"control_file": ".results.json",
+	"output_files": [{
+		"name": "chromatin_ensemble",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "JSON",
+			"data_type": "chromatin_3dmodel_ensemble",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Ensemble of chromatin 3Dmodels",
+				"tool": "tadbit",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "project_files",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "TAR",
+			"data_type": "tool_intermediate_file",
+			"compressed": "gzip",
+			"meta_data": {
+				"description": "TADbit internal project files",
+				"tool": "tadbit",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "statistics",
+		"required": true,
+		"allow_multiple": false,
+		"custom_visualizer": true,
+		"file": {
+			"file_type": "TAR",
+			"data_type": "tool_statistics",
+			"compressed": "gzip",
+			"meta_data": {
+				"description": "TADbit statistic plots",
+				"tool": "tadbit",
+				"visible": false
+			}
+		}
+	}]
+}
+{
+	"_id": "dnadyn",
+	"name": "MC-DNA",
+	"title": "MC DNA Dynamics",
+	"short_description": "MC-DNA is a coarse-grained DNA model in which the internal dynamics are described with helical parameters.",
+	"owner": {
+		"institution": "IRB",
+		"author": "Jürgen Walther",
+		"contact": "juergen.walther@irbbarcelona.org",
+		"url": "http://mmb.pcb.ub.es/www/"
+	},
+	"external": true,
+	"keywords": ["dna"],
+	"launcher": {
+		"type": "SGE",
+		"queue": "naFlex.q",
+		"executable": "/home/MuG/dnadyn_wf.py",
+		"cpus": 1
+	},
+	"input_files": [{
+		"name": "sequence",
+		"description": "DNA sequence",
+		"help": "DNA sequence help",
+		"file_type": ["TXT"],
+		"data_type": ["sequence_dna"],
+		"required": true,
+		"allow_multiple": false
+	}],
+	"arguments": [{
+		"name": "operations",
+		"description": "Operations",
+		"help": "Type of model to be created. Select the operation you want to execute",
+		"type": "enum_multiple",
+		"enum_items": {
+			"name": ["createTrajectory", "createStructure"]
+		},
+		"required": true,
+		"default": ""
+	}, {
+		"name": "createTrajectory:numStruct",
+		"description": "Number of structures",
+		"help": "bla bla",
+		"type": "integer",
+		"minimum": 1,
+		"maximum": 500,
+		"required": true,
+		"default": "100"
+	}],
+	"control_file": ".results.json",
+	"output_files": [{
+		"name": "PDB_dna_structure",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_structure",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Equilibrium structure",
+				"tool": "dnadyn",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "dna_trajectory_structure",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_structure",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Final DNA structure",
+				"tool": "dnadyn",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "dna_trajectory",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "DCD",
+			"data_type": "na_traj_coords",
+			"compressed": "null",
+			"meta_data": {
+				"description": "DNA trajectory",
+				"tool": "dnadyn",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "dna_top",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PARMTOP",
+			"data_type": "na_traj_top",
+			"compressed": "null",
+			"meta_data": {
+				"description": "DNA trajectory",
+				"tool": "dnadyn",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "summary",
+		"required": true,
+		"allow_multiple": false,
+		"custom_visualizer": true,
+		"file": {
+			"file_type": "TAR",
+			"data_type": "tool_statistics",
+			"compressed": "gzip",
+			"meta_data": {
+				"description": "dnadyn summary plots",
+				"tool": "dnadyn",
+				"visible": false
+			}
+		}
+	}]
+}
+{
+	"_id": "chromatindyn",
+	"name": "Chromatin Dynamics",
+	"title": "Chromatin Dynamics",
+	"short_description": "With the Chromatin Dynamics tool you can create your own 'beads-on-a-string' representation of a chromatin fiber.",
+	"owner": {
+		"institution": "IRB",
+		"author": "Jürgen Walther",
+		"contact": "juergen.walther@irbbarcelona.org",
+		"url": "http://mmb.pcb.ub.es/www/"
+	},
+	"external": true,
+	"keywords": ["chromatin", "dna"],
+	"launcher": {
+		"type": "SGE",
+		"queue": "naFlex.q",
+		"executable": "/home/MuG/chromatindyn_wf.py",
+		"cpus": 1
+	},
+	"input_files": [{
+		"name": "sequence",
+		"description": "DNA sequence",
+		"help": "DNA linker sequence",
+		"file_type": ["TXT"],
+		"data_type": ["sequence_dna"],
+		"required": false,
+		"allow_multiple": false
+	}, {
+		"name": "nuclPos",
+		"description": "Positions of nucleosomes",
+		"help": "Put in position where the nucleosomes are positioned in the linker sequence. Between each number has to be a space: for example '5 15' creates a structure where one nucleosome is put after the 5th bp of the linker sequence and another one after the 15th bp of the linker sequence generating a linker of 10bp between the two nucleosomes. Before the first and after the last nucleosome there have to at least 5 base pairs. Between two nucleosomes there has to be at least 3 base pairs.",
+		"file_type": ["TXT"],
+		"data_type": ["nucleosome_positioning"],
+		"required": false,
+		"allow_multiple": false
+	}, {
+		"name": "gffNucleaR",
+		"description": "Create a 3D structure from nucleaR output",
+		"help": "Create a 3D structure from an 'NR_' gff file from Nucleosome Dynamics",
+		"file_type": ["GFF3", "GFF"],
+		"data_type": ["nucleosome_positioning"],
+		"required": false,
+		"allow_multiple": false
+	}],
+	"arguments": [{
+		"name": "operations",
+		"description": "Operations",
+		"help": "Type of model to be created. Select the operation you want to execute",
+		"type": "enum_multiple",
+		"enum_items": {
+			"name": ["createTrajectory", "createStructure", "create3DfromNucleaR"]
+		},
+		"required": true,
+		"default": ""
+	}, {
+		"name": "createTrajectory:numStruct",
+		"description": "Number of structures",
+		"help": "Number of structures to generate (max 100)",
+		"type": "integer",
+		"minimum": 1,
+		"maximum": 100,
+		"required": false,
+		"default": "10"
+	}, {
+		"name": "create3DfromNucleaR:genRegion",
+		"description": "3D structure from Nucleosome Dynamics",
+		"help": "Obtain a structure from nucleosome positions within a genomic region calculated by nucleaR (within Nucleosome Dynamics). Use for example 'chrI:37415..39104'.",
+		"type": "string",
+		"required": false,
+		"default": "chrI:37415..39104"
+	}],
+	"control_file": ".results.json",
+	"output_files": [{
+		"name": "PDB_chromatin_structure",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "chromatin_3dmodel",
+			"compressed": "null",
+			"meta_data": {
+				"description": "3D chromatin structure",
+				"tool": "chromatindyn",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "chromatin_trajectory",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "DCD",
+			"data_type": "chromatin_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Chromatin trajectory",
+				"tool": "chromatindyn",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PDB_dummy_chromatin_structure",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "chromatin_3dmodel",
+			"compressed": "null",
+			"meta_data": {
+				"description": "3D dummy chromatin structure",
+				"tool": "chromatindyn",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PDB_chromatin_starting_structure",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "chromatin_3dmodel",
+			"compressed": "null",
+			"meta_data": {
+				"description": "3D chromatin starting structure for trajectory",
+				"tool": "chromatindyn",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "summary",
+		"required": true,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "TAR",
+			"data_type": "tool_statistics",
+			"compressed": "gzip",
+			"meta_data": {
+				"description": "chromatindyn summary plots",
+				"tool": "chromatindyn",
+				"visible": false
+			}
+		}
+	}]
+}
+{
+	"_id": "naflex",
+	"title": "Nucleic Acids Flexibility Analyses",
+	"name": "NAFlex analyses",
+	"short_description": "Set of analyses to extract Nucleic Acids flexibility properties from Molecular Dynamics trajectories",
+	"url": "http://mmb.irbbarcelona.org/NAFlex/",
+	"owner": {
+		"institution": "IRB",
+		"logo": "assets/home/institution.png",
+		"author": "Hospital Adam, Faustino Ignacio, Collepardo-Guevara Rosana, González Carlos, Gelpí Josep Lluís, Orozco Modesto",
+		"contact": "adam.hospital@irbbarcelona.org",
+		"url": "http://mmb.irbbarcelona.org/www/",
+		"user": "rroyo@bsc.es"
+	},
+	"external": true,
+	"keywords": ["dna", "rna"],
+	"launcher": {
+		"type": "SGE",
+		"queue": "naFlex.q",
+		"executable": "/orozco/services/Rdata/MuG/apps/NAFlex/NAFlex_MuG_Wrapper.pl",
+		"cpus": 1
+	},
+	"input_files": [{
+		"name": "pdb",
+		"description": "Input Structure, pdb format",
+		"help": "Input nucleic acid (or protein-na complex) representative structure used in the MD simulation",
+		"file_type": ["PDB"],
+		"data_type": ["na_structure"],
+		"required": true,
+		"allow_multiple": false
+	}, {
+		"name": "top",
+		"description": "Input Topology, Amber Parmtop v7 format",
+		"help": "Input nucleic acid (or protein-na complex) topology used in the MD simulation",
+		"file_type": ["PARMTOP"],
+		"data_type": ["na_traj_top"],
+		"required": true,
+		"allow_multiple": false
+	}, {
+		"name": "crd",
+		"description": "Input Trajectory, Amber mdcrd format",
+		"help": "Input nucleic acid (or protein-na complex) trajectory obtained from a MD simulation",
+		"file_type": ["MDCRD", "DCD", "NETCDF"],
+		"data_type": ["na_traj_coords", "na_traj"],
+		"required": true,
+		"allow_multiple": false
+	}],
+	"arguments": [{
+		"name": "operations",
+		"description": "Flexibility operation to be computed",
+		"help": "Flexibility operation to be computed: CURVES, STIFFNESS, PCAZIP, NMR_NOEs, NMR_JCouplings, HBs, STACKING, Distance Contact Maps, ALL",
+		"type": "enum_multiple",
+		"enum_items": {
+			"name": ["Curves", "Stiffness", "Pcazip", "Nmr_Jcouplings", "HBs", "Stacking", "DistanceContactMaps", "ALL"]
+		},
+		"required": true,
+		"allow_multiple": true,
+		"default": "ALL"
+	}],
+	"control_file": ".summary.json",
+	"output_files": [{
+		"name": "NAFlex.report.tgz",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "TAR",
+			"data_type": "tool_statistics",
+			"compressed": "gzip",
+			"meta_data": {
+				"description": "NAFlex analyses output report to be used in the custom visualization",
+				"tool": "NAFlex",
+				"visible": false
+			}
+		}
+	}, {
+		"name": "CURVES.backbone_torsions",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex CURVES Backbone torsions analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "CURVES.axis_bp",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex CURVES Axis Base Pairs analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "CURVES.helical_bp",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex CURVES Helical Base Pairs analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "CURVES.helical_bps",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex CURVES Helical Base Pair Steps analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "CURVES.grooves",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex CURVES Grooves analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "STIFFNESS.helical_bps_fctes",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex STIFFNESS Helical Base Pair Steps Force Constants analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "STIFFNESS.helical_bps_fctes_tables",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex STIFFNESS Helical Base Pair Steps Force Constants analyses output colour-coded tables",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec1",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 1",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec2",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 2",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec3",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 3",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec4",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 4",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec5",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 5",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec6",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 6",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec7",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 7",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec8",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 8",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec9",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 9",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "PCAZIP.animEvec10",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "na_traj",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex PCAZIP Principal Components animation of Eigen Vector number 10",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "NMR_JC",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex NMR_JCouplings analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "NMR_NOE.Sugar-Sugar",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex NMR_NOEs Sugar-Sugar analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "NMR_NOE.Sugar-Base",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex NMR_NOEs Sugar-Base analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "NMR_NOE.Sugar-BaseStep",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex NMR_NOEs Sugar-BaseStep (Sugar step i vs Base step i+1) analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "NMR_NOE.Intensities",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex NMR_NOEs intensity matrices output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "HBs",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex HBs analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "STACKING",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex STACKING analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "CONTACTS",
+		"required": false,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDF",
+			"data_type": "tool_statistics",
+			"compressed": "null",
+			"meta_data": {
+				"description": "NAFlex CONTACTS (Distance Contact Matrices) analyses output plots",
+				"tool": "NAFlex",
+				"visible": true
+			}
+		}
+	}]
+}
+{
+	"_id": "minimizedStruct",
+	"name": "MD Energy Refinement",
+	"title": "Structure Energy Refinement using Atomistic Molecular Dynamics",
+	"short_description": "Molecular Dynamics workflow to energetically minimize a structure. MD Setup + 100ps free MD. Output last structure from the 100ps.",
+	"url": "https://github.com/bioexcel/pymdsetup",
+	"owner": {
+		"institution": "IRB",
+		"logo": "assets/home/institution.png",
+		"author": "Andrio Pau, Hospital Adam, Gelpí Josp Lluis",
+		"contact": "adam.hospital@irbbarcelona.org",
+		"url": "http://mmb.irbbarcelona.org/www/"
+	},
+	"external": true,
+	"keywords": ["protein", "dna", "rna"],
+	"launcher": {
+		"type": "SGE",
+		"queue": "pymdsetup.q",
+		"executable": "/orozco/services/Rdata/MuG/apps/pymdsetup/pymdsetup_MuG_Wrapper.pl",
+		"cpus": 4
+	},
+	"input_files": [{
+		"name": "pdb",
+		"description": "Input Structure, pdb format",
+		"help": "Input PDB structure to be energetically refined",
+		"file_type": ["PDB"],
+		"data_type": ["structure", "prot_structure", "prot_dna_structure", "na_structure"],
+		"required": true,
+		"allow_multiple": false
+	}],
+	"arguments": [],
+	"output_files": [{
+		"name": "refined_structure.pdb",
+		"required": true,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"taxon_id": 0,
+			"data_type": "structure",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Energetically mimimized structure",
+				"tool": "minimizedStruct",
+				"visible": true
+			}
+		}
+	}]
+}
+{
+	"_id": "pydockdna",
+	"name": "pyDockDNA",
+	"title": "Protein-DNA docking",
+	"short_description": "PyDockDNA is a tool for the structural prediction of protein-DNA interactions",
+	"owner": {
+		"institution": "BSC",
+		"author": "Brian Jiménez-García",
+		"contact": "brian.jimenez@bsc.es",
+		"url": "https://life.bsc.es/pid/pidweb/default/tools",
+		"user": "bjimenez@bsc.es"
+	},
+	"external": true,
+	"keywords": ["protein", "dna"],
+	"launcher": {
+		"type": "SGE",
+		"queue": "pydock.q",
+		"executable": "/home/user/bin/mug/pydockdna",
+		"cpus": 4
+	},
+	"input_files": [{
+		"name": "receptor",
+		"description": "Receptor PDB structure",
+		"help": "PDB structure help",
+		"file_type": ["PDB"],
+		"data_type": ["prot_structure"],
+		"required": true,
+		"allow_multiple": false
+	}, {
+		"name": "ligand",
+		"description": "Ligand PDB structure",
+		"help": "PDB structure help",
+		"file_type": ["PDB"],
+		"data_type": ["na_structure", "prot_structure"],
+		"required": true,
+		"allow_multiple": false
+	}],
+	"arguments": [{
+		"name": "scoring",
+		"description": "Available energetic scoring functions",
+		"help": "pyDockDNA is able to use different scoring functions in the step of re-scoring the generated docking poses",
+		"type": "enum",
+		"enum_items": {
+			"description": ["pyDock-DNA"],
+			"name": ["pydockdna"]
+		},
+		"required": true,
+		"default": "PyDock DNA"
+	}, {
+		"name": "models",
+		"description": "Number of structures to model",
+		"help": "The number of generated models by this tool",
+		"type": "enum",
+		"enum_items": {
+			"name": ["1", "5", "10", "50"]
+		},
+		"minimum": 1,
+		"maximum": 50,
+		"required": true,
+		"default": "10"
+	}],
+	"control_file": ".results.json",
+	"output_files": [{
+		"name": "energy_table",
+		"required": true,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "CSV",
+			"data_type": "docking_ranking",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Ranking of docking poses",
+				"tool": "pydockdna",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "top_structures",
+		"required": true,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "structure",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Top 10 predictions",
+				"tool": "pydockdna",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "top10",
+		"required": true,
+		"allow_multiple": true,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "prot_dna_structure",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Top10 predicted structures",
+				"tool": "pydockdna",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "results",
+		"required": true,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "TAR",
+			"data_type": "tool_statistics",
+			"compressed": "gzip",
+			"meta_data": {
+				"description": "Compressed results of the tool",
+				"tool": "pydockdna",
+				"visible": false
+			}
+		}
+	}]
+}
+{
+	"_id": "dnashape",
+	"name": "DNAShapeScan",
+	"title": "DNAShapeScan",
+	"short_description": "Predict binding sites for a protein on a given genome segment by using DNAShape to include information on the shape of DNA.",
+	"url": "",
+	"owner": {
+		"institution": "University of Southern California, University of Nottingham",
+		"author": "Remo Rohs, Marco Pasi",
+		"contact": "rohs@usc.edu, marco.pasi@nottingham.ac.uk",
+		"url": "http://rohslab.cmb.usc.edu"
+	},
+	"external": true,
+	"has_custom_viewer": false,
+	"keywords": ["dna", "protein", "interactions"],
+	"launcher": {
+		"type": "SGE",
+		"queue": "dnashape.q",
+		"executable": "/opt/wrappers/dnashape_wf.py",
+		"cpus": 1
+	},
+	"input_files": [{
+		"name": "binding_data",
+		"description": "Experimental data describing the sequence specificity of the protein",
+		"help": "The tab-separated plain-text file must contain on each line a sequence and the corresponding (relative) binding affinity score.",
+		"file_type": ["TSV"],
+		"data_type": ["prot_dna_specificity"],
+		"required": true,
+		"allow_multiple": false
+	}, {
+		"name": "target",
+		"description": "Genomic segment on which to predict binding sites for the target protein",
+		"help": "Binding sites of the target protein will be predicted on the specified segment of the genome.",
+		"file_type": ["FASTA"],
+		"data_type": ["sequence_dna"],
+		"required": true,
+		"allow_multiple": false
+	}],
+	"arguments": [{
+		"name": "kmer1",
+		"description": "Encode sequence information using a first-order feature",
+		"help": "Sequence information is encoded using a first-order feature, where each position along the DNA sequence is treated independently.",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "shape",
+		"description": "Encode DNA shape information",
+		"help": "Features that encode the shape of DNA (such as Minor Groove width, Roll, Propeller twist and Helical twist) are used to improve the quality of the binding site prediction.",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false,
+		"default": "true"
+	}, {
+		"name": "max_results",
+		"description": "Limit the number of identified top-scoring binding sites that are returned",
+		"help": "The specified number of top-scoring results will be included in the output.",
+		"type": "integer",
+		"required": true,
+		"allow_multiple": false,
+		"default": "1000"
+	}, {
+		"name": "dimer",
+		"description": "Dimer mode: predict binding of dimers of the protein given a fixed spacing and a relative orientation of the binding sites",
+		"help": "Identify binding sites for a homodimer of the target protein; the relative orientation between the two proteins must be specified, as well as the spacing between the binding sites.",
+		"type": "boolean",
+		"required": true,
+		"allow_multiple": false,
+		"default": "off"
+	}, {
+		"name": "dimer:orientation",
+		"description": "The relative orientation of the binding sites: forward or backward",
+		"help": "In order to identify binding sites for a homodimer of the target protein, the relative orientation of the two binding sites must be specified: 'forward' indicates the binding sites are in the same orientation; 'backward' indicates they are in reverse (palindromic) orientation.",
+		"type": "enum",
+		"enum_items": {
+			"description": ["forward", "reverse"],
+			"name": ["forward", "reverse"]
+		},
+		"required": false,
+		"allow_multiple": false,
+		"default": "forward"
+	}, {
+		"name": "dimer:spacing",
+		"description": "The fixed spacing between the binding sites, measured in base pairs",
+		"help": "In order to identify binding sites for a homodimer of the target protein, the spacing between the two binding sites must be specified.",
+		"type": "integer",
+		"required": true,
+		"allow_multiple": false,
+		"default": "0"
+	}],
+	"control_file": ".summary.json",
+	"output_files": [{
+		"name": "BindingSites.bw",
+		"required": true,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "BW",
+			"data_type": "sequence_dna",
+			"compressed": "null",
+			"meta_data": {
+				"description": "Binding sites of the target protein identified on the specified genome segment.",
+				"tool": "dnashape",
+				"visible": true
+			}
+		}
+	}]
+}
+{
+	"_id": "pdiview",
+	"name": "3DConsensus",
+	"title": "3DConsensus",
+	"short_description": "Analyse a protein-DNA complex 3D structure to identify interactions and study their impact on specific binding by integrating experimental data on the protein's DNA specificity.",
+	"url": "",
+	"owner": {
+		"institution": "University of Nottingham",
+		"author": "Marco Pasi",
+		"contact": "marco.pasi@nottingham.ac.uk",
+		"url": "",
+		"user": "marco.pasi@nottingham.ac.uk"
+	},
+	"external": true,
+	"keywords": ["dna", "protein", "interactions"],
+	"launcher": {
+		"type": "SGE",
+		"queue": "dnashape.q",
+		"executable": "/opt/wrappers/pdiview_wf.py",
+		"cpus": 1
+	},
+	"input_files": [{
+		"name": "structure",
+		"description": "3D structure of the protein-DNA complex in PDB format",
+		"help": "The 3D structure of a protein-DNA complex in PDB format will be used to analyse the molecular determinants of specific binding.",
+		"file_type": ["PDB"],
+		"data_type": ["prot_dna_structure"],
+		"required": true,
+		"allow_multiple": false
+	}, {
+		"name": "binding_data",
+		"description": "Experimental data describing the sequence specificity of the protein",
+		"help": "The tab-separated plain-text file must contain on each line a sequence and the corresponding (relative) binding affinity score.",
+		"file_type": ["TSV"],
+		"data_type": ["prot_dna_specificity"],
+		"required": true,
+		"allow_multiple": false
+	}],
+	"arguments": [{
+		"name": "chains",
+		"description": "Commma-separated list of chains to be analysed from the PDB",
+		"help": "Specify which chains from the PDB file will be analysed; typically the first three chains (A, B and C) indicate the protein and the two strands of DNA.",
+		"type": "string",
+		"required": true,
+		"allow_multiple": false,
+		"default": "A,B,C"
+	}],
+	"control_file": ".summary.json",
+	"output_files": [{
+		"name": "output.pdb",
+		"required": true,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "PDB",
+			"data_type": "prot_dna_structure",
+			"compressed": "null",
+			"meta_data": {
+				"description": "The processed PDB file used for visualisation.",
+				"tool": "pdiview",
+				"visible": true
+			}
+		}
+	}, {
+		"name": "statistics",
+		"required": true,
+		"allow_multiple": false,
+		"file": {
+			"file_type": "TAR",
+			"data_type": "tool_statistics",
+			"compressed": "gzip",
+			"meta_data": {
+				"description": "Detailed output of tool for custom visualisation.",
+				"tool": "pdiview",
+				"visible": false
+			}
+		}
+	}]
+}

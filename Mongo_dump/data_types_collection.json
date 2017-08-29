@@ -1,47 +1,337 @@
-{ "_id" : "sequence_annotation", "name" : "Sequence Annotation", "file_types" : [ "BED", "BB", "BEDGRAPH", "WIG", "BW", "GFF", "GFF3", "GTF" ], "taxon_id" : true, "assembly" : [ "BED", "BB", "BEDGRAPH", "WIG", "BW", "GFF", "GFF3", "GTF" ] }
-{ "_id" : "data_chip_seq", "name" : "ChIP-Seq", "file_types" : [ "BED", "FASTQ", "BAM", "TSV" ], "taxon_id" : true, "assembly" : [ "BED", "BAM" ], "sorted" : [ "BAM" ], "paired" : [ "BAM" ] }
-{ "_id" : "chromatin_3dmodel", "name" : "Chromatin 3D structure", "file_types" : [ "PDB" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "chromatin_3dmodel_ensemble", "name" : "Ensemble of chromatin 3D structures", "file_types" : [ "JSON" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "chromatin_compartments", "name" : "Chromatin compartments data", "file_types" : [ "TXT" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "chromatin_tads", "name" : "Chromatin TADs", "file_types" : [ "BED", "TXT" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "chromatin_traj", "name" : "Chromatin trajectory", "file_types" : [ "DCD" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "configuration_file", "name" : "Tool configuration file", "file_types" : [ "JSON", "TEXT", "TSV" ], "taxon_id" : false, "assembly" : [] }
-{ "_id" : "data_atac_seq", "name" : "ATAC-Seq", "file_types" : [ "FASTQ", "BAM", "BED", "WIG" ], "taxon_id" : true, "assembly" : [ "BAM", "BED", "WIG" ], "sorted" : [ "BAM" ], "paired" : [ "BAM" ] }
-{ "_id" : "data_dna_methylation", "name" : "DNA methylation", "file_types" : [ "FASTQ", "WIG", "TSV" ], "taxon_id" : true, "assembly" : [ "WIG" ] }
-{ "_id" : "data_fish", "name" : "FISH data", "file_types" : [ "LIF", "TIFF" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "data_mnase_seq", "name" : "MNase-Seq", "file_types" : [ "FASTQ", "BAM" ], "taxon_id" : true, "assembly" : [ "BAM" ], "sorted" : [ "BAM" ], "paired" : [ "BAM" ] }
-{ "_id" : "data_rna_seq", "name" : "RNA-Seq", "file_types" : [ "FASTQ", "TSV" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "hic_contacts_coverage", "name" : "HiC contacts coverage", "file_types" : [ "WIG", "BIGWIG", "TXT" ], "taxon_id" : true, "assembly" : [ "WIG", "BIGWIG", "TXT" ] }
-{ "_id" : "hic_contacts_differential", "name" : "HiC differential contacts", "file_types" : [ "TSV" ], "taxon_id" : true, "assembly" : [ "TSV" ] }
-{ "_id" : "hic_contacts_matrix", "name" : "HiC contact matrix", "file_types" : [ "TXT", "HDF5" ], "taxon_id" : true, "assembly" : [ "TXT", "HDF5" ] }
-{ "_id" : "hic_contacts_peaks", "name" : "HiC contact peaks", "file_types" : [ "TSV" ], "taxon_id" : true, "assembly" : [ "TSV" ] }
-{ "_id" : "hic_directionality", "name" : "HiC directionality index", "file_types" : [ "TXT" ], "taxon_id" : true, "assembly" : [ "TXT" ] }
-{ "_id" : "hic_reads", "name" : "HiC sequencing reads", "file_types" : [ "FASTQ" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "hic_sequences", "name" : "HiC aligned reads ", "file_types" : [ "BAM" ], "taxon_id" : true, "assembly" : [ "BAM" ], "sorted" : [ "BAM" ], "paired" : [ "BAM" ] }
-{ "_id" : "hic_tads_scale", "name" : "HiC TADs scaling factor", "file_types" : [ "WIG" ], "taxon_id" : true, "assembly" : [ "WIG" ] }
-{ "_id" : "md_restart", "name" : "MD restart file", "file_types" : [ "RST ", "CPT" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "na_md_atom_traj_coords", "name" : "Nucleic acid MD atomistic trajectory coordinates", "file_types" : [ "XTC", "NETCDF", "MDCRD" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "na_md_atom_traj_top", "name" : "Nucleic acid MD atomistic trajectory topology", "file_types" : [ "TOP", "TPR", "PARMTOP", "PDB" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "na_md_cg_traj", "name" : "Nucleic acid MD CG trajectory", "file_types" : [ "MDCRD" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "na_structure", "name" : "Nucleic acid 3D structure", "file_types" : [ "PDB" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "na_traj_coords", "name" : "Nucleic acid trajectory coordinates", "file_types" : [ "XTC", "NETCDF", "MDCRD" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "na_traj_top", "name" : "Nucleic acid topology", "file_types" : [ "TOP", "TPR", "PARMTOP", "PDB" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "nucleosome_dynamics", "name" : "Nucleosome dynamics", "file_types" : [ "BW", "GFF3", "BED", "WIG", "RDATA" ], "taxon_id" : true, "assembly" : [ "BW", "GFF3", "BED", "WIG", "RDATA" ] }
-{ "_id" : "nucleosome_free_regions", "name" : "Nucleosome free regions", "file_types" : [ "BW", "GFF3", "BED", "WIG" ], "taxon_id" : true, "assembly" : [ "BW", "GFF3", "BED", "WIG" ] }
-{ "_id" : "nucleosome_gene_phasing", "name" : "Nucleosome phasing", "file_types" : [ "BW", "GFF3", "BED", "WIG" ], "taxon_id" : true, "assembly" : [ "BW", "GFF3", "BED", "WIG" ] }
-{ "_id" : "nucleosome_positioning", "name" : "Nucleosome positioning", "file_types" : [ "BW", "GFF3", "BED", "WIG", "TXT" ], "taxon_id" : true, "assembly" : [ "BW", "GFF3", "BED", "WIG" ] }
-{ "_id" : "nucleosome_stiffness", "name" : "Nucleosome stiffness", "file_types" : [ "BW", "GFF3", "BED", "WIG" ], "taxon_id" : true, "assembly" : [ "BW", "GFF3", "BED", "WIG" ] }
-{ "_id" : "tss_classification_by_nucleosomes", "name" : "Nucleosome TSS", "file_types" : [ "BW", "GFF3", "BED", "WIG" ], "taxon_id" : true, "assembly" : [ "BW", "GFF3", "BED", "WIG" ] }
-{ "_id" : "sequence_dna", "name" : "DNA sequence", "file_types" : [ "FASTA", "TXT" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "sequence_genomic", "name" : "Genomic sequence", "file_types" : [ "FASTA" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "sequence_mapping_index", "name" : "Sequence mapping index", "file_types" : [ "GEM", "BWT" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "sequence_prot", "name" : "Protein sequence", "file_types" : [ "FASTA" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "sequence_rna", "name" : "RNA sequence", "file_types" : [ "FASTA" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "structure", "name" : "3D structure", "file_types" : [ "PDB" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "tool_intermediate_file", "name" : "Tool Intermediate file", "file_types" : [ "TAR" ], "taxon_id" : false, "assembly" : [] }
-{ "_id" : "tool_statistics", "name" : "Tool summary file", "file_types" : [ "TAR" ], "taxon_id" : false, "assembly" : [] }
-{ "_id" : "docking_ranking", "name" : "Docking ranking score", "file_types" : [ "CSV", "TXT", "TSV" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "na_traj", "name" : "Nucleic acid trajectory", "file_types" : [ "DCD" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "prot_dna_specificity", "name" : "Protein-DNA specificity", "file_types" : [ "TSV" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "prot_dna_structure", "name" : "Protein-DNA complex structure", "file_types" : [ "PDB" ], "taxon_id" : true, "assembly" : [] }
-{ "_id" : "prot_structure", "name" : "Protein 3D structure", "file_types" : [ "PDB" ], "taxon_id" : true, "assembly" : [] }
+{
+	"_id": "sequence_annotation",
+	"name": "Sequence Annotation",
+	"file_types": ["BED", "BB", "BEDGRAPH", "WIG", "BW", "GFF", "GFF3", "GTF"],
+	"taxon_id": true,
+	"assembly": ["BED", "BB", "BEDGRAPH", "WIG", "BW", "GFF", "GFF3", "GTF"]
+}
+{
+	"_id": "data_chip_seq",
+	"name": "ChIP-Seq",
+	"file_types": ["BED", "FASTQ", "BAM", "TSV"],
+	"taxon_id": true,
+	"assembly": ["BED", "BAM"],
+	"sorted": ["BAM"],
+	"paired": ["BAM"]
+}
+{
+	"_id": "chromatin_3dmodel",
+	"name": "Chromatin 3D structure",
+	"file_types": ["PDB"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "chromatin_3dmodel_ensemble",
+	"name": "Ensemble of chromatin 3D structures",
+	"file_types": ["JSON"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "chromatin_compartments",
+	"name": "Chromatin compartments data",
+	"file_types": ["TXT"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "chromatin_tads",
+	"name": "Chromatin TADs",
+	"file_types": ["BED", "TXT"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "chromatin_traj",
+	"name": "Chromatin trajectory",
+	"file_types": ["DCD"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "configuration_file",
+	"name": "Tool configuration file",
+	"file_types": ["JSON", "TEXT", "TSV"],
+	"taxon_id": false,
+	"assembly": []
+}
+{
+	"_id": "data_atac_seq",
+	"name": "ATAC-Seq",
+	"file_types": ["FASTQ", "BAM", "BED", "WIG"],
+	"taxon_id": true,
+	"assembly": ["BAM", "BED", "WIG"],
+	"sorted": ["BAM"],
+	"paired": ["BAM"]
+}
+{
+	"_id": "data_dna_methylation",
+	"name": "DNA methylation",
+	"file_types": ["FASTQ", "WIG", "TSV"],
+	"taxon_id": true,
+	"assembly": ["WIG"]
+}
+{
+	"_id": "data_fish",
+	"name": "FISH data",
+	"file_types": ["LIF", "TIFF"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "data_mnase_seq",
+	"name": "MNase-Seq",
+	"file_types": ["FASTQ", "BAM"],
+	"taxon_id": true,
+	"assembly": ["BAM"],
+	"sorted": ["BAM"],
+	"paired": ["BAM"]
+}
+{
+	"_id": "data_rna_seq",
+	"name": "RNA-Seq",
+	"file_types": ["FASTQ", "TSV"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "hic_contacts_coverage",
+	"name": "HiC contacts coverage",
+	"file_types": ["WIG", "BIGWIG", "TXT"],
+	"taxon_id": true,
+	"assembly": ["WIG", "BIGWIG", "TXT"]
+}
+{
+	"_id": "hic_contacts_differential",
+	"name": "HiC differential contacts",
+	"file_types": ["TSV"],
+	"taxon_id": true,
+	"assembly": ["TSV"]
+}
+{
+	"_id": "hic_contacts_matrix",
+	"name": "HiC contact matrix",
+	"file_types": ["TXT", "HDF5"],
+	"taxon_id": true,
+	"assembly": ["TXT", "HDF5"]
+}
+{
+	"_id": "hic_contacts_peaks",
+	"name": "HiC contact peaks",
+	"file_types": ["TSV"],
+	"taxon_id": true,
+	"assembly": ["TSV"]
+}
+{
+	"_id": "hic_directionality",
+	"name": "HiC directionality index",
+	"file_types": ["TXT"],
+	"taxon_id": true,
+	"assembly": ["TXT"]
+}
+{
+	"_id": "hic_reads",
+	"name": "HiC sequencing reads",
+	"file_types": ["FASTQ"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "hic_sequences",
+	"name": "HiC aligned reads ",
+	"file_types": ["BAM"],
+	"taxon_id": true,
+	"assembly": ["BAM"],
+	"sorted": ["BAM"],
+	"paired": ["BAM"]
+}
+{
+	"_id": "hic_tads_scale",
+	"name": "HiC TADs scaling factor",
+	"file_types": ["WIG"],
+	"taxon_id": true,
+	"assembly": ["WIG"]
+}
+{
+	"_id": "md_restart",
+	"name": "MD restart file",
+	"file_types": ["RST ", "CPT"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "na_md_atom_traj_coords",
+	"name": "Nucleic acid MD atomistic trajectory coordinates",
+	"file_types": ["XTC", "NETCDF", "MDCRD"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "na_md_atom_traj_top",
+	"name": "Nucleic acid MD atomistic trajectory topology",
+	"file_types": ["TOP", "TPR", "PARMTOP", "PDB"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "na_md_cg_traj",
+	"name": "Nucleic acid MD CG trajectory",
+	"file_types": ["MDCRD"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "na_structure",
+	"name": "Nucleic acid 3D structure",
+	"file_types": ["PDB"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "na_traj_coords",
+	"name": "Nucleic acid trajectory coordinates",
+	"file_types": ["XTC", "NETCDF", "MDCRD"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "na_traj_top",
+	"name": "Nucleic acid topology",
+	"file_types": ["TOP", "TPR", "PARMTOP", "PDB"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "nucleosome_dynamics",
+	"name": "Nucleosome dynamics",
+	"file_types": ["BW", "GFF3", "BED", "WIG", "RDATA"],
+	"taxon_id": true,
+	"assembly": ["BW", "GFF3", "BED", "WIG", "RDATA"]
+}
+{
+	"_id": "nucleosome_free_regions",
+	"name": "Nucleosome free regions",
+	"file_types": ["BW", "GFF3", "BED", "WIG"],
+	"taxon_id": true,
+	"assembly": ["BW", "GFF3", "BED", "WIG"]
+}
+{
+	"_id": "nucleosome_gene_phasing",
+	"name": "Nucleosome phasing",
+	"file_types": ["BW", "GFF3", "BED", "WIG"],
+	"taxon_id": true,
+	"assembly": ["BW", "GFF3", "BED", "WIG"]
+}
+{
+	"_id": "nucleosome_positioning",
+	"name": "Nucleosome positioning",
+	"file_types": ["BW", "GFF3", "BED", "WIG", "TXT"],
+	"taxon_id": true,
+	"assembly": ["BW", "GFF3", "BED", "WIG"]
+}
+{
+	"_id": "nucleosome_stiffness",
+	"name": "Nucleosome stiffness",
+	"file_types": ["BW", "GFF3", "BED", "WIG"],
+	"taxon_id": true,
+	"assembly": ["BW", "GFF3", "BED", "WIG"]
+}
+{
+	"_id": "tss_classification_by_nucleosomes",
+	"name": "Nucleosome TSS",
+	"file_types": ["BW", "GFF3", "BED", "WIG"],
+	"taxon_id": true,
+	"assembly": ["BW", "GFF3", "BED", "WIG"]
+}
+{
+	"_id": "sequence_dna",
+	"name": "DNA sequence",
+	"file_types": ["FASTA", "TXT"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "sequence_genomic",
+	"name": "Genomic sequence",
+	"file_types": ["FASTA"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "sequence_mapping_index",
+	"name": "Sequence mapping index",
+	"file_types": ["GEM", "BWT"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "sequence_prot",
+	"name": "Protein sequence",
+	"file_types": ["FASTA"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "sequence_rna",
+	"name": "RNA sequence",
+	"file_types": ["FASTA"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "structure",
+	"name": "3D structure",
+	"file_types": ["PDB"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "tool_intermediate_file",
+	"name": "Tool Intermediate file",
+	"file_types": ["TAR"],
+	"taxon_id": false,
+	"assembly": []
+}
+{
+	"_id": "tool_statistics",
+	"name": "Tool summary file",
+	"file_types": ["TAR"],
+	"taxon_id": false,
+	"assembly": []
+}
+{
+	"_id": "docking_ranking",
+	"name": "Docking ranking score",
+	"file_types": ["CSV", "TXT", "TSV"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "na_traj",
+	"name": "Nucleic acid trajectory",
+	"file_types": ["DCD"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "prot_dna_specificity",
+	"name": "Protein-DNA specificity",
+	"file_types": ["TSV"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "prot_dna_structure",
+	"name": "Protein-DNA complex structure",
+	"file_types": ["PDB"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "prot_structure",
+	"name": "Protein 3D structure",
+	"file_types": ["PDB"],
+	"taxon_id": true,
+	"assembly": []
+}
