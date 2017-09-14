@@ -82,7 +82,7 @@
 {
 	"_id": "data_mnase_seq",
 	"name": "MNase-Seq",
-	"file_types": ["FASTQ", "BAM"],
+	"file_types": ["FASTQ", "BAM", "BED"],
 	"taxon_id": true,
 	"assembly": ["BAM"],
 	"sorted": ["BAM"],
@@ -91,7 +91,36 @@
 {
 	"_id": "data_rna_seq",
 	"name": "RNA-Seq",
-	"file_types": ["FASTQ", "TSV"],
+	"file_types": ["FASTQ", "TSV", "HDF5", "JSON"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "data_wgbs",
+	"name": "Whole Genome Bisulfite Sequencing",
+	"file_types": ["FASTQ", "BAM", "BAI", "WIG", "TSV", "TXT"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "index_bowtie",
+	"name": "Bowtie2 index files",
+	"file_types": ["BT2", "TXT"],
+	"taxon_id": true,
+	"assembly": [],
+	"compressed": true
+}
+{
+	"_id": "index_bwa",
+	"name": "BWA index files",
+	"file_types": ["AMB", "ANN", "BWT", "PAC", "SA"],
+	"taxon_id": true,
+	"assembly": []
+}
+{
+	"_id": "index_kallisto",
+	"name": "Kallisto index file",
+	"file_types": ["IDX"],
 	"taxon_id": true,
 	"assembly": []
 }
