@@ -11,16 +11,16 @@ function execJob ($workDir,$shFile,$queue,$cpus=1,$mem=0) {
     $jobname = $_SESSION['User']['id']."#".basename($shFile);
 
     // Start SGE process
-    $process = new ProcessSGE($shfile,$workDir,$queue,$jobname,$cpu,$mem);
+    $process = new ProcessSGE($shFile,$workDir,$queue,$jobname,$cpus,$mem);
 
     $pid = $process->getPid();
 
-    if (! $process->status()){
-	$_SESSION['errorData']['Error'][]="Job submission failed.<br/>".$process->getFullCommand."<br/>".$process->getErr();
+    if (!$process->status()){
+        $_SESSION['errorData']['Error'][]="Job submission failed.<br/>".$process->getFullCommand."<br/>".$process->getErr();
         logger("ERROR: SGE job is not running. MORE_INFO = '".$process->getErr(). "'");
         return 0;
     }
-
+    
     logger("The process $cmd is currently running PID = $pid");
     return $pid;
 }
@@ -37,7 +37,6 @@ function execJobPMES ($cloudName,$data){
 	return 0;
     }
 
-    print "<br>SERVER IS LISTENING !!!!!!! <br>";
     $process->runPMES($data);
     $jobid =  $process->getJobId();
 
@@ -139,7 +138,6 @@ function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL){
     return true;
 }
 
-
 function getPidFromOutfile($outfile){
 	$pid=0;
 	$SGE_updated = getUserJobs($_SESSION['userId']);
@@ -152,6 +150,8 @@ function getPidFromOutfile($outfile){
 	}
 	return $pid;	
 }
+
+// cancel job given its output file
 function delJobFromOutfiles($outfiles){
 	if (!is_array($outfiles)){
 		$outfiles=Array($outfiles);
@@ -179,7 +179,7 @@ function delJobFromOutfiles($outfiles){
 			//delete job
 			$ok = delJob($pid);
 			if (!$ok){
-				$_SESSION['errorData']['SGE'][]= "Cannot delete ".basename($outfile)." task. $pid unsuccessfully exited 'deljob'.";
+				$_SESSION['errorData']['Error'][]= "Cannot delete ".basename($outfile)." task. Unsuccessfully exit of 'deljob' for job $pid.";
 				continue;
 			}
 		    //delete job associated files
@@ -201,7 +201,7 @@ function delJobFromOutfiles($outfiles){
 				if (!empty($ofn)){
 					$ok = deleteGSFileBNS($fn);
 				    if (!$ok){
-						$_SESSION['errorData']['SGE'][]= "Job ".basename($outfile)." deleted. But errors occured while cleaning temporal files.";
+					    $_SESSION['errorData']['SGE'][]= "Job ".basename($outfile)." deleted. But errors occured while cleaning temporal files.";
 						continue;
 					}
 				}
@@ -222,19 +222,46 @@ function delJobFromOutfiles($outfiles){
 	return 1;
 }
 
-function delJob($pid){
-	$cmd = QDEL." $pid";
-	exec($cmd,$r);
-	$res = join(" ",$r);
-	if (preg_match('/has deleted/i',$res) || preg_match('/registered the job \d+ for deletion/',$res)){
-		delUserJob($_SESSION['User']['id'],$pid);
-		return true;
+function delJob($pid,$launcherType=NULL){
 
-	}else{
-		$_SESSION['errorData']['SGE'][] = "Cannot delete job $pid.<br>".join(". ",$r); 
-		return false;
-	}
-	return true;
+    $job=Array();
+    if (! $pid)
+        return false;
+
+    // guess launcher
+    if(!$launcherType){
+        if (is_numeric($pid))
+            $launcherType = "SGE";
+        else
+            $launcherType = "PMES";
+    }
+
+    // cancel job
+    $r = false;
+    if ($launcherType == "SGE"){
+        $process = new ProcessSGE();
+        list($r,$msg) = $process->stop($pid);
+        if (!$r)
+           $_SESSION['errorData']['Error'][]="Cannot delete $launcherType job [id = $pid].<br/>$msg";
+
+    }elseif($launcherType == "PMES"){
+        $process = new ProcessPMES();
+        $r= $process->stop($pid);
+        if (!$r)
+           $_SESSION['errorData']['Error'][]="Cannot delete $launcherType job [id = $pid].<br/>$msg";
+    }else{
+        $_SESSION['errorData']['Error'][]="Cannot delete job of type '$launcherType' [id = $pid]. Launcher not implemented.";
+        return false;
+    }
+
+    // delete job from user
+    if ($r){
+        delUserJob($_SESSION['User']['id'],$pid);
+    }else{
+    	$_SESSION['errorData']['Internal Error'][] = "Error while cancelling $launcherType job [id = $pid].<br>Job deleted from the system, but not from user metadata"; 
+    	return false;
+    }
+    return true;
 }
 
 /*
