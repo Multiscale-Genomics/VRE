@@ -4,8 +4,8 @@ require "../phplib/genlibraries.php";
 redirectOutside();
 
 $exp = array();
-foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array('_id'=>strtoupper($_GET['id'])),array('experimenttype'=>1, 'releasedate'=>1, 'accession'=>1, 'organism'=>1, 'name'=>1, 'assays'=>1, 'samples'=>1, 'arraydesign'=>1, 'protocol'=>1, 'description'=>1, 'lastupdatedate'=>1, 'provider'=>1, 'bibliography'=>1, 'files'=>1, 'secondaryaccession'=>1))->sort(array('releasedate'=>1)))) as $v)
-	$exp[$v['_id']] = array($v['experimenttype'], $v['releasedate'], $v['accession'], $v['organism'], $v['name'], $v['assays'], $v['samples'], $v['arraydesign'], $v['protocol'], $v['description'], $v['lastupdatedate'], $v['provider'], $v['bibliography'], $v['files'], $v['secondaryaccession']);
+foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array('_id'=>strtoupper($_GET['id'])),array('experimenttype'=>1, 'releasedate'=>1, 'accession'=>1, 'organism'=>1, 'name'=>1, 'assays'=>1, 'samples'=>1, 'arraydesign'=>1, 'protocol'=>1, 'description'=>1, 'lastupdatedate'=>1, 'provider'=>1, 'bibliography'=>1, 'files'=>1, 'secondaryaccession'=>1, 'mug_repository'=>1))->sort(array('releasedate'=>1)))) as $v)
+	$exp[$v['_id']] = array($v['experimenttype'], $v['releasedate'], $v['accession'], $v['organism'], $v['name'], $v['assays'], $v['samples'], $v['arraydesign'], $v['protocol'], $v['description'], $v['lastupdatedate'], $v['provider'], $v['bibliography'], $v['files'], $v['secondaryaccession'], $v['mug_repository']);
 
 $experiment = array();
 $experiment = $exp[$_GET['id']];
@@ -183,7 +183,7 @@ $experiment = $exp[$_GET['id']];
 													Files</td>
                                                   <td>
 													<?php 
-													$files = array();
+                                                    $files = array();
 													$files['idf'] = array();
 													$files['processed'] = array();
 													$files['raw'] = array();
@@ -220,6 +220,8 @@ $experiment = $exp[$_GET['id']];
 															<td class="col-1-subt">Sample and data relationship <?php if(sizeof($files['sdrf']) > 1) echo '('.sizeof($files['sdrf']).')'; ?></td>
 															<td class="col-2-subt">	
 															<?php foreach($files['sdrf'] as $k => $v): ?>
+                                                            <a href="applib/getData.php?uploadType=repository&url=<?php echo $v['url'];?>&repo=<?php echo $experiment[15];?>" target="_blank"><i class="fa fa-cloud-upload"></i></a>&nbsp;&nbsp;
+
 																<a href="<?php echo $v['url']; ?>" target="_blank"><i class="fa fa-download"></i> <?php echo $v['name']; ?></a> 
 															<?php endforeach; ?>
 															<td>

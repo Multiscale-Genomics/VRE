@@ -19,7 +19,9 @@ switch ($_REQUEST['uploadType']){
 							break;
 	case 'id':  $source = getSourceURL(); 
 							getData_fromURL($source['url'], $source['ext']);
-							break;
+                            break;
+    case 'repository': getData_fromRepository($_REQUEST);
+                            break;
 	default:
 		die(0);
 }
