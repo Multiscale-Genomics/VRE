@@ -35,7 +35,7 @@ var TaxonNameTypeahead = function () {
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       limit: 20,
       remote: {
-				url: 'http://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/suggest-for-search/%QUERY',
+				url: 'https://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/suggest-for-search/%QUERY',
         wildcard: '%QUERY',
 		    filter: function(list) {
           return $.map(list, function(taxon) { return { name: taxon.scientificName, id:taxon.taxId }; });
@@ -86,7 +86,7 @@ var TaxonIDTypeahead = function () {
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       limit: 1,
       remote: {
-				url: 'http://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/tax-id/%QUERY',
+				url: 'https://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/tax-id/%QUERY',
         wildcard: '%QUERY',
 		    filter: function(list) {
           //return $.map(list, function(taxon) { return { name: taxon.scientificName, id:taxon.taxId }; });
