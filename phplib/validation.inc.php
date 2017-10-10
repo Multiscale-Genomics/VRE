@@ -83,13 +83,13 @@ function get_chrAlternatives(){
 function validateUPLOAD($fn,$inFn,$refGenome,$format){
         $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
         $chrs     = Array();
+        $chrRefRoot="chr";
 
         $chrRef = get_chrNames($refGenome);
         if (! count($chrRef) ){
 		$_SESSION['errorData']['error'][]="Cannot find any chromosome for reference genome $refGenome.";
                 return (false);
         }
-        $chrRefRoot="chr";
         if (! is_file($inFn)){
                 $_SESSION['errorData']['error'][]="Given file $inFn is not on disk. Please, check the file is selected and has size > 0";
                 return (false);
@@ -149,23 +149,25 @@ function validateUPLOAD($fn,$inFn,$refGenome,$format){
         # match file chr names against ref genome chr names
 	foreach ($chrNames as $chr){
         	if (!$chr)
-                	continue;
+                continue;
 		# look for the exact chr name
-		if ( in_array($chr,$chrRef) ){
-			 $chrs[$chr]=$chr;
+        if ( in_array($chr,$chrRef) ){
+            $chrs[$chr]=$chr;
 
 		# look for chr alternatives names
-                }elseif (preg_match('/(chromosome)(.*)/i',$chr,$m) || preg_match('/(chr)(.*)/i',$chr,$m) || preg_match('/^()(.*)/i',$chr,$m)){
+        }elseif (preg_match('/(chromosome)(.*)/i',$chr,$m) || preg_match('/(chr)(.*)/i',$chr,$m) || preg_match('/^()(.*)/i',$chr,$m)){
 			if (!count($m)){continue;}
-                      	$pre  = $m[1];
+           	$pre  = $m[1];
 			$post = $m[2];
 			if (isset($chrAlt[$post])){
-                        	$chrs[$chr]=$chrRefRoot.$chrAlt[$post];
+                $chrs[$chr]=$chrRefRoot.$chrAlt[$post];
 			}elseif(in_array($post,$chrRef) ){
 				$chrs[$chr]=$post;
-                        }else{
-                        	$chrs[$chr]=false;
-                        }
+			}elseif(in_array("$chrRefRoot$post",$chrRef) ){
+                $chrs[$chr]=$chrRefRoot.$post;
+            }else{
+                $chrs[$chr]=false;
+           }
 		}
 	}
 
@@ -173,14 +175,14 @@ function validateUPLOAD($fn,$inFn,$refGenome,$format){
         $hasErr=0;
         foreach ($chrs as $c=>$r){
                 if ($r == false){
-                	$_SESSION['errorData']['error'][]="Cannot find chromosome name <b>$c</b> in reference sequence '$refGenome'. No transformations suggested.";
+                	$_SESSION['errorData']['Naming of genomic regions failed'][]="Cannot find chromosome name <b>$c</b> in reference sequence '$refGenome'. No transformations suggested.";
                         $hasErr=1;
 		}elseif($c != $r){
                 	$_SESSION['validation'][$fn]['action']["substitutions"]["$c => $r"]=0;
 		}
 	}
         if ($hasErr){
-                $_SESSION['errorData']['error'][]="Please, edit your file to match <a href=\"help.php?id=upload\" target=\"_blank\">reference genome names</a> . Current BAM contains: ".join(" , ",$chrNames);
+                $_SESSION['errorData']['Error'][]="Please, edit your file to match <a href=\"help/upload.php\" target=\"_blank\">reference genome names</a> . Given file contains: ".join(" , ",$chrNames);
                 return false;
         }
         return (true);
@@ -499,21 +501,21 @@ function validateBAM($bamFn,$refGenome){
 
 function get_seds_fromChrNameValidation($fn){
 	$subs=Array();
-	if (isset($_SESSION['validation'][$fn]['action']['substitutions'] )){
-		foreach ($_SESSION['validation'][$fn]["action"]['substitutions'] as $action ){
-                       if (preg_match('/(.[^ ]*) => (.*)/',$action,$m)){
-                                $format= $_SESSION['validation'][$fn]['format'];
-				if ($format == "GFF" || $format == "GFF3" || $format == "BED"){
-					print " sed 's/^".$m[2]."/".$m[3]."/g' <br/> ";
-					array_push($subs," sed 's/^".$m[2]."/".$m[3]."/g' ");
-				}elseif ($format == "WIG" ){
-					print " sed 's/chrom=".$m[2]."/chrom=".$m[3]."/g' <br/> ";
-					array_push($subs," sed 's/chrom=".$m[2]."/chrom=".$m[3]."/g' ");
-				}else{	
-					print " sed 's/".$m[2]."/".$m[3]."/g' <br/> ";
-					array_push($subs," sed 's/".$m[2]."/".$m[3]."/g' ");
-				}
-			}
+    if (isset($_SESSION['validation'][$fn]['action']['substitutions'] )){
+        foreach ($_SESSION['validation'][$fn]["action"]['substitutions'] as $action => $v ){
+            if (preg_match('/(.[^ ]*) => (.*)/',$action,$m)){
+                    $format= $_SESSION['validation'][$fn]['format'];
+    				if ($format == "GFF" || $format == "GFF3" || $format == "BED"){
+    					//print " sed 's/^".$m[1]."/".$m[2]."/g' <br/> ";
+    					array_push($subs," sed 's/^".$m[1]."/".$m[2]."/g' ");
+    				}elseif ($format == "WIG" ){
+    					//print " sed 's/chrom=".$m[1]."/chrom=".$m[2]."/g' <br/> ";
+    					array_push($subs," sed 's/chrom=".$m[1]."/chrom=".$m[2]."/g' ");
+    				}else{	
+    					//print " sed 's/".$m[1]."/".$m[2]."/g' <br/> ";
+    					array_push($subs," sed 's/".$m[1]."/".$m[2]."/g' ");
+    				}
+	    		}
 		}
 	}
 	return $subs;
@@ -535,11 +537,11 @@ function processBAM($bamId,$type,$cores){
 
 	if (empty($fileInfo) || count($subs) || $sort || $index ){
 		$shfile = queueNucDynPrepUpload(basename($bam),$dirTmp,$bamFn,$type,$sort,$subs,$index,$cores);
-	        $pid    = execNucDyn($dirTmp,$shfile);
+	    $pid    = execNucDyn($dirTmp,$shfile);
 
-        	print "PID PREPROCESSING is $pid for ".$bamFn." sORT=$sort index=$index type=$type fileInfo=".empty($fileInfo)."---> SH: $shfile<br>";
+        //print "PID PREPROCESSING is $pid for ".$bamFn." sORT=$sort index=$index type=$type fileInfo=".empty($fileInfo)."---> SH: $shfile<br>";
 		$fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $bam));
-	        $SGE_updated[$pid]= Array('_id' => $pid,
+	    $SGE_updated[$pid]= Array('_id' => $pid,
                                     'out'   => array($bam,"$bam.RData","$bam.cov","$bam.bai"),
                                     'log'   => str_replace(".sh",".log","$dirTmp/$shfile"),
 									'metaData'=> $fileMeta
@@ -567,48 +569,52 @@ function processBAM($bamId,$type,$cores){
 
 
 function processUPLOAD($inId){
-	$fileInfo = $GLOBALS['filesCol']->findOne(array('_id' => $inId));
-        $in       = $fileInfo['path'];
 	$dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
-	$inFn    = $GLOBALS['dataDir']."/".$in;
-	$outFn   = $dirTmp. "/".basename($in);
-
+	$fileInfo = $GLOBALS['filesCol']->findOne(array('_id' => $inId));
+    $fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $inId));
+    $in       = $fileInfo['path'];
+	$inFn     = $GLOBALS['dataDir']."/".$in;
+	$outFn    = $dirTmp. "/".basename($in);
 
 	# edit file according SESSION[validation] 
-	$subs  = get_seds_fromChrNameValidation($inId);
+    $subs  = get_seds_fromChrNameValidation($inId);
+
 	$cmd = "";
 	if (count($subs)){
 		$cmd = "cat $inFn | ". join(" | ",$subs). " > $outFn ; ";
 	}
-
 	if ($cmd){
 		subprocess($cmd,$stdOut,$stdErr,$dirTmp);
 		if ($stdErr){
-				$_SESSION['errorData']['error'][]="Error while executing the following command: $cmd<br/>$stdErr";
-			return (false);
+        	$_SESSION['errorData']['error'][]="Error while executing the following command: $cmd<br/>$stdErr";
+			return false;
 		}
 		if (! is_file($outFn) ){
 			$_SESSION['errorData']['error'][]="Error while executing the following command: $cmd<br/>Output $outFn not created";
-			return (false);
+			return false;
 		}
 
 		subprocess("mv $outFn $inFn",$stdOut,$stdErr,$dirTmp);
 		if (! is_file($inFn) and filesize($inFn) ){
 			$_SESSION['errorData']['error'][]="Error while executing the following command: $cmd<br/>Output $inFn not created";
-			return (false);
-		}
+			return false;
+        }
 	    $insertData=array(
-	           '_id'   => $in,
+	           '_id'   => $inId,
 	           'owner' => $_SESSION['userId'],
 	           'size'  => filesize($inFn),
 	           'mtime' => new MongoDate(filemtime($inFn))
-	    );
-		$fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $in));
-		$r = uploadGSFileBNS($in, $inFn, $insertData,$fileMeta,FALSE);
-		if ($r == 0)
-			return (false);
-	}
-	return (true);
+           );
+
+        // delete original file from DMP
+        $r = deleteGSFileBNS($inId);
+
+        // create new file from DMP
+        $r = uploadGSFileBNS($in, $inFn, $insertData,$fileMeta,FALSE);
+		if ($r == "0")
+			return false;
+    }
+	return true;
 }
 
 
