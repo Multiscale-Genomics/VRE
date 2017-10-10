@@ -57,7 +57,7 @@ if (file_exists($avatarImg)){
                                         <a href="user/usrProfile.php">
                                             <i class="glyphicon glyphicon-user"></i> My Profile </a>
 									</li>
-									<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['ADMIN'])){ ?>
+									<?php if((allowedRoles($_SESSION['User']['Type'], $GLOBALS['ADMIN'])) && (!allowedRoles($_SESSION['User']['Type'], $GLOBALS['TOOLDEV']))){ ?>
 									<li>
                                         <a href="admin/dashboard.php">
                                             <i class="glyphicon glyphicon-dashboard"></i> Dashboard </a>

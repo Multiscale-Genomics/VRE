@@ -70,7 +70,16 @@
 			case 'dashboard':
 			case 'repositoryList': ?>
 			<link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
-	        <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+					<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+			<?php break;
+			case 'help':
+			case 'method':
+			case 'inputs':
+			case 'outputs':
+			case 'results':
+			case 'tutorials':
+			case 'references':?>
+			<link href="assets/global/plugins/markdown/bootstrap-markdown-editor.css" rel="stylesheet" type="text/css" />
 			<?php break;
 			case 'output': ?>
 				<?php if(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/pydockdna'){ ?>
@@ -106,6 +115,9 @@
 			case 'editUser': ?>
 				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
 				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+			<?php break;
+			case 'tools': ?>
+				<link href="assets/global/plugins/cubeportfolio/css/cubeportfolio.css" rel="stylesheet" type="text/css" />
 			<?php break ?>;
 
 		<?php } ?>
@@ -142,7 +154,10 @@
 			<?php break; 
 			case 'input':
 			case 'output': ?>
-			<link href="assets/pages/css/customized-tools.css" rel="stylesheet" type="text/css" />	
+			<link href="assets/pages/css/customized-tools.css" rel="stylesheet" type="text/css" />
+			<?php break; 
+			case 'tools': ?>
+			<link href="assets/pages/css/portfolio.min.css" rel="stylesheet" type="text/css" />	
 			<?php break; ?>
 		<?php } ?>
         <!-- END PAGE LEVEL STYLES -->
@@ -152,7 +167,6 @@
 			case 'index2':
 			case 'index':
 			case 'home': 
-			case 'help1': 	
 			case 'usrProfile':
 			case 'uploadForm': 
 			case 'uploadForm2':
@@ -170,6 +184,24 @@
 			case 'input':
 			case 'output':
 			case 'loading_output':
+
+			case 'general':
+			case 'starting':
+			case 'upload':		
+			case 'ws':
+			case 'launch':
+			case 'hdesk':
+			case 'related':
+			case 'refs':
+			case 'help':
+			case 'method':
+			case 'inputs':
+			case 'outputs':
+			case 'results':
+			case 'tutorials':
+			case 'references':
+			case 'tools':
+	
 	?>		
 			<link href="assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />
         	<link href="assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />			

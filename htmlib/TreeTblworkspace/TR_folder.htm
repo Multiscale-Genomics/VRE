@@ -8,7 +8,7 @@
 <td>
 	##filename##
 	<!--  span style="font-weight:bold;" search="yes"   type="project" -->
-	<span class="expand_info" onclick="expandInfo(this)"></span>
+	<!--<span class="expand_info" onclick="expandInfo(this)"></span>-->
 	<div class="extra_info">
 		<table style="border:none;border-left:dashed 1px gray;margin:10px 22px;padding:0 3px;">
 			<tr><td>Description:</td><td>##description##</td></tr>
@@ -19,22 +19,30 @@
 
   		</table>
 	</div>
+	<a href="javascript:viewFileMeta('##_id##', '##filename##', 0);"><i class="fa fa-info-circle"></i></a>
 </td>
+<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>##filename##</td>
 <td>##mtime##</td>
 <td>##size##</td>
-<td>&nbsp;</td>
 <td>
-	<div class="btn-group">
-		<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
-			<i class="fa fa-angle-down"></i>
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;">
+		<button class="btn btn-xs blue-madison dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
+			<i class="fa fa-cogs"></i>
 		</button>
 		<ul class="dropdown-menu pull-right" role="menu">
 			<li><a href="javascript:deleteFolder('##_id_URL##');"><i class="fa fa-trash-o"></i> Delete Folder</a></li>
 			<li><a href="workspace/workspace.php?op=downloadtgz&fn=##_id_URL##"><i class="fa fa-download"></i> Download Folder</a></li>
-			##viewResultsLink##
 			##rerunLink##
+		</ul>
+	</div>
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;margin-left:33px;">
+    	<button class="btn btn-xs purple-intense dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
+				<i class="fa fa-eye"></i>
+		</button>
+	  <ul class="dropdown-menu pull-right" role="menu">
+			##viewResultsLink##
 		</ul>
 	</div>
 </td>

@@ -8,55 +8,58 @@
 </td>
 
 <td>
-	<a class="##state## truncate"  href="workspace/workspace.php?op=##openFunction##&fn=##_id_URL##" title="open file ##filename##" target="_blank">##filename##</a>
-	<span class="expand_info" onclick="expandInfo(this)"></span>
+	<a class="##state## truncate"  href="workspace/workspace.php?op=##openFunction##&fn=##_id_URL##" title="open file ##longfilename##" target="_blank">##filename##</a> 
+	<!--<span class="expand_info" onclick="expandInfo(this)"></span>-->
 	<div class="extra_info">
 	  <table>
 	  	<tr>
-			<td style="padding:0px 5px;vertical-align:top;color:#000;font-size:12px;">Description:</td>
-			<td style="padding:0px 5px;color:#666;font-size:12px;">##description##</td>
+			<td style="padding:0px 5px;vertical-align:top;">Description:</td>
+			<td style="padding:0px 5px;">##description##</td>
 		 </tr>
 		##tool##
-		##execDetails##
 		##notes##
 		##refGenome##
 		##paired##
 		##data_type##
 	  </table>
   	</div>
+		 <a href="javascript:viewFileMeta('##_id##', '##filename##', 1);" style="margin-left:3px;"><i class="fa fa-info-circle"></i></a>
 </td>
 <td>##format##</td>
+<td>##file_data_type##</td>
 <td>##project##</td>
 <td>##mtime##</td>
 <td>##size##</td>
+
 <td>
-	<div class="btn-group">
-	##tools##
-<!--		<button class="btn btn-xs blue-oleo dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Tools
-		     <i class="fa fa-angle-down"></i>
-		 </button>
-		 <ul class="dropdown-menu pull-center" role="menu">
-		     	<li><a href="javascript:;"><i class="fa fa-motorcycle"></i> Nucleosome Dynamics</a></li>
-			<li><a href="javascript:;"><i class="fa fa-database"></i> BigNASim</a></li>
-		 </ul>
--->
-	</div>
-</td>
-<td>
-	<div class="btn-group">
-    	<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
-			<i class="fa fa-angle-down"></i>
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;">
+    	<button class="btn btn-xs blue-madison dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
+				<i class="fa fa-cogs"></i>
 		</button>
 	  <ul class="dropdown-menu pull-right" role="menu">
 			##metadataLink##
 			<li><a href="workspace/workspace.php?op=downloadFile&fn=##_id_URL##"><i class="fa fa-download"></i> Download file </a></li>
 			<li><a href="javascript:deleteFile('##_id_URL##');"><i class="fa fa-trash-o"></i> Delete file </a></li>
 			##compressionLink##
+		</ul>
+	</div>
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;margin-left:33px;display:##vis_button##;">
+    	<button class="btn btn-xs purple-intense dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
+				<i class="fa fa-eye"></i>
+		</button>
+	  <ul class="dropdown-menu pull-right" role="menu">
 			##PDBView##
 			##NGLView##
 			##jbrowseLink##
 			##tadkitLink##
+			##plainText##
 		</ul>
+	</div>
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;margin-left:66px;display:##tools_button##;">
+    	<button class="btn btn-xs blue-dark dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
+				<i class="fa fa-wrench"></i>
+		</button>
+	 	##tools_list## 
 	</div>
 </td>
 <td>1</td>

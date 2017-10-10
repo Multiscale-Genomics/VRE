@@ -179,6 +179,10 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 				<script src="assets/global/plugins/ngl.js" type="text/javascript"></script>
 				<script src="tools/pdiview/assets/js/input.js" type="text/javascript"></script>
 				<script src="assets/pages/scripts/ngl-home.js" type="text/javascript"></script>
+				<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/process_genome'){ ?>
+				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+				<script src="tools/process_genome/assets/js/input.js" type="text/javascript"></script>
 				<?php } ?>
 
 			<?php break;
@@ -211,6 +215,17 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 				<script src="assets/global/plugins/ngl.last.js" type="text/javascript"></script>
 				<?php } ?>
 			<?php break;
+			case 'help':
+			case 'method':
+			case 'inputs':
+			case 'outputs':
+			case 'results':
+			case 'tutorials':
+			case 'references':?>
+			<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+			<script src="assets/global/plugins/markdown/marked.min.js" type="text/javascript"></script>
+			<script src="assets/global/plugins/markdown/bootstrap-markdown-editor.js" type="text/javascript"></script>
+			<?php break;
 			case 'jsonValidator': ?>
 			<script src="assets/global/plugins/codemirror/lib/codemirror.js" type="text/javascript"></script>
 				<script src="assets/global/plugins/codemirror/addon/edit/matchbrackets.js"></script>
@@ -219,6 +234,9 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 				<script src="assets/global/plugins/codemirror/lib/jsonlint.js"></script>
 				<script src="assets/global/plugins/codemirror/addon/lint/lint.js"></script>
 				<script src="assets/global/plugins/codemirror/addon/lint/json-lint.js"></script>
+			<?php break;
+			case 'tools': ?>
+				<script src="assets/global/plugins/cubeportfolio/js/jquery.cubeportfolio.min.js" type="text/javascript"></script>
 			<?php break;?>
 		<?php } ?>
         <!-- END PAGE LEVEL PLUGINS -->
@@ -314,7 +332,19 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			<script src="assets/pages/scripts/dashboard.js" type="text/javascript"></script>
 			<?php break;
 			case 'jsonValidator': ?>
-			<script src="assets/pages/scripts/json-validator.js" type="text/javascript"></script>	
+			<script src="assets/pages/scripts/json-validator.js" type="text/javascript"></script>
+			<?php break;
+			case 'tools': ?>
+			<script src="assets/pages/scripts/portfolio.tools.js" type="text/javascript"></script>
+			<?php break;
+			case 'help':
+			case 'method':
+			case 'inputs':
+			case 'outputs':
+			case 'results':
+			case 'tutorials':
+			case 'references':?>
+			<script src="assets/pages/scripts/help-editor.js" type="text/javascript"></script>	
 			<?php break;?>
 		<?php } ?>
         <!-- END PAGE LEVEL SCRIPTS -->
@@ -324,7 +354,6 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'index2': 				
 			case 'index': 
 			case 'home': 
-			case 'help1': 
 			case 'repositoryList':
 			case 'experiment':
 			case 'usrProfile':
@@ -342,6 +371,24 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'input':
 			case 'output': 
 			case 'loading_output':
+
+			case 'general':
+			case 'starting':
+			case 'upload':		
+			case 'ws':
+			case 'launch':
+			case 'hdesk':
+			case 'related':
+			case 'refs':
+			case 'help':
+			case 'method':
+			case 'inputs':
+			case 'outputs':
+			case 'results':
+			case 'tutorials':
+			case 'references':
+			case 'tools':
+
 			?>
 			<script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
 			<script src="assets/layouts/layout/scripts/main.js" type="text/javascript"></script>
@@ -351,7 +398,6 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 		<?php
 		switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'home': 
-			case 'help1': 
 			case 'repositoryList':
 			//case 'experiment':
 			//case 'usrProfile':
@@ -364,7 +410,25 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'dataFromTxt':
 			case 'dataFromID':
 			case 'input':
-			case 'output': ?>
+			case 'output':
+
+			case 'general':
+			case 'starting':
+			case 'upload':		
+			case 'ws':
+			case 'launch':
+			case 'hdesk':
+			case 'related':
+			case 'refs':
+			case 'help':
+			case 'method':
+			case 'inputs':
+			case 'outputs':
+			case 'results':
+			case 'tutorials':
+			case 'references':
+			case 'tools':
+			?>
 			<script src="assets/pages/scripts/cookie.js" type="text/javascript"></script>
 			<?php break; 
 			case 'index2': 

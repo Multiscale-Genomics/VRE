@@ -2,14 +2,14 @@
 
 <td>
 	 <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-		<input type="checkbox" class="checkboxes foldercheck" value="1" name="directory" id="##filename##"/>
-		 <span></span>
+		<input type="checkbox" class="checkboxes foldercheck" value="1" name="directory" id="##filename##" disabled style="display:none;"/>
+		 <span style="display:none;"></span>
 	 </label>
 </td>
 <td>
 	##filename##
 	<!--  span style="font-weight:bold;" search="yes"   type="project" -->
-	<span class="expand_info" onclick="expandInfo(this)"></span>
+	<!--<span class="expand_info" onclick="expandInfo(this)"></span>-->
 	<div class="extra_info">
 		<table style="border:none;border-left:dashed 1px gray;margin:10px 22px;padding:0 3px;">
 			<tr><td>Description:</td><td>##description##</td></tr>
@@ -17,16 +17,18 @@
 			##analyses##
   		</table>
 	</div>
+		<a href="javascript:viewFileMeta('##_id##', '##filename##', 0);"><i class="fa fa-info-circle"></i></a>
+	
 </td>
+<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>##filename##</td>
 <td>##mtime##</td>
 <td>##size##</td>
-<td>&nbsp;</td>
 <td>
-	<div class="btn-group">
-		<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
-			<i class="fa fa-angle-down"></i>
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;">
+		<button class="btn btn-xs blue-madison dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
+			<i class="fa fa-cogs"></i>
 		</button>
 		<ul class="dropdown-menu pull-right" role="menu">
 			<li><a href="workspace/workspace.php?op=cancelJobDirSure&fn=##_id_URL##"><i class="fa fa-times-circle"></i> Cancel Jobs</a></li>

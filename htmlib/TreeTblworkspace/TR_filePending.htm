@@ -1,14 +1,14 @@
 <tr data-tt-id="##tree_id##" data-tt-parent-id="##tree_id_parent##"  >
 <td>
-	<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+	<!--<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
 		<input type="checkbox" class="checkboxes" value="##_id##" name="##_id##" onchange="changeCheckbox(this)" id="##_id##" ##state## >
 		<span></span>
-	</label>
+	</label>-->
 </td>
 
 <td>
 	<a class="##state##"  href="workspace/workspace.php?op=##openFunction##&fn=##_id_URL##" title="open file" target="_blank">##filename##</a>
-	<span class="expand_info" onclick="expandInfo(this)"></span>
+	<!--<span class="expand_info" onclick="expandInfo(this)"></span>-->
 	<div class="extra_info">
 	  <table>
 	  	<tr>
@@ -19,20 +19,28 @@
 		##viewLog##
 	</table>
   </div>
+<a href="javascript:viewFileMeta('##pid##', '##filename##', 2);" style="margin-left:3px;"><i class="fa fa-info-circle"></i></a>
 </td>
 <td><span style="color:#004d66;font-weight:bold;">##pending##</span></td>
+<td></td>
 <td>##project##</td>
 <td></td>
-<td></td>
+<td>0.00 B</td>
 <td>
-</td>
-<td>
-	<div class="btn-group">
+	<!--<div class="btn-group">
     		<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
 			<i class="fa fa-angle-down"></i>
 		</button>
 	  <ul class="dropdown-menu pull-right" role="menu">
-			<li><a href="workspace/workspace.php?op=cancelJobSure&pid=##pid##"><i class="fa fa-times-circle"></i>Cancel job</a></li
+			<li><a href="workspace/workspace.php?op=cancelJobSure&pid=##pid##"><i class="fa fa-times-circle"></i>Cancel job</a></li>
+		</ul>
+	</div>-->
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;">
+    	<button class="btn btn-xs blue-madison dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
+				<i class="fa fa-cogs"></i>
+		</button>
+	  <ul class="dropdown-menu pull-right" role="menu">
+			<li><a href="workspace/workspace.php?op=cancelJobSure&pid=##pid##"><i class="fa fa-times-circle"></i>Cancel job</a></li>
 		</ul>
 	</div>
 </td>
