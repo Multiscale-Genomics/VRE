@@ -13,6 +13,7 @@ class Tooljob {
     public $cloudName;         // Cloud name where tool should be executed. Available clouds set in GLOBALS['clouds']
     public $description;
     public $working_dir;
+    public $output_dir;
     public $launcher;
 
     // Paths to files genereted during ToolJob execution
@@ -24,43 +25,56 @@ class Tooljob {
     public $metadata_file;
     public $metadata_file_virtual;
     public $log_file;
+    public $log_file_virtual;
 
     public $stageout_data=Array();
     public $input_files = Array();
     public $arguments   = Array();
     public $metadata    = Array();
     public $pid          = 0;
+    public $hasProjectFolder= true;
 
 
     /**
      * Creates new toolExecutor instance
      * @param string $toolId Tool Id as appears in Mongo
     */
-    public function __construct($tool,$project="0",$descrip="0"){
-	
+    public function __construct($tool,$project="",$descrip="",$output_dir=""){
+    
     	// Setting Tooljob
     	$this->toolId    = $tool['_id'];
     	$this->title     = $tool['name'] ." job";
-    	$this->project   = $project;
+        $this->project   = $project;
+
+        // Set paths in VRE
         $this->root_dir  = $GLOBALS['dataDir']."/".$_SESSION['User']['id'];
     	$this->pub_dir   = $GLOBALS['pubDir'];
 
+        // Set paths in the virtual machine
     	$this->set_cloudName($tool);
-
     	$this->root_dir_virtual = $GLOBALS['clouds'][$this->cloudName]['dataDir_virtual'];
     	$this->pub_dir_virtual  = $GLOBALS['clouds'][$this->cloudName]['pubDir_virtual'];
-	    $this->launcher         = $tool['infrastructure']['clouds'][$this->cloudName]['launcher'];
+
+        $this->launcher         = $tool['infrastructure']['clouds'][$this->cloudName]['launcher'];
 
 
-    	// Creating project folder
-    	if ($project != "0")
-    		$this->__setWorking_dir($project,1);
-    	else
-    		$this->__setWorking_inTmp($tool['_id']);
+    	// Creating execution folder
+        if ($project != "0"){
+            //create Project Folder 
+            $this->hasProjectFolder = true;
+            $this->__setWorking_dir($project,1);
+            $this->output_dir = $this->working_dir;
+        }else{
+            //internalTool
+            $this->hasProjectFolder = false;
+            $this->__setWorking_inTmp($tool['_id']);
+            $this->output_dir = $output_dir;
+        }
     
-    	if ($descrip != "0")
+    	if ($descrip != "")
     		$this->setDescription($descrip,$tool['name']);
-    
+
+
     	return $this;
     }
 
@@ -102,29 +116,29 @@ class Tooljob {
 
     public function __setWorking_dir($project, $overwrite=0){
 
-	$wd   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/$project";
-	$wdFN = $_SESSION['User']['id']."/$project";
+        $wd   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/$project";
+    	$wdFN = $_SESSION['User']['id']."/$project";
 	
-	if (!$overwrite){
-		$prevs = $GLOBALS['filesCol']->find(array('path' => $wdFN, 'owner' => $_SESSION['User']['id']) );
-		if ($prevs->count() > 0){
-		    for ($n=1;$n<99;$n++){
-	        	$projectN= $project. "_$n";
-			$wdFN    = $_SESSION['User']['id']."/$projectN";
-			$prevs   = $GLOBALS['filesCol']->find(array('path' => $wdFN, 'owner' => $_SESSION['User']['id']));
-			if ($prevs->count() == 0){
-			    $project= $projectN;
-	        	    $wd     = $GLOBALS['dataDir']."/$wdFN";
-			    break;
-        		}
-	    	    }
-		}
-	}
+    	if (!$overwrite){
+    		$prevs = $GLOBALS['filesCol']->find(array('path' => $wdFN, 'owner' => $_SESSION['User']['id']) );
+    		if ($prevs->count() > 0){
+    		    for ($n=1;$n<99;$n++){
+                	$projectN= $project. "_$n";
+        			$wdFN    = $_SESSION['User']['id']."/$projectN";
+        			$prevs   = $GLOBALS['filesCol']->find(array('path' => $wdFN, 'owner' => $_SESSION['User']['id']));
+        			if ($prevs->count() == 0){
+        			    $project= $projectN;
+    	        	    $wd     = $GLOBALS['dataDir']."/$wdFN";
+        			    break;
+        		    }
+	            }
+		    }
+	    }
+        $this->project = $project;
+        $this->working_dir    = $this->root_dir."/".$this->project;
 
-
-    	$this->working_dir    = $this->root_dir."/".$this->project;
-	$this->config_file    = $this->working_dir."/".$GLOBALS['tool_config_file'];
-	$this->stageout_file  = $this->working_dir."/".$GLOBALS['tool_stageout_file'];
+    	$this->config_file    = $this->working_dir."/".$GLOBALS['tool_config_file'];
+    	$this->stageout_file  = $this->working_dir."/".$GLOBALS['tool_stageout_file'];
         $this->submission_file= $this->working_dir."/".$GLOBALS['tool_submission_file'];
         $this->log_file       = $this->working_dir."/".$GLOBALS['tool_log_file'];
         $this->metadata_file  = $this->working_dir."/".$GLOBALS['tool_metadata_file'];
@@ -132,27 +146,32 @@ class Tooljob {
         $this->config_file_virtual    = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_config_file'];
         $this->stageout_file_virtual  = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_stageout_file'];
         $this->metadata_file_virtual  = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_metadata_file'];
+        $this->log_file_virtual       = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_log_file'];
     }
+
 
 
     public function __setWorking_inTmp($prefixDir=0){
-	if ($prefixDir =="0")
-		$prefixDir = "tool_";
-	$project = $prefixDir."_".rand(10000, 99999);
+        if (!$prefixDir)
+            $prefixDir = "tool_";
 
-    	$this->working_dir    = $this->root_dir."/".$this->project;
-	$this->config_file    = $this->working_dir."/".$GLOBALS['tool_config_file'];
-	$this->stageout_file  = $this->working_dir."/".$GLOBALS['tool_stageout_file'];
+        $project = $prefixDir."_".rand(10000, 99999);
+
+        $this->project = $project;
+        $this->working_dir    = $this->root_dir."/".$GLOBALS['tmpUser_dir'].$this->project;
+
+    	$this->config_file    = $this->working_dir."/".$GLOBALS['tool_config_file'];
+    	$this->stageout_file  = $this->working_dir."/".$GLOBALS['tool_stageout_file'];
         $this->submission_file= $this->working_dir."/".$GLOBALS['tool_submission_file'];
         $this->log_file       = $this->working_dir."/".$GLOBALS['tool_log_file'];
         $this->metadata_file  = $this->working_dir."/".$GLOBALS['tool_metadata_file'];
 
 
-        $this->config_file_virtual    = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_config_file'];
-        $this->stageout_file_virtual  = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_stageout_file'];
-        $this->metadata_file_virtual  = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_metadata_file'];
+        $this->config_file_virtual    = $this->root_dir_virtual."/".$GLOBALS['tmpUser_dir'].$this->project."/".$GLOBALS['tool_config_file'];
+        $this->stageout_file_virtual  = $this->root_dir_virtual."/".$GLOBALS['tmpUser_dir'].$this->project."/".$GLOBALS['tool_stageout_file'];
+        $this->metadata_file_virtual  = $this->root_dir_virtual."/".$GLOBALS['tmpUser_dir'].$this->project."/".$GLOBALS['tool_metadata_file'];
+        $this->log_file_virtual       = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_log_file'];
     }
-
 
 
     /**
@@ -162,71 +181,73 @@ class Tooljob {
     */
     public function createWorking_dir(){
 
-	if (!$this->working_dir ){
-		$_SESSION['errorData']['Internal Error'][]="Cannot create working_dir. Not set yet";
-		return 0;
-	}
-	$dirfn = str_replace($GLOBALS['dataDir']."/","",$this->working_dir);
+        if (!$this->working_dir ){
+    		$_SESSION['errorData']['Internal Error'][]="Cannot create working_dir. Not set yet";
+    		return 0;
+    	}
+    	$dirfn = str_replace($GLOBALS['dataDir']."/","",$this->working_dir);
 
-	// create working dir - disk and db
-	if (!is_dir($this->working_dir)){
-	
-		if (preg_match('/\.tmp/',$this->working_dir)){
-			$this->_id = 1;
-		}else{
-	        	$dirId = createGSDirBNS($dirfn);
+    
+        $hasProjectFolder = $this->hasProjectFolder;
+    	// create working dir - disk and db
+    	if (!is_dir($this->working_dir)){
+    	
+            if ($hasProjectFolder){
+            	$dirId = createGSDirBNS($dirfn);
 	        	if ($dirId=="0"){
-	                	$_SESSION['errorData']['Error'][]="Cannot create project folder: '$this->working_dir'";
-				return 0;
+	               	$_SESSION['errorData']['Error'][]="Cannot create project folder: '$this->working_dir'";
+		    		return 0;
         		}
-			$this->_id = $dirId;
-		}
+		    	$this->_id = $dirId;
+	    	}else{
+    		    $this->_id = 1;
+	    	}
+
 
         	mkdir($this->working_dir,0777);
         	chmod($this->working_dir, 0777);
 
-	// if exists, recover working dir id
-	}else{
-		if (preg_match('/\.tmp/',$this->working_dir)){
-			$this->_id = 1;
-		}else{
-			$dirId = getGSFileId_fromPath($dirfn);
-			$_SESSION['errorData']['Error'][]=" already done dir from file_path is $dirfn . id is $dirId<br>";
-			if ($dirId=="0")
-				$_SESSION['errorData']['Error'][]="Cannot create project folder: alredy in disk but not in mongo. Try using a new project name other than ".basename($this->working_dir);
-	
-			$this->_id = $dirId;
-		}
-		
-	}
+    	// if exists, recover working dir id
+    	}else{
+            if ($hasProjectFolder){
+    			$dirId = getGSFileId_fromPath($dirfn);
+    			$_SESSION['errorData']['Error'][]=" already done dir from file_path is $dirfn . id is $dirId<br>";
+    			if ($dirId=="0")
+    				$_SESSION['errorData']['Error'][]="Cannot create project folder: alredy in disk but not in mongo. Try using a new project name other than ".basename($this->working_dir);
+    	
+    			$this->_id = $dirId;
+	    	}else{
+    			$this->_id = 1;
+    		}
+        }
 
-	// set dir metadata
-	if ($this->_id != 1){
-		if (!is_dir($this->working_dir)){
-	        	$_SESSION['errorData']['Error'][]="Cannot write and set new project directory: '$this->working_dir' with id '$this->_id'";
-			return 0;
-		}
-	
-	        $input_ids = array();
-	        array_walk_recursive($this->input_files, function($v, $k) use (&$input_ids){ $input_ids[] = $v; });
-	        $input_ids = array_unique($input_ids);
-	
-		$projDirMeta=array(
-			'description' => $this->description,
-	        //'inPaths'     => array_map(create_function('$o', 'return $o->path;'), $this->input_files),
-	        'input_files' => $input_ids,
-	        'tool'        => $this->toolId,
-			'shPath'      => $this->submission_file,
-			'logPath'     => $this->log_file,
-        	'arguments'   => $this->arguments
-		);
-		$r = addMetadataBNS($this->_id, $projDirMeta);
-		if ($r == "0"){
-		        $_SESSION['errorData']['Error'][]="Project folder created. But cannot set metada for '$this->working_dir' with id '$this->_id'";
-			return 0;
-		}
-	}
-	return $this->_id;
+    	// set dir metadata
+    	if ($this->_id != 1){
+    		if (!is_dir($this->working_dir)){
+    	        	$_SESSION['errorData']['Error'][]="Cannot write and set new project directory: '$this->working_dir' with id '$this->_id'";
+    			return 0;
+    		}
+    	
+    	        $input_ids = array();
+    	        array_walk_recursive($this->input_files, function($v, $k) use (&$input_ids){ $input_ids[] = $v; });
+    	        $input_ids = array_unique($input_ids);
+    	
+    		$projDirMeta=array(
+    			'description' => $this->description,
+    	        //'inPaths'     => array_map(create_function('$o', 'return $o->path;'), $this->input_files),
+    	        'input_files' => $input_ids,
+                'tool'        => $this->toolId,
+    			'shPath'      => $this->submission_file,
+    			'logPath'     => $this->log_file,
+            	'arguments'   => $this->arguments
+    		);
+    		$r = addMetadataBNS($this->_id, $projDirMeta);
+    		if ($r == "0"){
+	            $_SESSION['errorData']['Error'][]="Project folder created. But cannot set metada for '$this->working_dir' with id '$this->_id'";
+                return 0;
+            }
+        }
+    	return $this->_id;
     }
 
 
@@ -248,13 +269,12 @@ class Tooljob {
 	$data = Array(
 		'input_files'=>Array(),
 		'arguments'=>Array(
-			Array("name"=>"project",     "value"=> $this->project),
+			Array("name"=>"project",     "value"=> $this->root_dir_virtual."/".$this->project),
 			Array("name"=>"description", "value"=> $this->description),
 		),
 		'output_files'=>Array()
 	);
 	// append input_files
-	//foreach ($this->input_files as $input_file){
 	//	array_push($data['input_files'], Array("name"=>$input_file->input_name, "value"=> $this->getPathRelativeToRoot($input_file->path)));
 	foreach ($this->input_files as $k=>$vs){
 	    foreach ($vs as $v){
@@ -274,7 +294,6 @@ class Tooljob {
 
     // append output_files from tool json
     if ($tool['output_files']){
-        var_dump($tool['output_files']);
         foreach ($tool['output_files'] as $k => $v){
             $data['output_files'][] = $v;
         }
@@ -352,9 +371,9 @@ class Tooljob {
 			    }
 			break;
 		    case "boolean":
-			if ($arg_value===true || $arg_value="on")
+			if ($arg_value===true || $arg_value=="on" || $arg_value == "1" || $arg_value == 1)
 				$arg_value=true;	
-			elseif ($arg_value===false || $arg_value="off")
+			elseif ($arg_value===false || $arg_value=="off"|| $arg_value == "0" || $arg_value == 0 )
 				$arg_value=false;	
 			else{
 			    $_SESSION['errorData']['Error'][]="Invalid argument. In '$arg_name' a boolean was expected, but found: $arg_value";
@@ -436,6 +455,14 @@ class Tooljob {
         // setting input_files
 	    $this->input_files[$input_name]=$fns;
     }
+    if (count($tool['input_files'])){
+        foreach ($tool['input_files'] as $input_name => $input){
+            if (!isset($input_files[$input_name]) && $input['required'] ){
+                $_SESSION['errorData']['Error'][]="Input file '$input_name' is required. Input not given";
+    			return 0;
+            }
+        }
+    }
     return 1;
     }
 
@@ -510,9 +537,18 @@ class Tooljob {
 		return 0;
 	}
 
-        $fileMuGs=Array();
-	foreach ($metadata as $fnId => $file){
-		$fileMuG = $this->fromVREfile_toMUGfile($file);
+    $fileMuGs=Array();
+    foreach ($metadata as $fnId => $file){
+        // convert metadata to DMP format
+        $fileMuG = $this->fromVREfile_toMUGfile($file);
+
+        // adapt metadta to App requirements
+        if (isset($fileMuG['source_id'])){
+            unset($fileMuG['source_id']);
+        }
+        if ($fileMuG['file_path']){
+            $fileMuG['file_path'] = $this->root_dir_virtual."/".$fileMuG['file_path'];
+        }
 		array_push($fileMuGs,$fileMuG);
 	}
 	$metadata_rfn = $this->metadata_file;
@@ -563,7 +599,6 @@ class Tooljob {
 		switch ($launcher){
 		    case "SGE":
 			$cmd  = $this->setBashCmd_SGE($tool);
-			//print "<br><br>CMD = $cmd<br>";
 			if (!$cmd)
 				return 0;
 	
@@ -578,7 +613,6 @@ class Tooljob {
 				return 0;
 
 			$submission_rfn = $this->createSubmitFile_PMES($json_data);
-			print "<br>PMES JSON FILE IS<br> $submission_rfn";
 			if (!is_file($submission_rfn))
 				return 0;
 			break;
@@ -597,7 +631,6 @@ class Tooljob {
 	
 		    case "SGE":
 			$cmd = $this->setBashCmd_withoutApp($tool,$metadata);
-			//print "<br><br>CMD WITHOUT APP= $cmd<br>";
 			if (!$cmd)
 				return 0;
 
@@ -624,11 +657,11 @@ class Tooljob {
 	}
 	$cmd = $tool['infrastructure']['executable'] .
 					" --config "         .$this->config_file_virtual .
-					" --root_dir "       .$this->root_dir_virtual .
-					" --public_dir "     .$this->pub_dir_virtual .
+				//	" --root_dir "       .$this->root_dir_virtual .
+				//	" --public_dir "     .$this->pub_dir_virtual .
 					" --in_metadata " 	 .$this->metadata_file_virtual .
-					" --out_metadata "   .$this->stageout_file_virtual ;
-				    //  " --log "            .$this->log_file
+					" --out_metadata "   .$this->stageout_file_virtual .
+				    " --log_file "       .$this->log_file_virtual ;
 	return $cmd;
     }
 
@@ -707,20 +740,21 @@ class Tooljob {
 				"imageName" => $cloud['imageName'], 
 				"imageType" => "small",				// Not used. Formally required for rOCCY petition.
 				),
-           	"app"        => array(
+      	"app"        => array(
 				"name"   => $tool['_id'],
 				"target" => $app_target,
 				"source" => $app_source,
 				"args"  => array(
 						"config"      => $this->config_file_virtual,
-						"root_dir"    => $this->root_dir_virtual,
-						"public_dir"  => $this->pub_dir_virtual,
+					  //"root_dir"    => $this->root_dir_virtual,
+					  //"public_dir"  => $this->pub_dir_virtual,
 						"in_metadata" => $this->metadata_file_virtual,
-						"out_metadata"=> $this->stageout_file_virtual
+                        "out_metadata"=> $this->stageout_file_virtual,
+                        "log_file"    => $this->log_file_virtual
 						),
         			"type" => $cloud['workflowType']    // COMPSs || Single
 				),				
-		"compss_flags" =>array( "flag" => " --summary")
+		"compss_flags" =>array( "flag" => " --summary --base-log-dir=".$this->root_dir_virtual."/".$this->project)
 		)
 	);
 	return $data;
@@ -808,38 +842,38 @@ class Tooljob {
      * @param string $inputs_request _REQUEST data from inputs.php form
     */
     public function submit($tool){
-	switch ($tool['infrastructure']['clouds'][$this->cloudName]['launcher']){
-	    case "SGE":
-		return $this->enqueue($tool['infrastructure']);
-		break;
-	    case "PMES":
-		return $this->callPMES();
-		break;
-	    default:
-		$_SESSION['errorData']['Error'][]="Tool '$this->toolId' not properly registered. Launcher for '$this->toolId' is set to: \"".$tool['infrastructure']['clouds'][$this->cloudName]['launcher']."\". Case not implemented.";
-		return 0;
-	}
-	return 1;
+	    switch ($tool['infrastructure']['clouds'][$this->cloudName]['launcher']){
+    	    case "SGE":
+    		    return $this->enqueue($tool);
+        		break;
+        	    case "PMES":
+    	    	return $this->callPMES();
+        		break;
+    	    default:
+    	    	$_SESSION['errorData']['Error'][]="Tool '$this->toolId' not properly registered. Launcher for '$this->toolId' is set to: \"".$tool['infrastructure']['clouds'][$this->cloudName]['launcher']."\". Case not implemented.";
+    		    return 0;
+    	}
+	    return 1;
     }	    
 
-    protected function enqueue($tool_infrastructure){
-	
-	logger("");
-	$memory = $tool['infrastructure']['memory'];
-	$cpus   = $tool['infrastructure']['cpus'];
-	$queue  = $tool['infrastructure']['clouds'][$this->cloudName]['queue'];
 
-	$pid  = execJob($this->working_dir, $this->submission_file, $queue, $cpus, $memory);
-	logger("USER:".$_SESSION['User']['_id'].", ID:".$_SESSION['User']['id'].", LAUNCHER:SGE, TOOL:".$this->toolId.", PID:$pid");
+    protected function enqueue($tool){
 	
-	if (!$pid){
-                $_SESSION['errorData']['Error'][]="Cannot enqueue job. Submission file was: $this->submission_file ";
-                return 0;
+    	logger("");
+    	$memory = $tool['infrastructure']['memory'];
+    	$cpus   = $tool['infrastructure']['cpus'];
+    	$queue  = $tool['infrastructure']['clouds'][$this->cloudName]['queue'];
+    
+    	$pid  = execJob($this->working_dir, $this->submission_file, $queue, $cpus, $memory);
+    	logger("USER:".$_SESSION['User']['_id'].", ID:".$_SESSION['User']['id'].", LAUNCHER:SGE, TOOL:".$this->toolId.", PID:$pid");
+    	
+    	if (!$pid){
+             $_SESSION['errorData']['Error'][]="Cannot enqueue job. Submission file was: $this->submission_file ";
+            return 0;
         }
-
-	$this->pid = $pid;
+    
+    	$this->pid = $pid;
         return $pid;
-
     }
 
 
@@ -849,8 +883,6 @@ class Tooljob {
 	$data = json_decode($data_string, true);
 
 	$pid  = execJobPMES($this->cloudName,$data);
-
-	print "<br><br>============= <br>TOOLJOB SEND TO '$this->cloudName'  RESULTED IN PID=$pid<br>";
 
 	logger("USER:".$_SESSION['User']['_id'].", ID:".$_SESSION['User']['id'].", LAUNCHER:PMES, TOOL:".$this->toolId.", PID:$pid");
 
