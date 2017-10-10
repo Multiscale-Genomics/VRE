@@ -450,6 +450,7 @@ function createGSDirBNS($dirPath,$asRoot=0) {
 	return $dirId;
 }
 
+
 // create new file registry
 // load file content to GRID, if load2grid===TRUE
 function uploadGSFileBNS($fnPath, $file, $attributes=Array(), $meta=Array(), $load2grid=false,$asRoot=0){
@@ -460,13 +461,14 @@ function uploadGSFileBNS($fnPath, $file, $attributes=Array(), $meta=Array(), $lo
 	list($fnPath,$r) = absolutePathGSFile($fnPath,$asRoot);
 	if ($r==0){
 		$_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath . Check current directory". $_SESSION['curDir'];
-                return $r;
-	}
-        $r = getGSFileId_fromPath($fnPath);
-        if ($r != "0"){
-		$_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath . File path already exists";
-                return $r;
-        }
+        return $r;
+    }
+    
+    $r = getGSFileId_fromPath($fnPath);
+    if ($r != "0"){
+           $_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath . File path already exists";
+           return $r;
+    }
 
 	//check parent
 	$parentPath  = dirname($fnPath);
@@ -521,6 +523,98 @@ function uploadGSFileBNS($fnPath, $file, $attributes=Array(), $meta=Array(), $lo
 				$expiration = $GLOBALS['caduca'] * 24 * 3600;
 				$t = filemtime($file);
 				$attributes['expiration'] = new MongoDate($t + $expiration);
+        }
+        // insert file
+		$GLOBALS['filesCol']->update (
+			array('_id' => $fnId),
+			$attributes,
+			array('upsert'=> 1)
+		);
+
+		// add file to parent
+		$GLOBALS['filesCol']->update (
+			array("_id"=>$parentId),
+			array('$addToSet' => array("files" => $fnId))
+        );
+
+        // update parent
+		$timeObj = new MongoDate(strtotime("now"));
+		modifyGSFileBNS($parentId,"atime", new MongoDate(filemtime($file)));
+
+	}
+	// add metadata file
+	if (count($meta)){
+		modifyMetadataBNS($fnId,$meta);
+	}
+	return $attributes['_id'];
+}
+
+
+// create new file registry from a URL
+function uploadGSFileBNS_fromURL($url, $parentPath , $attributes=Array(), $meta=Array(), $asRoot=0){
+
+	$col = $GLOBALS['filesCol'];
+
+    //check url
+    if(!is_url($url)){
+        $_SESSION['errorData']['mongoDB'][]="Cannot upload '$url'. Invalid URL format";
+        return 0;
+    }
+    $r = getGSFileId_fromPath($url);
+    if ($r != "0"){
+		$_SESSION['errorData']['mongoDB'][]="Warning: Cannot upload '$url'. The resource was already there";
+        return $r;
+    }
+
+	//check parent
+	$parentId  = getGSFileId_fromPath($parentPath,$asRoot);
+	if ($parentId == "0"){
+		$r = createGSDirBNS($parentPath,$asRoot);
+		if ($r=="0")
+			return 0;
+	}else{
+		if (!isGSDirBNS($col,$parentId) ){
+			$_SESSION['errorData']['mongoDB'][]="Cannot upload '$url'. Parent '$parentPath' is not a directoryy";
+			return 0;
+        }
+		$parentObj = $col->findOne(array(
+					'_id' => $parentId,
+					'owner' => $_SESSION['User']['id']
+					) );
+		if (isset($parentObj['permissions']) && $parentObj['permissions']== "000" ){
+			$_SESSION['errorData']['mongoDB'][]= "Not permissions to modify parent directory $parentPath";
+			return 0;
+		}
+	}
+
+
+	// load File info to mongo
+
+	$fnId = (!isset($attributes['_id'])? createLabel():$attributes['_id']);
+
+	if ($attributes){
+		//set default file attributes
+		if (! isset($attributes['_id']))
+				$attributes['_id'] = $fnId;
+		if (! isset($attributes['owner']))
+				$attributes['owner'] = $_SESSION['User']['id'];
+		if (! isset($attributes['mtime']))
+				$attributes['mtime'] = new MongoDate(strtotime("now"));
+		if (! isset($attributes['size'])){
+                $ch = curl_init($params['url']);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_HEADER, TRUE);
+                curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+                $attributes['size'] = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+                curl_close($ch);
+        }
+		if (! isset($attributes['parentDir']))
+				$attributes['parentDir'] =$parentId;
+		if (! isset($attributes['path']))
+				$attributes['path'] = $url;
+		if (! isset($attributes['expiration'])){
+				$expiration = $GLOBALS['caduca'] * 24 * 3600;
+				$attributes['expiration'] = new MongoDate(strtotime("now") + $expiration);
 		}
 		$GLOBALS['filesCol']->update (
 			array('_id' => $fnId),

@@ -268,6 +268,17 @@ function checkIfAllValidated(){
 	$('#myModal1').modal('show');
 }
 
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
+
 
 //var titleFeedbackBox = ['ERROR', 'SUMMARY', 'SUCCESS', 'INFO'];
 var titleFeedbackBox = ['ERROR', 'SUCCESS', 'SUMMARY' , 'INFO'];
@@ -298,14 +309,14 @@ function showProcessValidation(obj, id) {
 				$('#formInputs' + id + ' .disable-form').fadeOut();
 				$('#formInputs' + id + ' .btn-send-data').html(
 					//'<input type="button" class="btn green snd-metadata-btn" value="SEND METADATA" onclick="sendMetadata(' + id  + ', 1);" style="position:relative;z-index:20;" >'	
-					'<input type="submit" class="btn green snd-metadata-btn" value="SEND METADATA" style="position:relative;z-index:20;" >'
+					'<input type="submit" class="btn green snd-metadata-btn" value="SEND METADATA AGAIN" style="position:relative;z-index:20;" >'
 				);
 				$("#op" + id ).val('1');
 				break;
 		case 2: // change send metadata button for validate button
 				$('#formInputs' + id + ' .btn-send-data').html(
 					//'<input type="button" class="btn green val-metadata-btn" value="VALIDATE METADATA" onclick="sendMetadata(' + id  + ', 2);" style="position:relative;z-index:20;" >'	
-					'<input type="submit" class="btn green val-metadata-btn" value="VALIDATE METADATA" style="position:relative;z-index:20;" >'
+					'<input type="submit" class="btn green val-metadata-btn" value="ACCEPT CHANGES" style="position:relative;z-index:20;" >'
 				);
 				$("#op" + id ).val('2');
 				$('#formInputs' + id + ' .disable-form').fadeIn();
@@ -331,7 +342,29 @@ function showProcessValidation(obj, id) {
 		$('#bottom-validated-files').show();
 	}
 
+	arrayFiles.remove(parseInt(id));
+
+	if((obj.state != 2) && (obj.state != 0)){
+
+		if(arrayFiles.length > 0) {
+
+			var newIDX = arrayFiles[0];
+
+			$("input[name=idx][value=" + newIDX + "]").prop('checked', true);
+
+			showValidation(document.getElementsByName("idx")[newIDX]);
+
+		} else {
+
+			location.href= baseURL + 'workspace/';
+
+		}
+
+	}
+
 }
+
+
 
 /*function sendMetadata(id, op) {
 
@@ -470,7 +503,7 @@ var ValidateForm = function() {
              	var data = $('#uploadFiles' + formSelected).serialize();
 							data = data.replace(/%5B/g,"[");
               data = data.replace(/%5D/g,"]");
-              console.log(data);
+              //console.log(data);
 
 							$.ajax({
 								type: "POST",
@@ -506,6 +539,8 @@ var totalNumBlocks = 0;
 
 var formSelected = 0;
 
+var arrayFiles = [];
+
 jQuery(document).ready(function() {
 	// force to load first form properly
 	$('#formInputs0').fadeIn();
@@ -524,6 +559,9 @@ jQuery(document).ready(function() {
 		formSelected = $(this).attr("id");
 
 	});*/
+
+	for(i = 0; i < $("#numFiles").val(); i ++) arrayFiles.push(i);
+
 
 	 ValidateForm.init();
 

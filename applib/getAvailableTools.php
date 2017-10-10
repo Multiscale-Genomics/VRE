@@ -4,12 +4,33 @@ require "../phplib/genlibraries.php";
 
 redirectOutside();
 
-if(!$_POST){
+/*if(!$_POST){
 	//redirect($GLOBALS['URL']);
 	echo "Network error, please reload the Workspace";
-}
+}*/
 
-// TODO: get list of files and match with all the tools (casi ná :)
+/*$dt = $GLOBALS['filesMetaCol']->find(array('_id' => array('$in' => $_REQUEST["fn"])), array("_id" => true, "data_type" => true));
+
+$dt = iterator_to_array($dt, false);
+var_dump($dt);*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 $tools = getTools_List();
 

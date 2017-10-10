@@ -3,7 +3,7 @@
 require "../phplib/genlibraries.php";
 require "../phplib/admin.inc.php";
 
-redirectAdminOutside();
+redirectToolDevOutside();
 
 #
 # find available tools - by user
@@ -46,6 +46,9 @@ foreach (array_values(iterator_to_array($result)) as $v){
 	foreach ($stats_tool as $k => $v)
 		$tools[$toolId]['stats'].="$k:&nbsp;$v<br/>";
 }
+
+$toolsList = $tools;
+
 ?>
 
 <?php require "../htmlib/header.inc.php"; ?>
@@ -101,7 +104,8 @@ foreach (array_values(iterator_to_array($result)) as $v){
                                             </thead>
                                             <tbody>
 		<?php
-		foreach($tools as $toolId => $v){
+
+		foreach($toolsList as $toolId => $v){
 		?>
 			<tr>
 				<td><?php echo $toolId;?></td>

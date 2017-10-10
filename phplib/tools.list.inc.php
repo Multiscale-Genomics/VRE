@@ -57,18 +57,27 @@ function hasTool_custom_visualizer($toolId){
 	return $has_custom_visualizer;
 }
 
-function launchToolInternal($toolId,$inputs=array(),$args=array(),$outs=array()){
+function launchToolInternal($toolId,$inputs=array(),$args=array(),$outs=array(),$output_dir){
 
 	// Get tool.
-        $tool = getTool_fromId($toolId,1);
-        if (empty($tool)){
-                $_SESSION['errorData']['Error'][]="Tool not specified or not registered. Please, register '$toolId'";
-                return 0;
-        }
+    $tool = getTool_fromId($toolId,1);
+    if (empty($tool)){
+        $_SESSION['errorData']['Error'][]="Tool not specified or not registered. Please, register '$toolId'";
+        return 0;
+    }
+    if ($tool['external'] !== false){
+        $_SESSION['errorData']['Error'][]="Selected tool ($toolId) expected to be Internal but specification states: {'external':false}";
+        return 0;
+    }
 
-	// Set Tool job - tmp working dir
-	$jobMeta  = new Tooljob($tool);
+    // Set Tool job - tmp working dir
+    $project = 0;   // internal tool do not create a project folder
+    $descrip = "Internal job execution of ".$tool['name'];
 
+	$jobMeta  = new Tooljob($tool,$project,$descrip,$output_dir);
+
+    print "<br/>tools.list.inc.phpJOB META<br/>";
+    var_dump($jobMeta);
 
 	// Stage in (fake)  TODO
 

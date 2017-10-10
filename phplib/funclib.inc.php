@@ -48,6 +48,12 @@ function redirectAdminOutside(){
 	}
 }
 
+function redirectToolDevOutside(){
+	if(!checkToolDev()){
+		redirectInside();
+	}
+}
+
 function redirectInside(){
 	redirect("/workspace/");
 }
@@ -84,6 +90,12 @@ function returnHumanDateDashboard($q){
 function is_multi_array( $arr ) {
 	rsort( $arr );
 	return isset( $arr[0] ) && is_array( $arr[0] );
+}
+
+function maxlength($in, $length) {
+		
+	return strlen($in) > $length ? substr($in,0,$length)."..." : $in;
+
 }
 
 

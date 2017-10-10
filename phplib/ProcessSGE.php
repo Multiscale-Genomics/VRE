@@ -20,7 +20,7 @@ class ProcessSGE{
 	public function __construct($cl=false,$workDir="",$queue="srv.q",$jobname="",$cpu=1,$mem=0){
 
 		$current_user = posix_getpwuid(posix_geteuid());
-		$this->username  = $current_user['name']; 
+        $this->username  = $current_user['name']; 
 
 		if ($cl != false){
 			$this->workDir = $workDir;
@@ -33,18 +33,25 @@ class ProcessSGE{
 				$this->jobname = $jobname;
 			else
 				$this->jobname = basename($cl);
-
-			$this->runCom();
-		}
+            
+            $this->runCom();
+            print "JOB<br>";
+            var_dump($this);
+        }
+        return $this;
 	}
+
 
 	// execute SGE command
 	private function runCom(){
 		$this->setFullCommand();
-		$command = $this->fullcommand;
+        $command = $this->fullcommand;
 		logger("SGE job submission has CML = '$command'");
-				
-		$proc = proc_open($command,[
+
+        //chdir($this->workDir);
+        //exec($command,$op);
+
+        $proc = proc_open($command,[
 			 1 => ['pipe','w'],
 			 2 => ['pipe','w'],
 			],$pipes, $this->workDir);
@@ -52,15 +59,15 @@ class ProcessSGE{
 		fclose($pipes[1]);
 		$this->stderr = stream_get_contents($pipes[2]);
 		fclose($pipes[2]);
-		proc_close($proc);
- 
-		if (preg_match('/job (\d+)/',$this->stdout,$m)){
+        proc_close($proc);
+
+        if (preg_match('/job (\d+)/',$this->stdout,$m)){
 				$this->pid=(int)$m[1];
-				$msg = trim(preg_replace('/\s\s+/', ' ', "Job returns: ".$this->stdout));
+				$msg = trim(preg_replace('/\s\s+/', ' ', "Job STDOUT returns: ".$this->stdout));
 				logger($msg);
 		}else{
 				$this->pid=0;
-				$msg = trim(preg_replace('/\s\s+/', ' ', "Job returns: ".$this->stdout." Error: ". $this->stderr));
+				$msg = trim(preg_replace('/\s\s+/', ' ', "Job STDERR returns: ".$this->stdout." Error: ". $this->stderr));
 				logger($msg);
 				$_SESSION['errorData']['Error'][] = $this->stdout." Error: ". $this->stderr;
 		}
@@ -150,7 +157,7 @@ class ProcessSGE{
 	public function status(){
 		# No need to specify a queue, pids are unique in the same SGE system.
 		$pidForm = sprintf("%7s",$this->pid);
-		$command = QSTAT.' -u www-data | grep "^'.$pidForm.'"';
+		$command = QSTAT.' -u '.$this->username.' | grep "^'.$pidForm.'"';
 		exec($command,$op);
 
 		if (!isset($op[0]))return false;
@@ -162,12 +169,17 @@ class ProcessSGE{
 		else return true;
 	}
 
-	public function stop(){
-		$command = QDEL.' '.$this->pid;
-		exec($command);
-
-		if ($this->status() == false)return true;
-		else return false;
+    public function stop($pid=NULL){
+        if (!$pid){
+            return array(false,"No job id '$pid' given");
+        }
+		$command = QDEL.' '.$pid;
+        exec($command,$r);
+        $res = join(" ",$r);
+        if (preg_match('/has deleted/i',$res) || preg_match('/registered the job \d+ for deletion/',$res))
+            return array(true,$res);
+        else
+            return array(false,$res);
 	}
 }
 ?>

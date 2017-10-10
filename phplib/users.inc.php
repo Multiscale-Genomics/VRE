@@ -19,8 +19,16 @@ function checkLoggedIn() {
 function checkAdmin() {
 
 	$user = $GLOBALS['usersCol']->findOne(array('_id' => $_SESSION['User']['_id']));
-	
+
 	if(isset($_SESSION['User']) && ($user['Status'] == 1) && (allowedRoles($user['Type'], $GLOBALS['ADMIN']))) return true;
+	else return false;
+}
+
+function checkToolDev() {
+
+	$user = $GLOBALS['usersCol']->findOne(array('_id' => $_SESSION['User']['_id']));
+
+	if(isset($_SESSION['User']) && ($user['Status'] == 1) && (allowedRoles($user['Type'], $GLOBALS['TOOLDEV']) || allowedRoles($user['Type'], $GLOBALS['ADMIN']))) return true;
 	else return false;
 }
 
@@ -434,7 +442,7 @@ function getUserJobs($login) {
 
 function getUserJobPid($login,$pid) {
     $r = $GLOBALS['usersCol']->findOne(array("_id"      => $login,
-                                             "lastjobs._id"=> $pid
+                                             "lastjobs.$pid"=> array('$exists' => true)
                                             ));
     if (isset($r['lastjobs']))
         return $r['lastjobs'];

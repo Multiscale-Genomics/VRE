@@ -174,7 +174,7 @@ class ProcessPMES{
 		$job=array();
         $jobPMES = $this->getActivityInfo($jobid);
         if (count($jobPMES)){
-    		if ($jobPMES['jobStatus'] && in_array($jobPMES['jobStatus'], array("FINISHED","ERROR","FAILED")) )
+    		if ($jobPMES['jobStatus'] && in_array($jobPMES['jobStatus'], array("FINISHED","ERROR","FAILED","UNKNOWN")) )
        			return $job;
     		$job = $jobPMES;
     		$job['state']          = ($jobPMES['jobStatus']?$jobPMES['jobStatus']:"UNKNOWN");
@@ -197,9 +197,12 @@ class ProcessPMES{
     }
 
 
-	public function delJob($jobids){
+	public function stop($jobids){
 		$service = "terminateActivity";
-		return $this->post($jobids,$service);
+        $r = $this->post($jobids,$service);
+        print "<br/><br/><br/><br/>TERMINATEACTIVITY RETURNS:";
+        var_dump($r);
+        return $r;
 	}
 
 	public function getErr(){
@@ -235,10 +238,6 @@ class ProcessPMES{
 	}
 
 	public function start(){
-		return 1;
-	}
-
-	public function stop(){
 		return 1;
 	}
 }

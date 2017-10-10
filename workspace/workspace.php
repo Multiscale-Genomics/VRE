@@ -25,7 +25,6 @@ $fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['fn']));
 $filePath = getAttr_fromGSFileId($_REQUEST['fn'],'path'); 
 $rfn      = $GLOBALS['dataDir']."/$filePath";
 
-
 //
 // Process operation
 
@@ -49,6 +48,39 @@ if (isset($_REQUEST['op'])){
 			break;
 		}
 		downloadFile($rfn);
+		exit(0);
+		break;
+
+	case 'downloadAll':
+
+		$newName= "files.tar.gz";
+		$tmpZip = $GLOBALS['tmpDir']."/".basename($newName); 
+
+		$fls = "";
+
+		foreach( $_GET['fn'] as $v ) {
+			if($v !== 'undefined'){
+				$filePath2 = getAttr_fromGSFileId($v,'path'); 
+				//$rfn2      = $GLOBALS['dataDir']."/$filePath2";
+				$relpath = implode("/", array_slice(split('/',$filePath2), 0, -1));
+				$filnam = end(split('/',$filePath2));
+				$rfn2      = $GLOBALS['dataDir']."/$relpath";
+				$fls .= "-C $rfn2 $filnam ";
+				
+			}
+		}
+
+		$cmd = "/bin/tar czf $tmpZip $fls 2>&1";
+
+		exec($cmd,$output);
+		if ( !is_file($tmpZip) ){
+			$_SESSION['errorData']['Error'][] = "Uncompressed file not created.";
+			if ($output)
+				$_SESSION['errorData']['Error'][] = implode(" ", $output)."</br> <a href=\"javascript:location.reload();\">[ OK ]</a>";
+			break;
+		}
+		downloadFile($tmpZip);
+		unlink($tmpZip);
 		exit(0);
 		break;
 
@@ -115,8 +147,12 @@ if (isset($_REQUEST['op'])){
 		if (!$_REQUEST['fnPath']){
 			$_SESSION['errorData']['Error'][]="Cannot open file. Variable 'fnPath' not received. Please, try it latter or mail <a href=\"mailto:helpdesk@multiscalegenomics.eu\">helpdesk@multiscalegenomics.eu</a>";
 			break;	
-		}
-		$rfn = $GLOBALS['dataDir']."/".$_REQUEST['fnPath'];
+        }
+        if (preg_match('/^\//',$_REQUEST['fnPath']))
+    		$rfn = $_REQUEST['fnPath'];
+        else
+            $rfn = $GLOBALS['dataDir']."/".$_REQUEST['fnPath'];
+
 		$fileInfo = pathinfo($rfn);
 		$contentType = "text/plain";
 		$fileExtension = $fileInfo['extension'];
@@ -124,10 +160,10 @@ if (isset($_REQUEST['op'])){
 		if (array_key_exists($fileExtension, $content_types_list))
 			$contentType = $content_types_list[$fileExtension];
 
-		if (!$fileData && !preg_match('/\.log/',$rfn) ){
-            		break;
-	      	}
-        	if (!is_file($rfn) || !filesize($rfn)){
+		//if (!$fileData && !preg_match('/\.log/',$rfn) ){
+        //    		break;
+        //}
+        if (!is_file($rfn) || !filesize($rfn)){
 	        	$_SESSION['errorData']['error'][]= "'".basename($rfn). "' does not exist anymore or is empty. <a href=\"javascript:deleteMesg('".urlencode($_REQUEST['fn'])."')\">[ Delete ]</a> <a href=\"workspace/workspace.php\">[ OK ]</a>";
         		 break;
 		}
@@ -140,6 +176,36 @@ if (isset($_REQUEST['op'])){
 		print passthru("/bin/cat \"$rfn\"");
 		exit;
 
+	case 'deleteAll':
+		foreach( $_GET['fn'] as $v ) {
+			$fileData2 = $GLOBALS['filesCol']->findOne(array('_id' => $v, 'owner' => $_SESSION['User']['id']));
+			$fileMeta2 = $GLOBALS['filesMetaCol']->findOne(array('_id' => $v));
+			$filePath2 = getAttr_fromGSFileId($v,'path'); 
+			$rfn2      = $GLOBALS['dataDir']."/$filePath2";
+
+			$r = deleteGSFileBNS($v);
+			if ($r == 0){
+				$_SESSION['errorData']['error'][]="Cannot delete '$filePath' file from repository";
+				//break;
+			}
+			unlink($rfn2);
+			if (error_get_last()){
+				$_SESSION['errorData']['error'][]=error_get_last()["message"];
+				//break;
+			}
+
+			if ($fileMeta2['format'] == "BAM"){
+				$bai  = $GLOBALS['dataDir']."/$filePath2.bai";
+				$_SESSION['errorData']['info'][]="Associated file BAI=$bai to be deleted. TODO";
+				if (is_file($bai)){
+					//TODO delete associated files
+					$_SESSION['errorData']['info'][]="TODO .. delete associated files";
+					//unlink ($bai);
+				}
+			}
+			$GLOBALS['filesMetaCol']->remove(array('_id'=> $v));
+		}
+		break;
 
 	case 'deleteSure':
 		$r = deleteGSFileBNS($_REQUEST['fn']);

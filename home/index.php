@@ -6,9 +6,9 @@ redirectOutside();
 $tls = getTools_List();
 $vslzrs = getVisualizers_List();
 
-$tools = array_merge($tls, $vslzrs);
+$toolList = array_merge($tls, $vslzrs);
 
-sort($tools);
+sort($toolList);
 
 ?>
 
@@ -47,7 +47,7 @@ sort($tools);
 														<?php 
 														
 														$kw = array();
-														foreach($tools as $t) { 
+														foreach($toolList as $t) { 
 															foreach($t['keywords'] as $tk) $kw[] = $tk;
 														}
 
@@ -70,7 +70,7 @@ sort($tools);
 		
 																<?php 
 
-																foreach($tools as $t) { 
+																foreach($toolList as $t) { 
 
 																$kw = implode(" ", $t['keywords']);
 

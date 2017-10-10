@@ -256,6 +256,9 @@ function getVREfile_fromFile($mugfile){
 	$metadata = Array();
 
 	//set file
+    if (isset($mugfile['_id'])){
+        $file['_id']= $mugfile['_id'];
+    }
 	if (isset($mugfile['type'])){
 		$file['type']= $mugfile['type'];
 		unset($mugfile['type']);
@@ -268,9 +271,9 @@ function getVREfile_fromFile($mugfile){
 		$file['mtime']= $mugfile['creation_time'];
 		unset($mugfile['creation_time']);
 	}
-	if (isset($mugfile['meta_data']['owner'])){
-		$file['owner']= $mugfile['meta_data']['owner'];
-		unset($mugfile['meta_data']['owner']);
+	if (isset($mugfile['user_id'])){
+		$file['owner']= $mugfile['user_id'];
+		unset($mugfile['user_id']);
 	}else{
 		$file['owner']= $_SESSION['User']['id'];
 	}
@@ -288,6 +291,10 @@ function getVREfile_fromFile($mugfile){
 	}
 
 	//set metadata
+    if (isset($mugfile['_id'])){
+        $metadata['_id']= $mugfile['_id'];
+		unset($mugfile['_id']);
+    }
 	if (isset($mugfile['meta_data'])){
 		foreach ($mugfile['meta_data'] as $k => $v){
 			$mugfile[$k]=$v;
@@ -504,17 +511,26 @@ function array_merge_recursive_distinct(array &$array1, array &$array2){
 }
 
 // Converts multidimentional array (arr) into 2D array
-// mantaining key names using the dot notation: (key.subkey.subsubkey)
+// Can mantain key names using the dot notation: (key.subkey.subsubkey)
 
-function flattenArray($arr, $narr = array(), $nkey = '') {
-	foreach ($arr as $key => $value) {
-        	if (is_array($value)) {
-                    $narr = array_merge($narr, flattenArray($value, $narr, $nkey . $key . '.'));
+function flattenArray($arr,$dot_keynames=true,$narr = array(), $nkey = '') {
+    foreach ($arr as $key => $value) {
+        if ($dot_keynames){
+            	if (is_array($value)) {
+                    $narr = array_merge($narr, flattenArray($value, $dot_keynames, $narr, $nkey . $key . '.'));
                 } else {
                     $narr[$nkey . $key] = $value;
-        	}
+                }
+        
+        }else{
+            	if (is_array($value) && count($value)) {
+                    $narr = array_merge($narr, flattenArray($value, $dot_keynames, $narr, ''));
+                } else {
+                    $narr[$key] = $value;
+                }
         }
-	return $narr;
+    }
+    return $narr;
 }
 
 
@@ -619,4 +635,33 @@ function put($data,$url,$headers=array(),$auth_basic=array()){
 		return array($r,$info);
 }
 
+function is_url($url){
+    $regex = "((https?|ftp)\:\/\/)?"; 
+    $regex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?"; // User and Pass 
+    $regex .= "([a-z0-9-.]*)\.([a-z]{2,3})"; // Host or IP 
+    $regex .= "(\:[0-9]{2,5})?"; // Port 
+    $regex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?"; // Path 
+    $regex .= "(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?"; // GET Query 
+    $regex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?"; // Anchor
+    if(preg_match("/^$regex$/i", $url))
+        return true;
+    else
+        return false;
+}
+
+function fromTaxonID2TaxonName($taxon_id){
+    $taxonomy_ep = "https://www.ebi.ac.uk/ena/data/taxonomy/v1/taxon/tax-id";
+    $url = "$taxonomy_ep/$taxon_id";
+    list($resp,$info) = get($url);
+    if (!$resp){
+        return "Not found";
+    }else{
+        $resp = json_decode($resp);
+        if ($resp->scientificName){
+            return $resp->scientificName;  
+        }else{
+            return "Unknown";
+        }
+    }
+}
         

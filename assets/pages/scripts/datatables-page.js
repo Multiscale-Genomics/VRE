@@ -32,12 +32,14 @@ $(document).ready(function() {
 	columnDefs: [
 	  // columnes d'informació
 	  { targets: [0], orderable: false },
-	  { targets: [1], orderData: [ 3, 8, 1 ], orderable: false },
-	  { targets: [2], orderData: [ 3, 8, 2 ], orderable: false },
-	  { targets: [3], orderData: [ 3, 8, 1 ], orderable: false },
-	  { targets: [4], orderData: [ 9, 8, 4 ], orderable: false },
-	  { type: 'file-size', targets: 5, orderData: [ 10, 8, 5 ], orderable: false },
-	  { targets: [6], orderable: false },
+	  { targets: [1], orderData: [ 4, 8, 1 ], orderable: false },
+	  { targets: [2], orderData: [ 4, 8, 2 ], orderable: false },
+	  { targets: [3], orderData: [ 4, 8, 3 ], orderable: false },
+	  { targets: [4], orderData: [ 4, 8, 1 ], orderable: false },
+	  { targets: [5], orderData: [ 9, 8, 5 ], orderable: false },
+	  { type: 'file-size', targets: 6, orderData: [ 10, 8, 6 ], orderable: false },
+	  //{ targets: [6], orderable: false },
+	  
 	  { targets: [7], orderable: false },
 	  // columnes auxiliars d'ordenació (invisibles)
 	  { targets: [8], orderable: false, visible: false },
@@ -108,9 +110,8 @@ $(document).ready(function() {
 		if($(this).attr('data-tt-id').indexOf('.') == -1) foldersIndex.push($(this).attr('data-tt-id'));	
 	});
 
-
-  // BOTONS D'ORDENACIÓ DE COLUMNES array(File,Format,Proj,Date,Size,Expires)
-  var cols = new Array('asc','asc','asc','asc','asc');
+  // BOTONS D'ORDENACIÓ DE COLUMNES array(File,Format,Proj,Date,Size,Data type)
+  var cols = new Array('asc','asc','asc','asc','asc', 'asc', 'asc');
  /* $('.mock_button').click(function(){
 		i = $(this).attr("id").substring(11, 13);
   	//folders.prevObject.each(function(index){
@@ -194,13 +195,14 @@ $(document).ready(function() {
   var allFolderChecked = [];
   // select all files of a folder 
   $('input[type=checkbox].foldercheck', table.rows().nodes()).change(function() {
-	var folderId = $(this).parent().parent().parent().attr('data-tt-id');
+		var folderId = $(this).parent().parent().parent().attr('data-tt-id');
     var checked = $(this).is(":checked");
-	$('input[type=checkbox]', table.rows().nodes()).each(function() {
-		if ($(this).parent().parent().parent().attr('data-tt-parent-id') == folderId) $(this).prop('checked', checked);
-	});
-	if(checked) allFolderChecked.push(folderId);
-	else allFolderChecked.remove(folderId);
+		$('input[type=checkbox]', table.rows().nodes()).each(function() {
+			if ($(this).parent().parent().parent().attr('data-tt-parent-id') == folderId
+					 && ($(this).parent().parent().parent().attr('data-tt-parent-id') !== undefined)) $(this).prop('checked', checked);
+		});
+		if(checked) allFolderChecked.push(folderId);
+		else allFolderChecked.remove(folderId);
   }); 
 
   /*'a.folder-node', table.rows().nodes()).click(function(){
@@ -326,7 +328,7 @@ $(document).ready(function() {
       '</div>'+
 	  '<div class="col2">'+
 		'<div class="label label-sm label-danger" style="float: right;padding:0">'+
-            '<a href="javascript:removeFromToolsList(\'tool-' + id  + '\', ' + id_or  + ');" title="Remove file" class="btn btn-icon-only red" style="width: 25px;height: 25px;padding-top: 1px;"><i class="fa fa-trash"></i></a>'+
+            '<a href="javascript:removeFromToolsList(\'tool-' + id  + '\', ' + id_or  + ');" title="Clear file from list" class="btn btn-icon-only red" style="width: 25px;height: 25px;padding-top: 1px;"><i class="fa fa-times-circle"></i></a>'+
         '</div>'+
       '</div>'+
 	  '</li>');
@@ -394,7 +396,7 @@ $(document).ready(function() {
 	//console.log(fcheck);
 	if(!fcheck) $('tr[data-tt-id=' + folderId + '] input[type=checkbox].foldercheck').prop('checked', false);
 	
-	if(checked) toastModal("The file selected has been added to the Run Tools box below the workspace table.");
+	if(checked) toastModal("The file selected has been added to the Manage Files box below the workspace table.");
 
   }
 
@@ -419,23 +421,25 @@ $(document).ready(function() {
 
   // add / remove all the files from a folder to the portlet
   $('input[type=checkbox].foldercheck', table.rows().nodes()).change(function() {
-	var row = $(this).parent().parent().parent();
-	var checked = $(this).is(":checked");
-	for(i in allFiles){
-		if((allFiles[i].folderId) == row.data('tt-id')) {
-			if(checked) {
-				if(!allFiles[i].checked) drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
-				allFiles[i].checked = true;
-			}else{ 
-				allFiles[i].checked = false;
-				drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
+		var row = $(this).parent().parent().parent();
+		var checked = $(this).is(":checked");
+		for(i in allFiles){
+			if((allFiles[i].folderId) == row.data('tt-id')) {
+				if(checked) {
+					if(allFiles[i].fileId !== undefined) {
+						if(!allFiles[i].checked) drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
+						allFiles[i].checked = true;
+					}
+				}else{ 
+					allFiles[i].checked = false;
+					drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
+				}
 			}
 		}
-	}
-	drawToolsMenu(checked);
-	//console.log(JSON.stringify(allFiles));
+		drawToolsMenu(checked);
+		//console.log(JSON.stringify(allFiles));
 
-	if(checked) toastModal("All the files of the selected folder have been added to the Run Tools box below the workspace table.");
+		if(checked) toastModal("All the files of the selected folder have been added to the Manage Files box below the workspace table.");
 
   });
 
@@ -445,8 +449,12 @@ $(document).ready(function() {
 	for(i in allFiles){
 		if(allFiles[i].rowId) {
 			if(checked) {
-				if(!allFiles[i].checked) drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
-				allFiles[i].checked = true;
+				console.log(allFiles[i])
+				if((allFiles[i].fileId === undefined) || (allFiles[i].folderId === undefined) || (allFiles[i].fileName === undefined)){
+				}else{
+					if(!allFiles[i].checked) drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
+					allFiles[i].checked = true;
+				}
 			}else{ 
 				allFiles[i].checked = false;
 				drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
@@ -464,7 +472,7 @@ $(document).ready(function() {
 			var select = $('<select style="width: 100%!important;" class="selector form-control input-sm input-xsmall input-inline"><option value="">All</option></select>')
 			column.data().unique().sort().each( function ( d, j ) {
 				if(d.indexOf('<span style="display:none;">0</span>') != -1)	d = "uploads";
-				//console.log(d.indexOf('<span style="display:none;">0</span>')); 
+				//console.log(d.indexOf('<span style="display:none;">0</span>'));
 				if((d.length) && (d != '&nbsp;')){
 		  		var sel = '';
 		  		if ((d == col2SearchValue) || (d == col3SearchValue)) sel = ' selected ';

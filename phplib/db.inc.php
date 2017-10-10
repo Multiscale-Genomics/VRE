@@ -23,6 +23,7 @@ $GLOBALS['toolsCol'] = $GLOBALS['db']->tools;
 $GLOBALS['visualizersCol'] = $GLOBALS['db']->visualizers;
 $GLOBALS['fileTypesCol']    = $GLOBALS['db']->file_types;
 $GLOBALS['dataTypesCol']    = $GLOBALS['db']->data_types;
+$GLOBALS['helpsCol']    = $GLOBALS['db']->helps;
 
 $GLOBALS['dbData'] = $MuGVREConn->MuGVREData;
 $GLOBALS['studiesCol'] = $GLOBALS['dbData']->studies;

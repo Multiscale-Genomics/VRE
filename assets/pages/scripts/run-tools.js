@@ -3,7 +3,9 @@ var toolIdentifier = 0;
 var fileName = '';
 var baseURL = $('#base-url').val();
 
-runTool = function(idTool, idFile, nameFile) {
+/*runTool = function(idTool, idFile, nameFile) {
+
+	console.log(idTool);
 	
 	toolIdentifier = idTool;
 	fileName = nameFile;
@@ -37,7 +39,18 @@ $('#myModal1')
 .on('show.bs.modal', function (e) {
   var modal = $(this)
   modal.find('.modal-body').text('You have more than one file selected. If you go ahead, this tool will just be applied to the selected file ' + fileName  + '.')
-});
+});*/
+
+Array.prototype.remove = function() {
+	var what, a = arguments, L = a.length, ax;
+	while (L && this.length) {
+			what = a[--L];
+			while ((ax = this.indexOf(what)) !== -1) {
+					this.splice(ax, 1);
+			}
+	}
+	return this;
+};
 
 // remove single file from run tools portlet
 removeFromToolsList = function(id, id_or) {

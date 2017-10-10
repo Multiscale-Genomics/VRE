@@ -17,7 +17,8 @@ $usedDisk             = getUsedDiskSpace();
 //$time = $time_end - $GLOBALS['time_start'];
 //echo " ---------------------> Time returning from getUsedDiskSpace() $time segundos<br/>\n";
 $diskLimit            = $_SESSION['User']['diskQuota']; // getDiskLimit();
-$usedDiskPerc         = sprintf('%d', ($usedDisk / $diskLimit) * 100);
+$usedDiskPerc         = sprintf('%f', ($usedDisk / $diskLimit) * 100);
+$usedDiskPerc         = number_format($usedDiskPerc, 1, '.', '');
 
 if ($usedDisk < $diskLimit) {
 	$_SESSION['accionsAllowed'] = "enabled";
@@ -27,9 +28,6 @@ if ($usedDisk < $diskLimit) {
 }
 
 //update workspace content (job and files)
-
-if(!isset($_SESSION['User']['dataDir']))
-	$_SESSION['User']['dataDir']="MuGUSER57ecf22d91df3_58e3ce50b08152.38705916"; 
 
 $files = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir']));
 
@@ -79,9 +77,9 @@ sort($visualizers);*/
 
 			<div class="row">
 			    <div class="col-md-12">
-				<p style="margin-top:0;">
+                <p style="margin-top:0;">
 				If you want apply a Tool to a file, please select it from the dropdown menu on the Tools column. If you need to apply a Tool
-				to more than one file, check the selected files and they will be loaded in the <i>Run Tools</i> list at the bottom of the table.
+				to more than one file, check the selected files and they will be loaded in the <i>Manage Files</i> list at the bottom of the table.
 				</p>
 				<?php if($_SESSION['User']['Type'] == 100) { ?>
 					<div class="alert alert-warning">
@@ -140,18 +138,29 @@ sort($visualizers);*/
 				    <div class="portlet-title">
 							<div class="caption">
 					    	<i class="icon-share font-dark hide"></i>
-					    	<span class="caption-subject font-dark bold uppercase">Run Tools</span>
+					    	<span class="caption-subject font-dark bold uppercase">Manage Files</span>
 							</div>
 							<div class="actions" style="display:none!important;" id="btn-av-tools">
 								<div class="btn-group">
-									<a class="btn btn-sm green" id="visualization" href="javascript:;" data-toggle="dropdown">
-										<i class="fa fa-picture-o"></i> Visualization
+									<a class="btn btn-sm blue-madison" href="javascript:;" data-toggle="dropdown">
+										<i class="fa fa-cogs"></i> Actions
+						    		<i class="fa fa-angle-down"></i>
+									</a>	
+									<ul class="dropdown-menu pull-right" role="menu">
+										<li><a href="javascript:downloadAllFiles();"><i class="fa fa-download"></i> Download selected files </a></li>
+										<li><a href="javascript:editAllFiles();"><i class="fa fa-pencil"></i> Edit selected files metadata </a></li>
+										<li><a href="javascript:deleteAllFiles();"><i class="fa fa-trash-o"></i> Delete selected files </a></li>
+									</ul>
+					    	</div>
+								<div class="btn-group">
+									<a class="btn btn-sm purple-intense" id="visualization" href="javascript:;" data-toggle="dropdown">
+										<i class="fa fa-eye"></i> Visualization
 						    		<i class="fa fa-angle-down"></i>
 									</a>	
 									<ul class="dropdown-menu pull-right" id="visualizers_list" role="menu"> </ul>
 					    	</div>
 					    	<div class="btn-group">
-									<a class="btn btn-sm green" id="av_tools" href="javascript:;" data-toggle="dropdown">
+									<a class="btn btn-sm blue-dark" id="av_tools" href="javascript:;" data-toggle="dropdown">
 										<i class="fa fa-wrench"></i> Available Tools
 						    		<i class="fa fa-angle-down"></i>
 									</a>	
@@ -167,7 +176,7 @@ sort($visualizers);*/
 					</div>
 					<div class="scroller-footer">
 											<a class="btn btn-sm red pull-right display-hide" id="btn-rmv-all"  href="javascript:;">
-					       	<i class="fa fa-trash"></i> Remove all files
+					       	<i class="fa fa-times-circle"></i> Clear all files from list
 					    </a>
 					</div>
 				    </div>
@@ -193,7 +202,7 @@ sort($visualizers);*/
 						<!-- SUMMARY AND DISK QUOTA ROW -->
 
 
-			<?php $tools = getFileTypes_List(); ?>
+			<?php /*$tools = getFileTypes_List();*/ ?>
 
 
 			<div class="row">
@@ -202,280 +211,19 @@ sort($visualizers);*/
 				    <div class="portlet-title">
 							<div class="caption">
 					    	<i class="icon-share font-dark hide"></i>
-					    	<span class="caption-subject font-dark bold uppercase">HELP</span> <span style="font-size:12px;">below you have the list of tools and the file types accepted for each one</span>
+					    	<span class="caption-subject font-dark bold uppercase">LAST JOBS</span> 
 							</div>
 				    </div>
 				    <div class="portlet-body">
 							<div class="scroller" style="height: 204px;" data-always-visible="1" data-rail-visible="0">
-								<ul class="feeds">
-									<?php foreach($tools as $t) { ?>
-									<li>
-						    		<div class="col1">
-											<div class="cont">
-							    			<div class="cont-col1">
-												<div class="label font-green"> <?php echo $t['name']; ?> </div>
-							    			</div>
-											</div>
-						    		</div>
-										<div class="col2" style="width: 200px; margin-left: -200px; text-align: right;">
-											<div class=""><strong> <?php echo implode(", ", $t['file_types']); ?> </strong></div>
-						    		</div>
-									</li>
-									<?php } ?>
-								</ul>
+								<?php
+					    		print printLastJobs($files);
+		   			    ?>
 							</div>
 						</div>
 					</div>
 				</div>
-
-
-			   <!-- <div class="col-lg-6 col-xs-12 col-sm-12">
-				<div class="portlet light bordered">
-				    <div class="portlet-title">
-					<div class="caption">
-					    <i class="icon-share font-dark hide"></i>
-					    <span class="caption-subject font-dark bold uppercase">SUMMARY</span>
-					</div>
-				    </div>
-				    <div class="portlet-body">
-					<div class="scroller" style="height: 204px;" data-always-visible="1" data-rail-visible="0">
-					    <ul class="feeds">
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-danger">
-								  <i class="fa fa-database"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc text-danger"> You are about to run out your disk space. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-												<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-warning">
-								  <i class="fa fa-history"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-warning">Something.bam</span> is currently running. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-
-						<li>
-						    <a href="javascript:;" class="text-danger">
-							<div class="col1">
-							    <div class="cont">
-								<div class="cont-col1">
-								  <div class="label label-sm label-danger">
-								      <i class="fa fa-exclamation-circle"></i>
-								  </div>
-								</div>
-								<div class="cont-col2">
-								    <div class="desc"> You must fill in the metadata of the file Something.txt. </div>
-								</div>
-							    </div>
-							</div>
-							<div class="col2">
-							    <div class="date"> 20 mins </div>
-							</div>
-						    </a>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-info">
-								  <i class="fa fa-check"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-info">Something.bam</span> has finished processing. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> 24 mins </div>
-						    </div>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-warning">
-								  <i class="fa fa-history"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-warning">Something.bam</span> is currently running. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-						<li>
-						    <a href="javascript:;" class="text-danger">
-							<div class="col1">
-							    <div class="cont">
-								<div class="cont-col1">
-								  <div class="label label-sm label-danger">
-								      <i class="fa fa-exclamation-circle"></i>
-								  </div>
-								</div>
-								<div class="cont-col2">
-								    <div class="desc"> You must fill in the metadata of the file Something.txt. </div>
-								</div>
-							    </div>
-							</div>
-							<div class="col2">
-							    <div class="date"> 20 mins </div>
-							</div>
-						    </a>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-info">
-								  <i class="fa fa-check"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-info">Something.bam</span> has finished processing. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> 24 mins </div>
-						    </div>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-warning">
-								  <i class="fa fa-history"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-warning">Something.bam</span> is currently running. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-						<li>
-						    <a href="javascript:;" class="text-danger">
-							<div class="col1">
-							    <div class="cont">
-								<div class="cont-col1">
-								  <div class="label label-sm label-danger">
-								      <i class="fa fa-exclamation-circle"></i>
-								  </div>
-								</div>
-								<div class="cont-col2">
-								    <div class="desc"> You must fill in the metadata of the file Something.txt. </div>
-								</div>
-							    </div>
-							</div>
-							<div class="col2">
-							    <div class="date"> 20 mins </div>
-							</div>
-						    </a>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-info">
-								  <i class="fa fa-check"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-info">Something.bam</span> has finished processing. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> 24 mins </div>
-						    </div>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-warning">
-								  <i class="fa fa-history"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-warning">Something.bam</span> is currently running. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-						<li>
-						    <a href="javascript:;" class="text-danger">
-							<div class="col1">
-							    <div class="cont">
-								<div class="cont-col1">
-								  <div class="label label-sm label-danger">
-								      <i class="fa fa-exclamation-circle"></i>
-								  </div>
-								</div>
-								<div class="cont-col2">
-								    <div class="desc"> You must fill in the metadata of the file Something.txt. </div>
-								</div>
-							    </div>
-							</div>
-							<div class="col2">
-							    <div class="date"> 20 mins </div>
-							</div>
-						    </a>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-info">
-								  <i class="fa fa-check"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-info">Something.bam</span> has finished processing. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> 24 mins </div>
-						    </div>
-						</li>
-					    </ul>
-					</div>
-
-				    </div>
-				</div>
-			    </div>-->
+			   
 			    <div class="col-lg-6 col-xs-12 col-sm-12">
 				<div class="portlet light tasks-widget bordered">
 				    <div class="portlet-title">
@@ -595,8 +343,29 @@ sort($visualizers);*/
                             </div>
                         </div>
                     </div>
-                </div>
+								</div>
 
+				<div class="modal fade bs-modal" id="modalMeta" tabindex="-1" role="basic" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+								<h4 class="modal-title">Project info</h4>
+							</div>
+							<div class="modal-body table-responsive">
+								<div id="meta-container" style="max-height: calc(100vh - 255px);">						
+								<div id="meta-summary">
+									
+								</div>
+								
+																</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
 				
 

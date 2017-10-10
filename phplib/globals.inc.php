@@ -2,7 +2,7 @@
 
 $GLOBALS['AppPrefix'] = "MuG";
 $GLOBALS['BASEURL'] = "/";
-$GLOBALS['URL'] = "http://multiscalegenomics.bsc.es/vre/";
+$GLOBALS['URL'] = "http://multiscalegenomics.bsc.es/";
 $GLOBALS['NAME'] = "MuG Virtual Research Environment";
 $GLOBALS['SITETITLE'] = "Multiscale Complex Genomics | Virtual Research Environment";
 $GLOBALS['FROMMAIL'] = "irbinfo.mug@irbbarcelona.org";
@@ -10,6 +10,7 @@ $GLOBALS['FROMNAME'] = "MuG VRE";
 $GLOBALS['ROOTPATH'] = $_SERVER['DOCUMENT_ROOT'];
 $GLOBALS['helpdeskMail'] = "helpdesk@multiscalegenomics.eu";
 
+$GLOBALS['htmlPath'] = "/var/www/html/";
 $GLOBALS['logFile'] = "/gpfs/VRE.log";
 
 // roles
@@ -20,7 +21,7 @@ $GLOBALS['STATES_COLOR'] = array("0"=>"font-red", "1"=>"font-green-meadow", "2"=
 $GLOBALS['FILE_MSG_COLOR'] = array("0"=>"note-danger", "1"=>"note-info", "2"=>"note-success", 3=>"note-info");
 $GLOBALS['NO_GUEST'] = array(0,1,2,100,101);
 $GLOBALS['PREMIUM'] = array(0,1);
-$GLOBALS['ADMIN'] = array(0,1);
+$GLOBALS['ADMIN'] = array(0);
 $GLOBALS['TOOLDEV'] = array(1);
 
 

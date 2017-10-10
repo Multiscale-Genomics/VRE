@@ -13,7 +13,7 @@ require "db.inc.php";
 require "ldap.inc.php";
 require "keycloak.inc.php";
 require "log.inc.php";
-require "jobProcess.inc.php";
+require "ProcessJob.inc.php";
 require "oauth2.inc.php";
 
 require "templates.inc.php";

@@ -6,10 +6,12 @@ $GLOBALS['fsStyle'] = "fsMongo"; # fsMongo,fs,mongo
 $GLOBALS['shared']     = "/gpfs/";
 $GLOBALS['dataDir']    = $GLOBALS['shared']."MuG_userdata/";
 $GLOBALS['pubDir']     = $GLOBALS['shared']."MuG_public/";
-
 $GLOBALS['tmpDir']     = $GLOBALS['shared']."tmp/";
 $GLOBALS['refGenomes'] = $GLOBALS['pubDir']."refGenomes/";
 $GLOBALS['sampleData'] = $GLOBALS['shared']."sampleData";
+
+$GLOBALS['cloud']              = "mug-bsc"; # options are any of $GLOBALS['clouds']
+$GLOBALS['tmpUser_dir']       = ".tmp/";
 $GLOBALS['sampleData_default'] = "basic";
 
 
@@ -36,12 +38,15 @@ $GLOBALS['jbrowseURL']  = $GLOBALS['URL']."visualizers/jbrowse/";
 
 //Oauth2 authentification
 $GLOBALS['authServer']             = 'https://inb.bsc.es/auth';
-//MuG openId endpoints
 $GLOBALS['urlAuthorize' ]          = 'https://inb.bsc.es/auth/realms/mug/protocol/openid-connect/auth';     //get autorization_code
 $GLOBALS['urlAccessToken']         = 'https://inb.bsc.es/auth/realms/mug/protocol/openid-connect/token';    //get token
 $GLOBALS['urlResourceOwnerDetails']= 'https://inb.bsc.es/auth/realms/mug/protocol/openid-connect/userinfo'; //get user details
 $GLOBALS['urlLogout']              = 'https://inb.bsc.es/auth/realms/mug/protocol/openid-connect/logout';   //close keyclok session   
 
+//MuG DMP metdata API 
+$GLOBALS['DMPserver_domain']       = 'localhost';
+$GLOBALS['DMPserver_port']         = '5002';
+$GLOBALS['DMPserver_address']      = '/mug/api/dmp';
 
 //
 //

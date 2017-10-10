@@ -185,9 +185,9 @@ $tools = $GLOBALS['toolsCol']->find();
 																									<?php
 																									foreach ( $tools as $id => $value ) {
 																											$selected="";
-                                                    	if (in_array($id, $user['ToolsDev'])) $selected = "selected";
+                                                    	if (in_array($value['_id'], $user['ToolsDev'])) $selected = "selected";
 
-																											echo "<option value='$id' $selected>".$value['name']."</option>";
+																											echo "<option value='".$value['_id']."' $selected>".$value['name']."</option>";
 																									}
 																									?>
 																								</select>

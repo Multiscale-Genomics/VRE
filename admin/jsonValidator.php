@@ -3,7 +3,7 @@
 require "../phplib/genlibraries.php";
 require "../phplib/admin.inc.php";
 
-redirectAdminOutside();
+redirectToolDevOutside();
 
 
 ?>

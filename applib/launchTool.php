@@ -48,7 +48,6 @@ if ($debug){
 	var_dump($jobMeta);
 }
 
-
 //
 // Check input file requirements
 
