@@ -1,0 +1,7 @@
+flask
+flask_restful
+waitress
+httplib2
+pyBigWig
+git+git://github.com/Multiscale-Genomics/mg-dm-api.git
+git+git://github.com/Multiscale-Genomics/mg-rest-util.git

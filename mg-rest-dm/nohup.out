@@ -1,0 +1,25 @@
+[2017-10-09 15:43:17,945] ERROR in app: Exception on /mug/api/dmp/file_meta [GET]
+Traceback (most recent call last):
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/flask_restful/__init__.py", line 480, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/flask/views.py", line 84, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/flask_restful/__init__.py", line 595, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/mg_rest_util/mg_auth.py", line 81, in _wrap
+    return func(user_id=user_id, *args, **kwargs)
+  File "/var/www/html/mg-rest-dm/rest/app.py", line 202, in get
+    return dmp_api.get_file_by_id(user_id['user_id'], file_id, True)
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/dmp/dmp.py", line 307, in get_file_by_id
+    file_obj = self._get_rows(str(user_id), '_id', ObjectId(str(file_id)), rest)
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/bson/objectid.py", line 110, in __init__
+    self.__validate(oid)
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/bson/objectid.py", line 206, in __validate
+    _raise_invalid_id(oid)
+  File "/home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm2/lib/python2.7/site-packages/bson/objectid.py", line 52, in _raise_invalid_id
+    " or a 24-character hex string" % oid)
+InvalidId: '59a909fe8743651a977c9901w' is not a valid ObjectId, it must be a 12-byte input or a 24-character hex string

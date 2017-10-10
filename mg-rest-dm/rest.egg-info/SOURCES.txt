@@ -1,0 +1,10 @@
+README.md
+setup.cfg
+rest/__init__.py
+rest/app.py
+rest/release.py
+rest.egg-info/PKG-INFO
+rest.egg-info/SOURCES.txt
+rest.egg-info/dependency_links.txt
+rest.egg-info/requires.txt
+rest.egg-info/top_level.txt

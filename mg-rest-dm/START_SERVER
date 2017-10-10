@@ -1,0 +1,3 @@
+#start up server:
+cd /var/www/html/mg-rest-dm
+nohup /home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm/bin/python2.7 /home/lcodo2/.pyenv/versions/2.7.12/envs/mg-rest-dm/bin/waitress-serve --listen=0.0.0.0:5002 rest.app:APP &
