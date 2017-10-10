@@ -101,31 +101,31 @@ switch ($_REQUEST['op']) {
             }
 	    break;
 
-        case 'BEDGRAPH';
+    case 'BEDGRAPH';
 	case 'WIG':
 	case 'BED':
             if (!isset($_REQUEST['refGenome'])){
                 $resp['msg']="Missing compulsory fields. Please, specify reference genome.</br>";
-		$resp['state'] = 0;
+                $resp['state'] = 0;
                 break;
             }
             //$resp['msg'] = "File will be converted to BW";
-	    //$_SESSION['validation'][$fn]['action']["convert"]=0; 
-	    break;
+	        //$_SESSION['validation'][$fn]['action']["convert"]=0; 
+	        break;
 
-        case 'GFF':
+    case 'GFF':
 	case 'GFF3':
             if (!isset($_REQUEST['refGenome'])){
                 $resp['msg']="Missing compulsory fields. Please, specify reference genome.</br>";
-		$resp['state'] = 0;
+        		$resp['state'] = 0;
                 break;
             }
-	    break;
+	        break;
 
-        default:
+    default:
             # other formats accepted as uploaded
-	    $resp['msg']   = "Metadata file is valid</br>";
-	    $resp['state'] = 1;
+    	    $resp['msg']   = "Metadata file is valid</br>";
+	        $resp['state'] = 1;
             break;
     }
 
@@ -133,57 +133,87 @@ switch ($_REQUEST['op']) {
     // check formats and chrs names
     if ( $resp['msg'] == "" && $_REQUEST['refGenome']){
 
-	$valid = validateUPLOAD($fn,$rfn,$_REQUEST['refGenome'],$_REQUEST['format']);
+    	$valid = validateUPLOAD($fn,$rfn,$_REQUEST['refGenome'],$_REQUEST['format']);
+   /* 
+        print "SESSION - ERROR<br/>";
+        var_dump($_SESSION['errorData']);
+        print "SESSION - VALIDATION<br/>";
+        var_dump($_SESSION['validation']);
+        print "RESP<br/>";
+        var_dump($resp);
+
+        print "<br/>_____________________________________<br/><br/>";
+    */
 
 
-	// add function error msgs to resp
+    	// add function error msgs to resp
         if (! $valid){
-	    $resp['msg']  .= printErrorData();
-	    $resp['msg']  .= "File '".basename($fnPath)."' <b>not validated</b>. Please, mend your warnings/errors or upload the file again<br/>";
-	    $resp['state'] = 0;
+    	    $resp['msg']  .= printErrorData();
+    	    $_SESSION['errorData']['error'][] = "File '".basename($fnPath)."' <b>not validated</b>. Please, mend your warnings/errors or upload the file again<br/>";
+    	    $resp['state'] = 0;
+    
+    	// translate pending accions into nice msgs
+    	}else{
+    	    if (!isset($_SESSION['validation'][$fn]['action'])){
+     	    	$resp['msg'] .= "Genomic coordinates successfully mapped against ".$_REQUEST['refGenome']." genome.<br/>";
+    	    	$resp['state'] = 1;
+	        }else{
+    	    	$resp['state'] = 2;
+        		if (isset($_SESSION['validation'][$fn]['action']['substitutions']) ){
+    		        foreach ($_SESSION['validation'][$fn]['action']['substitutions'] as $sub => $r){
+    		        	$resp['msg'] .= $_REQUEST['format']." chromosome name not in reference sequence. The following transformation will be performed: $sub<br/>";	
+    		        }	
+    		    }
+    		    if (isset($_SESSION['validation'][$fn]['action']['enqueue_chrNames']) ){
+    		        $resp['msg'] .= "Chromosome names in BAM will be validated. If they do not match the names of reference genome, your BAM will modified to do so (i.e. 'Chr2' => 'ChrII'). If no equivalent name can be found, the validation will fail.</br>";
+    		    }
+    	    }
+        }
+    }
+/*
+    print "SESSION - ERROR<br/>";
+    var_dump($_SESSION['errorData']);
+    print "SESSION - VALIDATION<br/>";
+    var_dump($_SESSION['validation']);
+    print "RESP<br/>";
+    var_dump($resp);
 
-	// translate pending accions into nice msgs
-	}else{
-	    if (!isset($_SESSION['validation'][$fn]['action'])){
- 		$resp['msg'] .= "Genomic coordinates successfully mapped against ".$_REQUEST['refGenome']." genome.<br/>";
-	    	$resp['state'] = 1;
-	    }else{
-	    	$resp['state'] = 2;
-		if (isset($_SESSION['validation'][$fn]['action']['substitutions']) ){
-		    foreach ($_SESSION['validation'][$fn]['action']['substitutions'] as $sub => $r){
-		    	$resp['msg'] .= $_REQUEST['format']." chromosome name not in reference sequence. The following transformation will be performed: $sub<br/>";	
-		    }	
-		}
-		if (isset($_SESSION['validation'][$fn]['action']['enqueue_chrNames']) ){
-		    $resp['msg'] .= "Chromosome names in BAM will be validated. If they do not match the names of reference genome, your BAM will modified to do so (i.e. 'Chr2' => 'ChrII'). If no equivalent name can be found, the validation will fail.</br>";
-		}
-	    }
-	}
+    print "<br/>_____________________________________<br/><br/>";
+ */
+    // set file state according to SESSION['errorData'] and SESSION['validation']
+    if ( isset($_SESSION['validation'][$fn]['action'])){
+    	$resp['state']= 2;  
     }
 
-
-    // set file state according to SESSION['errorData'] and SESSION['validation']
-    if ( isset($_SESSION['validation'][$fn]['action']))
-	$resp['state']= 2;
-
-    if (isset($_SESSION['errorData']))
-	$resp['state']= 0;
+    if (isset($_SESSION['errorData'])){
+    	$resp['state']= 0;
+    }
 
 
     // save metadata if file already validated
     if ($resp['state'] == 1 ){
-	//var_dump($_REQUEST);
-	//exit(0);
-	$ok = saveMetadataUpload($fn,$_REQUEST,1);
-	if (!$ok){
-		$resp['msg'] .= printErrorData();
-		$resp['state']= 0;
-	}else{
-		$resp['msg'] .= basename($fnPath). " successfully validated<br/>";
-	}
+    	//var_dump($_REQUEST);
+    	//exit(0);
+    	$ok = saveMetadataUpload($fn,$_REQUEST,1);
+    	if (!$ok){
+    		$resp['msg'] .= printErrorData();
+    		$resp['state']= 0;
+    	}else{
+    		$resp['msg'] .= basename($fnPath). " successfully validated<br/>";
+    	}
     }
-    break;
 
+
+/*
+    print "SESSION - ERROR<br/>";
+    var_dump($_SESSION['errorData']);
+    print "SESSION - VALIDATION<br/>";
+    var_dump($_SESSION['validation']);
+    print "RESP<br/>";
+    var_dump($resp);
+
+ */
+    break;
 
 
   case 'uncompress':
@@ -203,8 +233,8 @@ switch ($_REQUEST['op']) {
 //var_dump($_SESSION['validation']);
 
     if (!isset($_SESSION['validation'][$fn]) ){
-	$resp['msg']   = "Nothing else to do for '".basename($fnPath)."'! File will we set as valid.<br/>";
-	$resp['state'] = 1;
+    	$resp['msg']   = "Nothing else to do for '".basename($fnPath)."'! File will we set as valid.<br/>";
+    	$resp['state'] = 1;
     }
     $format = $_SESSION['validation'][$fn]['format'];
 
@@ -293,15 +323,15 @@ switch ($_REQUEST['op']) {
 	case 'WIG':
 	case 'BED':
 	case 'GFF':
-	case 'GFF3':
-	   $ok = processUPLOAD($file);
+    case 'GFF3':
+       $ok = processUPLOAD($fn);
 	   if (!$ok){
-		$resp['msg'] .= printErrorData();
-		$resp['state']= 0;
+    		$resp['msg'] .= printErrorData();
+    		$resp['state']= 0;
 	    }else{
-		unset($_SESSION['validation'][$fn]);
-		$resp['msg'] .= basename($fnPath). " processed<br/>";
-		$resp['state']= 1;
+    		unset($_SESSION['validation'][$fn]);
+    		$resp['msg'] .= basename($fnPath). " processed<br/>";
+    		$resp['state']= 1;
 	    }
 	    break;
 
@@ -312,11 +342,17 @@ switch ($_REQUEST['op']) {
     }
 
     // set file state according to SESSION['errorData'] and SESSION['validation']
-    if ( isset($_SESSION['validation'][$fn]['action']))
-	$resp['state']= 2;
+    if ( isset($_SESSION['validation'][$fn]['action'])){
+    	$resp['state']= 2;
+    }
 
-    if (isset($_SESSION['errorData']))
-	$resp['state']= 0;
+    if (isset($_SESSION['errorData'])){
+    	$resp['state']= 0;
+        var_dump($_SESSION['errorData']);
+        echo "-----------";
+        var_dump($resp);
+        exit(0);
+    }
 
 
     // save metadata if file already validated or is enqueued
@@ -337,21 +373,23 @@ switch ($_REQUEST['op']) {
 		$resp['msg'] .= basename($fnPath). " validation process has being submited to the server. The task could take some time to run. Return to 'User Workspace' for monitoring it.<br/>";
 	//}
     }
-
-//print "<br/>----------------RESP-----<br/>";
-//var_dump($resp);
-//print "<br/>----------------VALIDATION LIST-----<br/>";
-//var_dump($_SESSION['validation']);
-//print "<br/>----------------ERROR-----<br/>";
-//var_dump($_SESSION['errorData']);
     break;
-
-
+  
   //no  format
   default:
     break;
 
 }
+/*
+print "<br/>----------------RESP-----<br/>";
+var_dump($resp);
+print "<br/>----------------VALIDATION LIST-----<br/>";
+var_dump($_SESSION['validation']);
+print "<br/>----------------ERROR-----<br/>";
+var_dump($_SESSION['errorData']);
+print "<br/>--------------------<br/>";
+ */
+
 
 print json_encode($resp);
 

@@ -126,6 +126,9 @@ redirectOutside();
 			    <!--<form name="uploadFiles" id="uploadFiles" action="" method="post" enctype="multipart/form-data">
 					<input type="hidden" name="op" id="op" value="1">
 					<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>-->
+
+					<input type="hidden" name="numFiles" id="numFiles" value="<?php echo sizeof($filesData); ?>">
+
 			    <div class="note note-info">
 				  <div class="mt-radio-list" style="padding-bottom:0;">
 					<?php
