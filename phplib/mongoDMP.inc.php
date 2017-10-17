@@ -8,7 +8,7 @@ function DMP_http($method,$service,$data=false){
 
     $url_base = $GLOBALS['DMPserver_domain'].":".$GLOBALS['DMPserver_port'].$GLOBALS['DMPserver_address'];
     $headers  = array("Content-Type: application/json", "Authorization: Bearer ".$_SESSION['User']['token']);
-print "HEADER : -H \"Content-Type: application/json\" -H \"Authorization: Bearer ".$_SESSION['User']['token']."\"\n";
+    print "HEADER : -H \"Content-Type: application/json\" -H \"Authorization: Bearer ".$_SESSION['User']['token']."\"\n";
 
     $url = $url_base."/".$service;
     switch ($method){
@@ -53,17 +53,14 @@ print "HEADER : -H \"Content-Type: application/json\" -H \"Authorization: Bearer
 function isGSDirBNSXXX($fn) { ### !OJO: old params were ($col,$fn) !!!
 
     // get DMP file
-    $user_id = ($asRoot?$asRoot:$_SESSION['User']['id']);
-    $params = array("user_id" => $user_id,
-                    "file_id" => $fn,
-                    "chrom"   => 0,
-                    "start"   => 0,
-                    "end"     => 0);
-    $fileDMP = DMP_http("get","track",$params);
+    if ($asRoot){
+        $_SESSION['errorData']['Error'][]="Sorry, no admin role defined in DMP yet. Not allowed to check isGSDir $fn being user ".$_SESSION['User']['id'];
+        return 0;
+    }
+    //$user_id = ($asRoot?$asRoot:$_SESSION['User']['id']);
+    $params = array("file_id" => $fn);
+    $fileDMP = DMP_http("get","file_meta",$params);
 
-    // convert DMP file to VRE file
-    #list($fileData,$fileMeta) = getVREfile_fromFile($fileDMP);
-    
     //check files attribute
     if (isset($fileDMP['files']))
         return false;
@@ -74,95 +71,82 @@ function isGSDirBNSXXX($fn) { ### !OJO: old params were ($col,$fn) !!!
 function getGSFileId_fromPathXXX($fnPath,$asRoot=0) {
 
     // get DMP file
-    $user_id = ($asRoot?$asRoot:$_SESSION['User']['id']);
-    $params = array("user_id"  => $user_id,
-                    "file_path"=> $fnPath);
-    $fileDMP = DMP_http("get","file",$params);
-
-    // convert DMP file to VRE file
-    list($file,$fileMeta) = getVREfile_fromFile($fileDMP);
-
-	if (empty($file))
-		return 0;
-	else
-		return $file['_id'];
-	
+    if ($asRoot){
+        $_SESSION['errorData']['Error'][]="Sorry, no admin role defined in DMP yet. Not allowed to get file from path $fnPath being user ".$_SESSION['User']['id'];
+        return 0;
+    }
+    //$user_id = ($asRoot?$asRoot:$_SESSION['User']['id']);
+    $files = getGSFiles_byUserXXX("path");
+    if (isset($files[$fnPath])){
+        return $files[$fnPath]['_id'];
+    }else{
+        return 0;
+    }
 }
 
-function getGSFilesFromDirXXX($dataSelection=Array(),$onlyVisible=0){
+function getGSFilesFromDirXXX($dirId,$onlyVisible=0){  ### !OJO: old params were ($dataSelection=Array(),$onlyVisible=0) !!! 
 
     $files=Array();
 
-    // get DMP dir
-    if (count($dataSelection) == 0 ){
+    // get dir
+    if (!$dirId){
         if (!isset($_SESSION['curDir'])){
             $_SESSION['errorData']['internal'][]="Cannot retrieve files from the database. Given query is not valid. Please, try it later or mail <a href=\"mailto:".$GLOBALS['helpdeskMail']."\">".$GLOBALS['helpdeskMail']."</a>";
             return FALSE;
         }
-        $dataSelection = Array(
-            'user_id'  => $_SESSION['userId'],
-            'file_path'=> $_SESSION['curDir']);
+        $dirId = $_SESSION['curDir'];
     }
-    
-    $fileDMP = DMP_http("get","file",$dataSelection);
-
-    // convert DMP dir to VRE dir
-    list($dirData,$dirMeta) = getVREfile_fromFile($fileDMP);
+    $dir = getGSFile_fromIdXXX($dirId);
 
     // check dir
-    if (!isset($dirData['_id'])){
+    if (!isset($dir['_id'])){
         $_SESSION['errorData']['Error'][]="Data is not accessible or do not exist anymore. Please, try it later or mail <a href=\"mailto:".$GLOBALS['helpdeskMail']."\">".$GLOBALS['helpdeskMail']."</a>";
         return FALSE;
     }
 
-    if (!isset($dirData['files']) || count($dirData['files'])==0 ){
+    if (!isset($dir['files']) || count($dir['files'])==0 ){
         $_SESSION['errorData']['Warning'][]="No data to display in the given directory.";
         return FALSE;
     }
 
     // Retrieve File Data and Metada for each file in directory
-    $count =count( $dirData['files']);
+    $count =count( $dir['files']);
+	foreach ($dir['files'] as $d) {
+        $fData = getGSFile_fromIdXXX($d);
 
-	foreach ($dirData['files'] as $d) {
-
-        if ($onlyVisible){
-            #$fData = getGSFiles_filteredBy($d, array('visible'=> Array('$ne'=>false)) );	
-            $fData = getGSFiles_filteredByXXX($d, array('visible'=> true));	
-        }else{
-            $fData = getGSFile_fromIdXXX($d);
-        }
-	    if ( $fData['path'] == $_SESSION['User']['id'] )
-            continue;
-
-	    $fData['mtime'] = $fData['mtime']->sec;
-	    $files[$fData['_id']] = $fData; 
+        //clean results: visible files, root dir, mtime
+        if ($onlyVisible && (isset($fData['visible']) || $fData['visible'] === false) ){ continue;}
+	    if ( $fData['path'] == $_SESSION['User']['id']){continue; }
+       	if (is_object($fData['mtime'])){$fData['mtime'] = $fData['mtime']->sec;}
+        //append
+        $files[$fData['_id']] = $fData; 
 
         if (isset($fData['files']) && count($fData['files'])>0 ){
 	    	foreach ($fData['files'] as $dd) {
-                if ($onlyVisible){
-                    #$ffData = getGSFiles_filteredBy($dd, array('visible'=> Array('$ne'=>false)) );	
-                    $ffData = getGSFiles_filteredByXXX($dd, array('visible'=> true));	
-                }else{
-                    $ffData = getGSFile_fromIdXXX($dd);
-                }
-       			if (is_object($ffData['mtime']))
-                    $ffData['mtime'] = $ffData['mtime']->sec;
+                $ffData = getGSFile_fromIdXXX($dd);
+                //clean results: visible files, root dir, mtime
+                if ($onlyVisible && (isset($ffData['visible']) || $ffData['visible'] === false) ){ continue;}
+       			if (is_object($ffData['mtime'])){$ffData['mtime'] = $ffData['mtime']->sec;}
+                //append
         		$files[$ffData['_id']] = $ffData; 
     		}
 	    }
-	}
+    }
+
+    // Return dir files
 	return $files;
 }
 
 function getGSFile_fromIdXXX($fn,$filter="",$asRoot=0) {
     // get DMP file
-    $user_id = ($asRoot?$asRoot:$_SESSION['User']['id']);
-    $params = array("user_id" => $user_id,
-                    "file_id" => $fn,
-                    "chrom"   => 0,
-                    "start"   => 0,
-                    "end"     => 0);
-    $fileDMP = DMP_http("get","track",$params);
+    if ($asRoot){
+        $_SESSION['errorData']['Error'][]="Sorry, no admin role defined in DMP yet. Not allowed to get file $fn being user ".$_SESSION['User']['id'];
+        return 0;
+    }
+    //$user_id = ($asRoot?$asRoot:$_SESSION['User']['id']);
+
+    $params = array("file_id" => $fn);
+    $fileDMP = DMP_http("get","file_meta",$params);
 
     // convert DMP file to VRE file
     list($fileData,$fileMeta) = getVREfile_fromFile($fileDMP);
@@ -187,6 +171,9 @@ function getGSFile_fromIdXXX($fn,$filter="",$asRoot=0) {
 
 }
 
+// get files filtered by certain metadata query
+// DMP no not support it
+//
 function getGSFiles_filteredByXXX($fn,$filters) {
 
     $filter = array_merge(array('user_id' => $_SESSION['User']['id']),$filters);
@@ -329,4 +316,27 @@ function createGSDirBNSXXX($dirPath,$asRoot=0) {
     }else{
 	    return 0;
     }
+}
+
+
+// get all files owned by user
+//
+function getGSFiles_byUserXXX($index="_id") {
+
+    $files=array();
+
+    // get DMP file
+    $params = array("by_user"=> 1);
+    $filesDMP = DMP_http("get","files",$params);
+
+    if (isset($filesDMP['files']) && count($filesDMP['files']) ){
+        foreach ($filesDMP['files'] as $fileDMP){
+            list($file,$fileMeta) = getVREfile_fromFile($fileDMP);
+            $file = array_merge($file,$fileMeta);
+            if (isset($file[$index])){
+                $files[$file[$index]] = $file;
+            }
+        }
+    }
+    return $files;
 }
