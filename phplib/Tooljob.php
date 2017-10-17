@@ -694,7 +694,7 @@ class Tooljob {
 	//Setting PMES execution user (name,uid,gid)
 	exec("stat  -c '%u:%g' ".$this->working_dir,$stat_out);
 	list($user_uid,$user_gid) = split(":",$stat_out[0]);
-	$user_name = "vre";
+	$user_name = "pmes";
 
 	//Setting executable as PMES requires
 	$app_target =  dirname($tool['infrastructure']['executable']);
@@ -716,7 +716,7 @@ class Tooljob {
 		"outputPaths"=> array(),
 		"infrastructure" =>  $this->cloudName,
 		"mountPoints"=> array(
-				    array( "target"     => $this->root_dir_virtual,
+				    array("target"     => $this->root_dir_virtual,
 					   "device"     => $GLOBALS['clouds'][$this->cloudName]['dataDir_fs']."/".$_SESSION['User']['id'],
 					   "permissions"=> "rw"
 				    ), 
@@ -728,9 +728,9 @@ class Tooljob {
 		"numNodes"   => "1",                                           //TODO OBSOLETE?
 		"user"       => array (
               			"username"   => $user_name,                     // PMES creates /home/username/
-				"credentials"=> array(
-					"pem"   => "/home/pmes/certs/pmes.pem", // in PMES server path
-					"key"   => "/home/pmes/certs/pmes.key", // in PMES server path
+                        "credentials"=> array(
+					"pem"   => "/home/pmes/pmes.pem", // in PMES server path
+					"key"   => "/home/pmes/pmes.key", // in PMES server path
 					"uid"   => $user_uid,                   // PMES writes outputs using this uid
 					"gid"   => $user_gid,                   // PMES writes outputs using this gid
 					"token" => ""
@@ -754,7 +754,7 @@ class Tooljob {
 						),
         			"type" => $cloud['workflowType']    // COMPSs || Single
 				),				
-		"compss_flags" =>array( "flag" => " --summary --base-log-dir=".$this->root_dir_virtual."/".$this->project)
+		"compss_flags" =>array( "flag" => " --summary --base_log_dir=".$this->root_dir_virtual."/".$this->project. " --library_path=/home/pmes/bin --pythonpath=/home/pmes/.pyenv/versions/2.7.12/envs/mg-process-fastq/lib/python2.7/site-packages/ " )
 		)
 	);
 	return $data;

@@ -816,6 +816,7 @@ function formatData($data) {
 		if (isset($data['pending'])){
 			if (!isset($data['files'])){
 				$data['filename']=$data['title'];
+				$data['longfilename']= $data['title'];
 				#$viewLog_state="enabled";
 				#if ($data['pending']=="HOLD" || $data['pending']=="PENDING"){
 				#	$viewLog_state = 'disabled';

@@ -208,7 +208,7 @@ if (isset($_REQUEST['op'])){
 		break;
 
 	case 'deleteSure':
-		$r = deleteGSFileBNS($_REQUEST['fn']);
+        $r = deleteGSFileBNS($_REQUEST['fn']);
 		if ($r == 0){
 			$_SESSION['errorData']['error'][]="Cannot delete '$filePath' file from repository";
 			break;
@@ -233,12 +233,15 @@ if (isset($_REQUEST['op'])){
 
 	case 'deleteDirOk':
 		$r = deleteGSDirBNS($_REQUEST['fn']);
-		if ($r == 0)
-			break;
-		exec ("rm -r \"$rfn\" 2>&1",$output);
-		if (error_get_last())
+		if ($r == 0){
+			$_SESSION['errorData']['error'][]="Cannot delete directory '$filePath' file from repository";
+            break;
+        }
+        exec ("rm -r \"$rfn\" 2>&1",$output);
+		if (error_get_last()){
 			$_SESSION['errorData']['error'][]=implode(" ",$output);
-		
+        }
+        exit(0);
 		break;
 
 

@@ -582,13 +582,11 @@ function post($data,$url,$headers=array(),$auth_basic=array()){
 function get($url,$headers=array(),$auth_basic=array()){
 
 		$c = curl_init();
-		curl_setopt($c, CURLOPT_URL, $url);
-		curl_setopt($c, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+        curl_setopt($c, CURLOPT_URL, $url);
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-        if (count($headers))
-            curl_setopt($c, CURLOPT_HTTPHEADER, $headers);
-        if ($auth_basic['user'] && $auth_basic['pass'])
-            curl_setopt($c, CURLOPT_USERPWD, $auth_basic['user'].":".$auth_basic['pass']);
+        if (isset($_SERVER['HTTP_USER_AGENT'])){                      curl_setopt($c, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);}
+        if (count($headers)){                                         curl_setopt($c, CURLOPT_HTTPHEADER, $headers);}
+        if (isset($auth_basic['user']) && isset($auth_basic['pass'])){curl_setopt($c, CURLOPT_USERPWD, $auth_basic['user'].":".$auth_basic['pass']);}
             
 		$r = curl_exec ($c);
 		$info = curl_getinfo($c);
