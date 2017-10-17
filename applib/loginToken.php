@@ -7,7 +7,7 @@ use MuG_Oauth2Provider\MuG_Oauth2Provider;
 
 
 // Setting auth server
-$provider = new MuG_Oauth2Provider(['redirectUri'=> 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']]);
+$provider = new MuG_Oauth2Provider(['redirectUri'=> $GLOBALS['URL'] . $_SERVER['PHP_SELF']]);
 /*
 $conf = getConf(__DIR__."/../../conf/oauth2.conf");
 $clientId     = $conf[0];
