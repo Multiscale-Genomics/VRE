@@ -22,7 +22,8 @@ function getConf($path){
     $results=array();
     foreach(explode(";",$buffer) as $a){
         $r = explode(":",$a);
-        array_push($results,$r[1]);
+        if (isset($r[1]))
+            array_push($results,$r[1]);
     }
 /*
 	$a = explode(";",$buffer);

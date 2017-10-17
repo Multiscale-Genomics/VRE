@@ -57,7 +57,11 @@ function downloadAllFiles(){
 }*/
 
 function viewFileMeta(id, name, type){
-	
+
+	$('#modalMeta .modal-header .modal-title').html('');
+	$('#modalMeta .modal-body #meta-summary').html('');
+	$('#modalMeta .modal-footer #btMeta').remove();
+
 	var txtID = '';
 	/*if(type == 1) var txtID = 'File';
 	else  var txtID = 'Job';*/
@@ -70,6 +74,8 @@ function viewFileMeta(id, name, type){
 			$('#modalMeta .modal-header .modal-title').html(name.toUpperCase() + ' ' + txtID + ' Info');
 			$('#modalMeta .modal-body #meta-summary').html(data);
 			$(".tooltips").tooltip();
+
+			if(($("#modalMeta #btMeta").length == 0) && (type == 1)) $('#modalMeta .modal-footer').prepend('<a id="btMeta" style="float:left;" href="getdata/editFile.php?fn[]=' + id + '" class="btn green">Edit Metadata</a>');
 
 			$('#modalMeta').modal({ show: 'true' });
 

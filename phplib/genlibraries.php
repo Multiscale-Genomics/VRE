@@ -24,6 +24,6 @@ require "projects.inc.php";
 require "getdata.inc.php";
 require "tools.list.inc.php";
 require "statistics.inc.php";
-
+require "datatypes.inc.php";
 
 ?>

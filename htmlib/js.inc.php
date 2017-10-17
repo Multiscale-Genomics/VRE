@@ -15,7 +15,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'uploadForm2':
 	case 'editFile':
 	?>
-	<script src="/htmlib/globals.js.inc.php"></script>
+	<script src="htmlib/globals.js.inc.php"></script>
 	<?php break; 
 }
 ?>
