@@ -7,7 +7,8 @@ class ProcessPMES{
 
 	private $server;
 	private $cloud;
-	private $APIroot = "pmes/";
+    private $APIroot = "pmes/";
+    private $stderr;
 
 
 	public function __construct($cloudName="local",$data=array(),$service=false){
@@ -27,7 +28,11 @@ class ProcessPMES{
 		$this->server = "http://".$this->cloud['PMESserver_domain'].":".$this->cloud['PMESserver_port']."/".$this->cloud['PMESserver_address'];
 
 		//test server access
-		$test = get_headers($this->server.$this->APIroot,1);
+        $test = get_headers($this->server.$this->APIroot,1);
+        if (!$test[0]){
+            $this->stderr = "Cannot connect to ".$this->server.$this->APIroot;
+            return 0;
+        }
 		if (preg_match('/404/', $test[0])){
 			$this->stderr = $test[0];
 			return 0;

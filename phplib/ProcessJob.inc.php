@@ -44,7 +44,7 @@ function execJobPMES ($cloudName,$data){
     var_dump($process);
 
     if ($jobid == "0"){
-	$_SESSION['errorData']['Error'][]="Job submission failed.<br/>".$process->lastCall."<br/>".$process->getErr();
+        $_SESSION['errorData']['Error'][]="Job submission failed.<br/>".json_encode($process->lastCall)."<br/>".$process->getErr();
         logger("ERROR: PMES job is not running. MORE_INFO = '".$process->getErr(). "'");
         return 0;
     }

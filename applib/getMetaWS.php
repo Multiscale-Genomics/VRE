@@ -231,7 +231,7 @@ if ($_SESSION['User']['Type']== 0 || $_SESSION['User']['Type'] == 1){
 // SHOWING AUXILIAR FILES ACCORDING DMP FILE
 if($_REQUEST["type"] == 0) {
 
-    $path = dirname($mt['logPath']);
+    $path = dirname($mt['logPath'])."/";
     //$p = getGSFile_fromId($_REQUEST["id"])['path'];
 	//$path = __DIR__.'/../files/'.$p.'/';
 
@@ -261,22 +261,23 @@ if($_REQUEST["type"] == 0) {
 				<?php if(($_SESSION['User']['Type'] == 0) || ($_SESSION['User']['Type'] == 1)) { ?>
 
 				<?php if(file_exists($path.'.submit')) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($p.'/.submit'); ?>" class="btn green" target="_blank"><i class="fa fa-paper-plane"></i> VIEW SUBMIT FILE </a>
+                <a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($path.'.submit'); ?>" class="btn green" target="_blank"><i class="fa fa-paper-plane"></i> VIEW SUBMIT FILE </a>
+
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW SUBMIT FILE </a>
 				<?php } ?>
 				<?php if(file_exists($path.'.config.json')) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($p.'/.config.json'); ?>" class="btn green" target="_blank"><i class="fa fa-cog"></i> VIEW CONFIG FILE </a>
+				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($path.'.config.json'); ?>" class="btn green" target="_blank"><i class="fa fa-cog"></i> VIEW CONFIG FILE </a>
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW CONFIG FILE </a>
 				<?php } ?>
 				<?php if(file_exists($path.'.input_metadata.json')) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($p.'/.input_metadata.json'); ?>" class="btn green" target="_blank"><i class="fa fa-tags"></i> VIEW META FILE </a>
+				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($path.'.input_metadata.json'); ?>" class="btn green" target="_blank"><i class="fa fa-tags"></i> VIEW META FILE </a>
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW META FILE </a>
 				<?php } ?>
 				<?php if(file_exists($path.'.results.json')) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($p.'/.results.json'); ?>" class="btn green" target="_blank"><i class="fa fa-line-chart"></i> VIEW RESULTS FILE </a>
+				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($path.'.results.json'); ?>" class="btn green" target="_blank"><i class="fa fa-line-chart"></i> VIEW RESULTS FILE </a>
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW RESULTS FILE </a>
 				<?php } ?>

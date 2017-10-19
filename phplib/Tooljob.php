@@ -6,9 +6,10 @@ class Tooljob {
     public $title;
     public $project;           // User defined. Correspond to the execution folder name
     public $toolId;
-    public $root_dir;          // User dataDir mounted to VMs. Path as seen by VRE 
-    public $root_dir_virtual;  // User dataDir mounted to VMs. Path as seen by VMs
     public $pub_dir;           // Public dir mounted to VMs. Path as seen by VRE
+    public $root_dir;          // User dataDir. Mounted to VMs in PMES. Already there in SGE. Path as seen by VRE 
+    public $root_dir_virtual;  // User dataDir. Mounted to VMs in PMES. Already there im SGE. Path as seen by VMs
+    public $root_dir_mug;      // MuG  dataDir parent of user dataDir. Mounted to VMs in PMES. Already there im SGE. Path as seen by VMs 
     public $pub_dir_virtual;   // Public dir mounted to VMs. Path as seen by VMs  
     public $cloudName;         // Cloud name where tool should be executed. Available clouds set in GLOBALS['clouds']
     public $description;
@@ -51,12 +52,21 @@ class Tooljob {
     	$this->pub_dir   = $GLOBALS['pubDir'];
 
         // Set paths in the virtual machine
-    	$this->set_cloudName($tool);
-    	$this->root_dir_virtual = $GLOBALS['clouds'][$this->cloudName]['dataDir_virtual'];
-    	$this->pub_dir_virtual  = $GLOBALS['clouds'][$this->cloudName]['pubDir_virtual'];
-
+        $this->set_cloudName($tool);
         $this->launcher         = $tool['infrastructure']['clouds'][$this->cloudName]['launcher'];
-
+        switch ($this->launcher){
+            case "SGE":
+                $this->root_dir_virtual = $GLOBALS['clouds'][$this->cloudName]['dataDir_virtual']. "/".$_SESSION['User']['id'];
+                $this->root_dir_mug      = $GLOBALS['clouds'][$this->cloudName]['dataDir_virtual'];
+                $this->pub_dir_virtual  = $GLOBALS['clouds'][$this->cloudName]['pubDir_virtual'];
+                break;
+            case "PMES":
+                $this->root_dir_virtual = $GLOBALS['clouds'][$this->cloudName]['dataDir_virtual'];
+                $this->pub_dir_virtual  = $GLOBALS['clouds'][$this->cloudName]['pubDir_virtual'];
+                break;
+            default:
+                $_SESSION['errorData']['Error'][]="Tool '$this->toolId' not properly registered. Launcher type is set to '".$this->launcher."'. Case not implemented.";
+        }
 
     	// Creating execution folder
         if ($project != "0"){
@@ -657,8 +667,8 @@ class Tooljob {
 	}
 	$cmd = $tool['infrastructure']['executable'] .
 					" --config "         .$this->config_file_virtual .
-				//	" --root_dir "       .$this->root_dir_virtual .
-				//	" --public_dir "     .$this->pub_dir_virtual .
+					" --root_dir "       .$this->root_dir_mug .
+					" --public_dir "     .$this->pub_dir_virtual .
 					" --in_metadata " 	 .$this->metadata_file_virtual .
 					" --out_metadata "   .$this->stageout_file_virtual .
 				    " --log_file "       .$this->log_file_virtual ;
@@ -867,8 +877,8 @@ class Tooljob {
     	$pid  = execJob($this->working_dir, $this->submission_file, $queue, $cpus, $memory);
     	logger("USER:".$_SESSION['User']['_id'].", ID:".$_SESSION['User']['id'].", LAUNCHER:SGE, TOOL:".$this->toolId.", PID:$pid");
     	
-    	if (!$pid){
-             $_SESSION['errorData']['Error'][]="Cannot enqueue job. Submission file was: $this->submission_file ";
+        if (!$pid){
+            $_SESSION['errorData']['Error'][]="Internal error. Cannot enqueue job.";
             return 0;
         }
     
@@ -887,8 +897,8 @@ class Tooljob {
 	logger("USER:".$_SESSION['User']['_id'].", ID:".$_SESSION['User']['id'].", LAUNCHER:PMES, TOOL:".$this->toolId.", PID:$pid");
 
 	if (!$pid){
-                $_SESSION['errorData']['Error'][]="Cannot enqueue job. Submission file was: $this->submission_file ";
-                return 0;
+        $_SESSION['errorData']['Error'][]="Internal error. Cannot enqueue job.";
+        return 0;
         }
 	$this->pid = $pid;
         return $pid;
@@ -1043,8 +1053,20 @@ class Tooljob {
 					break;
 				}
 			}
-		}
-		// 2, set cloudName from clouds list in tool specification, the first found available
+        }
+
+        // 2, set cloudName from current cloud, if it is in tool specification
+        if (!$this->cloudName && isset($GLOBALS['cloud']) ){
+            foreach ($tool['infrastructure']['clouds'] as $name=>$toolInfo){
+                if($name == $GLOBALS['cloud']){
+                    if (in_array($name,$available_clouds)){
+                           $this->cloudName = $name;
+                           break;
+                    }
+                }
+            }
+        }
+        // 3, set cloudName from clouds list in tool specification, the first found available
 		if (! $this->cloudName){
 			foreach ($tool['infrastructure']['clouds'] as $name=>$cloudInfo){
 				if (in_array($name,$available_clouds)){
@@ -1056,7 +1078,7 @@ class Tooljob {
 		}
 	}
 	if (! $this->cloudName){
-		// 3, set cloudName from the server available_clouds, the first
+        // 4, set cloudName from the server available_clouds, the first
 		$this->cloudName = $available_clouds[0];
 		$_SESSION['errorData']['Warning'][] = "Tool has no the cloud infrastructure set. Taking '$this->cloudName', but the tool execution may fail.";
 	}

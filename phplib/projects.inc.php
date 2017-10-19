@@ -549,11 +549,11 @@ function getFilesToDisplay($dataSelection) {
 			}
 			$parentId = $filesPending[$r['_id']]['parentDir'];
 			if (!isset($files[$parentId])){
-			   if ($r['pending']){
-                   $_SESSION['errorData']['Warning'][]="Output directory of job '".$r['title']."' does not exist anymore.";
+                if ($r['pending']){
+                    $_SESSION['errorData']['Warning'][]="Cannot display '".$filesPending[$r['_id']]['path']."'. Its execution folder '".$r['title']."' does not exist anymore.";
     				unset($filesPending[$r['_id']]);
-			    }else{
-	    			$_SESSION['errorData']['Error'][]="FS inconsistency. The directory containing file '".$r['path']."' does not exist anymore.";
+               }else{
+                   $_SESSION['errorData']['Error'][] ="Cannot display '".$filesPending[$r['_id']]['path']."'. FS inconsistency. Its parent folder ($parentId) does not exist anymore or is unaccessible.";
     				unset($filesPending[$r['_id']]);		
 			    }
 			    continue;
@@ -1211,8 +1211,10 @@ function processPendingFiles($sessionId,$files){
             $dummyId   = createLabel()."_dummy";
             //get dummy parentDir
             if ($job['hasProjectFolder']){
+                // show job in project dir
                 $parentDir = fromAbsPath_toPath($job['working_dir']);
             }else{
+                // show job in output_dir (infered from stageout_data)
                 $parentDir= 0;
                 if($job['stageout_data']){
                     $output_file_1 = $job['stageout_data']['output_files'][0];
@@ -1503,6 +1505,7 @@ function processPendingFiles($sessionId,$files){
                 if (is_file($logFileP) ){
                     // move and redefine log and SH file if internalTool
                     if ($job['hasProjectFolder'] === false ){
+                        // right now, redifinition done inside saveResults
                     }
 					if ($debug)
 						print "<br>JOB IN ERROR $fileId storing LOG $logFile <br>";
@@ -1582,8 +1585,21 @@ function saveResults($filePath,$metaData=array(),$job=array(),$rfn=0,$asRoot=0){
 	# prepare file metaData
 	$metaData = prepMetadataResult($metaData,$filePath,$job);
 
+    # prepare Parent
+    $parentPath = dirname($filePath);
+    $parentId = getGSFileId_fromPath($parentPath,$asRoot);
+    if (!$parentId){
+        if (isset($job['hasProjectFolder']) &&  $job['hasProjectFolder']===false){
+            $parentPath = fromAbsPath_toPath($job['output_dir']);
+            $parentId = getGSFileId_fromPath($parentPath,$asRoot);
+        }
+        if (!$parentId){
+            $_SESSION['errorData']['Error'][]="Cannot save result '".basename($filePath)."' at '$parentPath'. This parent directory does not exist or is unaccessible";
+            return 0;
+        }
+    }
+
 	#save Data
-	$parent= dirname($filePath);
 	$fileId = createLabel();
 	
 	$insertData=array(
@@ -1592,7 +1608,7 @@ function saveResults($filePath,$metaData=array(),$job=array(),$rfn=0,$asRoot=0){
 		'size'  => filesize($rfn),
 		'path'  => $filePath,
 		'mtime' => new MongoDate(filemtime($rfn)),
-		'parentDir' => getGSFileId_fromPath(dirname($filePath),$asRoot)
+		'parentDir' => $parentId
 	);
 
 	#save to MONGO

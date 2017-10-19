@@ -202,7 +202,70 @@ sort($visualizers);*/
 						<!-- SUMMARY AND DISK QUOTA ROW -->
 
 
-			<?php /*$tools = getFileTypes_List();*/ ?>
+			<?php 
+				$toolsHelp = getTools_Help(); 
+				$toolsList = getTools_List();
+				sort($toolsList);
+			?>
+
+
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<div class="portlet light bordered">
+				    <div class="portlet-title">
+							<div class="caption">
+					    	<i class="icon-share font-dark hide"></i>
+					    	<span class="caption-subject font-dark bold uppercase">TOOLS EXECUTION HELP</span> 
+							</div>
+				    </div>
+				    <div class="portlet-body">
+
+								<p>Below users can found all the possible data type combinations for each tool:</p>
+
+							<div class="panel-group accordion" id="accordion1">
+									<?php
+										$c = 0;
+										foreach($toolsList as $tl) {
+									?>
+									<div class="panel panel-default">
+											<div class="panel-heading">
+													<h4 class="panel-title">
+															<a class="accordion-toggle accordion-toggle-styled <?php if($c != 0) echo "collapsed"; ?>" data-toggle="collapse" data-parent="#accordion1" href="#collapse_<?php echo $c; ?>"> <?php echo $tl["name"]; ?> </a>
+													</h4>
+											</div>
+											<div id="collapse_<?php echo $c; ?>" class="panel-collapse <?php if($c == 0) echo "in"; else echo "collapse"; ?>">
+													<div class="panel-body">
+															<ul class="list-group">
+															<?php
+															foreach($toolsHelp as $th) {
+
+																if($th["id"] == $tl["_id"]) {
+																	?>
+																	<li class="list-group-item">
+																		<?php 
+																			foreach($th["datatypes"] as $dt) {
+																				echo $dt."<br>";
+																			}	 
+																		?>
+																	</li>
+																	<?php
+																}
+										
+															}
+															?>
+															</ul>
+													</div>
+											</div>
+									</div>
+									<?php 
+										$c ++;
+										} 
+									?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
 
 			<div class="row">

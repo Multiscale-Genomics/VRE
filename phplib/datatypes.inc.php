@@ -13,100 +13,162 @@ function getFiles_DataTypes($fn) {
 }
 
 
-// aquí treure les múltiples llista1, llista2
-// id = naflex
-// llista1 = {}
-// llista2 = {}
 function getTools_DataTypes() {
 
 	$dt = $GLOBALS['toolsCol']->find(array("external" => true), array("input_files_combinations_internal" => true));
 
 	$array = array();
 
+	$c = 0;
+
 	foreach($dt as $tool) {
 
-		/*$array[]["id"] = $tool["_id"];
-		$array[]["list1"] = array();
-		$array[]["list2"] = array();*/
-
-
-
 		foreach($tool["input_files_combinations_internal"] as $combination) {
-		
+
+			$array[$c]["id"] = $tool["_id"];
+			$array[$c]["list1"] = array();
+			$array[$c]["list2"] = array();
+			
 			foreach($combination as $single_c) {
 
 				foreach($single_c as $k => $v) {
 
-					if($v == 1) $array["list1"][] = $k;
+					if($v == 1) $array[$c]["list1"][] = $k;
 
 					if($v == "+") {
-						$array["list1"][] = $k;
-						$array["list2"][] = $k;
+						$array[$c]["list1"][] = $k;
+						$array[$c]["list2"][] = $k;
 					}
 
-					if($v == "*") $array["list2"][] = $k;
-
-					//echo $k." - ".$v;
+					if($v == "*") $array[$c]["list2"][] = $k;
 
 				}
 
 			}
 
+			$c ++;
+
 		}
 
 	}
 
-	var_dump($array);
+	return $array;
 
 }
 
-function getMinDT_Files($dt) {
+function getTools_ByDT($toolsDT, $filesDT) {
+	
+	/*var_dump($filesDT);
+	var_dump("**************", "CUT OFF", "**************");
+	$c = 1;*/
 
+	$toolsList = array();
+
+	foreach($toolsDT as $tdt) {
 		
+		/*var_dump("iteration ".$c);
+		$c ++;*/
 
-}
+		if(sizeof($tdt["list1"]) <= sizeof($filesDT)) {
 
-// aquí hauria de fer el total de combinacions possibles de totes les tools (TENINT EN COMPTE * i +!!!!) i només treure els que 
-// siguin = $numfiles
-// NO SÉ COM FER QUE NAFLEX TINGUI 3 O 4+ POSSIBLES INPUTS :_______(
+			$list1 = $tdt["list1"];
+			$list2 = $tdt["list2"];
+			$listF = $filesDT;
 
-/*function getNumDT_Tools($datatype, $numfiles) {
+			foreach($listF as $itemWS) {
 
-	$a = array();
+				//var_dump($itemWS);
 
-	// foreach datatype array 
-	foreach($datatype as $dt) {
+				if(in_array($itemWS, $list1)) {
 
-		$a[$dt["_id"]] = array();
+					$key = array_search($itemWS, $list1);
+					unset($list1[$key]);
 
-		// foreach combination
-		foreach($dt["input_files_combinations_internal"] as $ifci) {
+					$key = array_search($itemWS, $listF);
+					unset($listF[$key]);
 
-			var_dump($ifci);
+				} else if(in_array($itemWS, $list2)) {
 
-			$c = 0;
+					$key = array_search($itemWS, $list2);
+					unset($list2[$key]);
 
-			foreach($ifci as $i) {
+					$key = array_search($itemWS, $listF);
+					unset($listF[$key]);
 
-				foreach($i as $k => $v) {
-
-					//if($v != "*") $c ++;
-					$c ++;
+				} else {
+				
+					break;
 
 				}
 
 			}
+			
+			/*var_dump($tdt["id"]);
+			var_dump($list1);
+			var_dump($list2);
+			var_dump($listF);
+			if((sizeof($list1) == 0) && (sizeof($listF) == 0)) var_dump("MATCHING!!");*/
+				//var_dump(sizeof($listF));
 
-			if($c == $numfiles) $a[$dt["_id"]][] = $c;
+			if((sizeof($list1) == 0) && (sizeof($listF) == 0)) $toolsList[] = $tdt["id"];
 
 		}
 
 	}
 
-	foreach($a as $k => $v) if(empty($v)) unset($a[$k]);
+	$toolsList = array_unique($toolsList);
 
-	//var_dump($a);
+	return $toolsList;
 
-	return $a;
+}
 
-}*/
+function getTools_ListByID($array) {
+
+	$tl = $GLOBALS['toolsCol']->find(array('_id' => array('$in' => $array)), array("name" => true));
+
+	return iterator_to_array($tl, false);
+
+}
+
+function getTools_Help() {
+
+	$dt = $GLOBALS['toolsCol']->find(array("external" => true), array("input_files_combinations_internal" => true));
+
+	$array = array();
+
+	$c = 0;
+
+	foreach($dt as $tool) {
+
+		foreach($tool["input_files_combinations_internal"] as $combination) {
+
+			$array[$c]["id"] = $tool["_id"];
+			$array[$c]["datatypes"] = array();
+			
+			foreach($combination as $single_c) {
+
+				foreach($single_c as $k => $v) {
+
+					$n = $GLOBALS['dataTypesCol']->find(array("_id" => $k), array("name" => true));
+					$n  = iterator_to_array($n, true);
+
+					if($v == 1) $array[$c]["datatypes"][] = "<strong>".$n[$k]["name"]."</strong> - one (mandatory)";
+
+					if($v == "+") $array[$c]["datatypes"][] = "<strong>".$n[$k]["name"]."</strong> - at least one (mandatory)";
+
+					if($v == "*") $array[$c]["datatypes"][] = "<strong>".$n[$k]["name"]."</strong> - multiple allowed (optional)";
+
+				}
+
+			}
+
+			$c ++;
+
+		}
+	
+	}
+
+	return $array;
+
+}
+

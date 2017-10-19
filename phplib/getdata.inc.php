@@ -189,9 +189,13 @@ function getData_fromURL($source, $ext = null) {
 	$error = curl_error($ch); 
 	curl_close ($ch);
 
-	// getting path and file size
-	$nameFile = explode("/", $source);
-	$rfnNew = "$wdP/".$nameFile[sizeof($nameFile) - 1];
+    // getting path and file size
+    $source_path = parse_url($source,PHP_URL_PATH);
+    $source_path = explode('&',$source_path);
+    $source_path = explode('?',$source_path[0]);
+    $nameFile = basename($source_path[0]);
+    
+    $rfnNew = "$wdP/".$nameFile;
 	if(isset($ext)) $rfnNew .= '.'.$ext;
 	$size   = strlen($data);
 
@@ -515,8 +519,8 @@ function getData_fromRepository($params=array()) { //url, repo
 		mkdir($wdP, 0775);
     }
     if ($wdId == "0" || !is_dir($wdP)){
-		$_SESSION['errorData']['Error'][]="Target server directory '".basename($wd)."' is not a directory.Your user account is corrupted. Please, report to <a href=\"mailto:helpdesk@multiscalegenomics.eu\">helpdesk@multiscalegenomics.eu</a>";
-		die("Target server directory '".basename($wd)."' is not a directory. Your user account is corrupted. Please, report to <a href=\"mailto:helpdesk@multiscalegenomics.eu\">helpdesk@multiscalegenomics.eu");
+		$_SESSION['errorData']['Error'][]="Target server directory '$wd' is not a directory.Your user account is corrupted. Please, report to <a href=\"mailto:helpdesk@multiscalegenomics.eu\">helpdesk@multiscalegenomics.eu</a>";
+		die("Target server directory '$wdP' is not a directory. Your user account is corrupted. Please, report to <a href=\"mailto:helpdesk@multiscalegenomics.eu\">helpdesk@multiscalegenomics.eu");
     }
     
     // Check file already registered

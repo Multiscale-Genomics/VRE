@@ -471,30 +471,38 @@ function uploadGSFileBNS($fnPath, $file, $attributes=Array(), $meta=Array(), $lo
     }
 
 	//check parent
-	$parentPath  = dirname($fnPath);
-	if ($parentPath == ".")
-		$parentPath=$_SESSION['User']['id'];
-	
-	$parentId  = getGSFileId_fromPath($parentPath,$asRoot);
-	if ($parentId == "0"){
-		$r = createGSDirBNS($parentPath,$asRoot);
-		if ($r=="0")
-			return 0;
-	}else{
-		if (!isGSDirBNS($col,$parentId) ){
-			$_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath. Parent '$parentPath' is not a directoryy";
-			return 0;
-	        }
-		$parentObj = $col->findOne(array(
-					'_id' => $parentId,
-					'owner' => $_SESSION['User']['id']
-					) );
-		if (isset($parentObj['permissions']) && $parentObj['permissions']== "000" ){
-			$_SESSION['errorData']['mongoDB'][]= "Not permissions to modify parent directory $parentPath";
-			return 0;
-		}
-	}
-
+    if (isset($attributes['parentDir']) ){
+        if (!$attributes['parentDir']){
+            $_SESSION['errorData']['Warning'][]="Given parent directory is invalid (".$attributes['parentDir']."). Infering it from '$fnPath' path file.";
+            unset($attributes['parentDir']);
+        }
+        $parentId = $attributes['parentDir'];
+    }
+    if (!$parentId){
+       $parentPath  = dirname($fnPath);
+       if ($parentPath == ".")
+               $parentPath=$_SESSION['User']['id'];
+       
+       $parentId  = getGSFileId_fromPath($parentPath,$asRoot);
+       if ($parentId == "0"){
+               $r = createGSDirBNS($parentPath,$asRoot);
+               if ($r=="0")
+                       return 0;
+       }else{
+               if (!isGSDirBNS($col,$parentId) ){
+                       $_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath. Parent '$parentPath' is not a directoryy";
+                       return 0;
+               }
+               $parentObj = $col->findOne(array(
+                                       '_id' => $parentId,
+                                       'owner' => $_SESSION['User']['id']
+                                       ) );
+               if (isset($parentObj['permissions']) && $parentObj['permissions']== "000" ){
+                       $_SESSION['errorData']['mongoDB'][]= "Not permissions to modify parent directory $parentPath";
+                       return 0;
+               }
+       }
+    }
 
 	//load file content to grid
 	if ($load2grid){
