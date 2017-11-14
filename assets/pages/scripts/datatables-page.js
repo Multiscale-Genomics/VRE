@@ -12,6 +12,9 @@ $(document).ready(function() {
 	lengthMenu: [[5,15,20,-1],[5,15,20,"All"]],
 	orderCellsTop: true,
 	ordering: true,
+	language: {
+        emptyTable: 'No files found for the selected tool <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align=\'left\' style=\'margin:3px;\'>Please go to the <em>Get Data</em> section to load tool input files.</p><p align=\'left\' style=\'margin:3px;\'>More information on what this tool expects below on the <em>Tools\' Help</em> box, or in the main <em>Help</em> section</p>"></i>'
+	},
 	/*treetable: {
 	  expandable: true
 	},*/
@@ -36,7 +39,8 @@ $(document).ready(function() {
 	  { targets: [2], orderData: [ 4, 8, 2 ], orderable: false },
 	  { targets: [3], orderData: [ 4, 8, 3 ], orderable: false },
 	  { targets: [4], orderData: [ 4, 8, 1 ], orderable: false },
-	  { targets: [5], orderData: [ 9, 8, 5 ], orderable: false },
+	  { targets: [5], orderData: [ 4, 8, 5 ], orderable: false },
+	  //{ targets: [5], orderData: [ 4, 8, 5 ], orderable: false },
 	  { type: 'file-size', targets: 6, orderData: [ 10, 8, 6 ], orderable: false },
 	  //{ targets: [6], orderable: false },
 	  
@@ -52,7 +56,16 @@ $(document).ready(function() {
 
 				$(row).css('font-weight', 'bold');
 				$(row).css('color', '#337ab7');
-		 		$('td:first-child .mt-checkbox', row).after('<i class="fa fa-folder" aria-hidden="true" style="font-size:18px;margin-left:5px;"></i>');
+				if($('td:first-child', row).hasClass('highlighted_folder')) {
+					var folderIcon = '<span class="fa-stack fa-lg" style="height: 0;">' +
+  				'<i class="fa fa-folder fa-stack-1x font-blue-oleo" style="left:-5px;top: -9px;"></i>' + 
+  				'<i class="fa fa-folder-o font-green" style="position: absolute;left: 5px;top: -9px;"></i>' + 
+					'</span>';
+				}else{
+
+					var folderIcon = '<i class="fa fa-folder" aria-hidden="true" style="font-size:18px;margin-left:5px;"></i>';
+				}
+		 		$('td:first-child .mt-checkbox', row).after(folderIcon);
 
 		 }else {
 		
@@ -69,6 +82,7 @@ $(document).ready(function() {
    "initComplete": function (settings, json) {
    		$('#loading-datatable').hide();
    		$('#workspace').show();
+   		$(".tooltips").tooltip();
 		// ***********************
  		//setTimeout(function(){  table.cell({ row: 4, column: 2 }).data('<span class="alert-danger">FINISH!!!</span>').draw(); }, 6000);
   		// ***********************

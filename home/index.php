@@ -3,10 +3,11 @@
 require "../phplib/genlibraries.php";
 redirectOutside();
 
-$tls = getTools_List();
+$tls = getTools_List(1);
+$tlsProv = getTools_List(0);
 $vslzrs = getVisualizers_List();
 
-$toolList = array_merge($tls, $vslzrs);
+$toolList = array_merge($tls, $tlsProv, $vslzrs);
 
 sort($toolList);
 
@@ -35,8 +36,7 @@ sort($toolList);
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> Homepage
-                        </h1>
+                       <!-- <h1 class="page-title"> Homepage</h1> -->
                         <!-- END PAGE TITLE-->
 												<!-- END PAGE HEADER-->
 

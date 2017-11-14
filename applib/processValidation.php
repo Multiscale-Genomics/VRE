@@ -65,7 +65,8 @@ switch ($_REQUEST['op']) {
     // restart validation action list
     if (isset($_SESSION['validation'][$fn]))
 	unset($_SESSION['validation'][$fn]);
-
+    
+    $resp['state'] = 1;
     	
     // check compulsory fields
     if (!isset($_REQUEST['format'])){
@@ -75,30 +76,31 @@ switch ($_REQUEST['op']) {
     $_SESSION['validation'][$fn]['format']=$_REQUEST['format'];
 
 
+    // check validation actions to perfome on file
     switch ( $_REQUEST['format'] ) {
 
 	case 'BAM':
-            if (!isset($_REQUEST['refGenome']) || !isset($_REQUEST['paired']) || !isset($_REQUEST['sorted'])){
-                $resp['msg']="Missing compulsory fields. Please, especify: reference genome, sorted/unsorted and paired/single.</br>";
-		$resp['state'] = 0;
-                break;
-            }
-            if (($_REQUEST['sorted']!= "sorted" && $_REQUEST['sorted']!= 1) && (!isset($fileMeta['sorted']) || $fileMeta['sorted']=="unsorted")){
-                $resp['msg']   = "The BAM file will be sorted and indexed.</br>";
-		$_SESSION['validation'][$fn]['action']["sort"] = 0;
-		$_SESSION['validation'][$fn]['action']["index"]= 0;
-		$resp['state'] = 2;
+        if (!isset($_REQUEST['refGenome']) || !isset($_REQUEST['paired']) || !isset($_REQUEST['sorted'])){
+            $resp['msg']="Missing compulsory fields. Please, especify: reference genome, sorted/unsorted and paired/single.</br>";
+        	$resp['state'] = 0;
+            break;
+        }
+        if (($_REQUEST['sorted']!= "sorted" && $_REQUEST['sorted']!= 1) && (!isset($fileMeta['sorted']) || $fileMeta['sorted']=="unsorted")){
+            $resp['msg']   = "The BAM file will be sorted and indexed.</br>";
+		    $_SESSION['validation'][$fn]['action']["sort"] = 0;
+    		$_SESSION['validation'][$fn]['action']["index"]= 0;
+    		$resp['state'] = 2;
 
+        }else{
+            if (!is_file($rfn.".bai") ){
+                $resp['msg']   = "The BAM file will be indexed.</br>";
+		        $_SESSION['validation'][$fn]['action']["index"] = 0;
+		        $resp['state'] = 2;
             }else{
-                if (!is_file($rfn.".bai") ){
-                    $resp['msg']   = "The BAM file will be indexed.</br>";
-		    $_SESSION['validation'][$fn]['action']["index"] = 0;
-		    $resp['state'] = 2;
-                }else{
-                    $resp['msg']   = "BAM file already indexed.</br>";
-		    $resp['state'] = 1;
-                }
-            }
+                $resp['msg']   = "BAM file already indexed.</br>";
+		        $resp['state'] = 1;
+           }
+        }
 	    break;
 
     case 'BEDGRAPH';
@@ -131,20 +133,8 @@ switch ($_REQUEST['op']) {
 
 
     // check formats and chrs names
-    if ( $resp['msg'] == "" && $_REQUEST['refGenome']){
-
-    	$valid = validateUPLOAD($fn,$rfn,$_REQUEST['refGenome'],$_REQUEST['format']);
-   /* 
-        print "SESSION - ERROR<br/>";
-        var_dump($_SESSION['errorData']);
-        print "SESSION - VALIDATION<br/>";
-        var_dump($_SESSION['validation']);
-        print "RESP<br/>";
-        var_dump($resp);
-
-        print "<br/>_____________________________________<br/><br/>";
-    */
-
+    if ( $resp['state'] != 0 && $_REQUEST['refGenome']){
+        $valid = validateUPLOAD($fn,$rfn,$_REQUEST['refGenome'],$_REQUEST['format']);
 
     	// add function error msgs to resp
         if (! $valid){
@@ -170,16 +160,6 @@ switch ($_REQUEST['op']) {
     	    }
         }
     }
-/*
-    print "SESSION - ERROR<br/>";
-    var_dump($_SESSION['errorData']);
-    print "SESSION - VALIDATION<br/>";
-    var_dump($_SESSION['validation']);
-    print "RESP<br/>";
-    var_dump($resp);
-
-    print "<br/>_____________________________________<br/><br/>";
- */
     // set file state according to SESSION['errorData'] and SESSION['validation']
     if ( isset($_SESSION['validation'][$fn]['action'])){
     	$resp['state']= 2;  
@@ -192,8 +172,6 @@ switch ($_REQUEST['op']) {
 
     // save metadata if file already validated
     if ($resp['state'] == 1 ){
-    	//var_dump($_REQUEST);
-    	//exit(0);
     	$ok = saveMetadataUpload($fn,$_REQUEST,1);
     	if (!$ok){
     		$resp['msg'] .= printErrorData();
@@ -261,16 +239,20 @@ switch ($_REQUEST['op']) {
 			$resp['state']=0;
 			break;
 		    }
-		}
-		// enqueue BAMval tool	
+        }
+        //output file dir
+		$output_dir  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/uploads";
+
+        // enqueue BAMval tool	
 		$resp['state']=3;
 		$toolId = "BAMval";
 		//tool inputs -- should match tool registry
 		$toolInputs = array("bam"=>array($fn));
 		//tool arguments -- should match tool registry
-		$toolArgs   = array("sort"   => $sort,
-				    "index"  => $index,
-				    "replace"=> join(" | ",$subs)
+        $toolArgs   = array(
+                    "sort"    => $sort,
+				    "index"   => $index,
+				    "replace" => "\"".join(" | ",$subs) ."\""
 				   );
 		//tool outputs -- metadata saved in mongo until tool output registration phase
 		$bamMeta = prepMetadataUpload($_REQUEST,$resp['state']);
@@ -279,31 +261,35 @@ switch ($_REQUEST['op']) {
 		unset($bamMeta['refGenome']);
 		unset($bamMeta['taxon_id']);
 		unset($bamMeta['data_type']);
-		$bamMeta['validated']=1;
-		$bamOut=array(  "name"     => "bam",
+		$bamMeta['validated']=true;
+        $bamOut=array(
+                "name"     => "bam",
 				"file_path"=> $bamFn,
 				"data_type"=> $_REQUEST['data_type'],
-				"source_id"=> array($fn),
+				"sources"  => array($bamFn),
 				"taxon_id" => $_REQUEST['taxon_id'],
 				"meta_data"=> $bamMeta);
 		$baiMeta = array(
-			"name"        => "bam_index",
-			"visible"     => false,
-			"assembly"    => $_REQUEST['refGenome'],
-			"description" => $_REQUEST['description'],
-			"associated_id"=> $fnPath
+			"name"             => "bam_index",
+			"visible"          => false,
+			"assembly"         => $_REQUEST['refGenome'],
+			"description"      => $_REQUEST['description'],
+			"associated_master"=> $fnPath
 			);
-		$baiOut=array(  "name"     => "bam_index",
+        $baiOut=array(
+                "name"     => "bam_index",
 				"file_path"=> "$bamFn.bai",
 				"data_type"=> $_REQUEST['data_type'],
-				"source_id"=> array($fn),
+				"sources"  => array($bamFn),
 				"taxon_id" => $_REQUEST['taxon_id'],
 				"meta_data"=> $baiMeta);
 		$toolOuts = Array ("output_files" => Array($bamOut, $baiOut));
+		//tool logName
+		$logName = basename($bamFn,".bam"). ".log"; 
 		//call tool
-		$pid = launchToolInternal("BAMval",$toolInputs,$toolArgs,$toolOuts);
+		$pid = launchToolInternal("BAMval",$toolInputs,$toolArgs,$toolOuts,$output_dir,$logName);
 
-                if ($pid){
+         if ($pid){
 		    $resp['state']=3;
                     unset($_SESSION['validation'][$fn]);
                 }else{
@@ -348,9 +334,9 @@ switch ($_REQUEST['op']) {
 
     if (isset($_SESSION['errorData'])){
     	$resp['state']= 0;
-        var_dump($_SESSION['errorData']);
-        echo "-----------";
-        var_dump($resp);
+        //var_dump($_SESSION['errorData']);
+        //echo "-----------";
+        //var_dump($resp);
         exit(0);
     }
 

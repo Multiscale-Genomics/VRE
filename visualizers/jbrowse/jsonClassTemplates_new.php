@@ -42,7 +42,8 @@ class Alignment extends Base{
 
 	public function __construct($label,$path,$file){
 		parent::__construct("Alignment",$label."_bam",$path,$file);
-
+###PROVA!!!
+		$this->chunkSizeLimit = "10000000"; 
 	}
 }
 

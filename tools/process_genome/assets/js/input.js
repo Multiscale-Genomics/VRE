@@ -81,6 +81,7 @@ var ValidateForm = function() {
             },
 
             submitHandler: function(form) {
+            		$('button[type="submit"]', $('#process-genome')).prop('disabled', true);
                 $('.warn-nd', $('#process-genome')).hide();
                 $('.err-nd', $('#process-genome')).hide();
                 var data = $('#process-genome').serialize();

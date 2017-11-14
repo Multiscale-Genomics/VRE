@@ -193,18 +193,6 @@ redirectOutside();
 			    <?php
 			    //TODO add $defs as global like reference genomes?¿
 			    //metadata default values
-			    /*$defs = Array(
-					//general
-					'format'     => 'UNK',
-					'description'=> "",
-					'compressed' => 0,
-					'validated'  => 0,
-					//specific for aligned coords (BW, GFF, FASTQ aligned, etc..)
-					'refGenome'  => "",
-					//specific for BAM
-					'paired'     => 'paired',
-					'sorted'     => TRUE,
-				);*/
 
 			    //extract or guess file formats
 			    foreach ($filesData as $idx => $v ) {
@@ -212,10 +200,16 @@ redirectOutside();
 				$fileExtension = "";
 				if (isset($_REQUEST['format']) && isset($_REQUEST['format'][$idx]) && $_REQUEST['format'][$idx]){
 					$fileExtension=$_REQUEST['format'][$idx];
-				}elseif (isset($filesMeta[$idx]['format'])){
+				}elseif (isset($filesMeta[$idx]['format']) && $filesMeta[$idx]['format'] ){
 					$fileExtension=$filesMeta[$idx]['format'];
 				}elseif(isset($filesData[$idx]['_id'])){
-					$fnPath = $filesData[$idx]['path'];
+                    $fnPath = $filesData[$idx]['path'];
+                    list($fileExtension,$_REQUEST['compressed'][$idx]) = getFileExtension($fnPath);
+                    list($fileExtension,$compressionType) = getFileExtension($fnPath);
+                    if ($compressionType){
+                        $_REQUEST['compressed'][$idx]=1;
+                    }
+                    /*
 					$fileInfo = pathinfo($fnPath);
 					if (isset($fileInfo['extension'])){
 					      $fileExtension = strtoupper($fileInfo['extension']);
@@ -227,7 +221,8 @@ redirectOutside();
 					      }else{
 						  $_REQUEST['compressed'][$idx]=0;
 					      }
-					}
+                    }
+                     */
 				}
 
 
@@ -260,7 +255,7 @@ redirectOutside();
 				  <div class="form-group formatTR" id="formatTR<?php echo $idx;?>">
 				        <label>File Format</label>
 								<select id="format<?php echo $idx;?>" name="format" onchange="customfromFormat(this.value, <?php echo $idx;?>)" class="form-control formatSelector">
-
+								<option value="" >Select the file format</option>
 								<?php foreach($filetypes as $ft) { ?>
 								<option value="<?php echo $ft['_id']; ?>" <?php if (in_array($fileExtension,$ft['extension'])){echo "selected";}?>><?php echo $ft['_id']; ?></option>
 								<?php } ?>

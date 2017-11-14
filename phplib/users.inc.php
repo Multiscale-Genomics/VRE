@@ -16,6 +16,12 @@ function checkLoggedIn() {
 	else return false;
 }
 
+function checkTermsOfUse() {
+
+	if($_SESSION['User']['terms'] == 1) return true;
+	else return false;
+}
+
 function checkAdmin() {
 
 	$user = $GLOBALS['usersCol']->findOne(array('_id' => $_SESSION['User']['_id']));

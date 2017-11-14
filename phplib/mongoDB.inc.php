@@ -126,8 +126,8 @@ function getGSFiles_filteredBy($fn,$filters) {
 		else
 			$filter_filesMetaCol[$attr] = $v;
 	}	
-	$fileData = $GLOBALS['filesCol']->findOne($filter_filesCol);
-	$fileMeta = $GLOBALS['filesMetaCol']->findOne($filter_filesMetaCol);
+    $fileData = $GLOBALS['filesCol']->findOne($filter_filesCol);
+    $fileMeta = $GLOBALS['filesMetaCol']->findOne($filter_filesMetaCol);
 	$existMeta= $GLOBALS['filesMetaCol']->findOne(Array('_id' => $fn));
 
 	if (empty($fileData))

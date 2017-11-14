@@ -15,7 +15,7 @@ class ProcessPMES{
 
 		//get infrastructure info
 		if ($cloudName == "local"){
-			$this->cloud = getCurrentCloud();
+			$this->cloud = $this->getCurrentCloud();
 			if ($this->cloud == "0")
 				$cloudName="mug-bsc";
 		}elseif(!in_array($cloudName,array_keys($GLOBALS['clouds'])) ){
@@ -24,6 +24,8 @@ class ProcessPMES{
 		}else{
 			$this->cloud = $GLOBALS['clouds'][$cloudName];
 		}
+        logger("PMES invocation in $cloudName");
+
 		//PMES url server
 		$this->server = "http://".$this->cloud['PMESserver_domain'].":".$this->cloud['PMESserver_port']."/".$this->cloud['PMESserver_address'];
 
@@ -49,64 +51,6 @@ class ProcessPMES{
 		return 1;
     }
 
-    /*
-	private function post($data,$service){
-		$url = $this->server.$this->APIroot.$service;
-		logger("PMES POST call. URL = '$url'");
-
-		$data_string = json_encode($data);
-	
-		print "<br>POST DATA IS <br>";
-		print "<pre>".json_encode($data, JSON_PRETTY_PRINT)."</pre>";
-		
-	
-		if (!strlen($data_string)){
-		    $_SESSION['errorData']['Error'][]="Curl: cannot POST request. Data to send is empty";
-		    return 0;
-		}
-		logger("PMES POST call. POST_DATA = '".json_encode($data). "'");
-
-		$c = curl_init();
-		curl_setopt($c, CURLOPT_URL, $url);
-		curl_setopt($c, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-		curl_setopt($c, CURLOPT_POST, 1);
-		curl_setopt($c, CURLOPT_CUSTOMREQUEST, "POST");
-		curl_setopt($c, CURLOPT_POSTFIELDS, $data_string);
-		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($c, CURLOPT_HTTPHEADER, array(
-		                    'Content-Type: application/json',
-		                    'Content-Length: '. strlen($data_string)
-		                    )
-		            );
-		//curl_setopt($c, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		//curl_setopt($c, CURLOPT_USERPWD, "username:password");
-
-		$r = curl_exec ($c);
-		$this->lastCall = curl_getinfo($c);
-
-		if ($r === false){
-			$errno = curl_errno($c);
-			$msg = curl_strerror($errno);
-		    	$err = "Error calling PMES. Uncomplete POST petition. Additional info: [$errno] $msg";
-		    	$_SESSION['errorData']['Error'][]=$err;	
-		        logger("ERROR:" .$err);
-                return 0;
-		}
-		curl_close($c);
-
-		print "<br>AFTER CURL EXEC RETURNS<br>";
-		var_dump($r);
-
-		if ($this->lastCall['http_code'] != 200){
-			$err = "Error calling PMES. POST petition resulted unsuccessful. HTTP code: ".$this->lastCall['http_code'];
-			$_SESSION['errorData']['Error'][]=$err;
-			logger("ERROR:" .$err);
-			logger("ERROR: calling PMES. POST_INFO = '".json_encode($this->lastCall). "'");
-			logger("ERROR: calling PMES. POST_RESPONSE = '".strip_tags($r). "'");
-			return 0;
-		}
-        return $r;
-    }*/
 
     private function post($data,$service){
 
@@ -179,7 +123,7 @@ class ProcessPMES{
 		$job=array();
         $jobPMES = $this->getActivityInfo($jobid);
         if (count($jobPMES)){
-    		if ($jobPMES['jobStatus'] && in_array($jobPMES['jobStatus'], array("FINISHED","ERROR","FAILED","UNKNOWN")) )
+    		if ($jobPMES['jobStatus'] && in_array($jobPMES['jobStatus'], array("FINISHED","ERROR","FAILED","UNKNOWN", "CANCELLED")) )
        			return $job;
     		$job = $jobPMES;
     		$job['state']          = ($jobPMES['jobStatus']?$jobPMES['jobStatus']:"UNKNOWN");
@@ -225,14 +169,19 @@ class ProcessPMES{
                 return $this->server;
         }
 
-	public function getCurrentCloud(){
-		print "<br>CurrentCloud = ".$_SERVER['HTTP_HOST']." <br>";
-
-		if (!isset($_SERVER['HTTP_HOST']))
-			return 0;
+    public function getCurrentCloud(){
+        if (isset($GLOBALS['cloud']) and isset($GLOBALS['clouds'][$GLOBALS['cloud']]) ){
+            return $GLOBALS['clouds'][$GLOBALS['cloud']];
+        }
+		if (!isset($_SERVER['HTTP_X_FORWARDED_SERVER'])){
+            return 0;
+        }else{
+            $serverName = split(",",$_SERVER['HTTP_X_FORWARDED_SERVER'])[0];
+        }
 		foreach ($GLOBALS['clouds'] as $cloudName => $cloudInfo){
-			if ($cloudInfo['http_host'] == $_SERVER['HTTP_HOST'])
-				return $cloudName;
+			if ($cloudInfo['http_host'] == $serverName){
+			    return $cloudInfo;
+            }
 		}
 		$_SESSION['errorData']['Warning'][]="No MuG cloud associated to current host domain '".$_SERVER['HTTP_HOST']."'";
 		return 0;

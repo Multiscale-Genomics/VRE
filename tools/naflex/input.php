@@ -191,7 +191,7 @@ if (count($rerunParams)){
 				
 								<?php if($file['format'] == 'PDB') { ?>
 		
-									<a href="javascript:openNGL('<?php echo $file['fn']; ?>', '<?php echo $p[2]; ?> ');" style="margin-left:5px;">
+									<a href="javascript:openNGL('<?php echo $file['fn']; ?>', '<?php echo $p[2]; ?>', 'pdb');" style="margin-left:5px;">
 										<div class="label label-sm label-info tooltips" style="padding:4px 5px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to preview this file with NGL.</p>">
 											<i class="fa fa-window-maximize font-white"></i>
                      </div>
@@ -362,7 +362,8 @@ if (count($rerunParams)){
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                                 <h4 class="modal-title"></h4>
                             </div>
-                            <div class="modal-body">
+														<div class="modal-body">
+															<div id="loading-viewport" style="position:absolute;left:42%; top:200px;"><img src="assets/layouts/layout/img/ring-alt.gif" /></div>
                               <div id="viewport" style="width:100%; height:500px;background:#ddd;"></div>
                              </div>
                             <div class="modal-footer">

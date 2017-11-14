@@ -99,6 +99,8 @@ $(document).ready(function() {
 	$('#av_tools').click(function () {
   	// Only call notifications when opening the dropdown
     if (!$(this).parent().hasClass('open')) {
+
+    	$('#av_tools_list').html('');
 		
 			var files = '';
 

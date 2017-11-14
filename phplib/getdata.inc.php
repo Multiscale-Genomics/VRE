@@ -421,6 +421,14 @@ function getDataTypeFromFileType($filetype) {
 
 }
 
+function getFileTypeFromExtension($fileExtension) {
+
+	$dt = $GLOBALS['fileTypesCol']->find(array('extension' => array('$in' => array($fileExtension))))->sort(array('_id' => 1));
+
+	return iterator_to_array($dt);
+
+}
+
 function getFeaturesFromDataType($datatype, $filetype) {
 
 	$dt = $GLOBALS['dataTypesCol']->findOne(array('_id' => $datatype), array('assembly' => 1, 'taxon_id' => 1, 'paired' => 1, 'sorted' => 1, ));
@@ -453,8 +461,11 @@ function getFeaturesFromDataType($datatype, $filetype) {
 /*                               */
 /*********************************/
 
-function getData_fromRepository($params=array()) { //url, repo
+function getData_fromRepository($params=array()) { //url, repo, id, taxon
 
+    // return url
+    $url_experiment = $GLOBALS['url']."/repository/experiment.php?id=".$params['id'];
+        
     //validate URL: get status and size and filename
 
     $ch = curl_init($params['url']);
@@ -467,16 +478,22 @@ function getData_fromRepository($params=array()) { //url, repo
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     if ($status != 200 && !preg_match('/^3/',$status) ){
         $_SESSION['errorData']['Error'][] = "Resource URL ('".$params['url']."') is not valid or unaccessible. Status: $status";
-        die("Resource URL ('".$params['url']."') is not validi or unaccessible. Status: $status");
+        redirect($url_experiment);
     }
     //filename
     $filename="";
     if (preg_match('/^Content-Disposition: .*?filename=(?<f>[^\s]+|\x22[^\x22]+\x22)\x3B?.*$/m', $curl_data,$m)){
         $filename = trim($m['f'],' ";');
+    }elseif (preg_match('/^Content-Length:\s*(\d+)/m', $curl_data,$m)){
+        $hasLength = $m[1];
+        if ($hasLength){
+            $filename = basename($params['url']);
+        }
     }
     if (!$filename){
         $_SESSION['errorData']['Error'][] = "Resource URL ('".$params['url']."') is not pointing to a valid filename";
-        die("Resource URL ('".$params['url']."') is not pointing to a valid filename");
+        var_dump($curl_data);
+        redirect($url_experiment);
     }
     //size
     $size   = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
@@ -484,12 +501,12 @@ function getData_fromRepository($params=array()) { //url, repo
     $diskLimit    = (int)$_SESSION['User']['diskQuota'];
     if ($size == 0 ) {
         $_SESSION['errorData']['Error'][] = "Resource URL ('".$params['url']."') is pointing to an empty resource (size = 0)";
-        die("Resource URL ('".$params['url']."') is pointing to an empty resource (size = 0)");
+        redirect($url_experiment);
 
     }
     if ($size > ($diskLimit-$usedDisk) ) {
         $_SESSION['errorData']['Error'][] = "Cannot import file. There will be not enough space left in the workspace (size = $size)";
-        die("Cannot import file. There will be not enough space left in the workspace (size = $size)");
+        redirect($url_experiment);
     }
     curl_close($ch);
 
@@ -506,21 +523,21 @@ function getData_fromRepository($params=array()) { //url, repo
 	$_SESSION['errorData']['Info'][] = "Creating  repository directory: $wd ($wdId)";
 
 	if ($wdId == "0" ){
-            $_SESSION['errorData']['Error'][] = "Cannot create repository directory in $dataDirPath";
-            die("Cannot create repository directory in $dataDirPath");
+            $_SESSION['errorData']['Internal error'][] = "Cannot create repository directory in $dataDirPath";
+            redirect($url_experiment);
 	}
 	$r = addMetadataBNS($wdId,Array("expiration" => -1,
 				   "description"=> "Remote personal data"));
 	if ($r == "0"){
-            $_SESSION['errorData']['Error'][] = "Cannot set repository directory $wd";
-            die("Cannot set repository directory $wd");
+            $_SESSION['errorData']['Internal error'][] = "Cannot set 'repository' directory $wd";
+            redirect($url_experiment);
 	}
 	if (!is_dir($wdP))
 		mkdir($wdP, 0775);
     }
     if ($wdId == "0" || !is_dir($wdP)){
-		$_SESSION['errorData']['Error'][]="Target server directory '$wd' is not a directory.Your user account is corrupted. Please, report to <a href=\"mailto:helpdesk@multiscalegenomics.eu\">helpdesk@multiscalegenomics.eu</a>";
-		die("Target server directory '$wdP' is not a directory. Your user account is corrupted. Please, report to <a href=\"mailto:helpdesk@multiscalegenomics.eu\">helpdesk@multiscalegenomics.eu");
+		$_SESSION['errorData']['Error'][]="Target server directory '$wd' is not a directory. Your user account is corrupted. Please, report to <a href=\"mailto:helpdesk@multiscalegenomics.eu\">helpdesk@multiscalegenomics.eu</a>";
+        redirect($url_experiment);
     }
     
     // Check file already registered
@@ -564,27 +581,38 @@ function getData_fromRepository($params=array()) { //url, repo
                 "url"    => $params['url'],   
                 "output" => $fnP);           // Tool is responsible to create outputs in the output_dir
 
-        // setting tool outputs -- metadata to saved in DMP during tool output_file registration
-        $descrip=(isset($params['repo'])?"Remote file extracted from ".$params['repo']:"Remote file");
+        // setting tool outputs -- metadata to save in DMP during tool output_file registration
+        $descrip=(isset($params['id'])?"Remote file extracted from <a target='_blank' href=\"$url_experiment\">".$params['id']."</a>":"Remote file");
+        $taxon = (isset($params['taxon'])?$params['taxon']:"");
+        list($fileExtension,$compressed) = getFileExtension($fnP); 
+        $filetypes = getFileTypeFromExtension($fileExtension);
+        $filetype =(isset(array_keys($filetypes)[0])?array_keys($filetypes)[0]:"");
+
         $fileOut=array("name"  => "file",
         		   "file_path"=> $fnP,
     	    	   "data_type"=> "",
-    	    	   "file_type"=> "",
+    	    	   "file_type"=> $filetype,
                    "source_id"=> [0],
-                   "taxon_id" => 0,
+                   "taxon_id" => $taxon,
         		   "meta_data"=> array(
                        "validated"   => false,
+                       "compressed"  => $compressed,
             		   "description" => $descrip)
-        );
+                   );
         $toolOuts = Array ("output_files" => Array($fileOut));
+        
+        // setting logName
+        $logName = basename($fnP). ".log";
     
         //calling internal tool
-        $pid = launchToolInternal($toolId,$toolInputs,$toolArgs,$toolOuts,$output_dir);
+        $pid = launchToolInternal($toolId,$toolInputs,$toolArgs,$toolOuts,$output_dir,$logName);
 
         if ($pid == 0){
-            $_SESSION['errorData']['Error'][]="Resource file cannot be imported. Error occurred during the job 'Get remote file'";
+            $_SESSION['errorData']['Error'][]="Resource file '".basename($fnP)."' cannot be imported. Error occurred while preparing the job 'Get remote file'";
+            redirect($url_experiment);
         }else{
-            $_SESSION['errorData']['Info'][]="Resource file successfully imported. Remote file being download into 'Resource' folder. Please, edit its metadata once the job has finished";
+            $_SESSION['errorData']['Info'][] ="Remote file '".basename($fnP)."' imported into the 'repository' folder below. Please, edit its metadata once the job has finished";
+            redirect("../workspace");
         }
         //FIXME END
        
@@ -610,8 +638,39 @@ function getData_fromRepository($params=array()) { //url, repo
         	die("ERROR: Error occurred while registering the repository file.");
         }
         */
-        redirect("../workspace");
    }
 }   
+/*********************************/
+/*                               */
+/*      DATA FROM SAMPLE DATA    */
+/*                               */
+/*********************************/
 
+function getSampleDataList($status=1) {
+
+	$ft = $GLOBALS['sampleDataCol']->find(array('status' => $status))->sort(array('_id' => 1));
+
+	return iterator_to_array($ft);
+
+}
+
+function getData_fromSampleData($params=array()) { //sampleData
+    var_dump($params);
+
+    if (!is_array($params['sampleData'])){
+        $params['sampleData']=array($params['sampleData']);
+    }
+    foreach ($params['sampleData'] as $sampleName ){
+        $_SESSION['errorData']['Info'][]="Importing sample data for '$sampleName'";
+        $r = setUserWorkSpace_sampleData($sampleName,$_SESSION['User']['id']);
+		if ($r=="0"){
+            $_SESSION['errorData']['Warning'][] = "Cannot fully inject sample data '$sampleData' into user workspace.";
+            redirect($GLOBALS['url']."/getdata/sampleDataList.php");
+        }else{
+            $_SESSION['errorData']['Info'][] = "Sample data successfuly imported.";
+            redirect("../workspace");
+	    }
+    }
+
+}
 ?>

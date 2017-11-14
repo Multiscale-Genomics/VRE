@@ -1,5 +1,4 @@
 <?php
-
 require "../phplib/genlibraries.php";
 require "../phplib/tools.inc.php";
 redirectOutside();
@@ -7,22 +6,21 @@ redirectOutside();
 
 if($_REQUEST["type"] != 2) {
     // EXTRACT FILE METADATA FROM DMP FILE
-    //$mt   = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST["id"]));
-    //$tool = $GLOBALS['toolsCol']->findOne(array('_id' => $mt["tool"]));
     $mt   = getGSFile_fromId($_REQUEST["id"]);
-    $tool = getTool_fromId($mt["tool"]);
+    $tool = getTool_fromId($mt["tool"],1);
 }else{
     // EXTRACT JOB METADATA FROM USER JOBS
 	$mt = getUserJobPid($_SESSION['User']['_id'],$_REQUEST["id"]);
 
 }
 
-?>
+// check Metadata
+if (!$mt){
+    print "Sorry, no metadata accessible for this resource";
+    exit(0);
+}
 
-
-<h3>Item Details</h3>
-
-<?php 
+?> <h3>Item Metadata</h3><?php 
 
 // Description
 
@@ -30,7 +28,9 @@ if($mt["description"] != "") {
 ?>
 <table class="table table-striped table-bordered">
 	<tbody><tr>
-			<th><b>Description </b></th>
+			<th><b>Description 
+				<i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Tooltip sample</p>"></i>
+			</b></th>
 	</tr>
 				<tr>
 				<td><?php echo nl2br ($mt["description"]); ?></td>
@@ -48,33 +48,38 @@ if(!isset($mt["validated"]) || $mt["validated"]) {
 }else{
     $mt['validated'] = "FALSE";
 }
+if ($mt['validated'] == "FALSE"){
 ?>
 <table class="table table-striped table-bordered">
 	<tbody><tr>
 			<th><b>Valid metadata</b></th>
         	</tr>
 			<tr>
-			<td><?php echo nl2br ($mt["validated"]); ?></td>
+            <td><?php echo nl2br ($mt["validated"]); if($mt["validated"] == "FALSE") { ?> 
+            <a style="margin-left:10px;" href="getdata/editFile.php?fn[]=<?php echo $mt["_id"]; ?>" class="btn btn-xs green">Validate Metadata</a>
+                <?php } ?>
+            </td>
 	    	</tr>
 	</tbody>
 </table>
 <?php
+}
 
 
-// Data_type, file_type, taxon_id and assembly (for files)
+// Data_type, file_type, taxon_id, assembly, paired, sorted (for files)
 
 if($_REQUEST["type"] == 1) {
     // show data_type, file_type
     $dt = $GLOBALS['dataTypesCol']->findOne(array('_id' => $mt["data_type"]));
     // show taxon_id and assembly
     if(!isset($mt["taxon_id"])){
-       $taxon = "Not applicable";
+       $taxon = "N/A";
     }elseif($mt['taxon_id'] == 0){
         $taxon = $mt['taxon_id'];
     }else{
         $taxon = fromTaxonID2TaxonName($mt['taxon_id'])." (".$mt['taxon_id'].")";
     }
-    if(!isset($mt["refGenome"])){$mt['refGenome'] = "Not applicable";}
+    if(!isset($mt["refGenome"])){$mt['refGenome'] = "N/A";}
 
     ?>
     <table class="table table-striped table-bordered">
@@ -84,8 +89,8 @@ if($_REQUEST["type"] == 1) {
     	    <th><b>File Type</b></th>
     	</tr>
     	<tr>
-   			<td><?php echo $dt["name"]; ?></td>
-   			<td><?php echo $mt["format"]; ?></td>
+   			<td><?php echo $dt["name"];if(!isset($dt["name"])) echo "N/A"; ?></td>
+   			<td><?php echo $mt["format"]; if(!isset($mt["format"])) echo "N/A"; ?></td>
     	</tr>
     	</tbody>
     </table>
@@ -102,7 +107,23 @@ if($_REQUEST["type"] == 1) {
     	</tbody>
     </table>
 
-<?php
+    <?php
+    if(isset($mt["paired"]) || isset($mt["sorted"])){
+    ?>
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+    	    <th style="width:50%;"><b>BAM type</b></th>
+    	    <th><b>BAM sorted</b></th>
+    	</tr>
+    	<tr>
+   			<td><?php echo $mt["paired"]. " end"; ?></td>
+   			<td><?php if($mt["sorted"] == "sorted"){echo "TRUE";}else{echo "FALSE";} ?></td>
+    	</tr>
+    	</tbody>
+    </table>
+    <?php
+    }
 }
 ?>
 
@@ -126,7 +147,7 @@ if(isset($mt["tool"]) && isset($mt['input_files'])) {
 <table class="table table-striped table-bordered">
 	<tbody><tr>
 			
-			<th><b>Input files</b></th>
+			<th><b>File source/s</b></th>
 	       </tr>
 			<tr>
 				
@@ -136,8 +157,7 @@ if(isset($mt["tool"]) && isset($mt['input_files'])) {
 												<ul class="feeds" id="list-files-run-tools">
 																			
 												<?php
-											 foreach ($mt['input_files'] as $inp){
-												//echo $inp."<br/>";
+                                              foreach ($mt['input_files'] as $inp){
 												$path = getAttr_fromGSFileId($inp, 'path');
 												$p = explode("/", $path);
 
@@ -173,9 +193,97 @@ if(isset($mt["tool"]) && isset($mt['input_files'])) {
 </table>
 <?php
 }
-?>
 
+// Associated Files
+
+if(isset($mt["associated_files"])) {
+?>
+<table class="table table-striped table-bordered">
+	<tbody><tr>
+			
+			<th><b>Associated Files</b></th>
+	       </tr>
+			<tr>
+				
+                <td><?php
+											if (count($mt['associated_files'])){
+												?>
+												<ul class="feeds" id="list-files-run-tools">
+																			
+												<?php
+											 foreach ($mt['associated_files'] as $inp){
+                                                 $path = getAttr_fromGSFileId($inp, 'path');
+												$p = explode("/", $path);
+
+												?>
+												<li class="tool-122 tool-list-item">
+												<div class="col1">
+													<div class="cont">
+														<div class="cont-col1">
+															<div class="label label-sm label-info">
+																<i class="fa fa-file"></i>
+															</div>
+														</div>
+														<div class="cont-col2">
+															<div class="desc">
+																<span class="text-info" style="font-weight:bold;"><?php echo $p[1]; ?>  /</span> <?php echo $p[2]; ?> 
+															</div>
+														</div>
+													</div>
+												</div>
+												</li>
+												<?php
+
+											 }
+												?>
+											</ul>
+											<?php
+                     }else{
+                         echo "";
+                    }?>
+                </td>
+			</tr>
+	</tbody>
+</table>
 <?php
+}
+
+
+// Arguments
+
+if(isset($mt["arguments"])) {
+?>
+<table class="table table-striped table-bordered">
+	<tbody><tr>
+			<th><b>Arguments</b></th>
+				       </tr>
+			<tr>
+                <td>
+                    <table class="table table-bordered">
+                <?php
+                foreach ($mt["arguments"] as $k => $v){
+                    if (isset($tool['arguments'][$k]['description'])){
+                        $k = $tool['arguments'][$k]['description'];
+                    }
+                    if(gettype($v) == "array") {
+											echo "<tr><td>$k</td><td>";
+											foreach($v as $val) echo $val."<br>";
+											echo "</td></tr>";
+										} else {
+											echo "<tr><td>$k</td><td>$v</td></tr>";
+										}
+                }
+                ?>
+                    </table>
+                </td>
+                
+			</tr>
+	</tbody>
+</table>
+<?php
+}
+
+
 // FIXME   Temporal fix until cloudName is not stored in metadata. Hardcoded here
 if($mt["cloudName"] == "")
     $mt['cloudName'] = $GLOBALS['cloud'];
@@ -199,6 +307,9 @@ if($mt["cloudName"] != "") {
 <?php
 if ($_SESSION['User']['Type']== 0 || $_SESSION['User']['Type'] == 1){
 ?>
+
+<h3>Development data</h3>
+
 <table class="table table-striped table-bordered">
 	<tbody><tr>
 			<th style="background-color: #e7ecf1;"><b>Metadata resource - <a href="http://multiscale-genomics.readthedocs.io/projects/mg-dm-api/rest.html" title="Data Management RESTful API" target="_blank">DMP</a> (TODO)</b></th>
@@ -206,8 +317,10 @@ if ($_SESSION['User']['Type']== 0 || $_SESSION['User']['Type'] == 1){
 			<tr>
             <td>
                 <a target="_blank" href="<?php echo $GLOBALS['URL'].'mug/api/dmp/file_meta?file_id='.$_REQUEST['id'];?>"><?php echo $GLOBALS['URL'].'mug/api/dmp/file_meta?file_id='.$_REQUEST['id'];?></a>
-                <br/>
-                <pre style="font-size:0.7em;margin:10px 25px;"><?php echo json_encode($mt, JSON_PRETTY_PRINT);?></pre>
+                <?php if ($_SESSION['User']['Type']== 0){ ?>
+                    <br/>
+                    <pre style="font-size:0.7em;margin:10px 25px;"><?php echo json_encode($mt, JSON_PRETTY_PRINT);?></pre>
+                <?php } ?>
             </td>
 			</tr>
 	</tbody>
@@ -255,7 +368,7 @@ if($_REQUEST["type"] == 0) {
 				<?php if(file_exists($mt['logPath'])) { ?>
 				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['logPath']); ?>" class="btn green" target="_blank"><i class="fa fa-file-text-o"></i> VIEW LOG FILE </a>
 				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW LOG FILE </a>
+				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW LOG FILE   <?php var_dump($mt['logPath']);?></a>
 				<?php } ?>
 
 				<?php if(($_SESSION['User']['Type'] == 0) || ($_SESSION['User']['Type'] == 1)) { ?>
@@ -299,7 +412,7 @@ if($_REQUEST["type"] == 2) {
 		<div id="meta-log">
 
 				<?php if(file_exists($mt[$_REQUEST['id']]['log_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode(fromAbsPath_toPath($mt['log_file'])); ?>" class="btn green" target="_blank"><i class="fa fa-file-text-o"></i> VIEW LOG FILE </a>
+				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt[$_REQUEST['id']]['log_file']); ?>" class="btn green" target="_blank"><i class="fa fa-file-text-o"></i> VIEW LOG FILE </a>
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW LOG FILE </a>
 				<?php } ?>

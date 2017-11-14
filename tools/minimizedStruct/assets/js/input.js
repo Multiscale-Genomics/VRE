@@ -48,7 +48,7 @@ var ValidateForm = function() {
             },
 
             submitHandler: function(form) {
-
+									$('button[type="submit"]', $('#minimizedStruct-form')).prop('disabled', true);
 							/*if(activeBlocks.length == 0) {
                   $('.warn-nd', $('#dnadyn-form')).show();
                   $('.err-nd', $('#dnadyn-form')).hide();

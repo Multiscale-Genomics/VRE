@@ -29,7 +29,14 @@ if ($usedDisk < $diskLimit) {
 
 //update workspace content (job and files)
 
-$files = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir']));
+if(isset($_REQUEST["tool"]) && $_REQUEST["tool"] != "") $dtlist = getAvailableDTbyTool($_REQUEST["tool"]);
+//var_dump($dtlist["list"]);
+
+//$files = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir'], 'data_type' => array('$in' => $dtlist["list"])));
+$allFiles = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir']), null);
+$files = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir']),$dtlist["list"]);
+
+//$fn_filtered = $GLOBALS['filesMetaCol']->findOne(array('_id' => $fn, "data_type" => array('$in' => array("na_structure","na_traj_top", "na_traj_coords", "na_traj"))) );
 
 $files = addTreeTableNodesToFiles($files);
 
@@ -70,17 +77,17 @@ sort($visualizers);*/
 			<!-- END PAGE BAR -->
 			<!-- BEGIN PAGE TITLE-->
 			<h1 class="page-title"> User Workspace
-			    <small>manage data through the data table</small>
+			    <!--<small>manage data through the data table</small>-->
 			</h1>
 			<!-- END PAGE TITLE-->
 			<!-- END PAGE HEADER-->
 
 			<div class="row">
 			    <div class="col-md-12">
-                <p style="margin-top:0;">
+               <!-- <p style="margin-top:0;">
 				If you want apply a Tool to a file, please select it from the dropdown menu on the Tools column. If you need to apply a Tool
 				to more than one file, check the selected files and they will be loaded in the <i>Manage Files</i> list at the bottom of the table.
-				</p>
+				</p>-->
 				<?php if($_SESSION['User']['Type'] == 100) { ?>
 					<div class="alert alert-warning">
 						Your request for a premium user account is being processed. In the meantime, you can use the platform as a common user.
@@ -104,9 +111,39 @@ sort($visualizers);*/
 					</div>
 
 				<?php } ?>
+
+	
+			<?php
+                    $toolsList = getTools_List();
+			?>
+			
 				<!-- BEGIN EXAMPLE TABLE PORTLET -->
-				<div class="portlet">
+				<div class="row">
+			  <div class="col-md-12 col-sm-12">
+
+				<div class="portlet light bordered">
+
+					<div class="portlet-title">
+							<div class="caption">
+					    	<i class="icon-share font-dark hide"></i>
+					    	<span class="caption-subject font-dark bold uppercase">Select File(s)</span> <small style="font-size:75%;">Please select the file or files you want to use</small>
+							</div>
+							<div class="actions">
+								<a href="workspace" class="btn green"> Reload Workspace </a>
+							</div>
+						</div>
+
 				    <div class="portlet-body">
+
+							<div class="input-group" style="margin-bottom:20px;">
+  						<span class="input-group-addon" style="background:#5e738b;"><i class="fa fa-wrench font-white"></i></span>
+							<select class="form-control" style="width:100%;" onchange="loadWSTool(this)">
+								<option value="">Filter files by tool</option>
+								<?php foreach($toolsList as $tl) { ?>
+								<option value="<?php echo $tl["_id"]; ?>" <?php if($_REQUEST["tool"] == $tl["_id"]) echo 'selected'; ?>><?php echo $tl["name"]; ?></option>
+								<?php } ?>
+							</select>
+						</div>
 
 					<div id="loading-datatable"><div id="loading-spinner">LOADING</div></div>
 
@@ -130,6 +167,8 @@ sort($visualizers);*/
 
 
 			    </div>
+			</div>
+			</div>
 			</div>
 
 			<div class="row">
@@ -215,14 +254,92 @@ sort($visualizers);*/
 				    <div class="portlet-title">
 							<div class="caption">
 					    	<i class="icon-share font-dark hide"></i>
-					    	<span class="caption-subject font-dark bold uppercase">TOOLS EXECUTION HELP</span> 
+								<span class="caption-subject font-dark bold uppercase">TOOLS' HELP</span> 
+
+								<?php 
+									if($_REQUEST["tool"] != "") { 
+										$expcol = "collapse";
+										$portlet = "";
+								?>
+
+								<small>Below users can find all the possible data type combinations for the selected tool</small>
+
+								<?php 
+									} else { 
+										$expcol = "expand";
+										$portlet = "portlet-collapsed";
+								?>
+
+								<small style="font-size:75%;">Below users can find all the possible data type combinations for each tool (click expand button)</small>
+
+								<?php } ?>
+
+							</div>
+							<div class="tools">
+							<a href="javascript:;" class="<?php echo $expcol; ?>"></a>
 							</div>
 				    </div>
-				    <div class="portlet-body">
+				    <div class="portlet-body <?php echo $portlet; ?>">
 
-								<p>Below users can found all the possible data type combinations for each tool:</p>
+								<?php if($_REQUEST["tool"] != "") { ?>
+
+								<!--<p>Below users can find all the possible data type combinations for the selected tool:</p>-->
+
+								<?php } else { ?>
+
+								<!--<p>Below users can find all the possible data type combinations for each tool:</p>-->
+
+								<?php } ?>
+
+							<?php if($_REQUEST["tool"] != "") { ?>
 
 							<div class="panel-group accordion" id="accordion1">
+									<?php
+										$c = 0;
+										foreach($toolsList as $tl) {
+
+										if($tl["_id"] == $_REQUEST["tool"]) {
+									?>
+									<div class="panel panel-default">
+											<div class="panel-heading">
+													<h4 class="panel-title">
+															<a class="accordion-toggle accordion-toggle-styled " data-toggle="collapse" data-parent="#accordion1" href="#collapse_<?php echo $c; ?>"> <?php echo $tl["name"]; ?> </a>
+													</h4>
+											</div>
+											<div id="collapse_<?php echo $c; ?>" class="panel-collapse in">
+													<div class="panel-body">
+															<ul class="list-group">
+															<?php
+															foreach($toolsHelp as $th) {
+
+																if($th["id"] == $tl["_id"]) {
+																	?>
+																	<li class="list-group-item">
+																		<?php 
+																			foreach($th["datatypes"] as $dt) {
+																				echo $dt."<br>";
+																			}	 
+																		?>
+																	</li>
+																	<?php
+																}
+										
+															}
+															?>
+															</ul>
+													</div>
+											</div>
+									</div>
+									<?php 
+										}
+										$c ++;
+										} 
+									?>
+							</div>
+
+							<?php } else { ?>
+
+								<div class="panel-group accordion" id="accordion1">
 									<?php
 										$c = 0;
 										foreach($toolsList as $tl) {
@@ -230,10 +347,10 @@ sort($visualizers);*/
 									<div class="panel panel-default">
 											<div class="panel-heading">
 													<h4 class="panel-title">
-															<a class="accordion-toggle accordion-toggle-styled <?php if($c != 0) echo "collapsed"; ?>" data-toggle="collapse" data-parent="#accordion1" href="#collapse_<?php echo $c; ?>"> <?php echo $tl["name"]; ?> </a>
+															<a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_<?php echo $c; ?>"> <?php echo $tl["name"]; ?> </a>
 													</h4>
 											</div>
-											<div id="collapse_<?php echo $c; ?>" class="panel-collapse <?php if($c == 0) echo "in"; else echo "collapse"; ?>">
+											<div id="collapse_<?php echo $c; ?>" class="panel-collapse collapse">
 													<div class="panel-body">
 															<ul class="list-group">
 															<?php
@@ -262,6 +379,9 @@ sort($visualizers);*/
 										} 
 									?>
 							</div>
+
+							<?php }  ?>
+
 						</div>
 					</div>
 				</div>
@@ -280,7 +400,7 @@ sort($visualizers);*/
 				    <div class="portlet-body">
 							<div class="scroller" style="height: 204px;" data-always-visible="1" data-rail-visible="0">
 								<?php
-					    		print printLastJobs($files);
+					    		print printLastJobs($allFiles);
 		   			    ?>
 							</div>
 						</div>
@@ -437,9 +557,5 @@ sort($visualizers);*/
 
 require "../htmlib/footer.inc.php"; 
 require "../htmlib/js.inc.php";
-
-//$time_end = microtime(true);
-//$time = $time_end - $GLOBALS['time_start'];
-//echo "_____________________________________________________________> TOTAL WS en $time segundos<br/>";
 
 ?>

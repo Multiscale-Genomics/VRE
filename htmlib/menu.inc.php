@@ -50,6 +50,9 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'refs':$currentSection = 'he';
 					  $currentSubSection = 'h9';
 					  break;
+	case 'ackn':$currentSection = 'he';
+					  $currentSubSection = 'h10';
+					  break;
 	case 'repositoryList': 
 	case 'experiment': $currentSection = 'dt';
 					 	   $currentSubSection = 'rp';
@@ -60,6 +63,9 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'dataFromID': $currentSection = 'dt';
 					 	   $currentSubSection = 'id';
 					  	   break;
+    case 'sampleDataList': $currentSection = 'dt';
+                          $currentSubSection = 'sd';
+                          break; 
 	case 'usrProfile': $currentSection = 'up';
 					  	   $currentSubSection = 'mp';
 						   break;
@@ -168,18 +174,6 @@ sort($tools);
                                     <!--<?php if($currentSection == 'uw') { ?><span class="selected"></span><?php } ?>
                                     <span class="arrow <?php if($currentSection == 'uw') { ?>open<?php } ?>"></span>-->
                                 </a>
-                               <!-- <ul class="sub-menu">
-                                    <li class="nav-item <?php if($currentSubSection == 'dt') { ?>active open<?php } ?>">
-                                        <a href="workspace/" class="nav-link ">
-                                            <span class="title">User Data</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item <?php if($currentSubSection == 'uf') { ?>active open<?php } ?>">
-                                        <a href="getdata/uploadForm.php" class="nav-link ">
-                                            <span class="title">Upload Files</span>
-                                        </a>
-                                    </li>
-                                </ul>-->
 														</li>
 														
 														<li class="nav-item  <?php if($currentSection == 'dt') { ?>active open<?php } ?>">
@@ -200,69 +194,24 @@ sort($tools);
                                             <span class="title">From Repository</span>
                                         </a>
                                     </li>
-																		<li class="nav-item <?php if($currentSubSection == 'id') { ?>active open<?php } ?>">
+                                    <li class="nav-item <?php if($currentSubSection == 'sd') { ?>active open<?php } ?>">
+                                        <a href="getdata/sampleDataList.php" class="nav-link ">
+                                            <span class="title">Import sample data</span>
+                                        </a>
+                                    </li>
+																		<!--<li class="nav-item <?php if($currentSubSection == 'id') { ?>active open<?php } ?>">
                                         <a href="getdata/dataFromID.php" class="nav-link ">
                                             <span class="title">From ID</span>
                                         </a>
                                     </li>
-																		<!--<li class="nav-item <?php if($currentSubSection == 'tx') { ?>active open<?php } ?>">
+																		<li class="nav-item <?php if($currentSubSection == 'tx') { ?>active open<?php } ?>">
                                         <a href="getdata/dataFromTxt.php" class="nav-link ">
                                             <span class="title">From Text</span>
                                         </a>
                                     </li>-->
                                 </ul>
                             </li>
-
-											
-                           <!-- <li class="nav-item  <?php if($currentSection == 're') { ?>active open<?php } ?>">
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-notebook"></i>
-                                    <span class="title">Repository</span>
-									<?php if($currentSection == 're') { ?><span class="selected"></span><?php } ?>
-                                    <span class="arrow <?php if($currentSection == 're') { ?>open<?php } ?>"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item  <?php if($currentSubSection == 'rl') { ?>active open<?php } ?>">
-                                        <a href="repository/repositoryList.php" class="nav-link ">
-                                            <span class="title">List of Experiments</span>
-                                        </a>
-                                    </li>                                    
-                                </ul>
-                            </li>
-                            <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-link"></i>
-                                    <span class="title">External Links</span>
-                                    <span class="arrow"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item  ">
-                                        <a href="http://www.multiscalegenomics.eu/MuGVRE/modules/BigNASimMuG/" target="_blank" class="nav-link ">
-                                            <span class="title">BigNASim</span>
-                                        </a>
-                                    </li>
-									<li class="nav-item  ">
-                                        <a href="http://mmb.irbbarcelona.org/NucleosomeDynamics/" target="_blank" class="nav-link ">
-                                            <span class="title">Nucleosome Dynamics</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="http://www.multiscalegenomics.eu/MuGVRE/flexibility-browser/" target="_blank" class="nav-link ">
-                                            <span class="title">Flexibility Browser</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="http://sgt.cnag.cat/3dg/tadkit/" target="_blank" class="nav-link ">
-                                            <span class="title">TADKit 3D genome visualizer</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="http://www.multiscalegenomics.eu/MuGVRE/modules/ConnectivityBrowser/" target="_blank" class="nav-link ">
-                                            <span class="title">MuG Information Network</span>
-                                        </a>
-                                    </li>
-                                </ul>
-															</li>-->
+                           
 														<li class="nav-item  <?php if($currentSection == 'he') { ?>active open<?php } ?>">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-question"></i>
@@ -283,7 +232,7 @@ sort($tools);
 																		</li>
 																		<li class="nav-item  <?php if($currentSubSection == 'h3') { ?>active open<?php } ?>">
                                         <a href="help/upload.php" class="nav-link ">
-                                            <span class="title">Upload Data</span>
+                                            <span class="title">Get Data</span>
                                         </a>
 																		</li>
 																		<li class="nav-item  <?php if($currentSubSection == 'h4') { ?>active open<?php } ?>">
@@ -349,11 +298,11 @@ sort($tools);
 																							</a>
 																						</li>
 																						<?php } ?>
-																						<li class="nav-item <?php if($currentSubSubSubSection == 'tut') { ?>active open<?php } ?>">
+																						<!--<li class="nav-item <?php if($currentSubSubSubSection == 'tut') { ?>active open<?php } ?>">
 																							<a href="tools/<?php echo $t["_id"]; ?>/help/tutorials.php" class="nav-link">
 																							<span class="title"> Tutorials </span>
 																							</a>
-																						</li>
+																						</li>-->
 																						<?php if(in_array("references", $arrSect)) { ?>
 																						<li class="nav-item <?php if($currentSubSubSubSection == 'ref') { ?>active open<?php } ?>">
 																							<a href="tools/<?php echo $t["_id"]; ?>/help/references.php" class="nav-link">
@@ -379,6 +328,11 @@ sort($tools);
 																		<li class="nav-item  <?php if($currentSubSection == 'h9') { ?>active open<?php } ?>">
                                         <a href="help/refs.php" class="nav-link ">
                                             <span class="title">References</span>
+                                        </a>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h10') { ?>active open<?php } ?>">
+                                        <a href="help/ackn.php" class="nav-link ">
+                                            <span class="title">Acknowledgments</span>
                                         </a>
                                     </li>
                                 </ul>

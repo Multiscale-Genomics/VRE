@@ -2,7 +2,7 @@
 var fileName = '';
 var baseURL = $('#base-url').val();
 
-function openNGL(fileID, label){
+function openNGL(fileID, label, extension){
   $('#viewport').html('');
   $('#modalNGL .modal-title').html(label);
   $('#modalNGL').modal({ show: 'true' });
@@ -29,7 +29,7 @@ function openNGL(fileID, label){
 
 				if(obj.data_type != 'na_traj') {
 
-					stage.loadFile( baseURL + "files/" + obj.path, { defaultRepresentation: false } )
+					stage.loadFile( baseURL + "files/" + obj.path, { defaultRepresentation: false, ext:extension } )
 					.then( function( o ){
 						o.setSelection('/*');	
 						o.addRepresentation( "cartoon", { color: "residueindex", aspectRatio: 4, scale: 1	} );

@@ -198,7 +198,7 @@ $tools = $GLOBALS['toolsCol']->find();
                                     </div>
 																		<div class="form-actions">
                                                 <button type="submit" class="btn blue"><i class="fa fa-check"></i> Update</button>
-                                                <button type="reset" class="btn default">Cancel</button>
+                                                <button type="reset" class="btn default">Reset</button>
                                             </div>
                                   </div>
                               </div>

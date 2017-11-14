@@ -28,10 +28,16 @@ switch($_SESSION['User']['Type']) {
 
 }
 
-if ($_SESSION['User']['Type'] == 0)
+if ($_SESSION['User']['Type'] == 0){
 	$result = $GLOBALS['toolsCol']->find(array());
-else 
-	$result = $GLOBALS['toolsCol']->find(array("_id" => array('$in' => $_SESSION['User']['ToolsDev'])));
+}else{
+        if ($_SESSION['User']['ToolsDev']){
+            $result = $GLOBALS['toolsCol']->find(array("_id" => array('$in' => $_SESSION['User']['ToolsDev'])));
+        }else{
+            $_SESSION['errorData']['Error'][]="You have no tool ownership associated. Please, contact <a href=\"mailto:".$GLOBALS['helpdeskMail']."\">us</a>";
+               $result = $GLOBALS['toolsCol']->find(array());
+        }
+}
 
 
 foreach (array_values(iterator_to_array($result)) as $v){

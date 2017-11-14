@@ -152,7 +152,9 @@ viewResults = function(project, tool) {
 			}*/
 			if(data == '1'){
 				setTimeout(function(){ location.href = 'tools/' + tool + '/output.php?project=' + project; }, 500);	
-			}		
+			}else if(data == '0') {
+				setTimeout(function(){ location.href = 'workspace/'; }, 500);
+			}
 		}
 	});
 
@@ -169,7 +171,22 @@ editAllFiles = function() {
 	location.href = baseURL + "getdata/uploadForm2.php?" + query;
 }
 
+checkJobStatus = function() {
+	$.ajax({
+			type: "GET",
+			//url: baseURL + "workspace/workspace.php",
+			url: baseURL + "applib/updateUserJobs.php",
+			data: "id=1", 
+			success: function(data) {
+				var d = JSON.parse(data);
+				if(d.hasChanged == 1) location.href= baseURL + "workspace/";
+			}
+		});
+}
+
 $(document).ready(function() {
+
+	setInterval(checkJobStatus, 10000);
 
 	$('#modalDelete').find('.modal-footer .btn-modal-del').on('click', function(){
 		$('#modalDelete').find('.modal-footer .btn-modal-del').prop('disabled', true);
@@ -187,12 +204,16 @@ $(document).ready(function() {
 			fn = fn.slice(0, -1);
 		}
 
+		//console.log(baseURL + "applib/actionsWS.php?op=" + option + fn);
+
 		$.ajax({
 			type: "GET",
-			url: baseURL + "workspace/workspace.php",
+			//url: baseURL + "workspace/workspace.php",
+			url: baseURL + "applib/actionsWS.php",
 			data: "op=" + option + fn, 
 			success: function(data) {
 				$('#modalDelete').modal('toggle');	
+				//console.log(data);
 				location.href= baseURL + "workspace/";
 			}
 		});
@@ -200,3 +221,9 @@ $(document).ready(function() {
 	});
 
 });
+
+function loadWSTool(op) {
+
+	location.href = baseURL + "workspace/?tool=" + op.value;
+
+}

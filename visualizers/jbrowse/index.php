@@ -10,7 +10,8 @@ include "jsonClassTemplates_new.php";
 $user = $_SESSION['User']['id'];
 
 # JBrowse url
-$url = "JBrowse-1.11.6/index.html?";
+#$url = "JBrowse-1.11.6/index.html?";
+$url = "JBrowse-1.12.1-yeast/index.html?";
 $url = $url . "data=" . urlencode("user_data/$user/.jbrowse");
 $url = $url . "&loc=" . urlencode("chrII:30000..50000");
 $url = $url . "&tracks=";
@@ -107,17 +108,17 @@ print "LABEL: " . $label . " " . "FILENAME: " . $filename . " TYPE: " . $type . 
 	} elseif ($type == "nucleosome_positioning"){
                 $e = new GFF_NR($label,"$project",$filename);
                 
-        } elseif ($type == "nucleosome_dynamics" && $format=="GFF3"){
+        } elseif ($type == "nucleosome_dynamics" && ( $format=="GFF3" || $format=="GFF" ) ){
                 $e = new GFF_ND($label,"$project",$filename);
         } elseif ($type == "nucleosome_dynamics" && $format=="BW"){
-                $e = new BW($label,"$project",$filename);
+                $e = new BW_P($label,"$project",$filename);
         } elseif ($type == "tss_classification_by_nucleosomes"){
                 $e = new GFF_TX($label,"$project",$filename);
         } elseif ($type == "nucleosome_free_regions"){
                 $e = new GFF_NFR($label,"$project",$filename);
         } elseif ($type == "nucleosome_stiffness"){
                 $e = new GFF_GAU($label,"$project",$filename);
-        } elseif ($type == "nucleosome_gene_phasing" && $format=="GFF"){
+        } elseif ($type == "nucleosome_gene_phasing" && ( $format=="GFF3" || $format=="GFF" ) ){
                 $e = new GFF_P($label,"$project",$filename);
         } elseif ($type == "nucleosome_gene_phasing" && $format=="BW"){
                 $e = new BW_P($label,"$project",$filename);
@@ -141,7 +142,9 @@ print "LABEL: " . $label . " " . "FILENAME: " . $filename . " TYPE: " . $type . 
                 $e = new AlignmentCoverage($label,"$project",$filename);
 
 	} else {
-                $_SESSION['errorData']['JBrowse'][] ="$filename cannot be visualized.  Unknown track type '$type' or unsupported format '$format'.";
+#                $_SESSION['errorData']['JBrowse'][] ="$filename cannot be visualized.  Unknown track type '$type' or unsupported format '$format'.";
+                $_SESSION['errorData']['JBrowse'][] ="$filename cannot be visualized.  Unsupported format '$format'.<br>Supported formats are: GFF, GFF3, BW and BAM.";
+
                 redirect("/visualizers/error.php");
 	}
 
@@ -197,6 +200,7 @@ if(file_exists($seqfrom)) {
     }
 } else {
 //print "not exists";
+	unlink($seqfrom);
 	symlink($seqto,$seqfrom);
 }
 
@@ -215,6 +219,7 @@ if(file_exists($tracksfrom)) {
         exit("$linkfile exists but not symbolic link\n");
     }
 } else {
+	unlink($tracksfrom);
 	symlink($tracksto,$tracksfrom);
 }
 
@@ -233,6 +238,7 @@ if(file_exists($namesfrom)) {
         exit("$linkfile exists but not symbolic link\n");
     }
 } else {
+    unlink($namesfrom);
     symlink($namesto,$namesfrom);
 }
 
@@ -240,8 +246,8 @@ if(file_exists($namesfrom)) {
 fwrite($trackf, $trackTail);
 fclose($trackf);
 
-if ($ref == "dmel-r5.1"){
-	$url = "../JBrowse/JBrowse-1.12.0/index.html?";
+if ($ref == "r5.01"){
+	$url = "JBrowse-1.12.0/index.html?";
 	$url = $url . "data=" . urlencode("user_data/$user/.jbrowse");
 	$url = $url . "&loc=" . urlencode("chrI:30000..50000");
 	$url = $url . "&tracks=";

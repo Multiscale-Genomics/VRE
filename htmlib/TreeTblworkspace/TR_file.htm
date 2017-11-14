@@ -1,5 +1,4 @@
 <tr data-tt-id="##tree_id##" data-tt-parent-id="##tree_id_parent##">
-
 <td>
 	<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
 		<input type="checkbox" class="checkboxes" value="##_id##" name="##_id##" onchange="changeCheckbox(this)" id="##_id##" ##state##/>
@@ -33,8 +32,9 @@
 
 <td>
 	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;">
-    	<button class="btn btn-xs blue-madison dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
+    	<button class="btn btn-xs blue-madison dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
 				<i class="fa fa-cogs"></i>
+				<i class="fa fa-angle-down"></i>
 		</button>
 	  <ul class="dropdown-menu pull-right" role="menu">
 			##metadataLink##
@@ -43,9 +43,10 @@
 			##compressionLink##
 		</ul>
 	</div>
-	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;margin-left:33px;display:##vis_button##;">
-    	<button class="btn btn-xs purple-intense dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;margin-left:38px;display:##vis_button##;">
+    	<button class="btn btn-xs purple-intense dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
 				<i class="fa fa-eye"></i>
+				<i class="fa fa-angle-down"></i>
 		</button>
 	  <ul class="dropdown-menu pull-right" role="menu">
 			##PDBView##
@@ -55,9 +56,10 @@
 			##plainText##
 		</ul>
 	</div>
-	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;margin-left:66px;display:##tools_button##;">
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;margin-left:75px;display:##tools_button##;">
     	<button class="btn btn-xs blue-dark dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 
 				<i class="fa fa-wrench"></i>
+				<i class="fa fa-angle-down"></i>
 		</button>
 	 	##tools_list## 
 	</div>

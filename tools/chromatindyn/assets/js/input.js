@@ -174,7 +174,7 @@ var ValidateForm = function() {
             },
 
             submitHandler: function(form) {
-
+								$('button[type="submit"]', $('#chromdyn-form')).prop('disabled', true);
 							//console.log(activeBlocks);
 		
 							/*if(activeBlocks.length == 0) {

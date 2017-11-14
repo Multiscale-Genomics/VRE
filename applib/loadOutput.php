@@ -30,7 +30,6 @@ if($_REQUEST){
 
 	}
 
-
 	// Get internal results
 	//
 
@@ -38,12 +37,41 @@ if($_REQUEST){
 
 		$files = $GLOBALS['filesCol']->findOne(array('_id' => $_REQUEST['project']), array('files' => 1, '_id' => 0));
 
+		$has_statistics = false;
 		foreach($files["files"] as $id) {
 
 			$fMeta = iterator_to_array($GLOBALS['filesMetaCol']->find(array('_id' => $id,
 																																			'data_type'  => "tool_statistics",
 																																			'format'     =>'TAR',
 																																			'compressed' =>"gzip")));
+
+			if(count($fMeta) != 0) {
+				$has_statistics = true;
+			}
+		}
+
+
+		if(!$has_statistics) {
+				$_SESSION['errorData']['Error'][]="Error creating custom results, please check the selected job.";
+				echo '0';
+				die();
+		}
+
+		foreach($files["files"] as $id) {
+
+			$fMeta = iterator_to_array($GLOBALS['filesMetaCol']->find(array('_id' => $id,
+																																			'data_type'  => "tool_statistics",
+																																			'format'     =>'TAR',
+																																			'compressed' =>"gzip")));
+
+
+			/*if(!count($fMeta)) {
+				//$_SESSION['errorData']['Error'][]="Error creating custom results, please check the selected job.";
+				//echo '0';
+				var_dump(getAttr_fromGSFileId($id,'path'));
+				die();
+																																			}*/
+
 			if(count($fMeta) ) {
 				$path = $GLOBALS['dataDir']."/".getAttr_fromGSFileId($id,'path');
 				exec("tar --touch -xzf \"$path\" -C \"$wd\" 2>&1", $err);

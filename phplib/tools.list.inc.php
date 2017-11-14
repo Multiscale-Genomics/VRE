@@ -2,9 +2,9 @@
 
 require "Tooljob.php";
 
-function getTools_List() {
+function getTools_List($status = 1) {
 	
-	$tools = $GLOBALS['toolsCol']->find(array('external' => true), array('name' => 1, 'title' => 1, 'short_description' => 1, 'keywords' => 1))->sort(array('title' => 1));
+	$tools = $GLOBALS['toolsCol']->find(array('external' => true, 'status' => $status), array('name' => 1, 'title' => 1, 'short_description' => 1, 'keywords' => 1))->sort(array('title' => 1));
 
 	return iterator_to_array($tools);	
 
@@ -57,7 +57,7 @@ function hasTool_custom_visualizer($toolId){
 	return $has_custom_visualizer;
 }
 
-function launchToolInternal($toolId,$inputs=array(),$args=array(),$outs=array(),$output_dir){
+function launchToolInternal($toolId,$inputs=array(),$args=array(),$outs=array(),$output_dir="",$logName=""){
 
 	// Get tool.
     $tool = getTool_fromId($toolId,1);
@@ -76,8 +76,11 @@ function launchToolInternal($toolId,$inputs=array(),$args=array(),$outs=array(),
 
 	$jobMeta  = new Tooljob($tool,$project,$descrip,$output_dir);
 
-    print "<br/>tools.list.inc.phpJOB META<br/>";
-    var_dump($jobMeta);
+    
+	// Set LogName
+	if (strlen($logName)){
+		$jobMeta->setLog($logName);
+	}
 
 	// Stage in (fake)  TODO
 

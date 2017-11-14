@@ -78,7 +78,7 @@ function getRunningJobs(){
 }
 */
 
-function getRunningJobInfo($pid,$launcherType=NULL){
+function getRunningJobInfo($pid,$launcherType=NULL,$cloudName="local"){
 
 	$job=Array();
 	if (! $pid)
@@ -98,7 +98,7 @@ function getRunningJobInfo($pid,$launcherType=NULL){
 		$job = $process->getRunningJobInfo($pid);
 
 	}elseif($launcherType == "PMES"){
-		$process = new ProcessPMES();
+		$process = new ProcessPMES($cloudName);
 		$job = $process->getRunningJobInfo($pid);
 	}else{
 		$_SESSION['errorData']['Error'][]="Cannot monitor job '$pid' of type '$launcher'. Launcher not implemented.";
@@ -108,7 +108,7 @@ function getRunningJobInfo($pid,$launcherType=NULL){
 	return $job;
 }
 
-function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL){
+function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL,$cloudName="local"){
 
     // guess launcher
 	if(!$launcherType){
@@ -119,7 +119,7 @@ function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL){
     }
     // if PMES, update log content
     if ($launcherType == "PMES"){
-		$process = new ProcessPMES();
+		$process = new ProcessPMES($cloudName);
         $job = $process->getActivityInfo($pid);
 
         if ($job['jobOutputMessage'] || $job['jobErrorMessage'] ){
@@ -222,7 +222,7 @@ function delJobFromOutfiles($outfiles){
 	return 1;
 }
 
-function delJob($pid,$launcherType=NULL){
+function delJob($pid,$launcherType=NULL,$cloudName="local"){
 
     $job=Array();
     if (! $pid)
@@ -239,7 +239,7 @@ function delJob($pid,$launcherType=NULL){
     // cancel job
     $r = false;
     if ($launcherType == "SGE"){
-        $process = new ProcessSGE();
+        $process = new ProcessSGE($cloudName);
         list($r,$msg) = $process->stop($pid);
         if (!$r)
            $_SESSION['errorData']['Error'][]="Cannot delete $launcherType job [id = $pid].<br/>$msg";

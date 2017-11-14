@@ -86,7 +86,7 @@ var ValidateForm = function() {
             },
 
             submitHandler: function(form) {
-
+							$('button[type="submit"]', $('#dnashape-form')).prop('disabled', true);
 							$('.warn-nd', $('#dnashape-form')).hide();
 							$('.err-nd', $('#dnashape-form')).hide();
 							var data = $('#dnashape-form').serialize();

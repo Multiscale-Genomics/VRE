@@ -15,10 +15,10 @@ foreach ($files as $file)
 		        unlink($file);
 
 # TADkit url
-$absURL = "http://vre.multiscalegenomics.eu/visualizers/tadkit/tadkit/index.html";
+$absURL = "http://dev.multiscalegenomics.eu/visualizers/tadkit/tadkit/index.html";
 $user_data = "user_data/";
 $uid = uniqid();
-$url = "#/project/project/dataset";
+$url = "#/project/dataset";
 $url = $url . "?conf=". $user_data . urlencode($user) . "/.tadkit/conf_".$uid.".json";
 $file = $GLOBALS['dataDir']."/". $user . "/.tadkit/conf_".$uid.".json";
 //print $file;
@@ -74,8 +74,8 @@ if(sizeof($arr_datasets)>0) {
                 redirect("/visualizers/error.php"); 
 
 	}
-	//if ($data_type == 'chromatin_model' || $data_type == 'tadbit_models') {
-	if(strpos($filename, '.json') !== false)  { #Until we fix data type
+	if ($data_type == 'chromatin_3dmodel_ensemble' || $data_type == 'tadbit_models') {
+	//if(strpos($filename, '.json') !== false)  { #Until we fix data type
 		$conf_json["dataset"] = $user_data.$filepath;
 	} else {
 		if ($type == "FALSE"){

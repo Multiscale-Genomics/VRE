@@ -22,6 +22,8 @@ switch ($_REQUEST['uploadType']){
                             break;
     case 'repository': getData_fromRepository($_REQUEST);
                             break;
+    case 'sampleData': getData_fromSampleData($_REQUEST);
+                            break;
 	default:
 		die(0);
 }

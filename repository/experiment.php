@@ -52,18 +52,46 @@ $experiment = $exp[$_GET['id']];
                         <h1 class="page-title">Experiment <?php echo $experiment[2]; ?></h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
+		    <div class="row">
+			<div class="col-md-12">
+			<?php  
+				$error_data = false;
+			 	if ($_SESSION['errorData']){ 
+					$error_data = true;
+				?>
+				<?php if ($_SESSION['errorData']['Info']) { ?> 
+					<div class="alert alert-info">
+				<?php } else { ?>
+					<div class="alert alert-danger">
+				<?php } ?>
+					
+			        <?php 
+				foreach($_SESSION['errorData'] as $subTitle=>$txts){
+			        	print "<strong>$subTitle</strong><br/>";
+				       foreach($txts as $txt){
+				       	print "<div>$txt</div>";
+					}
+				}
+		  		unset($_SESSION['errorData']);
+		  		?>
+			     </div>
+			    <?php } ?>
+			  </div>
+			</div>
 
-												<div class="mt-element-step">
+
+								<div class="mt-element-step">
                                     <div class="row step-line">
                                         <div class="mt-step-desc">
-																				Please select any data of this experiment and it will be automatically uploaded to your workspace.
-																				</div>
+						Please select any data of this experiment and it will be automatically uploaded to your workspace.
+										</div>
 
 										<?php require "../htmlib/stepsup.inc.php"; ?>	
 										
                                     </div>
                                 </div>
 
+												<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
 
 
                         <div class="row">
@@ -220,8 +248,7 @@ $experiment = $exp[$_GET['id']];
 															<td class="col-1-subt">Sample and data relationship <?php if(sizeof($files['sdrf']) > 1) echo '('.sizeof($files['sdrf']).')'; ?></td>
 															<td class="col-2-subt">	
 															<?php foreach($files['sdrf'] as $k => $v): ?>
-                                                            <a href="applib/getData.php?uploadType=repository&url=<?php echo $v['url'];?>&repo=<?php echo $experiment[15];?>" target="_blank"><i class="fa fa-cloud-upload"></i></a>&nbsp;&nbsp;
-
+                                <!--<a href="applib/getData.php?uploadType=repository&url=<?php echo $v['url'];?>&repo=<?php echo $experiment[15];?>" target="_blank"><i class="fa fa-cloud-upload"></i></a>&nbsp;&nbsp;-->
 																<a href="<?php echo $v['url']; ?>" target="_blank"><i class="fa fa-download"></i> <?php echo $v['name']; ?></a> 
 															<?php endforeach; ?>
 															<td>
@@ -309,7 +336,7 @@ $experiment = $exp[$_GET['id']];
 																<div class="form-actions">
 			
 																	<div id="bottom-validated-files">
-																			<div id=""><a href="javascript:;" class="btn green tooltips" aria-hidden="true" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Import experiment to workspace (service not available yet)</p>"><i class="fa fa-cloud-upload"></i> IMPORT EXPERIMENT TO WORKSPACE </a></div>
+																	<div id=""><a href="javascript:openFilesList('<?php echo $_GET['id']; ?>');" class="btn green tooltips" aria-hidden="true" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to select the file from this experiment you want to import to workspace</p>"><i class="fa fa-cloud-upload"></i> IMPORT EXPERIMENT TO WORKSPACE </a></div>
 	
 																			<div id="" style="margin-top:20px"><a href="repository/JSONexperiment.php?id=<?php echo$_GET['id']; ?>" class="btn green" target="_blank"><i class="fa fa-file-code-o"></i> OPEN IN JSON FORMAT </a></div>
 
@@ -324,7 +351,25 @@ $experiment = $exp[$_GET['id']];
                     </div>
                     <!-- END CONTENT BODY -->
                 </div>
-                <!-- END CONTENT -->
+								<!-- END CONTENT -->
+
+<div class="modal fade bs-modal" id="modalFilesList" tabindex="-1" role="basic" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+								<h4 class="modal-title">Experiment list of files</h4>
+							</div>
+							<div class="modal-body table-responsive">
+								<div id="meta-container" style="max-height: calc(100vh - 255px);">						
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
 <?php 
 

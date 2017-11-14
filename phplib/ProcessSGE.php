@@ -35,8 +35,6 @@ class ProcessSGE{
 				$this->jobname = basename($cl);
             
             $this->runCom();
-            print "JOB<br>";
-            var_dump($this);
         }
         return $this;
 	}

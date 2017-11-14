@@ -27,13 +27,16 @@ class Tooljob {
     public $metadata_file_virtual;
     public $log_file;
     public $log_file_virtual;
+    public $logName;
 
-    public $stageout_data=Array();
-    public $input_files = Array();
-    public $arguments   = Array();
-    public $metadata    = Array();
-    public $pid          = 0;
+    public $stageout_data   = Array();
+    public $input_files     = Array();
+    public $input_files_pub = Array();
+    public $arguments       = Array();
+    public $metadata        = Array();
+    public $pid             = 0;
     public $hasProjectFolder= true;
+    public $refGenome_to_taxon = Array( "hg38"=>"9606" ,  "hg19"=>"9606", "R64-1-1"=>"4932", "r5_01"=>"7227");
 
 
     /**
@@ -117,6 +120,27 @@ class Tooljob {
                 $this->description="Execution directory";
     }
 
+    public function setLog($filename=""){
+
+        //set logName
+        if (strlen($filename)){
+    		$filename = basename($filename);
+    		$f = pathinfo($filename);
+    		if ($f['extension'] != "log"){
+    			$filename = $filename. ".log";
+    		}
+    		$this->logName = $filename;
+    	}else{
+    		$this->logName = $GLOBALS['tool_log_file'];
+        }
+
+        //set again working dir
+        if ($this->hasProjectFolder){
+            $this->__setWorking_dir($this->project,1);
+        }else{
+            $this->__setWorking_inTmp($this->toolId);
+        }
+    }
 
    /**
      * Set working directory where log_file, submission_file and control_file will be located
@@ -147,16 +171,18 @@ class Tooljob {
         $this->project = $project;
         $this->working_dir    = $this->root_dir."/".$this->project;
 
+        if (!$this->logName){$this->logName = $GLOBALS['tool_log_file'];}
+
     	$this->config_file    = $this->working_dir."/".$GLOBALS['tool_config_file'];
     	$this->stageout_file  = $this->working_dir."/".$GLOBALS['tool_stageout_file'];
         $this->submission_file= $this->working_dir."/".$GLOBALS['tool_submission_file'];
-        $this->log_file       = $this->working_dir."/".$GLOBALS['tool_log_file'];
+        $this->log_file       = $this->working_dir."/".$this->logName;
         $this->metadata_file  = $this->working_dir."/".$GLOBALS['tool_metadata_file'];
 
         $this->config_file_virtual    = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_config_file'];
         $this->stageout_file_virtual  = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_stageout_file'];
         $this->metadata_file_virtual  = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_metadata_file'];
-        $this->log_file_virtual       = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_log_file'];
+        $this->log_file_virtual       = $this->root_dir_virtual."/".$this->project."/".$this->logName;
     }
 
 
@@ -170,17 +196,19 @@ class Tooljob {
         $this->project = $project;
         $this->working_dir    = $this->root_dir."/".$GLOBALS['tmpUser_dir'].$this->project;
 
+        if (!$this->logName){$this->logName = $GLOBALS['tool_log_file'];}
+
     	$this->config_file    = $this->working_dir."/".$GLOBALS['tool_config_file'];
     	$this->stageout_file  = $this->working_dir."/".$GLOBALS['tool_stageout_file'];
         $this->submission_file= $this->working_dir."/".$GLOBALS['tool_submission_file'];
-        $this->log_file       = $this->working_dir."/".$GLOBALS['tool_log_file'];
+        $this->log_file       = $this->working_dir."/".$this->logName;
         $this->metadata_file  = $this->working_dir."/".$GLOBALS['tool_metadata_file'];
 
 
         $this->config_file_virtual    = $this->root_dir_virtual."/".$GLOBALS['tmpUser_dir'].$this->project."/".$GLOBALS['tool_config_file'];
         $this->stageout_file_virtual  = $this->root_dir_virtual."/".$GLOBALS['tmpUser_dir'].$this->project."/".$GLOBALS['tool_stageout_file'];
         $this->metadata_file_virtual  = $this->root_dir_virtual."/".$GLOBALS['tmpUser_dir'].$this->project."/".$GLOBALS['tool_metadata_file'];
-        $this->log_file_virtual       = $this->root_dir_virtual."/".$this->project."/".$GLOBALS['tool_log_file'];
+        $this->log_file_virtual       = $this->root_dir_virtual."/".$GLOBALS['tmpUser_dir'].$this->project."/".$this->logName;
     }
 
 
@@ -297,6 +325,17 @@ class Tooljob {
                        );
 	   }
 	}
+	foreach ($this->input_files_pub as $k=>$vs){
+	    foreach ($vs as $v){
+            array_push($data['input_files'], Array(
+                                                "name"          => $k,
+                                                "value"         => $v,
+                                                "required"      => $tool['input_files_public_dir'][$k]['required'],
+                                                "allow_multiple"=> $tool['input_files_public_dir'][$k]['allow_multiple']
+                                            )
+                       );
+	   }
+	}
 	// append arguments
 	foreach ($this->arguments as $k=>$v){
 		array_push($data['arguments'], Array("name"=>$k, "value"=> $v));
@@ -305,7 +344,10 @@ class Tooljob {
     // append output_files from tool json
     if ($tool['output_files']){
         foreach ($tool['output_files'] as $k => $v){
-            $data['output_files'][] = $v;
+	    if (isset($v['file']['file_path'])){
+		$v['file']['file_path'] = $this->root_dir_virtual."/".$this->project ."/".$v['file']['file_path'];
+	    }
+	    $data['output_files'][] = $v;
         }
     }
 
@@ -375,11 +417,6 @@ class Tooljob {
 				}
 			}
 			break;
-			    if ($tool['arguments'][$arg_name]['type'] == "enum"){
-			    	$_SESSION['errorData']['Internal'][]="Invalid argument enum in tool definition. '$arg_name' has no 'enum_items' or 'enum_items['name].";
-				return 0;
-			    }
-			break;
 		    case "boolean":
 			if ($arg_value===true || $arg_value=="on" || $arg_value == "1" || $arg_value == 1)
 				$arg_value=true;	
@@ -427,7 +464,7 @@ class Tooljob {
 
     /**
      * Set inputFiles
-     * @param array $arguments Arguments as received from inputs.php
+     * @param array $input_files  Input_files as received from inputs.php
      * @param array $tool Tool array containing input_files type and requirements
      * @param array $metadata Files metadata extracted from DB
     */
@@ -439,32 +476,35 @@ class Tooljob {
 	    if (count($tool) && count($metadata)){
 		    if (!is_array($fns))
 			$fns=array($fns);
-		    foreach ($fns as $fn){
+
+            foreach ($fns as $fn){
+            // checking value not empty
 			if (!$fn){
 				$_SESSION['errorData']['Error'][]="No file given for '$input_name'";
 				return 0;
 			}
 			// checking coherence between JSON and REQUEST
-			if (!isset($tool['input_files'][$input_name])){
+/*			if (!isset($tool['input_files'][$input_name])){
 				$_SESSION['errorData']['Internal'][]="Input file '$input_name' not found in tool definition. '$this->toolId' is not properly registered";
 				return 0;
-			}
+            } */
 			// checking input_file has metadata
 			if (!isset($metadata[$fn])){
 				$_SESSION['errorData']['Error'][]="Given file in '$input_name' has no metadata";
 				return 0;
 			}
-			// checking input_files requirements
-			$ok = $this->validateInput_file($tool['input_files'][$input_name], $metadata[$fn]);
+    	    // checking input_file integrity
+/*			$ok = $this->validateInput_file($tool['input_files'][$input_name], $metadata[$fn]);
 			if (! $ok){
 				$_SESSION['errorData']['Error'][]="Input file '$input_name' not valid. Stopping '$this->toolId' execution";
 				return 0;
-			}
+            }*/
 		    }   
 	    }
         // setting input_files
 	    $this->input_files[$input_name]=$fns;
     }
+    /*
     if (count($tool['input_files'])){
         foreach ($tool['input_files'] as $input_name => $input){
             if (!isset($input_files[$input_name]) && $input['required'] ){
@@ -472,10 +512,67 @@ class Tooljob {
     			return 0;
             }
         }
-    }
+    }*/
     return 1;
     }
 
+    /**
+     * Set inputFiles from public directory
+     * @param array $input_files_public Input_files_public_dir as received from inputs.php
+     * @param array $tool Tool array containing input_files type and requirements
+     * @param array $metadata_pub Files metadata extracted from DB
+    */
+
+
+    public function setInput_files_public($input_files_public,$tool=array(),$metadata_pub=array()){
+
+    foreach ($input_files_public as $input_name => $input_values){
+
+        $fns = array();
+        //checking  requirements
+        if (count($tool) && count($metadata_pub)){
+		    if (!is_array($input_values))
+			    $input_values=array($input_values);
+
+            foreach ($input_values as $input_value){
+            // checking value not empty
+			if (!$input_value){
+				$_SESSION['errorData']['Error'][]="No value given public file '$input_name'";
+				return 0;
+			}
+			// checking coherence between JSON and REQUEST
+			if (!isset($tool['input_files_public_dir'][$input_name])){
+				$_SESSION['errorData']['Internal'][]="Input file public '$input_name' not found in tool definition. '$this->toolId' is not properly registered";
+				return 0;
+            }
+            // replacing file_path by fn in input_files_pub
+            $fn = "";
+            foreach ($metadata_pub as $f => $file){
+                if ($file['file_path'] == $input_value){
+                    $fn = $f;
+                }
+            }
+            if ($fn){
+                array_push($fns,$fn);
+            }else{
+                $_SESSION['errorData']['Error'][]="Input file public '$input_name' with value '$input_value' not found in public directory";
+                return 0;
+            }
+    	    // checking input_file integrity
+/*	        $ok = $this->validateInput_file($tool['input_files_public'][$input_name], $metadata_pub[$fn]);
+		    if (! $ok){
+			   	$_SESSION['errorData']['Error'][]="Input file public '$input_name' not valid. Stopping '$this->toolId' execution";
+                return 0;
+            }
+            */
+            }
+        }
+        // setting input_files
+	    $this->input_files_pub[$input_name]=$fns;
+
+        }
+        return 1;
+    }
 
     /**
      * Store its metadata in Tooljob for recovering it latter, while stageout register
@@ -518,7 +615,6 @@ class Tooljob {
 	}
 	// checking format
 	if (isset($inputReq['file_type']) &&  isset($inputMetadata['format'])){
-		//if ($inputReq['file_type'] != $inputMetadata['format']){
 		if (!in_array($inputMetadata['format'],$inputReq['file_type'])){
 			$_SESSION['errorData']['Error'][]="Input file '".basename($inputMetadata['path'])."' in '".$inputReq['name']." has format '".$inputMetadata['format']."  and '".implode(", ",$inputReq['file_type'])."' was excepted.";
 			return 0;
@@ -527,7 +623,6 @@ class Tooljob {
 	}
 	// checking datatype
 	if (isset($inputReq['data_type']) &&  isset($inputMetadata['data_type'])){
-		//if ($inputReq['data_type'] != $inputMetadata['data_type']){
 		if (!in_array($inputMetadata['data_type'],$inputReq['data_type'])){
 			$_SESSION['errorData']['Error'][]="Input file '".basename($inputMetadata['path'])."' in '".$inputReq['name']." is a '".$inputMetadata['data_type']."  and '".implode(", ",$inputReq['data_type'])."' was excepted.";
 			return 0;
@@ -541,26 +636,69 @@ class Tooljob {
     /**
      * Creates metadata JSON
     */
-    public function setMetadata_file($metadata){
+    public function setMetadata_file($metadata,$metadata_pub=array()){
 	if (!$this->working_dir){
 		$_SESSION['errorData']['Internal Error'][]="Cannot create metadata file. No 'working_dir' set";
 		return 0;
 	}
 
     $fileMuGs=Array();
+
+    // add input_files metadata
     foreach ($metadata as $fnId => $file){
         // convert metadata to DMP format
         $fileMuG = $this->fromVREfile_toMUGfile($file);
 
-        // adapt metadta to App requirements
+        // adapt metadata to App requirements
         if (isset($fileMuG['source_id'])){
-            unset($fileMuG['source_id']);
+            $source_list=array();
+            foreach($fileMuG['source_id'] as $source_id){
+                if ($source_id){
+                    $source_path = getAttr_fromGSFileId($source_id,"path");
+                    if($source_path){array_push($source_list,$this->root_dir_virtual."/".$source_path);}
+                }
+            }
+            $fileMuG['sources'] = $source_list;
+	    unset($fileMuG['source_id']);
         }
         if ($fileMuG['file_path']){
             $fileMuG['file_path'] = $this->root_dir_virtual."/".$fileMuG['file_path'];
         }
+        if ($fileMuG['meta_data']['parentDir']){
+            $parent_path = getAttr_fromGSFileId($fileMuG['meta_data']['parentDir'],"path");
+            if($parent_path){$fileMuG['meta_data']['parentDir'] = $this->root_dir_virtual."/".$parent_path;}
+        }
 		array_push($fileMuGs,$fileMuG);
-	}
+    }
+
+    // add input_files public metadata
+    if (count($metadata_pub)){
+    foreach ($metadata_pub as $fnId => $fileMuG){
+        // convert metadata to DMP format
+        //$fileMuG = $this->fromVREfile_toMUGfile($file);
+
+        // adapt metadata to App requirements
+        if (isset($fileMuG['source_id'])){
+            $source_list=array();
+            foreach($fileMuG['source_id'] as $source_id){
+                if ($source_id){
+                    $source_path = getAttr_fromGSFileId($source_id,"path");
+                    if($source_path){array_push($source_list,$this->public_dir_virtual."/".$source_path);}
+                }
+            }
+            $fileMuG['sources'] = $source_list;
+	        unset($fileMuG['source_id']);
+        }
+        if ($fileMuG['file_path']){
+            $fileMuG['file_path'] = $this->pub_dir_virtual."/".$fileMuG['file_path'];
+        }
+        if ($fileMuG['meta_data']['parentDir']){
+            $parent_path = getAttr_fromGSFileId($fileMuG['meta_data']['parentDir'],"path");
+            if($parent_path){$fileMuG['meta_data']['parentDir'] = $this->root_dir_virtual."/".$parent_path;}
+        }
+        array_push($fileMuGs,$fileMuG);
+    }
+    }
 	$metadata_rfn = $this->metadata_file;
 
 	// write JSON
@@ -586,7 +724,7 @@ class Tooljob {
     /**
      * Creates execution Command Line and Submission File
     */
-    public function prepareExecution($tool,$metadata){
+    public function prepareExecution($tool,$metadata,$metadata_pub = array()){
 
 	$launcher = $tool['infrastructure']['clouds'][$this->cloudName]['launcher'];
 
@@ -597,7 +735,7 @@ class Tooljob {
 		if ($r=="0")
 		    return 0;
 	
-		$this->setMetadata_file($metadata);
+		$this->setMetadata_file($metadata,$metadata_pub);
 		if ($r=="0")
 		    return 0;
 	
@@ -667,8 +805,8 @@ class Tooljob {
 	}
 	$cmd = $tool['infrastructure']['executable'] .
 					" --config "         .$this->config_file_virtual .
-					" --root_dir "       .$this->root_dir_mug .
-					" --public_dir "     .$this->pub_dir_virtual .
+					//" --root_dir "       .$this->root_dir_mug .
+					//" --public_dir "     .$this->pub_dir_virtual .
 					" --in_metadata " 	 .$this->metadata_file_virtual .
 					" --out_metadata "   .$this->stageout_file_virtual .
 				    " --log_file "       .$this->log_file_virtual ;
@@ -704,7 +842,8 @@ class Tooljob {
 	//Setting PMES execution user (name,uid,gid)
 	exec("stat  -c '%u:%g' ".$this->working_dir,$stat_out);
 	list($user_uid,$user_gid) = split(":",$stat_out[0]);
-	$user_name = "pmes";
+	$user_name = "vre".substr(md5(rand()),0,5);
+	//$user_name = "pmes";
 
 	//Setting executable as PMES requires
 	$app_target =  dirname($tool['infrastructure']['executable']);
@@ -758,13 +897,13 @@ class Tooljob {
 						"config"      => $this->config_file_virtual,
 					  //"root_dir"    => $this->root_dir_virtual,
 					  //"public_dir"  => $this->pub_dir_virtual,
+                      //"log_file"    => $this->log_file_virtual,
 						"in_metadata" => $this->metadata_file_virtual,
-                        "out_metadata"=> $this->stageout_file_virtual,
-                        "log_file"    => $this->log_file_virtual
+                        "out_metadata"=> $this->stageout_file_virtual
 						),
         			"type" => $cloud['workflowType']    // COMPSs || Single
 				),				
-		"compss_flags" =>array( "flag" => " --summary --base_log_dir=".$this->root_dir_virtual."/".$this->project. " --library_path=/home/pmes/bin --pythonpath=/home/pmes/.pyenv/versions/2.7.12/envs/mg-process-fastq/lib/python2.7/site-packages/ " )
+		"compss_flags" =>array( "flag" => " --summary --base_log_dir=".$this->root_dir_virtual."/".$this->project )
 		)
 	);
 	return $data;
@@ -918,90 +1057,93 @@ class Tooljob {
      * @file  VRE file object, resulting from merging MuGVRE Mongo collections Files + FilesMetadata
     */
     protected function fromVREfile_toMUGfile($file) {
-
-                $mugfile        = array();
+        $mugfile        = array();
 		$compressions   = $GLOBALS['compressions'];
-                $mugfile['_id'] = $file['_id'];
+        $mugfile['_id'] = $file['_id'];
 
 		//path -> file_path (relative to user_data_directory)
-                if (isset($file['path'])){
+        if (isset($file['path'])){
 			if (preg_match('/^\//', $file['path']) || preg_match('/^'.$_SESSION['User']['id'].'/', $file['path']) ){
-                        	$path = explode("/",$file['path']);
-                        	$mugfile['file_path'] = implode("/",array_slice($path,-2,2));
+                $path = explode("/",$file['path']);
+                $mugfile['file_path'] = implode("/",array_slice($path,-2,2));
 			}else{
-                        	$mugfile['file_path'] = $file['path'];
+                $mugfile['file_path'] = $file['path'];
 			}
-                }else{
-                        $mugfile['file_path'] = NULL;
+        }else{
+            $mugfile['file_path'] = NULL;
 		}
 
 		// format -> file_type
-                if (isset($file['format']))
-                        $mugfile['file_type'] = $file['format'];
-                else
-                        $mugfile['file_type'] = "UNK";
+        if (isset($file['format'])){
+            $mugfile['file_type'] = $file['format'];
+        }else{
+            $mugfile['file_type'] = "UNK";
+        }
 
 		// data_type -> data_type
-                if (isset($file['data_type']))
-                        $mugfile['data_type'] = $file['data_type'];
-                else
-                        $mugfile['data_type'] = NULL;
+        if (isset($file['data_type'])){
+            $mugfile['data_type'] = $file['data_type'];
+        }else{
+            $mugfile['data_type'] = NULL;
+        }
 
 		// compressed -> compressed
-                if (isset($file['path'])){
+        if (isset($file['path'])){
 			$ext = pathinfo($file['path'], PATHINFO_EXTENSION);
 			$ext = preg_replace('/_\d+$/',"",$ext);
 			$ext = strtolower($ext);
-                        if (in_array($ext,array_keys($compressions)) ){
-                                $mugfile['compressed'] = $compressions[$ext];
-                        }else{
-                                $mugfile['compressed'] = 0;
-                        }
-                }
+            if (in_array($ext,array_keys($compressions)) ){
+                $mugfile['compressed'] = $compressions[$ext];
+            }else{
+                $mugfile['compressed'] = 0;
+            }
+        }
 
-		// inPaths -> source_id (file_ids)
-                if (isset($file['inPaths'])){
-			if (!is_array($file['inPaths'])){
-				$file['inPaths']=array($file['inPaths']);
+		// input_files -> source_id (old inPaths)
+        if (isset($file['input_files'])){
+			if (!is_array($file['input_files'])){
+				$mugfile['input_files']=array($file['input_files']);
+            }else{
+                $mugfile['source_id']=$file['input_files'];
 			}
-			foreach ($file['inPaths'] as $inPath){
-				if (preg_match('/\//', $inPath)){
-					$mugfile['source_id'][] = getGSFileId_fromPath($inPath);
-				}else{
-					$mugfile['source_id'][] = $inPath;
-				}
-			}
-                }else{
-                        $mugfile['source_id'] = [];
-		}
+        }else{
+            $mugfile['source_id'] = array();
+        }
+
+		// owner -> user_id
+        if (isset($file['owner']))
+            $mugfile['user_id'] = $file['owner'];
+        else
+            $mugfile['user_id'] = $_SESSION['User']['id'];
 
 		// mtime -> creation_time
-                if (isset($file['mtime']))
-                        $mugfile['creation_time'] = $file['mtime'];
-                else
-                        $mugfile['creation_time'] = new \MongoDate();
+        if (isset($file['mtime']))
+            $mugfile['creation_time'] = $file['mtime'];
+        else
+            $mugfile['creation_time'] = new \MongoDate();
 
 		// taxon_id -> taxon_id
-                if (isset($file['taxon_id']))
+        if (isset($file['taxon_id'])){
 			$mugfile['taxon_id'] = $file['taxon_id'];
-		else{
-		 	if(!isset($file['refGenome']))
+        }else{
+		 	if(!isset($file['refGenome'])){
 				$mugfile['taxon_id'] = 0;
-			else{
-				$refGenome_to_taxon = Array( "hg19"=>"9606", "R64-1-1"=>"4932", "r5.01"=>"7227");
-				$mugfile['taxon_id'] = $refGenome_to_taxon[$file['refGenome']];
+            }else{
+				//$refGenome_to_taxon = Array( "hg19"=>"9606", "R64-1-1"=>"4932", "r5.01"=>"7227");
+                $mugfile['taxon_id'] =(isset($this->refGenome_to_taxon[$file['refGenome']])?$this->refGenome_to_taxon[$file['refGenome']]:0);
 			}
 		}
 
-                unset($file['_id']);
-                unset($file['path']);
-                unset($file['mtime']);
-                unset($file['format']);
-                unset($file['trackType']); 
-                unset($file['tracktype']); 
-                unset($file['shPath']); 
-                unset($file['logPath']); 
-                unset($file['inPaths']);
+        unset($file['_id']);
+        unset($file['path']);
+        unset($file['mtime']);
+        unset($file['format']);
+        unset($file['data_type']); 
+        unset($file['tracktype']); 
+        unset($file['shPath']); 
+        unset($file['logPath']); 
+        unset($file['input_files']);
+        unset($file['owner']);
 
 		// other -> meta_data
                 $mugfile['meta_data']  = $file;
@@ -1086,6 +1228,94 @@ class Tooljob {
     }
 
 
+    /**
+     * Recreate metadata for input files not included in DMP/Mongo
+     * @param array $input_files Input_files_public_dir as received from inputs.php
+     * @param array $tool Tool array containing input_files type and requirements
+     * @param array $metadata Files metadata extracted from DB
+    */
+    public function createMetadata_from_Input_files_public($input_files_public,$tool){
+
+        $metadata_public = array();
+
+	    foreach ($input_files_public as $input_name => $input_value){
+    	    if (count($tool)){
+    		// checking coherence between JSON and REQUEST
+    		if (!isset($tool['input_files_public_dir'][$input_name])){
+    			$_SESSION['errorData']['Internal'][]="Input file public '$input_name' not found in tool definition. '$this->toolId' is not properly registered";
+                return $metadata_public;
+    		}
+            if ($input_value!=""){
+                $rfn_public = 1;
+
+                // check input_files_public_dir
+                switch ($tool['input_files_public_dir'][$input_name]['type']){
+                    case 'enum':
+    			        if (!isset($tool['input_files_public_dir'][$input_name]['enum_items']) || (!isset($tool['input_files_public_dir'][$input_name]['enum_items']['name']))){
+                            $_SESSION['errorData']['Internal'][]="Invalid input_files_public_dir enum in tool definition. '$input_name' has no 'enum_items' or 'enum_items['name].";
+                            $rfn_public = 0;
+                        }
+			            if (!in_array($input_value,$tool['input_files_public_dir'][$input_name]['enum_items']['name']) ){
+	    		            $_SESSION['errorData']['Error'][]="Invalid input_files_public_dir. In '$input_name' these values are accepted [".implode(", ",$tool['input_files_public_dir'][$input_name]['enum_items']['name'])."], but found $input_value";
+                            $rfn_public = 0;
+                        }
+            			$input_value = strval($input_value);
+                        break;
+                    case 'hidden':
+                    case 'string':
+			            if (is_array($input_value)){
+            			    $_SESSION['errorData']['Error'][]="Invalid file public. In '$input_name' a string was expected, but found an array: ".implode(",",$input_value);
+                            $rfn_public = 0;
+            			}
+            			$input_value = strval($input_value);
+            			break;
+                    default:
+                        $_SESSION['errorData']['Internal'][]="Input file public '$input_name' has unsupported type (".$tool['input_files_public_dir'][$arg_name]['type']."). '$this->toolId' is not properly registered";
+                        $rfn_public = 0;
+                }
+                if ($rfn_public == 0 ){
+                    continue;
+                }
+
+                // find file in public dir
+                $rfn_public = $this->pub_dir."/$input_value";
+                if (!is_file($rfn_public) && (!is_dir($rfn_public)) && (!preg_match('/\$\(.+\)/',$rfn_public)) ){
+                    $_SESSION['errorData']['Error'][]="Input file public '$input_name' not found in public directory: $rfn_public";
+                    continue;
+                }
+                // get fn and  metadata from DMP #TODO : right now this data is not registered!!
+                
+                // create fake metadata
+            	$fn  = createLabel()."_dummy";
+                $file = array(
+                        '_id'       => $fn,
+                        'file_path' => $input_value,
+                        'meta_data' => array(),
+                        'sources'   => array(),
+                        'taxon_id'  => 0
+                    );
+                if (preg_match('/refGenomes\/(\w+)\//',$input_value,$m)){
+                    $refGenome = $m[1];
+                    $file['meta_data']['assembly'] = $refGenome;
+                    $file['taxon_id'] =(isset($this->refGenome_to_taxon[$refGenome])?$this->refGenome_to_taxon[$refGenome]:0);
+                }
+
+                if (isset($tool['input_files_public_dir'][$input_name]['data_type']) && is_array($tool['input_files_public_dir'][$input_name]['data_type'])){
+                    $file['data_type']= $tool['input_files_public_dir'][$input_name]['data_type'][0];
+                }
+                if (isset($tool['input_files_public_dir'][$input_name]['file_type']) && is_array($tool['input_files_public_dir'][$input_name]['file_type'])){
+                    $file['file_type']= $tool['input_files_public_dir'][$input_name]['file_type'][0];
+                }
+                $file['user_id']= "public";
+                if (is_file($rfn_public)) { $file['type'] = "file";}
+                if ( is_dir($rfn_public)) { $file['type'] = "dir";}
+                $metadata_public[$fn]= $file;
+
+            }
+            }
+        }
+        return $metadata_public;
+    }
 
     /**
      * Parse submission File

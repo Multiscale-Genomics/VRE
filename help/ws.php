@@ -55,6 +55,7 @@ redirectOutside();
 														</ul>
 													</li>
 													<li><a href="help/ws.php#manage">Manage Files</a></li>
+													<li><a href="help/ws.php#help">Tools' Help</a></li>
 													<li><a href="help/ws.php#jobs">Last Jobs</a></li>
 													<li><a href="help/ws.php#disk">Disk Use</a></li>
 												</ul>
@@ -84,6 +85,10 @@ redirectOutside();
 												<h3> Features </h3>
 
 												<p>The list of projects and files is the core of the workspace. In this list, users can found the uploaded files and the projects. In order to browse the list in a confortable way, the system provides some features:</p>
+
+												<p><img src="assets/layouts/layout/img/help/wsxx20.png" /> </p>
+
+												<p>Selecting a tool from the <em>Filter files by tool</em> select list, the workspace list will show the files accepted for the selected tool.</p>
 
 												<p><img src="assets/layouts/layout/img/help/ws03.png" /> The list shows by default 10 records in the first page, but clicking this select menu, users can see 5, 15, 20 or All.</p>
 
@@ -230,6 +235,21 @@ redirectOutside();
 												<h4>Clear all files from list</h4>
 	
 												<p>Clicking the Clear all files from list button <img src="assets/layouts/layout/img/help/ws13.png" /> users can remove all the files from the list (not from the Workspace).</p>
+
+												<p><span id="help">&nbsp;</span></p>
+
+												<h2> Tools' Help </h2>
+	
+												<p><img src="assets/layouts/layout/img/help/wsxx21.png" /></p>
+
+												<p>The Tools' Help is a list with all the possible files combination for the Tools available in the <strong>MuG VRE</strong>. Initially, all the combinations
+												are visible, therefore, clicking on the expand button in the top right corner the block will be expanded:</p>
+
+												<p><img src="assets/layouts/layout/img/help/wsxx22.png" /></p>
+
+												<p>In case of use of <em>Filter files by tool</em> feature, the Tools' Help block will only show the combinations for the selected tool:</p>
+			
+												<p><img src="assets/layouts/layout/img/help/wsxx23.png" /></p>
 
 												<p><span id="jobs">&nbsp;</span></p>
 

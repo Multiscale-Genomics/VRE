@@ -92,10 +92,19 @@
 							"tubed" : true,
 							"resolution_scales" : {
 								"2000" : 1,
-								"10000" : 5,
-								"50000" : 5,
-								"100000" : 5
+								"10000" : 10,
+								"50000" : 20,
+								"100000" : 50
 							}
+						},
+						"cluster" : {
+							"color" : "0x000000",
+							"linewidth" : 1,
+							"transparent" : true,
+							"modelOpacity" : 0.1,
+							"centroidOpacity" : 0.8,
+							"fog" : true,
+							"visible" : false
 						},
 						"network" : {
 							"transparent": false,
@@ -216,46 +225,52 @@
 						"leading_chr" : true,
 						"species_data" : {
 							"drosophila_melanogaster" : {
-								"id" : "dmel",
-								"fastaURL" : "refGenomes/r5.01/r5.01.fa",
-								"cytobandURL" : "refGenomes/r5.01/cytoBand.txt",
-								"tracks": [
-									    {
-									      "name": "Fillion Colors",
-									      "type": "annotation",
-									      "format": "gff3",
-									      "sourceType": "file",
-									      "url": "assets/data/fill.gff",
-									      "indexed": false
-									    }
-								]
+								"r5.01" : {
+									"id" : "r5.01",
+									"fastaURL" : "refGenomes/r5.01/r5.01.fa",
+									"cytobandURL" : "refGenomes/r5.01/cytoBand.txt",
+									"tracks": [
+										    {
+										      "name": "Fillion Colors",
+										      "type": "annotation",
+										      "format": "gff3",
+										      "sourceType": "file",
+										      "url": "assets/data/fill.gff",
+										      "indexed": false
+										    }
+									]
+								}
 							},
 							"homo_sapiens" : {
-								"id" : "hg38",
-								"fastaURL": "refGenomes/hg38/hg38.fa",
-								"cytobandURL": "refGenomes/hg38/hg38_cytoBand.txt",
-								"tracks": [
-									{
-										"name": "Genes",
-					                    "url": "//igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed",
-					                    "index": "//igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed.idx",
-					                    "displayMode": "EXPANDED"
-				                	}
-				                ]
+								"hg38" : {
+									"id" : "hg38",
+									"fastaURL": "refGenomes/hg38/hg38.fa",
+									"cytobandURL": "refGenomes/hg38/hg38_cytoBand.txt",
+									"tracks": [
+										{
+											"name": "Genes",
+						                    "url": "//igv.broadinstitute.org/annotations/hg38/genes/Homo_sapiens.GRCh38.80.sorted.gtf.gz",
+						                    "index": "//igv.broadinstitute.org/annotations/hg38/genes/Homo_sapiens.GRCh38.80.sorted.gtf.gz.tbi",
+						                    "displayMode": "EXPANDED"
+					                	}
+					                ]
+					            }
 							},
 							"saccharomyces_cerevisiae" : {
-								"id" : "R64-1-1",
-								"fastaURL": "refGenomes/R64-1-1/R64-1-1.fa",
-								"cytobandURL": "refGenomes/R64-1-1/R64-1-1_cytoband.txt",
-								"tracks": [{
-                                                                              "name": "Genomic sequence features",
-                                                                              "type": "annotation",
-                                                                              "format": "gff3",
-                                                                              "sourceType": "file",
-                                                                              "url": "assets/data/saccharomyces_cerevisiae.gff",
-                                                                              "indexed": false,
-									      "displayMode": "EXPANDED"
-                                                                            }]
+								"R64-1-1" : {
+									"id" : "R64-1-1",
+									"fastaURL": "refGenomes/R64-1-1/R64-1-1.fa",
+									"cytobandURL": "refGenomes/R64-1-1/R64-1-1_cytoband.txt",
+									"tracks": [{
+	                                                                              "name": "Genomic sequence features",
+	                                                                              "type": "annotation",
+	                                                                              "format": "gff3",
+	                                                                              "sourceType": "file",
+	                                                                              "url": "assets/data/saccharomyces_cerevisiae.gff",
+	                                                                              "indexed": false,
+										      "displayMode": "EXPANDED"
+	                                                                            }]
+								}
 							}
 						}
 					}

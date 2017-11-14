@@ -67,6 +67,7 @@ var ValidateForm = function() {
 
 						
             submitHandler: function(form) {
+            		$('button[type="submit"]', $('#naflex-form')).prop('disabled', true);
                 /*$('.warn-nd', $('#naflex-form')).hide();
                 $('.err-nd', $('#naflex-form')).hide();
                 var data = $('#naflex-form').serialize();

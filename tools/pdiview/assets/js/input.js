@@ -48,7 +48,7 @@ var ValidateForm = function() {
             },
 
             submitHandler: function(form) {
-
+							$('button[type="submit"]', $('#pdiview-form')).prop('disabled', true);
 							$('.warn-nd', $('#pdiview-form')).hide();
 							$('.err-nd', $('#pdiview-form')).hide();
 							var data = $('#pdiview-form').serialize();

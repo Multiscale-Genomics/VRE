@@ -14,6 +14,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'uploadForm':
 	case 'uploadForm2':
 	case 'editFile':
+	case 'editFile2':
 	?>
 	<script src="htmlib/globals.js.inc.php"></script>
 	<?php break; 
@@ -88,7 +89,8 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
 			<?php break; 
 			case 'uploadForm2':
-			case 'editFile': ?>
+			case 'editFile':
+			case 'editFile2':?>
 			  <script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
 			  <script src="assets/global/plugins/typeahead/handlebars.min.js" type="text/javascript"></script>
@@ -98,7 +100,11 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			  <script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
 			  <script src="assets/global/plugins/typeahead/handlebars.min.js" type="text/javascript"></script>
-        <script src="assets/global/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
+			<?php break; 
+			case 'sampleDataList': ?>
+			  <script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
 			<?php break;
 			case 'adminUsers': ?>
 			<script src="assets/global/scripts/datatable.js" type="text/javascript"></script>
@@ -133,6 +139,12 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
 				<script src="assets/global/plugins/ngl.js" type="text/javascript"></script>
 				<script src="tools/pydockdna/assets/js/input.js" type="text/javascript"></script>
+				<script src="assets/pages/scripts/ngl-home.js" type="text/javascript"></script>
+				<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/pydock'){ ?>
+				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/ngl.js" type="text/javascript"></script>
+				<script src="tools/pydock/assets/js/input.js" type="text/javascript"></script>
 				<script src="assets/pages/scripts/ngl-home.js" type="text/javascript"></script>	
 				<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/nucldynwf'){ ?>
 				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
@@ -146,13 +158,30 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 				<script src="assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
 				<script src="tools/naflex/assets/js/input.js" type="text/javascript"></script>
 				<script src="assets/pages/scripts/ngl-home.js" type="text/javascript"></script>
-				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit'){ ?>
+				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit_map_parse_filter'){ ?>
 				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
 				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
 				<script src="assets/global/plugins/typeahead/handlebars.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
 				<script src="assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
-				<script src="tools/tadbit/assets/js/input.js" type="text/javascript"></script>
+				<script src="tools/tadbit_map_parse_filter/assets/js/input.js" type="text/javascript"></script>
+				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit_normalize'){ ?>
+				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+				<script src="tools/tadbit_normalize/assets/js/input.js" type="text/javascript"></script>
+				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit_bin'){ ?>
+				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+				<script src="tools/tadbit_bin/assets/js/input.js" type="text/javascript"></script>
+				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit_segment'){ ?>
+				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+				<script src="tools/tadbit_segment/assets/js/input.js" type="text/javascript"></script>
+				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit_model'){ ?>
+				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+				<script src="tools/tadbit_model/assets/js/input.js" type="text/javascript"></script>
 				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/dnadyn'){ ?>
 				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
 				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
@@ -183,6 +212,10 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
 				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
 				<script src="tools/process_genome/assets/js/input.js" type="text/javascript"></script>
+				<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/process_chipseq'){ ?>
+				<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+				<script src="tools/process_chipseq/assets/js/input.js" type="text/javascript"></script>
 				<?php } ?>
 
 			<?php break;
@@ -193,6 +226,12 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 				<script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
 				<script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
 				<script src="tools/pydockdna/assets/js/output.js" type="text/javascript"></script>
+				<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/pydock'){ ?>
+				<script src="assets/global/plugins/ngl.js" type="text/javascript"></script>
+				<script src="assets/global/scripts/datatable.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+				<script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+				<script src="tools/pydock/assets/js/output.js" type="text/javascript"></script>
 				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/naflex'){ ?>
 				<script type="text/javascript" src="tools/naflex/js/sequenceSelection.js"></script>
 				<script type="text/javascript" src="tools/naflex/js/NA_Checks.js"></script>
@@ -292,14 +331,18 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			<script src="assets/pages/scripts/profile.js" type="text/javascript"></script>
 			<?php break; 
 			case 'repositoryList': ?>
-			<script src="assets/pages/scripts/table-repository.js" type="text/javascript"></script>	
+			<script src="assets/pages/scripts/table-repository.js" type="text/javascript"></script>
+			<?php break; 
+			case 'experiment': ?>
+			<script src="assets/pages/scripts/experiment.js" type="text/javascript"></script>		
 			<?php break;
 			case 'uploadForm': ?>	
 			<script src="assets/pages/scripts/form-dropzone.js" type="text/javascript"></script>
 			<script src="assets/pages/scripts/form-down-remotefile.js" type="text/javascript"></script>
 			<script src="assets/pages/scripts/form-validateinput.js" type="text/javascript"></script>
 			<?php break;
-			case 'editFile': 
+			case 'editFile':
+			case 'editFile2':
 			?>	
 			<script src="assets/pages/scripts/form-validatefiles.js" type="text/javascript"></script>
 			<script src="assets/pages/scripts/get-taxon-id.js" type="text/javascript"></script>
@@ -336,6 +379,9 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			<?php break;
 			case 'tools': ?>
 			<script src="assets/pages/scripts/portfolio.tools.js" type="text/javascript"></script>
+			<?php break; 
+			case 'sampleDataList': ?>
+			  <script src="assets/pages/scripts/sample-data.js" type="text/javascript"></script>
 			<?php break;
 			case 'help':
 			case 'method':
@@ -359,7 +405,8 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'usrProfile':
 			case 'uploadForm':
 			case 'uploadForm2': 
-			case 'editFile': 
+			case 'editFile':
+			case 'editFile2':
 			case 'adminUsers': 
 			case 'newUser': 
 			case 'editUser':
@@ -380,6 +427,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'hdesk':
 			case 'related':
 			case 'refs':
+			case 'ackn':
 			case 'help':
 			case 'method':
 			case 'inputs':
@@ -388,6 +436,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'tutorials':
 			case 'references':
 			case 'tools':
+			case 'sampleDataList':
 
 			?>
 			<script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
@@ -420,6 +469,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'hdesk':
 			case 'related':
 			case 'refs':
+			case 'ackn':
 			case 'help':
 			case 'method':
 			case 'inputs':

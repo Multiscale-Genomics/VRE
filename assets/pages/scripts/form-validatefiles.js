@@ -442,12 +442,16 @@ var ValidateForm = function() {
                 data_type: {
                     required: true
                 },
-								/*taxon_name_id: {
+                format: {
+                    required: true
+                },
+
+								taxon_name_id: {
                     required: true
                 },
 								taxon_id_name: {
                     required: true
-                },*/
+                },
 								refGenome: {
                     required: true
                 }

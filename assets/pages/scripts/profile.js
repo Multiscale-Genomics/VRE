@@ -138,10 +138,16 @@ var Profile = function () {
 				Inst: {
 					required: true
 				},
+				Country: {
+					required: true
+				},
+				terms: {
+					required:true
+				},
             },
 
             messages: {
-
+							terms: { required: "You must accept terms of use" }
             },
 
             invalidHandler: function(event, validator) { //display error alert on form submit
@@ -160,11 +166,15 @@ var Profile = function () {
 
             errorPlacement: function(error, element) {
 
-				if (element.closest('.input-icon').size() === 1) {
+							if (element.closest('.input-icon').size() === 1) {
                     error.insertAfter(element.closest('.input-icon'));
                 } else {
                     error.insertAfter(element);
                 }
+
+							if($(element).attr("id") == "terms") {
+									error.insertAfter(element.parent());
+							}
 
             },
 

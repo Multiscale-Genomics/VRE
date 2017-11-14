@@ -3,14 +3,16 @@
 $GLOBALS['fsStyle'] = "fsMongo"; # fsMongo,fs,mongo 
 
 //VRE installation paths
-$GLOBALS['shared']     = "/gpfs/";
+$GLOBALS['shared']     = "/orozco/services/MuG/";
 $GLOBALS['dataDir']    = $GLOBALS['shared']."MuG_userdata/";
 $GLOBALS['pubDir']     = $GLOBALS['shared']."MuG_public/";
+$GLOBALS['appsDir']    = $GLOBALS['shared']."apps/soft/";
 $GLOBALS['tmpDir']     = $GLOBALS['shared']."tmp/";
 $GLOBALS['refGenomes'] = $GLOBALS['pubDir']."refGenomes/";
 $GLOBALS['sampleData'] = $GLOBALS['shared']."sampleData";
+$GLOBALS['logFile']    = $GLOBALS['shared']."VRE.log";
 
-$GLOBALS['cloud']              = "mug-bsc"; # options are any of $GLOBALS['clouds']
+$GLOBALS['cloud']              = "mug-irb"; # options are any of $GLOBALS['clouds']
 $GLOBALS['tmpUser_dir']       = ".tmp/";
 $GLOBALS['sampleData_default'] = "basic";
 
@@ -19,11 +21,11 @@ $GLOBALS['sampleData_default'] = "basic";
 $GLOBALS['htmlib'] = "/var/www/html/htmlib";
 
 //File manager config
-$GLOBALS['caduca']            = "40"; //days
-$GLOBALS['disklimit']         = 12*1024*1024*1024;
-$GLOBALS['disklimitAnon']     = 4*1024*1024*1024;
-$GLOBALS['limitFileSize']     = '900M';
-$GLOBALS['max_execution_time']= 2000;
+$GLOBALS['caduca']            = "90"; //days
+//$GLOBALS['disklimit']         = 12*1024*1024*1024;
+//$GLOBALS['disklimitAnon']     = 4*1024*1024*1024;
+//$GLOBALS['limitFileSize']     = '900M';
+//$GLOBALS['max_execution_time']= 2000;
 
 //File names of tool executions
 $GLOBALS['tool_config_file']     = ".config.json";
@@ -33,7 +35,7 @@ $GLOBALS['tool_stageout_file']   = ".results.json";
 $GLOBALS['tool_metadata_file']   = ".input_metadata.json";
 
 //Visualizers
-$GLOBALS['jbrowseURL']  = $GLOBALS['URL']."visualizers/jbrowse/";
+$GLOBALS['jbrowseURL']  = $GLOBALS['URL']."/visualizers/jbrowse/";
 
 
 //Oauth2 authentification
@@ -56,7 +58,8 @@ $GLOBALS['refGenomes_names'] = Array(
 		'R64-1-1' => "Saccharomyces cerevisiae (R64-1-1)",
 		'hg19'    => "Homo Sapiens (hg19 / GRCh37)",
 		'hg38'    => "Homo Sapiens (hg38 / GRCh38)",
-		'r5.01'   => "Drosophila Melanogaster (r5.01)"
+		'r5.01'   => "Drosophila Melanogaster (r5.01)",
+		'UNK'     => "Other"
 	);
 
 // MuG file. Accepted values for 'compression' attribute
@@ -71,19 +74,24 @@ $GLOBALS['compressions'] = Array(
 // MuG cloud infrastructures
 $GLOBALS['clouds'] = Array(
 		'mug-bsc' => array(
-			"http_host"         => "multiscalegenomics.bsc.es",
+			"http_host"         => "multiscalegenomics.bsc.es" ,               // used in getCurrentCloud
 			"dataDir_fs"        => "/data/cloud/apps/noroot/mug/MuG_userdata", //export path for NFS server
 			"pubDir_fs"         => "/data/cloud/apps/noroot/mug/MuG_public",   //export path for NFS server
-			"dataDir_virtual"   => "/MUG_USERDATA", //Different for all clouds? If not, could be $GLOBALS['dataDir_virtual'].
+			"dataDir_virtual"   => "/MUG_USERDATA",
 			"pubDir_virtual"    => "/MUG_PUBLIC",
-			"PMESserver_domain" => "192.168.122.114",
-			"PMESserver_port"   => "8080",
+			"PMESserver_domain" => "multiscalegenomics.bsc.es",
+			"PMESserver_port"   => "80",
 			"PMESserver_address"=> "pmes/"
 			),
 		'mug-irb' => array(
-			"http_host"         => "vre.multiscalegenomics.eu",
-			"dataDir_virtual"   => "/MUG_USERDATA",
-			"pubDir_virtual"    => "/MUG_PUBLIC"
+			"http_host"         => "dev.multiscalegenomics.eu",         // used in getCurrentCloud
+			"dataDir_fs"        => "/NAmmb5/services/MuG/MuG_userdata", //export path for NFS server
+			"pubDir_fs"         => "/NAmmb5/services/MuG/MuG_public",   //export path for NFS server
+			"dataDir_virtual"   => "/orozco/services/MuG/MuG_userdata",
+			"pubDir_virtual"    => "/orozco/services/MuG/MuG_public",
+			"PMESserver_domain" => "192.168.11.236",
+			"PMESserver_port"   => "8080",
+			"PMESserver_address"=> "pmes/"
 			),
 		'mug-ebi' => array(
 			"http_host"        => "what.ever.uk",

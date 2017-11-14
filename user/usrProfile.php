@@ -46,6 +46,17 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
         </h1>
         <!-- END PAGE TITLE-->
         <!-- END PAGE HEADER-->
+
+				<?php if(!checkTermsOfUse()) { ?>
+				<div class="row">
+					<div class="col-md-12">
+							<div class="alert alert-warning">
+								<strong>WARNING:</strong> You must accept the terms of use before start using the MuG VRE. 
+							</div>
+						</div>
+				</div>
+				<?php } ?>
+
         <div class="row">
             <div class="col-md-12">
 
@@ -113,12 +124,12 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
                                         <li class="active">
                                             <a href="#tab_1_1" data-toggle="tab">Personal Info</a>
                                         </li>
-                                        <li>
+                                        <!--<li>
                                             <a href="#tab_1_2" data-toggle="tab">Change Avatar</a>
                                         </li>
                                         <li>
                                             <a href="#tab_1_3" data-toggle="tab">Change Password</a>
-                                        </li>
+                                        </li>-->
                                         <li>
                                             <a href="#tab_1_4" data-toggle="tab">API keys</a>
                                         </li>
@@ -137,7 +148,7 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
 											<div class="alert alert-info display-hide" id="succ-chg-prf">
  				                            	Your personal info has been updated.
 											</div>	
-																						<form role="form" action="javascript:void(0);" id="form-change-profile">
+																						<form role="form" action="javascript:;" id="form-change-profile">
 																							<input type="hidden" id="base-url" value="<?php echo $GLOBALS['BASEURL']; ?>"/>
 																							<?php if(!isset($_SESSION['lastUserLogin'])) { ?>
 																							<input type="hidden" id="is-first-time" value="1"/>
@@ -154,7 +165,8 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
                                                     <input name="Inst" type="text" value="<?php echo $_SESSION['User']['Inst']; ?>" class="form-control" /> </div>
                                                 <div class="form-group">
                                                     <label class="control-label">Country</label>
-                                                    <select name="Country" class="form-control">
+																										<select name="Country" class="form-control">
+																												<option value=""></option>
                                                          <?php
 														 $selCountry = '';
 														 foreach($countries as $key => $value):
@@ -164,8 +176,16 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
 														 endforeach;
 														 ?>
                                                     </select>
-                                                </div>
-                                                <div class="margiv-top-10">
+																								</div>
+																								<div class="form-group margin-top-30">
+																									<label class="mt-checkbox mt-checkbox-outline" style="margin-bottom:0;"> Please, accept <a href="javascript:openTermsOfUse();">Mug VRE Terms of use</a>
+                                                            <input type="checkbox" value="1" name="terms" id="terms" 
+																														<?php if(checkTermsOfUse()) echo 'checked disabled'; ?>
+																														/>
+                                                            <span></span>
+                                                        </label>
+																									</div>
+                                                <div class="margin-top-10">
 																							<?php if(isset($_SESSION['lastUserLogin'])) { ?>
 																					<button type="submit" id="submit-changes" class="btn green">Save Changes</button>
 																					<?php }else{ ?>
@@ -188,11 +208,11 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
  				                            	Image successfully uploaded.
 											</div>	
 
-                                            <form action="javscript:void(0);" role="form" id="form-chg-img" enctype="multipart/form-data">
+                                            <form action="javascript:;" role="form" id="form-chg-img" enctype="multipart/form-data">
                                                 <div class="form-group">
                                                     <div class="fileinput fileinput-<?php if($avatarExists == 1) echo 'exists'; else echo 'new'; ?>" data-provides="fileinput">
                                                         <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-                                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=select+image" alt="" /> 
+                                                            <img src="https://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=select+image" alt="" /> 
 														</div>
                                                         <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 150px; height: auto;"> 
 															<?php if($avatarExists == 1) { ?>
@@ -225,7 +245,7 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
 											<div class="alert alert-info display-hide" id="succ-chg-pwd">
  				                            	Your password has been changed.
 											</div>	
-                                            <form action="javascript:void(0);" id="form-change-pwd"> 
+                                            <form action="javascript:;" id="form-change-pwd"> 
                                                 <div class="form-group">
                                                     <label class="control-label">Current Password</label>
                                                     <input type="password" name="oldpass" class="form-control" /> </div>

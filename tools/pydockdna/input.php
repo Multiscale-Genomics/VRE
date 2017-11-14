@@ -115,8 +115,8 @@ if ($_REQUEST['rerunDir']){
 	//array_push($inPaths,getAttr_fromGSFileId($fn,'path'));
 }
 
-if((count($_REQUEST['fn']) != 1) && (count($_REQUEST['fn']) != 2)){
-	$_SESSION['errorData']['Error'][] = "Please, select one or two files of format PDB for running this tool";
+if(/*(count($_REQUEST['fn']) != 1) &&*/ (count($_REQUEST['fn']) != 2)){
+	$_SESSION['errorData']['Error'][] = "Please, select two files of format PDB for running this tool";
 	redirect('/workspace/');
 }
 
@@ -345,7 +345,7 @@ if ($prevs->count() > 0){
 																		
 																						<?php if($file['format'] == 'PDB') { ?>
 																
-																							<a href="javascript:openNGL('<?php echo $file['fn']; ?>', '<?php echo $p[2]; ?> ');" style="margin-left:5px;">
+																							<a href="javascript:openNGL('<?php echo $file['fn']; ?>', '<?php echo $p[2]; ?>', 'pdb');" style="margin-left:5px;">
 																								<div class="label label-sm label-info tooltips" style="padding:4px 5px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to preview this file with NGL.</p>">
 																									<i class="fa fa-window-maximize font-white"></i>
 																								</div>
@@ -473,7 +473,7 @@ if ($prevs->count() > 0){
 												<div class="form-group">
                                                     <label class="control-label">Scoring <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Available energetic scoring functions.</p>"></i></label>
                                                     <select class="form-control form-field-enabled valid" name="arguments[scoring]" aria-invalid="false">
-                                                        <option value="pydockdna" selected="">PyDock DNA</option>
+                                                        <option value="dnascore" selected="">PyDock DNA</option>
                                                     </select>
                                                 </div>
                                               </div>
@@ -509,7 +509,8 @@ if ($prevs->count() > 0){
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                                 <h4 class="modal-title"></h4>
                             </div>
-                            <div class="modal-body">
+														<div class="modal-body">
+															<div id="loading-viewport" style="position:absolute;left:42%; top:200px;"><img src="assets/layouts/layout/img/ring-alt.gif" /></div>
                               <div id="viewport" style="width:100%; height:500px;background:#ddd;"></div>
                              </div>
                             <div class="modal-footer">

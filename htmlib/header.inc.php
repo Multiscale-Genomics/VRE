@@ -16,7 +16,7 @@
         <meta content="" name="description" />
         <meta content="" name="author" />
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -62,7 +62,8 @@
 					<link href="assets/global/plugins/dropzone/basic.min.css" rel="stylesheet" type="text/css" />
 			<?php break; 
 			case 'uploadForm2':
-			case 'editFile': ?>
+			case 'editFile':
+			case 'editFile2': ?>
 			<link href="assets/global/plugins/typeahead/typeahead.css" rel="stylesheet" type="text/css" />
 			<?php break; 
 			case 'adminUsers':
@@ -96,8 +97,11 @@
 				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/nucldynwf'){ ?>
 				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit'){ ?>
+				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit_map_parse_filter'){ ?>	
 				<link href="assets/global/plugins/typeahead/typeahead.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit_segment'){ ?>	
 				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
 				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
 				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/dnadyn'){ ?>
@@ -171,6 +175,7 @@
 			case 'uploadForm': 
 			case 'uploadForm2':
 			case 'editFile':
+			case 'editFile2':
 			case 'adminUsers':
 			case 'newUser':
 			case 'editUser':
@@ -178,6 +183,7 @@
 			case 'jsonValidator':
 			case 'dashboard':
 			case 'repositoryList':
+			case 'sampleDataList':
 			case 'experiment':
 			case 'dataFromTxt':
 			case 'dataFromID':
@@ -193,6 +199,7 @@
 			case 'hdesk':
 			case 'related':
 			case 'refs':
+			case 'ackn':
 			case 'help':
 			case 'method':
 			case 'inputs':

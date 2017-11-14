@@ -1,0 +1,14 @@
+{
+	"dataset" : "assets/examples/models-marco.json",
+	"tracks": [
+		    {
+		      "name": "MArco",
+		      "type": "wig",
+		      "format": "wig",
+		      "sourceType": "file",
+		      "url": "assets/examples/BindingSites.wig",
+		      "indexed": false
+		    }
+		    
+	]
+}

@@ -204,10 +204,15 @@ redirectOutside();
 				$fileExtension = "";
 				if (isset($_REQUEST['format']) && isset($_REQUEST['format'][$idx]) && $_REQUEST['format'][$idx]){
 					$fileExtension=$_REQUEST['format'][$idx];
-				}elseif (isset($filesMeta[$idx]['format'])){
+				}elseif (isset($filesMeta[$idx]['format']) && $filesMeta[$idx]['format']){
 					$fileExtension=$filesMeta[$idx]['format'];
 				}elseif(isset($filesData[$idx]['_id'])){
-					$fnPath = $filesData[$idx]['path'];
+                    $fnPath = $filesData[$idx]['path'];
+                    list($fileExtension,$compressionType) = getFileExtension($fnPath);
+                    if ($compressionType){
+                        $_REQUEST['compressed'][$idx]=1;
+                    }
+/*
 					$fileInfo = pathinfo($fnPath);
 					if (isset($fileInfo['extension'])){
 					      $fileExtension = strtoupper($fileInfo['extension']);
@@ -219,7 +224,8 @@ redirectOutside();
 					      }else{
 						  $_REQUEST['compressed'][$idx]=0;
 					      }
-					}
+                    }
+ */
 				}
 
 				$filetypes = getFileTypesList();
@@ -259,7 +265,7 @@ redirectOutside();
 				  <div class="form-group formatTR" id="formatTR<?php echo $idx;?>">
 				        <label>File Format</label>
 				        <select id="format<?php echo $idx;?>" name="format" onchange="customfromFormat(this.value, <?php echo $idx;?>)" class="form-control formatSelector">
-
+								<option value="" >Select the file format</option>
 								<?php foreach($filetypes as $ft) { ?>
 								<option value="<?php echo $ft['_id']; ?>" <?php if (in_array($fileExtension,$ft['extension'])){echo "selected";}?>><?php echo $ft['_id']; ?></option>
 								<?php } ?>
@@ -295,23 +301,12 @@ redirectOutside();
 								<!--<span class="help-block font-red warn1" style="display:none;">This field is required.</span>-->
 				  </div>
 
-					<?php if(isset($filesMeta[$idx]['taxon_id'])) { ?>
-
-					<input type="hidden" id="have_taxon_id" value="1" />
-
-					<div class="form-group display-hide" id="taxonG<?php echo $idx;?>">
-          	<label class="control-label" id="label-taxon">Taxon <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Insert the taxon for this file. You can provide it by name, ID, or avoid this step.</p>"></i></label>
-							<input type="text" class="form-control field_dependency<?php echo $idx;?>" value="<?php echo $filesMeta[$idx]['taxon_id']; ?>" name="taxon_id_name" readonly>
-					</div>
-
-					
-					<?php } else{ ?>
 	
 					<div class="form-group display-hide" id="taxonG<?php echo $idx;?>">
           	<label class="control-label" id="label-taxon<?php echo $idx;?>">Taxon <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Insert the taxon for this file. You can provide it by name, ID, or avoid this step.</p>"></i></label>
 						<div class="input-group">
-							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_1 taxon_name" name="taxon_name_id" id="taxonName<?php echo $idx;?>" placeholder="Please enter the taxon name" disabled>
-							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_2 taxon_id" style="display:none;" name="taxon_id_name" id="taxonID<?php echo $idx;?>" placeholder="Please enter the taxon ID" disabled>
+							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_1 taxon_name" name="taxon_name_id" id="taxonName" placeholder="Please enter the taxon name" value="<?php echo fromTaxonID2TaxonName($filesMeta[$idx]['taxon_id'])." (".$filesMeta[$idx]['taxon_id'].")"; ?>">
+							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_2 taxon_id" style="display:none;" name="taxon_id_name" id="taxonID" placeholder="Please enter the taxon ID" disabled>
 							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_3" style="display:none;" id="" disabled placeholder="No taxon provided">
 							<div class="input-group-btn">
 									<img class="Typeahead-spin" src="assets/layouts/layout/img/loading-spinner-blue.gif" style="display:none;">	
@@ -333,7 +328,6 @@ redirectOutside();
 						</div>
 					</div>
 
-					<?php } ?>
 
 
 					<input type="hidden" name="taxon_id" value="<?php echo $filesMeta[$idx]['taxon_id']; ?>" />

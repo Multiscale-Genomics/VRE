@@ -126,6 +126,8 @@ table.dataTable td.sorting_1, table.dataTable td.sorting_2, table.dataTable td.s
 #toast-container > .toast { background-image: none !important; }
 #toast-container > .toast:before { position: relative;font-family: FontAwesome;font-size: 30px;line-height: 18px;float: left;margin-left: -1em;color: #FFF;padding-right: 0.2em;margin-right: 0.5em;margin-top:0.6em;margin-bottom:2em; }
 #toast-container > .toast-success:before { content: "\f0ab"; }
+#meta-log { margin-bottom:20px; }
+/*.highlighted_folder { color: #08375f; }*/
 /* HOME */
 .portfolio-content.portfolio-3 .cbp-l-filters-button .cbp-filter-counter,
 .portfolio-content.portfolio-3 .cbp-l-filters-button .cbp-filter-item.cbp-filter-item-active,

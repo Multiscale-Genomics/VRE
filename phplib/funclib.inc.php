@@ -40,6 +40,8 @@ function getConf($path){
 function redirectOutside(){
 	if(!checkLoggedIn()){
 		redirect($GLOBALS['URL']);
+	}else if(!checkTermsOfUse()) {
+		if(pathinfo($_SERVER['PHP_SELF'])['filename'] != 'usrProfile') redirect($GLOBALS['PROFILE']);
 	}
 }
 

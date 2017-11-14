@@ -4,12 +4,26 @@ var Helpdesk = function() {
 
     var handleHelpdesk = function() {
 
+				$('#Request').change(function() {
+					if($(this).val() == "tools") {
+						$('#Tool').prop('disabled', false);
+						$('#row-tools').show();
+					}else{
+						$('#Tool').prop('disabled', true);
+						$('#row-tools').hide();
+					}
+				});
+
+
         $('#helpdesk').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
             rules: {
                 Request: {
+                    required: true,
+                },
+								Tool: {
                     required: true,
                 },
                 Subject: {

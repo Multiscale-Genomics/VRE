@@ -9,6 +9,7 @@ function get_chrNames($ref){
     //$chrFile= $GLOBALS['refGenomes']. "/$ref/$ref.fa.chrom.sizes";
     //$chrFile= glob($GLOBALS['refGenomes']. "/*/$ref/$ref.fa.chrom.sizes")[0];
     $chrFile= $GLOBALS['refGenomes']. "/$ref/$ref.fa.chrom.sizes";
+    //$_SESSION['errorData']['Info'][]="Reference names are found in  $chrFile ";
     if (! is_file($chrFile)){
 	//$_SESSION['errorData']['error'][]="Cannot find file with chromosome information names '$chrFile'";
 	$_SESSION['errorData']['error'][]="Cannot find file with chromosome information names ".$GLOBALS['refGenomes']."/$ref/$ref.fa.chrom.sizes";
@@ -51,8 +52,30 @@ function get_chrAlternatives(){
 		'19' => 'XIX',
 		'20' => 'XX',
 		'21' => 'XXI',
-		'22' => 'XXII',
-		'I'  => 'I',
+        '22' => 'XXII',
+		'I'  => '1',
+		'II' => '2',
+		'III'=> '3',
+		'IV' => '4',
+		'V'  => '5',
+		'VI' => '6',
+		'VII'=> '7',
+		'VIII'=>'8',
+		'IX' => '9',
+		'X'  => '10',
+		'XI' => '11',
+		'XII'=> '12',
+		'XIII'=>'13',
+		'XIV'=> '14',
+		'XV' => '15',
+		'XVI'=> '16',
+		'XVII'=>'17',
+		'XVIII'=>'18',
+		'XIX'=> '19',
+		'XX' => '20',
+		'XXI'=> '21',
+		'XXII'=>'22',
+		/*'I'  => 'I',
 		'II' => 'II',
 		'III'=> 'III',
 		'IV' => 'IV',
@@ -67,7 +90,7 @@ function get_chrAlternatives(){
 		'XIII'=> 'XIII',
 		'XIV'=> 'XIV',
 		'XV' => 'XV',
-		'XVI'=> 'XVI',
+        'XVI'=> 'XVI',*/
 		'Mito'=>'M',
 		'Mt' => 'M',
 		'MT' => 'M',
@@ -122,10 +145,10 @@ function validateUPLOAD($fn,$inFn,$refGenome,$format){
             case "GFF3":
                 $chrNames = getChrFromGFF($inFn);
                 break;
- 	    default:
-                $_SESSION['errorData']['error'][]="Cannot parse chromosome names from files of format '$format'.";
-                return (false);
-        }
+            default:
+                //$_SESSION['errorData']['error'][]="Cannot parse chromosome names from files of format '$format'.";
+                return true;
+    }
 	if (!$chrNames || count($chrNames)==0){
 	    # BAM with no header? if no BAM chr_names, check BAM format and enqueue the validation process
 	    if ($format=="BAM"){
@@ -151,7 +174,7 @@ function validateUPLOAD($fn,$inFn,$refGenome,$format){
         	if (!$chr)
                 continue;
 		# look for the exact chr name
-        if ( in_array($chr,$chrRef) ){
+            if ( in_array($chr,$chrRef) ){
             $chrs[$chr]=$chr;
 
 		# look for chr alternatives names
@@ -159,9 +182,9 @@ function validateUPLOAD($fn,$inFn,$refGenome,$format){
 			if (!count($m)){continue;}
            	$pre  = $m[1];
 			$post = $m[2];
-			if (isset($chrAlt[$post])){
+            if (isset($chrAlt[$post]) && in_array($chrRefRoot.$chrAlt[$post],$chrRef)){
                 $chrs[$chr]=$chrRefRoot.$chrAlt[$post];
-			}elseif(in_array($post,$chrRef) ){
+			}elseif(in_array($post,$chrRef)){
 				$chrs[$chr]=$post;
 			}elseif(in_array("$chrRefRoot$post",$chrRef) ){
                 $chrs[$chr]=$chrRefRoot.$post;
@@ -182,7 +205,8 @@ function validateUPLOAD($fn,$inFn,$refGenome,$format){
 		}
 	}
         if ($hasErr){
-                $_SESSION['errorData']['Error'][]="Please, edit your file to match <a href=\"help/upload.php\" target=\"_blank\">reference genome names</a> . Given file contains: ".join(" , ",$chrNames);
+            $_SESSION['errorData']['Error'][]="Please, edit your file to match <a href=\"help/upload.php\" target=\"_blank\">reference genome names</a> . Given file contains: ".join(" , ",$chrNames);
+            $_SESSION['errorData']['Error'][]="Reference '$refGenome' assembly contains : ".join(" , ",$chrRef);
                 return false;
         }
         return (true);
@@ -246,21 +270,21 @@ function getChrFromGFF($gffFn){
 
 function getChrFromBIGWIG($bwFn){
 	$dirTmp    = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
-	$dirExe    = $GLOBALS['appsDir']."/apps/ucsc/";
+	$dirExe    = $GLOBALS['appsDir']."/UCSC/";
 	$trackLines= "";
 	$stdErr    = "";
 	$chrNames  = Array();
 
-	subprocess("$dirExe/bigWigInfo -chroms '$bwFn' | awk '{if($0~/[:space:]+.* [0-9]+ [0-9]+/){print $1}}'",$trackLines,$stdErr,$dirTmp);
-print "$dirExe/bigWigInfo -chroms '$bwFn' | awk '{if($0~/[:space:]+.* [0-9]+ [0-9]+/){print $1}}</br>";
+	subprocess("$dirExe/bigWigInfo -chroms '$bwFn' | awk '{if($0~/[:space:]+.* [0-9]+ [0-9]+/){print $1}} '",$trackLines,$stdErr,$dirTmp);
+    $trackLines = preg_replace('/\n$/','',$trackLines);
 	if ($stdErr){
 		$_SESSION['errorData']['error'][]="Error extracting chromosome names: $stdErr";
 		return (false);
 	}
 	if (!$trackLines)
 		return $chrNames;
-	$chrNames = split('/$/',$trackLines);
 
+	$chrNames = split(PHP_EOL,$trackLines);
 	return $chrNames;
 }
 
@@ -511,6 +535,9 @@ function get_seds_fromChrNameValidation($fn){
     				}elseif ($format == "WIG" ){
     					//print " sed 's/chrom=".$m[1]."/chrom=".$m[2]."/g' <br/> ";
     					array_push($subs," sed 's/chrom=".$m[1]."/chrom=".$m[2]."/g' ");
+    				}elseif ($format == "BAM" ){
+    					//print " sed 's/".$m[1]."\\t/".$m[2]."\\t/g' <br/> ";
+    					array_push($subs," sed 's/".$m[1]."\\t/".$m[2]."\\t/g' ");
     				}else{	
     					//print " sed 's/".$m[1]."/".$m[2]."/g' <br/> ";
     					array_push($subs," sed 's/".$m[1]."/".$m[2]."/g' ");
@@ -621,7 +648,7 @@ function processUPLOAD($inId){
 function convert2BW_getCmd($input,$bw,$refGenome){
 	$chrSizes= glob($GLOBALS['refGenomes']. "/*/$refGenomes/$refGenome.fa.chrom.sizes")[0];
 	$dirTmp  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
-	$dirExe  = $GLOBALS['appsDir']."/apps/ucsc/";
+	$dirExe  = $GLOBALS['appsDir']."/UCSC/";
 	$ext = pathinfo($input, PATHINFO_EXTENSION);
 	$ext = preg_replace('/_\d+$/',"",$ext);
 
@@ -646,7 +673,7 @@ function convert2BW($fn,$BW,$refGenome,$format){
 	//$chrSizes= $GLOBALS['refGenomes']. "/$refGenome/$refGenome.fa.chrom.sizes";
 	$chrSizes= glob($GLOBALS['refGenomes']. "/*/$refGenomes/$refGenome.fa.chrom.sizes")[0];
 	$dirTmp  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
-	$dirExe  = $GLOBALS['appsDir'];
+	$dirExe  = $GLOBALS['appsDir']."/UCSC/";
 
 	$input  = $GLOBALS['dataDir']."/".$fn;
 	$BWfn   = $GLOBALS['dataDir']."/".$BW;
@@ -824,6 +851,7 @@ function prepMetadataLog($metaOutfile,$logPath=0,$format="LOG"){
 
 */
 
+/*
 //creates SH for enqueuing BAM sorting and indexing
 function queueBAMvalidation ($prepNum,$tmpdir,$outdir,$bamFn,$type,$sort,$subs,$index,$cores) {
 
@@ -877,7 +905,7 @@ function queueBAMvalidation ($prepNum,$tmpdir,$outdir,$bamFn,$type,$sort,$subs,$
 
     return basename($out);
 }
-
+*/
 
 
 

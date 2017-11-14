@@ -56,6 +56,42 @@ function getTools_DataTypes() {
 
 }
 
+function getAvailableDTbyTool($tool) {
+
+	$dt = $GLOBALS['toolsCol']->find(array("external" => true, "_id" => $tool), array("input_files_combinations_internal" => true));
+
+	$array = array();
+
+	$c = 0;
+
+	foreach($dt as $tool) {
+
+		foreach($tool["input_files_combinations_internal"] as $combination) {
+
+			$array[$c]["id"] = $tool["_id"];
+
+			foreach($combination as $single_c) {
+
+				foreach($single_c as $k => $v) {
+
+					$array[$c]["list"][] = $k;
+
+				}
+
+			}
+
+		}
+
+	}
+
+	$array[0]["list"] = array_unique($array[0]["list"]);
+
+	$array = $array[0];
+
+	return $array;
+
+}
+
 function getTools_ByDT($toolsDT, $filesDT) {
 	
 	/*var_dump($filesDT);
@@ -122,9 +158,9 @@ function getTools_ByDT($toolsDT, $filesDT) {
 
 }
 
-function getTools_ListByID($array) {
+function getTools_ListByID($array, $status) {
 
-	$tl = $GLOBALS['toolsCol']->find(array('_id' => array('$in' => $array)), array("name" => true));
+	$tl = $GLOBALS['toolsCol']->find(array('_id' => array('$in' => $array), 'status' => $status), array("name" => true));
 
 	return iterator_to_array($tl, false);
 
@@ -139,7 +175,10 @@ function getTools_Help() {
 	$c = 0;
 
 	foreach($dt as $tool) {
-
+        if (!isset($tool["input_files_combinations_internal"])){
+            $_SESSION['errorData']['Error'][]="TOOL ".$tool['_id']." no internal comb";
+            next;
+        }
 		foreach($tool["input_files_combinations_internal"] as $combination) {
 
 			$array[$c]["id"] = $tool["_id"];

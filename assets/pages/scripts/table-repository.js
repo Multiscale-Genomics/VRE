@@ -17,18 +17,21 @@ var TableDatatablesRepository = function () {
             "language": {
                 "lengthMenu": " _MENU_ records"
             },
-            "columnDefs": [{ // set default column settings
+
+            /*"columnDefs": [{ // set default column settings
                 'orderable': false,
                 'targets': [0]
-            },/* {
+            },*//* {
                 "searchable": true,
                 "targets": [0]
-            },*/ {
+            },*/ 
+            "columnDefs": [{
                 "searchable": false,
-                "targets": [0, 6, 7]
+                "targets": [5, 6]
+                //"targets": [0, 6, 7]
             }],
             "order": [
-                [5, "desc"]
+                [4, "desc"]
             ], // set first column as a default sort by asc
         	    "initComplete": function (settings, json) {
 				            $('#loading-datatable').hide();

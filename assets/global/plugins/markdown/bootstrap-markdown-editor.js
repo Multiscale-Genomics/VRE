@@ -119,7 +119,7 @@
 					d += '<div class="md-toolbar">', 
 					d += '<div class="btn-toolbar">', 
 					d += '<div class="btn-group">', 
-					d += '<button type="button" data-mdtooltip="tooltip" title="' + c.label.btnHeader1 + '" class="md-btn btn btn-sm btn-default" data-btn="h1">H1</button>', 
+					//d += '<button type="button" data-mdtooltip="tooltip" title="' + c.label.btnHeader1 + '" class="md-btn btn btn-sm btn-default" data-btn="h1">H1</button>', 
 					d += '<button type="button" data-mdtooltip="tooltip" title="' + c.label.btnHeader2 + '" class="md-btn btn btn-sm btn-default" data-btn="h2">H2</button>', 
 					d += '<button type="button" data-mdtooltip="tooltip" title="' + c.label.btnHeader3 + '" class="md-btn btn btn-sm btn-default" data-btn="h3">H3</button>', 
 					d += "</div>", 

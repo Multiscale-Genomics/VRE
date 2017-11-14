@@ -10,7 +10,7 @@ require "mail.inc.php";
 require "users.inc.php";
 require "users_ldap.inc.php";
 require "db.inc.php";
-require "ldap.inc.php";
+//require "ldap.inc.php";
 require "keycloak.inc.php";
 require "log.inc.php";
 require "ProcessJob.inc.php";
@@ -25,5 +25,6 @@ require "getdata.inc.php";
 require "tools.list.inc.php";
 require "statistics.inc.php";
 require "datatypes.inc.php";
+
 
 ?>

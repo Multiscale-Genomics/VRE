@@ -13,24 +13,26 @@ catch (MongoException $e) {
     die('Error: ' . $e->getMessage());
 }
 
-$GLOBALS['db'] = $MuGVREConn->MuGVRE_bsc;
-$GLOBALS['usersCol'] = $GLOBALS['db']->users;
+$GLOBALS['db']          = $MuGVREConn->MuGVRE_irb;
+$GLOBALS['usersCol']    = $GLOBALS['db']->users;
 $GLOBALS['countriesCol']= $GLOBALS['db']->countries;
 $GLOBALS['filesCol']    = $GLOBALS['db']->files;
 $GLOBALS['filesMetaCol']= $GLOBALS['db']->filesMetadata;
-$GLOBALS['checkMail']= $GLOBALS['db']->checkMail;
-$GLOBALS['toolsCol'] = $GLOBALS['db']->tools;
+$GLOBALS['checkMail']   = $GLOBALS['db']->checkMail;
+$GLOBALS['toolsCol']    = $GLOBALS['db']->tools;
 $GLOBALS['visualizersCol'] = $GLOBALS['db']->visualizers;
-$GLOBALS['fileTypesCol']    = $GLOBALS['db']->file_types;
-$GLOBALS['dataTypesCol']    = $GLOBALS['db']->data_types;
+$GLOBALS['fileTypesCol']= $GLOBALS['db']->file_types;
+$GLOBALS['dataTypesCol']= $GLOBALS['db']->data_types;
 $GLOBALS['helpsCol']    = $GLOBALS['db']->helps;
+$GLOBALS['sampleDataCol']= $GLOBALS['db']->sampleData;
 
-$GLOBALS['dbData'] = $MuGVREConn->MuGVREData;
-$GLOBALS['studiesCol'] = $GLOBALS['dbData']->studies;
+$GLOBALS['dbData']      = $MuGVREConn->MuGVREData;
+$GLOBALS['studiesCol']  = $GLOBALS['dbData']->studies;
 $GLOBALS['repositoriesCol']= $GLOBALS['dbData']->repositories;
+$GLOBALS['sdrfCol']     = $GLOBALS['dbData']->AEsdrfData;
 
-$GLOBALS['dbPDB'] = $MuGVREConn->FlexPortal;
-$GLOBALS['pdbCol'] = $GLOBALS['dbPDB']->PDB_Entry;
-$GLOBALS['monomersCol']= $GLOBALS['dbPDB']->PDB_Monomers;
+$GLOBALS['dbPDB']       = $MuGVREConn->FlexPortal;
+$GLOBALS['pdbCol']      = $GLOBALS['dbPDB']->PDB_Entry;
+$GLOBALS['monomersCol'] = $GLOBALS['dbPDB']->PDB_Monomers;
 
 ?>

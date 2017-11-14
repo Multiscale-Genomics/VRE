@@ -30,13 +30,13 @@ redirectOutside();
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>Upload Data</span>
+                                  <span>Get Data</span>
                               </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> Upload Data
+                        <h1 class="page-title"> Get Data
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -48,7 +48,7 @@ redirectOutside();
 														<ul>
 															<li><a href="help/upload.php#files">Upload Files</a></li>
 															<li><a href="help/upload.php#repository">From Repository</a></li>
-															<li><a href="help/upload.php#id">From ID</a></li>
+															<li><a href="help/upload.php#sample">Import Sample Data</a></li>
 														</ul>
 													</li>
 													<li><a href="help/upload.php#step2">Second Step: Edit File Metadata</a></li>
@@ -101,14 +101,24 @@ redirectOutside();
 												As the uploading process of this kind of files is asyncron because of the huge size of some of them, users are redirected directly to the Workspace 
 												instead of the second step of the process (File Metadata Edition)</p>
 
-												<p><span id="id">&nbsp;</span></p>
+
+												<p><span id="sample">&nbsp;</span></p>
+
+												<h3>Import Sample Data</h3>
+
+												<p><img src="assets/layouts/layout/img/help/uploadxx02.png" style="width:800px;max-width:100%;" /></p>
+
+												<p><strong>MuG VRE</strong> provides the users the feature of loading sample data for different tools. </p>
+
+
+												<!--<p><span id="id">&nbsp;</span></p>
 
 												<h3>From ID</h3>
 
 												<p><img src="assets/layouts/layout/img/help/upload07.png" style="width:800px;max-width:100%;" /></p>
 
 												<p><strong>MuG VRE</strong> provides the users the feature of loading files directly inserting the ID of a Data Bank. Currently the <strong>MuG VRE</strong>
-												just implements the Protein Data Bank (PDB) option. Users just have to start writting the first characters of the code ID and the system will autocomplete the code.</p>
+												just implements the Protein Data Bank (PDB) option. Users just have to start writting the first characters of the code ID and the system will autocomplete the code.</p>-->
 
 												<p><span id="step2">&nbsp;</span></p>
 

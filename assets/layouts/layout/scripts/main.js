@@ -1,3 +1,18 @@
+
+function openTermsOfUse() {
+	$('#modalTerms').modal({ show: 'true' });
+
+	$.ajax({
+		type: "POST",
+		url: "/applib/getTermsOfUse.php",
+		data:"id=1",
+		success: function(data) {
+			$('#modalTerms .modal-body .container-terms').html(data);
+		}
+	});
+}
+
+
 jQuery(document).ready(function() {
 	// Optimalisation: Store the references outside the event handler:
     var $window = $(window);
@@ -7,7 +22,7 @@ jQuery(document).ready(function() {
     function checkWidth() {
         if(!menu_toggler) {
 			var windowsize = $window.width();
-			if (windowsize < 1260) {
+			if (windowsize < 1400) {
 				$('body').addClass('page-sidebar-closed');
 				$('ul.page-sidebar-menu').addClass('page-sidebar-menu-closed');
 				$('.beta-short').show();

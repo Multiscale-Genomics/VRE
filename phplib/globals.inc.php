@@ -2,16 +2,16 @@
 
 $GLOBALS['AppPrefix'] = "MuG";
 $GLOBALS['BASEURL'] = "/";
-$GLOBALS['URL'] = "http://multiscalegenomics.bsc.es/";
+$GLOBALS['URL'] = "https://dev.multiscalegenomics.eu";
+$GLOBALS['PROFILE'] = "/user/usrProfile.php";
 $GLOBALS['NAME'] = "MuG Virtual Research Environment";
 $GLOBALS['SITETITLE'] = "Multiscale Complex Genomics | Virtual Research Environment";
 $GLOBALS['FROMMAIL'] = "irbinfo.mug@irbbarcelona.org";
 $GLOBALS['FROMNAME'] = "MuG VRE";
 $GLOBALS['ROOTPATH'] = $_SERVER['DOCUMENT_ROOT'];
-$GLOBALS['helpdeskMail'] = "helpdesk@multiscalegenomics.eu";
+$GLOBALS['ADMINMAIL'] = "admin@multiscalegenomics.eu";
 
 $GLOBALS['htmlPath'] = "/var/www/html/";
-$GLOBALS['logFile'] = "/gpfs/VRE.log";
 
 // roles
 //$GLOBALS['ROLES'] = array("0"=>"Admin", "1"=>"Tool Dev.", "2"=>"Common", 100=>"Premium Rq", 101=>"Premium Rj");
@@ -34,21 +34,9 @@ define ("QSTAT", ". /usr/local/sge/environment/settings.sh; /usr/local/sge/bin/l
 define ("SGE_ROOT","/usr/local/sge");
 
 
-//load in mongo?
-//$GLOBALS['tools'] = Array(
-//		'validation' => Array( "prefix" => "UP",  "title" => "Validation"         , "description"=>""),
-//		'ND'         => Array( "prefix" => "ND",  "title" => "Nucleosome Dynamics", "description"=>""),
-//		'NR'         => Array( "prefix" => "NR",  "title" => "NucleR positioning" , "description"=>""),
-//		'NFR'        => Array( "prefix" => "NFR", "title" => "Nucleosome Free Regions", "description"=>""),
-//		'P'          => Array( "prefix" => "TSS", "title" => "TSS classification" , "description"=>""),
-//		'STF'        => Array( "prefix" => "P",   "title" => "Phasing analysis"   , "description"=>""),
-//		'PP'         => Array( "prefix" => "STF", "title" => "Stiffness"          , "description"=>""),
-//		''           => Array( "prefix" => "PP",  "title" => "Preprocessing"      , "description"=>""),
-//	);
-
-//datamanager
-$GLOBALS['DISKLIMIT'] = 20*1024*1024*1024;
-$GLOBALS['MAXSIZEUPLOAD'] = 15000;
+//file datamanager
+$GLOBALS['DISKLIMIT'] = 10*1024*1024*1024;
+$GLOBALS['MAXSIZEUPLOAD'] = 2000;
 
 
 ?>

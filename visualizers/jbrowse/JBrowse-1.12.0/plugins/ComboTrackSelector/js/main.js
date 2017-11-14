@@ -112,7 +112,7 @@ _configDefaults: function() {
 
         refSeqs: "{dataRoot}/seq/refSeqs.json",
         include: [
-	    'user_jbrowse/dmel-r5.1/jbrowse/modENCODE/trackList2.json'
+	    'user_jbrowse/r5.01/jbrowse/modENCODE/trackList2.json'
         ],
         nameUrl: "{dataRoot}/names/root.json",
 

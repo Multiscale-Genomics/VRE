@@ -40,22 +40,11 @@ foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array(),arr
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title">List of Experiments
+                        <h1 class="page-title">List of Experiments of Array Express
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
 											
-												<div class="mt-element-step">
-                                    <div class="row step-line">
-                                        <div class="mt-step-desc">
-																				Please select an experiment.
-																				</div>
-
-										<?php require "../htmlib/stepsup.inc.php"; ?>	
-										
-                                    </div>
-                                </div>
-
 	
                         <div class="row">
                             <div class="col-md-12">
@@ -74,7 +63,7 @@ foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array(),arr
                                         <table class="table table-striped table-hover table-bordered" id="table-repository">
                                             <thead>
                                                 <tr>
-                                                    <th></th>
+                                                    <!--<th></th>-->
                                                     <th> Accession </th>
                                                     <th> Title </th>
                                                     <th> Type </th>
@@ -91,11 +80,11 @@ foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array(),arr
 											  ?>
 												
 											  <tr>
-                                                <td style="vertical-align:middle;">
+                                                <!--<td style="vertical-align:middle;">
                                                     <a href="javascript:;">
                                                         <i class="font-green fa fa-cloud-upload tooltips" aria-hidden="true" style="font-size:22px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Import experiment to workspace (service not available yet)</p>"></i>
                                                     </a>
-                                                </td>
+                                                </td>-->
                                                 <td><a href="repository/experiment.php?id=<?php echo $key; ?>"><?php echo $value[2]; ?></a></td>
                                                 <td><?php echo $value[4]; ?></td>
                                                 <td><?php echo $value[0]; ?></td>

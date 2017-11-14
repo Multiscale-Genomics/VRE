@@ -217,8 +217,9 @@ if (count($rerunParams)){
 								<span class="text-info" style="font-weight:bold;"><?php echo $p[1]; ?>  /</span> <?php echo $p[2]; ?>
 	
 								<?php if(($file['format'] == 'GFF') || ($file['format'] == 'BW') || ($file['format'] == 'BAM')) { ?>
-							
-									<a target="_blank" href="/visualizers/jbrowse/jbrowser_new.php/?user=<?php echo $_SESSION['User']['id']; ?>&tracks=<?php echo $file['fn']; ?>">
+	
+									<a target="_blank" href="visualizers/jbrowse/index.php/?user=<?php echo $_SESSION['User']['id']; ?>&fn[]=<?php echo $file['fn']; ?>">
+									<!--<a target="_blank" href="/visualizers/jbrowse/jbrowser_new.php/?user=<?php echo $_SESSION['User']['id']; ?>&tracks=<?php echo $file['fn']; ?>">-->
 										<div class="label label-sm label-info tooltips" style="padding:4px 5px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to preview this file with JBrowse.</p>">
 											<i class="fa fa-align-right font-white"></i>
                      </div>
@@ -238,9 +239,14 @@ if (count($rerunParams)){
                               <!-- END PORTLET 0: INPUTS -->
 			<form action="#" class="horizontal-form" id="nucleosome-dynamics">
 				 <input type="hidden" name="tool" value="nucldynwf" />
+                 <input type="hidden" name="input_files_public_dir[refGenome_chromSizes]" value="refGenomes/" />
+
 				  <?php foreach ($_REQUEST['fn'] as $fn) { ?>
 				  	<input type="hidden" id="fn1" name="fn[]" value="<?php echo $fn; ?>" />
-				  <?php } ?>
+					<?php } ?>
+					<input type="hidden" name="numInputs" id="numInputs" value="<?php echo count($_REQUEST['fn']); ?>" />
+
+					
 	
                               <!-- BEGIN PORTLET 1: ANALYZES -->
                               <div class="portlet box blue-oleo">
@@ -375,7 +381,8 @@ if (count($rerunParams)){
                                   </div>
                               </div>
                               <!-- END PORTLET 2: NUCLER -->
-                              <!-- BEGIN PORTLET 3: NUCLEOSOME DYNAMICS -->
+															<!-- BEGIN PORTLET 3: NUCLEOSOME DYNAMICS -->
+															<?php if(count($_REQUEST['fn']) > 1){ ?>
                               <div class="portlet box blue form-block-header" id="form-block-header2">
                                   <div class="portlet-title">
                                       <div class="caption">
@@ -540,7 +547,8 @@ if (count($rerunParams)){
                                           </div>
                                       </div>
                                   </div>
-                              </div>
+															</div>
+															<?php } ?>
                               <!-- END PORTLET 3: NUCLEOSOME DYNAMICS -->
                               <!-- BEGIN PORTLET 4: NUCLEOSOME FREE REGIONS -->
                               <div class="portlet box blue form-block-header" id="form-block-header3">

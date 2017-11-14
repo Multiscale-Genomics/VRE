@@ -53,7 +53,7 @@ $path = '/files/'.$_SESSION['User']['id'].'/'.$dir;
                         <div class="row">
                   			    <div class="col-md-12">
                         				<p style="margin-top:0;">
-										The compressed results file includes the PDB structures predicted by pyDockSAXS and their corresponding CRYSOL fit curves. Please, refer to the help section for further details.
+										The compressed results file includes the PDB structures predicted by pyDockDNA. Please, refer to the help section for further details.
                                 </p>
 													</div>
 													<div class="col-md-12">

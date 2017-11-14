@@ -5,6 +5,8 @@ require "../phplib/admin.inc.php";
 
 redirectOutside();
 
+$tools = getTools_List();
+
 ?>
 
 <?php require "../htmlib/header.inc.php"; ?>
@@ -95,13 +97,25 @@ redirectOutside();
                                                 <div class="form-group">
                                                     <label class="control-label">Type of request</label>
                                                     <select name="Request" id="Request" class="form-control">
-																											<option value=""></option>
-																											<option value="VRE behavior">VRE behavior</option>
-																											<option value="Tools execution">Tools execution</option>
+																											<option value="">Select a request</option>
+																											<option value="general">I have a technical question</option>
+																											<option value="tools">I have an issue related with some tool</option>
 																										</select>
                                                 </div>
                                             </div>
-																						
+                                        </div>
+																				<div class="row display-hide" id="row-tools">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Tools List</label>
+                                                    <select name="Tool" id="Tool" class="form-control" disabled>
+																											<option value="">Select a Tool</option>
+																											<?php foreach($tools as $t) { ?>
+																											<option value="<?php echo $t["_id"]; ?>"><?php echo $t["name"]; ?></option>
+																											<?php } ?>
+																										</select>
+                                                </div>
+                                            </div>
                                         </div>
 																				<div class="row">
                                             <div class="col-md-12">
