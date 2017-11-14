@@ -4,8 +4,8 @@
 </td>
 
 <td>
-	<a class="##state##"  href="workspace/workspace.php?op=##openFunction##&fn=##_id_URL##" title="open file" target="_blank">##filename##</a>
-	<span class="expand_info display-hide" onclick="expandInfo(this)"></span>
+	<a class="##state##"  href="workspace/workspace.php?op=##openFunction##&fn=##_id_URL##" title="open file ##filename##" target="_blank">##filename##</a>
+    <!--<span class="expand_info display-hide" onclick="expandInfo(this)"></span>-->
 	<div class="extra_info display-hide">
 	  <table>
 	  	<tr>
@@ -18,15 +18,27 @@
 		##paired##
 	  </table>
   	</div>
+    <a href="javascript:viewFileMeta('##_id##', '##longfilename##', 1);" style="margin-left:3px;"><i class="fa fa-info-circle"></i></a>
 </td>
 <td>##format##</td>
+<td></td>
 <td>##project##</td>
 <td>##mtime##</td>
 <td>##size##</td>
 <td>
-</td>
-<td>
-	<div class="btn-group">
+	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;">
+    	<button class="btn btn-xs blue-madison dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+				<i class="fa fa-cogs"></i>
+				<i class="fa fa-angle-down"></i>
+		</button>
+	  <ul class="dropdown-menu pull-right" role="menu">
+			##metadataLink##
+			<li><a href="workspace/workspace.php?op=downloadFile&fn=##_id_URL##"><i class="fa fa-download"></i> Download file </a></li>
+			<li><a href="javascript:deleteFile('##_id_URL##');"><i class="fa fa-trash-o"></i> Delete file </a></li>
+			##compressionLink##
+		</ul>
+	</div>
+	<!--<div class="btn-group">
     	<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
 			<i class="fa fa-angle-down"></i>
 		</button>
@@ -36,7 +48,7 @@
 			<li><a href="javascript:deleteFile('##_id_URL##');"><i class="fa fa-trash-o"></i> Delete file </a></li>
 			##compressionLink##
 		</ul>
-	</div>
+	</div>-->
 </td>
 <td>1</td>
 <td>##mtime_parent##</td>

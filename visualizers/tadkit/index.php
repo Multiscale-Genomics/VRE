@@ -15,10 +15,10 @@ foreach ($files as $file)
 		        unlink($file);
 
 # TADkit url
-$absURL = "http://vre.multiscalegenomics.eu/visualizers/tadkit/tadkit/index.html";
+$absURL = "http://dev.multiscalegenomics.eu/visualizers/tadkit/tadkit/index.html";
 $user_data = "user_data/";
 $uid = uniqid();
-$url = "#/project/browser";
+$url = "#/project/dataset";
 $url = $url . "?conf=". $user_data . urlencode($user) . "/.tadkit/conf_".$uid.".json";
 $file = $GLOBALS['dataDir']."/". $user . "/.tadkit/conf_".$uid.".json";
 //print $file;
@@ -48,7 +48,7 @@ if(sizeof($arr_datasets)>0) {
 
         $filepath = $fileData['path'];
 	$filename = basename($filepath);
-        $type = $fileData['trackType'];
+        $type = $fileData['format'];
 	$data_type = $fileData['data_type'];
         $ref = $fileData['refGenome'];
         $a_project = split("/",dirname($filepath));
@@ -74,7 +74,8 @@ if(sizeof($arr_datasets)>0) {
                 redirect("/visualizers/error.php"); 
 
 	}
-	if ($data_type == 'chromatin_model' || $data_type == 'tadbit_models') {
+	if ($data_type == 'chromatin_3dmodel_ensemble' || $data_type == 'tadbit_models') {
+	//if(strpos($filename, '.json') !== false)  { #Until we fix data type
 		$conf_json["dataset"] = $user_data.$filepath;
 	} else {
 		if ($type == "FALSE"){
@@ -89,8 +90,11 @@ if(sizeof($arr_datasets)>0) {
 		} elseif ($type == "BED"){
         	        $type = "bed";
                 	$igv_type = "annotation";
+		} elseif ($type == "BEDGRAPH"){
+                        $type = "bedGraph";
+                        $igv_type = "wig";
 		} elseif ($type == "BW_cov"){
-        	        $type = "bigWig";
+        	        $type = "bigwig";
                 	$igv_type = "wig";
 		} elseif ($type == "GFF_NR"){
         	        $type = "gff";
@@ -111,18 +115,18 @@ if(sizeof($arr_datasets)>0) {
         	        $type = "gff";
                 	$igv_type = "annotation";
 	        } elseif ($type == "BW_P"){
-        	        $type = "bigWig";
+        	        $type = "bigwig";
                 	$igv_type = "wig";
 	        } elseif ($type == "GFF"){
         	        $type = "gff";
                 	$igv_type = "annotation";
 	        } elseif ($type == "BW"){
-        	        $type = "bigWig";
+        	        $type = "bigwig";
                 	$igv_type = "wig";
 		} else {
 	//		print $type;
 	//		print "unknown trackType<br>";
-        	        $_SESSION['errorData']['tadkit'][] ="$filename cannot be visualized, file has no track type";
+        	        $_SESSION['errorData']['tadkit'][] ="$filename cannot be visualized, file has unknown track type '$type' ";
 			redirect("/visualizers/error.php"); 
 		}
 
@@ -140,6 +144,10 @@ if(sizeof($arr_datasets)>0) {
   }
 }
 
+if ($conf_json["dataset"] == ""){
+	$_SESSION['errorData']['tadkit'][] ="No TADbit models file selected";
+        redirect("/visualizers/error.php");
+}
 if ($conf_json != null) {
   $json = json_encode($conf_json);
   $json = str_replace("\/","/",$json);

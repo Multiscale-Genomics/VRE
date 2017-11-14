@@ -89,7 +89,22 @@
 							"endcap" : false,
 							"pathClosed" : false,
 							"visible" : true,
-							"tubed" : true
+							"tubed" : true,
+							"resolution_scales" : {
+								"2000" : 1,
+								"10000" : 10,
+								"50000" : 20,
+								"100000" : 50
+							}
+						},
+						"cluster" : {
+							"color" : "0x000000",
+							"linewidth" : 1,
+							"transparent" : true,
+							"modelOpacity" : 0.1,
+							"centroidOpacity" : 0.8,
+							"fog" : true,
+							"visible" : false
 						},
 						"network" : {
 							"transparent": false,
@@ -118,7 +133,7 @@
                         "width" : "800px",
                         "height" : "400px",
                         "margin" : "0px",
-                        "offsetx" : "10px",
+                        "offsetx" : "510px",
                         "position" : 1
                     }
                 },
@@ -150,14 +165,49 @@
 					"generator" : "TADkit"
 				},
 				"object" : {
+					"uuid" : "00000000-0000-0000-0000-000000000002",
+					"id" : "e-default-panel",
+					"title" : "Inspector",
+					"type" : "panel-inspector",
+					"dataset" : "genes",
+					"state" : {
+						"width" : "500px",
+						"height" : "500px",
+						"margin" : "4px",
+						"position" : 1
+					}
+				},
+				"view" : {
+					"viewpoint" : {
+						"chromStart" : 1,
+						"chromEnd" : 10,
+						"scale" : 1
+					},
+					"viewtype" : "list",
+					"settings" : {
+						"background" : "#ffffff",
+						"margin" : "4px",
+						"padding" : {"top": "5px", "right": "100px", "bottom": "5px", "left": "100px"},
+						"example" : 1
+					}
+				}
+			},
+            {
+				"metadata" : {
+					"version" : 1.0,
+					"type" : "component",
+					"generator" : "TADkit"
+				},
+				"object" : {
 					"uuid" : "00000000-0000-0000-0000-000000000007",
 					"id" : "slider-external",
 					"title" : "Navigation",
 					"type" : "panel-igvjs",
 					"dataset" : "default",
 					"state" : {
-						"width" : "100%",
-						"height" : "400px",
+						"width" : "800px",
+						"height" : "500px",
+						"margin" : "0px",
 						"position" : 1
 					}
 				},
@@ -175,32 +225,52 @@
 						"leading_chr" : true,
 						"species_data" : {
 							"drosophila_melanogaster" : {
-								"id" : "dmel",
-								"fastaURL" : "refGenomes/Drosophila_melanogaster/r5.01/r5.01.fa",
-								"cytobandURL" : "refGenomes/Drosophila_melanogaster/r5.01/cytoBand.txt",
-								"tracks": [
-									    {
-									      "name": "Fillion Colors",
-									      "type": "annotation",
-									      "format": "gff3",
-									      "sourceType": "file",
-									      "url": "assets/data/fill.gff",
-									      "indexed": false
-									    }
-								]
+								"r5.01" : {
+									"id" : "r5.01",
+									"fastaURL" : "refGenomes/r5.01/r5.01.fa",
+									"cytobandURL" : "refGenomes/r5.01/cytoBand.txt",
+									"tracks": [
+										    {
+										      "name": "Fillion Colors",
+										      "type": "annotation",
+										      "format": "gff3",
+										      "sourceType": "file",
+										      "url": "assets/data/fill.gff",
+										      "indexed": false
+										    }
+									]
+								}
 							},
 							"homo_sapiens" : {
-								"id" : "hg19",
-								"fastaURL": "refGenomes/Homo_sapiens/hg19/hg19.fa",
-								"cytobandURL": "refGenomes/Homo_sapiens/hg19/cytoBand.txt",
-								"tracks": [
-									{
-										"name": "Genes",
-					                    "url": "//igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed",
-					                    "index": "//igv.broadinstitute.org/annotations/hg19/genes/gencode.v18.collapsed.bed.idx",
-					                    "displayMode": "EXPANDED"
-				                	}
-				                ]
+								"hg38" : {
+									"id" : "hg38",
+									"fastaURL": "refGenomes/hg38/hg38.fa",
+									"cytobandURL": "refGenomes/hg38/hg38_cytoBand.txt",
+									"tracks": [
+										{
+											"name": "Genes",
+						                    "url": "//igv.broadinstitute.org/annotations/hg38/genes/Homo_sapiens.GRCh38.80.sorted.gtf.gz",
+						                    "index": "//igv.broadinstitute.org/annotations/hg38/genes/Homo_sapiens.GRCh38.80.sorted.gtf.gz.tbi",
+						                    "displayMode": "EXPANDED"
+					                	}
+					                ]
+					            }
+							},
+							"saccharomyces_cerevisiae" : {
+								"R64-1-1" : {
+									"id" : "R64-1-1",
+									"fastaURL": "refGenomes/R64-1-1/R64-1-1.fa",
+									"cytobandURL": "refGenomes/R64-1-1/R64-1-1_cytoband.txt",
+									"tracks": [{
+	                                                                              "name": "Genomic sequence features",
+	                                                                              "type": "annotation",
+	                                                                              "format": "gff3",
+	                                                                              "sourceType": "file",
+	                                                                              "url": "assets/data/saccharomyces_cerevisiae.gff",
+	                                                                              "indexed": false,
+										      "displayMode": "EXPANDED"
+	                                                                            }]
+								}
 							}
 						}
 					}

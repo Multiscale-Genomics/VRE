@@ -11,6 +11,7 @@ if (!isset($_REQUEST['fn']) && !isset($_REQUEST['rerunDir'])){
 
 $rerunParams  = Array();
 $inPaths = Array();
+$formats = Array();
 
 if ($_REQUEST['rerunDir']){
 	$dirMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['rerunDir'])); 
@@ -26,6 +27,7 @@ if ($_REQUEST['rerunDir']){
 		$file['path'] = $inPath;
 		$file['fn'] = getGSFileId_fromPath($inPath);
 		$file['format'] = getAttr_fromGSFileId($file['fn'],'format');
+		array_push($formats,$file['format']);
 		array_push($inPaths,$file);
 	}
 	$rerunParams = $dirMeta['raw_params'];
@@ -39,16 +41,35 @@ if ($_REQUEST['rerunDir']){
 		$file['path'] = getAttr_fromGSFileId($fn,'path');
 		$file['fn'] = $fn;
 		$file['format'] = getAttr_fromGSFileId($fn,'format');
+		array_push($formats,$file['format']);
 		array_push($inPaths,$file);
 	}
 	//array_push($inPaths,getAttr_fromGSFileId($fn,'path'));
 }
 
 if((count($_REQUEST['fn']) != 1) && (count($_REQUEST['fn']) != 3)){
-	$_SESSION['errorData']['Error'][] = "NAFlex only can be run with one (PDB) or three (PDB, TOP and CRD) input files.";
+	$_SESSION['errorData']['Error'][] = "NAFlex only can be run with one (PDB) or three (PDB, TOP and CRD / DCD) input files.";
 	redirect('/workspace/');
 }
 
+$count_val = array_count_values($formats);
+
+if(count($_REQUEST['fn']) == 3) {
+
+	if(($count_val['PDB'] != 1) && ($count_val['TOP'] != 1) || ((!in_array("MDCRD", $formats)) && (!in_array("DCD", $formats)))) {
+		$_SESSION['errorData']['Error'][] = "NAFlex only can be run with one (PDB) or three (PDB, TOP and CRD / DCD) input files.";
+		redirect('/workspace/');
+	}
+
+}else {
+
+	if($count_val['PDB'] != 1) {
+		$_SESSION['errorData']['Error'][] = "NAFlex only can be run with one (PDB) or three (PDB, TOP and CRD / DCD) input files.";
+		redirect('/workspace/');
+	}
+
+
+}
 
 // default project dir
 $dirNum="000";
@@ -118,13 +139,13 @@ if (count($rerunParams)){
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>NAFlex</span>
+                                  <span>NAFlex analyses</span>
                               </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> NAFlex
+                        <h1 class="page-title"> Nucleic Acids Flexibility Analyses
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -170,7 +191,7 @@ if (count($rerunParams)){
 				
 								<?php if($file['format'] == 'PDB') { ?>
 		
-									<a href="javascript:openNGL('<?php echo $file['fn']; ?>', '<?php echo $p[2]; ?> ');" style="margin-left:5px;">
+									<a href="javascript:openNGL('<?php echo $file['fn']; ?>', '<?php echo $p[2]; ?>', 'pdb');" style="margin-left:5px;">
 										<div class="label label-sm label-info tooltips" style="padding:4px 5px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to preview this file with NGL.</p>">
 											<i class="fa fa-window-maximize font-white"></i>
                      </div>
@@ -236,7 +257,7 @@ if (count($rerunParams)){
 																					<div class="row">
                                               <div class="col-md-6">
                                                   <div class="form-group">
-                                                      <label class="control-label">PDB File <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Select the pdb input file</p>"></i></label>
+                                                      <label class="control-label">PDB File <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Input nucleic acid (or protein-na complex) representative structure used in the MD simulation.</p>"></i></label>
                                                       <select  name="input_files[pdb]" class="form-control form-field-enabled params_naflex_inputs">
 																												<?php if(count($_REQUEST['fn']) != 1) { ?><option selected value> -- select a file -- </option> <?php } ?>
 																												<?php foreach ($inPaths as $file) {  ?>
@@ -250,7 +271,7 @@ if (count($rerunParams)){
 
                                               <div class="col-md-6">
 																									<div class="form-group">
-                                                      <label class="control-label">Top File <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Select the Amber7 Parmtop file</p>"></i></label>
+                                                      <label class="control-label">Top File <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Input nucleic acid (or protein-na complex) topology used in the MD simulation.</p>"></i></label>
                                                       <select  name="input_files[top]" class="form-control form-field-enabled params_naflex_inputs">
 																												<option selected value> -- select a file -- </option>
 																												<?php foreach ($inPaths as $file) {  ?>
@@ -268,8 +289,8 @@ if (count($rerunParams)){
 																						<div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
-                                                      <label class="control-label">Crd File <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Select the Amber mdcrd file</p>"></i></label>
-                                                      <select  name="input_files[trj]" class="form-control form-field-enabled params_naflex_inputs">
+                                                      <label class="control-label">Trajectory File <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Input nucleic acid (or protein-na complex) trajectory obtained from a MD simulation.</p>"></i></label>
+                                                      <select  name="input_files[crd]" class="form-control form-field-enabled params_naflex_inputs">
 																												<option selected value> -- select a file -- </option>
 																												<?php foreach ($inPaths as $file) {  ?>
 																												<?php $p = explode("/", $file['path']); ?>
@@ -286,14 +307,15 @@ if (count($rerunParams)){
 	
 																						<div class="row">
                                               <div class="col-md-12">
-												  											<div class="form-group">
+												  											<div class="form-group operations_select">
                                                       <label class="control-label">Operations <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Operations you want to apply to this tool. You can choose more than one field.</p>"></i></label>
 																											<?php if(count($_REQUEST['fn']) == 1) { ?>
-																											<select class="form-control form-field-enabled valid" name="arguments[operations]" id="operations" aria-invalid="false">
-                                                          <option value="Curves">Curves</option>
+																											<select class="form-control form-field-enabled valid select2naf" name="arguments[operations][]" id="operations" aria-invalid="false" multiple="multiple" disabled>
+                                                          <option value="Curves" selected>Curves</option>
 																											</select>
+																											<input type="hidden" name="arguments[operations][]" value="Curves" />
 																											<?php } else { ?>
-                                                      <select class="form-control form-field-enabled valid select2naf" name="arguments[operations]" id="operations" aria-invalid="false" multiple="multiple">
+                                                      <select class="form-control form-field-enabled valid select2naf" name="arguments[operations][]" id="operations" aria-invalid="false" multiple="multiple">
                                                           <option value=""></option>
                                                           <option value="ALL">ALL</option>
                                                           <option value="Curves">Curves</option>
@@ -312,7 +334,7 @@ if (count($rerunParams)){
                                       </div>
                                   </div>
                               </div>
-                              <!-- END PORTLET 2: NUCLER -->
+                              <!-- END PORTLET 2: OPTIONS -->
                               <div class="alert alert-danger err-nd display-hide">
                                   <strong>Error!</strong> You forgot to fill out some mandatory fields, please check them before submit the form.
                               </div>
@@ -340,7 +362,8 @@ if (count($rerunParams)){
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                                 <h4 class="modal-title"></h4>
                             </div>
-                            <div class="modal-body">
+														<div class="modal-body">
+															<div id="loading-viewport" style="position:absolute;left:42%; top:200px;"><img src="assets/layouts/layout/img/ring-alt.gif" /></div>
                               <div id="viewport" style="width:100%; height:500px;background:#ddd;"></div>
                              </div>
                             <div class="modal-footer">

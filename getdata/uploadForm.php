@@ -95,7 +95,7 @@ redirectOutside();
 														</ul>
 														<div class="tab-content">
 																<div class="tab-pane active" id="tab_1_1_1">
-																		<p> Just drag & drop your files over the area below or click it to open your browser </p>
+																<p> Just drag & drop your files over the area below or click it to open your browser (as a BETA version, the maximum upload size is <strong><?php echo $GLOBALS['MAXSIZEUPLOAD']; ?>M</strong>) </p>
 																		<form action="applib/getData.php" class="dropzone dropzone-file-area" id="my-dropzone" style="/*width: 500px;*/ font-size:24px; font-weight:600; margin: 10px 0;">
 																			<input type="hidden" name="baseURL" id="base-url" value="<?php echo $GLOBALS['BASEURL']; ?>" />
 																			<input type="hidden" name="uploadType" value="file" />

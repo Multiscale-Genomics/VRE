@@ -4,6 +4,7 @@ require "../phplib/genlibraries.php";
 
 if($_POST){
 
+
 $u = checkUserLoginExists(sanitizeString($_POST["usermail"]));
 
 if(isSet($u)) {

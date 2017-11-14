@@ -1,0 +1,51 @@
+/* general */
+body {
+}
+.container {
+    padding-top: 75px;
+    background-color: white;
+    width: 80%;
+    height: 90%;
+    margin-left: 0px;
+}
+
+/* carousel */
+.carousel-caption {color: black; text-shadow: none; padding-bottom: 8%;}
+.ccontrol, .ccontrol:hover, .ccontrol:focus {
+    position:absolute;
+    top:0;
+    bottom:auto;
+    left:0;
+    width:15%;
+    font-size:20px;
+    color:black;
+    text-align:center;
+}
+.ccontrol.l {}
+.ccontrol.r {right:0; left:auto;}
+select.ccontrol, select.ccontrol:hover, select.ccontrol:focus {
+    left: 50%; 
+    width: auto;
+    transform: translate(-50%, 0);
+}
+#plots img {display: block; margin-top: 15px;}
+#logos img {height: 180px}
+#seqlogo img {height: 180px}
+
+/* sequence */
+#sequence table {width: 60%; margin: auto}
+#sequence th.seq_initial {text-align: right}
+#sequence th.seq_final {text-align: left}
+#sequence td {margin: auto; text-align: center}
+#sequence td:hover {Background-color: #0099cc;}
+#sequence ol {list-style: none; font-size: medium;}
+#sequence li {display: inline;}
+
+/* controls */
+.controls {margin-top: 5px;}
+.controls label {margin-left: 1px;}
+div.naradio {margin-left: 5%; font-size: 80%;}
+div.colors {font-weight: 700; margin: 5px 0;}
+.cimg {display:inline-block; width: 1.2em; height: 1.2em;}
+.buttons > span {margin-top: 5px;}
+.helpline {font-size: small; padding-left: 15px;}

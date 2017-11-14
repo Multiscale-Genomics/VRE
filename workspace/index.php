@@ -7,13 +7,20 @@ redirectOutside();
 <?php
   require "../htmlib/header.inc.php";
 
+//$GLOBALS['time_start'] = microtime(true);
+
+// Merge pending files and retrieved data
 // compute data disk space
 
 $usedDisk             = getUsedDiskSpace();
+//$time_end= microtime(true);
+//$time = $time_end - $GLOBALS['time_start'];
+//echo " ---------------------> Time returning from getUsedDiskSpace() $time segundos<br/>\n";
 $diskLimit            = $_SESSION['User']['diskQuota']; // getDiskLimit();
-$usedDiskPerc         = sprintf('%d', ($usedDisk / $diskLimit) * 100);
+$usedDiskPerc         = sprintf('%f', ($usedDisk / $diskLimit) * 100);
+$usedDiskPerc         = number_format($usedDiskPerc, 1, '.', '');
 
-if ($usedDisk < $disklimit) {
+if ($usedDisk < $diskLimit) {
 	$_SESSION['accionsAllowed'] = "enabled";
 } else {
 	$_SESSION['accionsAllowed'] = "disabled";
@@ -22,7 +29,15 @@ if ($usedDisk < $disklimit) {
 
 //update workspace content (job and files)
 
-$files = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir']));
+if(isset($_REQUEST["tool"]) && $_REQUEST["tool"] != "") $dtlist = getAvailableDTbyTool($_REQUEST["tool"]);
+//var_dump($dtlist["list"]);
+
+//$files = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir'], 'data_type' => array('$in' => $dtlist["list"])));
+$allFiles = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir']), null);
+$files = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir']),$dtlist["list"]);
+
+//$fn_filtered = $GLOBALS['filesMetaCol']->findOne(array('_id' => $fn, "data_type" => array('$in' => array("na_structure","na_traj_top", "na_traj_coords", "na_traj"))) );
+
 $files = addTreeTableNodesToFiles($files);
 
 // tools list
@@ -31,7 +46,6 @@ $visualizers = getVisualizers_List();
 
 sort($tools);
 sort($visualizers);*/
-
 
 ?>
 
@@ -63,17 +77,17 @@ sort($visualizers);*/
 			<!-- END PAGE BAR -->
 			<!-- BEGIN PAGE TITLE-->
 			<h1 class="page-title"> User Workspace
-			    <small>manage data through the data table</small>
+			    <!--<small>manage data through the data table</small>-->
 			</h1>
 			<!-- END PAGE TITLE-->
 			<!-- END PAGE HEADER-->
 
 			<div class="row">
 			    <div class="col-md-12">
-				<p style="margin-top:0;">
+               <!-- <p style="margin-top:0;">
 				If you want apply a Tool to a file, please select it from the dropdown menu on the Tools column. If you need to apply a Tool
-				to more than one file, check the selected files and they will be loaded in the <i>Run Tools</i> list at the bottom of the table.
-				</p>
+				to more than one file, check the selected files and they will be loaded in the <i>Manage Files</i> list at the bottom of the table.
+				</p>-->
 				<?php if($_SESSION['User']['Type'] == 100) { ?>
 					<div class="alert alert-warning">
 						Your request for a premium user account is being processed. In the meantime, you can use the platform as a common user.
@@ -97,9 +111,39 @@ sort($visualizers);*/
 					</div>
 
 				<?php } ?>
+
+	
+			<?php
+                    $toolsList = getTools_List();
+			?>
+			
 				<!-- BEGIN EXAMPLE TABLE PORTLET -->
-				<div class="portlet">
+				<div class="row">
+			  <div class="col-md-12 col-sm-12">
+
+				<div class="portlet light bordered">
+
+					<div class="portlet-title">
+							<div class="caption">
+					    	<i class="icon-share font-dark hide"></i>
+					    	<span class="caption-subject font-dark bold uppercase">Select File(s)</span> <small style="font-size:75%;">Please select the file or files you want to use</small>
+							</div>
+							<div class="actions">
+								<a href="workspace" class="btn green"> Reload Workspace </a>
+							</div>
+						</div>
+
 				    <div class="portlet-body">
+
+							<div class="input-group" style="margin-bottom:20px;">
+  						<span class="input-group-addon" style="background:#5e738b;"><i class="fa fa-wrench font-white"></i></span>
+							<select class="form-control" style="width:100%;" onchange="loadWSTool(this)">
+								<option value="">Filter files by tool</option>
+								<?php foreach($toolsList as $tl) { ?>
+								<option value="<?php echo $tl["_id"]; ?>" <?php if($_REQUEST["tool"] == $tl["_id"]) echo 'selected'; ?>><?php echo $tl["name"]; ?></option>
+								<?php } ?>
+							</select>
+						</div>
 
 					<div id="loading-datatable"><div id="loading-spinner">LOADING</div></div>
 
@@ -124,6 +168,8 @@ sort($visualizers);*/
 
 			    </div>
 			</div>
+			</div>
+			</div>
 
 			<div class="row">
 			  <div class="col-md-12 col-sm-12">
@@ -131,18 +177,29 @@ sort($visualizers);*/
 				    <div class="portlet-title">
 							<div class="caption">
 					    	<i class="icon-share font-dark hide"></i>
-					    	<span class="caption-subject font-dark bold uppercase">Run Tools</span>
+					    	<span class="caption-subject font-dark bold uppercase">Manage Files</span>
 							</div>
 							<div class="actions" style="display:none!important;" id="btn-av-tools">
 								<div class="btn-group">
-									<a class="btn btn-sm green" id="visualization" href="javascript:;" data-toggle="dropdown">
-										<i class="fa fa-picture-o"></i> Visualization
+									<a class="btn btn-sm blue-madison" href="javascript:;" data-toggle="dropdown">
+										<i class="fa fa-cogs"></i> Actions
+						    		<i class="fa fa-angle-down"></i>
+									</a>	
+									<ul class="dropdown-menu pull-right" role="menu">
+										<li><a href="javascript:downloadAllFiles();"><i class="fa fa-download"></i> Download selected files </a></li>
+										<li><a href="javascript:editAllFiles();"><i class="fa fa-pencil"></i> Edit selected files metadata </a></li>
+										<li><a href="javascript:deleteAllFiles();"><i class="fa fa-trash-o"></i> Delete selected files </a></li>
+									</ul>
+					    	</div>
+								<div class="btn-group">
+									<a class="btn btn-sm purple-intense" id="visualization" href="javascript:;" data-toggle="dropdown">
+										<i class="fa fa-eye"></i> Visualization
 						    		<i class="fa fa-angle-down"></i>
 									</a>	
 									<ul class="dropdown-menu pull-right" id="visualizers_list" role="menu"> </ul>
 					    	</div>
 					    	<div class="btn-group">
-									<a class="btn btn-sm green" id="av_tools" href="javascript:;" data-toggle="dropdown">
+									<a class="btn btn-sm blue-dark" id="av_tools" href="javascript:;" data-toggle="dropdown">
 										<i class="fa fa-wrench"></i> Available Tools
 						    		<i class="fa fa-angle-down"></i>
 									</a>	
@@ -158,7 +215,7 @@ sort($visualizers);*/
 					</div>
 					<div class="scroller-footer">
 											<a class="btn btn-sm red pull-right display-hide" id="btn-rmv-all"  href="javascript:;">
-					       	<i class="fa fa-trash"></i> Remove all files
+					       	<i class="fa fa-times-circle"></i> Clear all files from list
 					    </a>
 					</div>
 				    </div>
@@ -184,254 +241,172 @@ sort($visualizers);*/
 						<!-- SUMMARY AND DISK QUOTA ROW -->
 
 
+			<?php 
+				$toolsHelp = getTools_Help(); 
+				$toolsList = getTools_List();
+				sort($toolsList);
+			?>
+
+
 			<div class="row">
-			    <div class="col-lg-6 col-xs-12 col-sm-12">
-				<div class="portlet light bordered">
+				<div class="col-md-12 col-sm-12">
+					<div class="portlet light bordered">
 				    <div class="portlet-title">
-					<div class="caption">
-					    <i class="icon-share font-dark hide"></i>
-					    <span class="caption-subject font-dark bold uppercase">SUMMARY</span>
+							<div class="caption">
+					    	<i class="icon-share font-dark hide"></i>
+								<span class="caption-subject font-dark bold uppercase">TOOLS' HELP</span> 
+
+								<?php 
+									if($_REQUEST["tool"] != "") { 
+										$expcol = "collapse";
+										$portlet = "";
+								?>
+
+								<small>Below users can find all the possible data type combinations for the selected tool</small>
+
+								<?php 
+									} else { 
+										$expcol = "expand";
+										$portlet = "portlet-collapsed";
+								?>
+
+								<small style="font-size:75%;">Below users can find all the possible data type combinations for each tool (click expand button)</small>
+
+								<?php } ?>
+
+							</div>
+							<div class="tools">
+							<a href="javascript:;" class="<?php echo $expcol; ?>"></a>
+							</div>
+				    </div>
+				    <div class="portlet-body <?php echo $portlet; ?>">
+
+								<?php if($_REQUEST["tool"] != "") { ?>
+
+								<!--<p>Below users can find all the possible data type combinations for the selected tool:</p>-->
+
+								<?php } else { ?>
+
+								<!--<p>Below users can find all the possible data type combinations for each tool:</p>-->
+
+								<?php } ?>
+
+							<?php if($_REQUEST["tool"] != "") { ?>
+
+							<div class="panel-group accordion" id="accordion1">
+									<?php
+										$c = 0;
+										foreach($toolsList as $tl) {
+
+										if($tl["_id"] == $_REQUEST["tool"]) {
+									?>
+									<div class="panel panel-default">
+											<div class="panel-heading">
+													<h4 class="panel-title">
+															<a class="accordion-toggle accordion-toggle-styled " data-toggle="collapse" data-parent="#accordion1" href="#collapse_<?php echo $c; ?>"> <?php echo $tl["name"]; ?> </a>
+													</h4>
+											</div>
+											<div id="collapse_<?php echo $c; ?>" class="panel-collapse in">
+													<div class="panel-body">
+															<ul class="list-group">
+															<?php
+															foreach($toolsHelp as $th) {
+
+																if($th["id"] == $tl["_id"]) {
+																	?>
+																	<li class="list-group-item">
+																		<?php 
+																			foreach($th["datatypes"] as $dt) {
+																				echo $dt."<br>";
+																			}	 
+																		?>
+																	</li>
+																	<?php
+																}
+										
+															}
+															?>
+															</ul>
+													</div>
+											</div>
+									</div>
+									<?php 
+										}
+										$c ++;
+										} 
+									?>
+							</div>
+
+							<?php } else { ?>
+
+								<div class="panel-group accordion" id="accordion1">
+									<?php
+										$c = 0;
+										foreach($toolsList as $tl) {
+									?>
+									<div class="panel panel-default">
+											<div class="panel-heading">
+													<h4 class="panel-title">
+															<a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_<?php echo $c; ?>"> <?php echo $tl["name"]; ?> </a>
+													</h4>
+											</div>
+											<div id="collapse_<?php echo $c; ?>" class="panel-collapse collapse">
+													<div class="panel-body">
+															<ul class="list-group">
+															<?php
+															foreach($toolsHelp as $th) {
+
+																if($th["id"] == $tl["_id"]) {
+																	?>
+																	<li class="list-group-item">
+																		<?php 
+																			foreach($th["datatypes"] as $dt) {
+																				echo $dt."<br>";
+																			}	 
+																		?>
+																	</li>
+																	<?php
+																}
+										
+															}
+															?>
+															</ul>
+													</div>
+											</div>
+									</div>
+									<?php 
+										$c ++;
+										} 
+									?>
+							</div>
+
+							<?php }  ?>
+
+						</div>
 					</div>
+				</div>
+			</div>
+
+
+			<div class="row">
+				<div class="col-lg-6 col-xs-12 col-sm-12">
+					<div class="portlet light bordered">
+				    <div class="portlet-title">
+							<div class="caption">
+					    	<i class="icon-share font-dark hide"></i>
+					    	<span class="caption-subject font-dark bold uppercase">LAST JOBS</span> 
+							</div>
 				    </div>
 				    <div class="portlet-body">
-					<div class="scroller" style="height: 204px;" data-always-visible="1" data-rail-visible="0">
-					    <ul class="feeds">
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-danger">
-								  <i class="fa fa-database"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc text-danger"> You are about to run out your disk space. </div>
-							    </div>
+							<div class="scroller" style="height: 204px;" data-always-visible="1" data-rail-visible="0">
+								<?php
+					    		print printLastJobs($allFiles);
+		   			    ?>
 							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-												<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-warning">
-								  <i class="fa fa-history"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-warning">Something.bam</span> is currently running. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-
-						<li>
-						    <a href="javascript:;" class="text-danger">
-							<div class="col1">
-							    <div class="cont">
-								<div class="cont-col1">
-								  <div class="label label-sm label-danger">
-								      <i class="fa fa-exclamation-circle"></i>
-								  </div>
-								</div>
-								<div class="cont-col2">
-								    <div class="desc"> You must fill in the metadata of the file Something.txt. </div>
-								</div>
-							    </div>
-							</div>
-							<div class="col2">
-							    <div class="date"> 20 mins </div>
-							</div>
-						    </a>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-info">
-								  <i class="fa fa-check"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-info">Something.bam</span> has finished processing. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> 24 mins </div>
-						    </div>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-warning">
-								  <i class="fa fa-history"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-warning">Something.bam</span> is currently running. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-						<li>
-						    <a href="javascript:;" class="text-danger">
-							<div class="col1">
-							    <div class="cont">
-								<div class="cont-col1">
-								  <div class="label label-sm label-danger">
-								      <i class="fa fa-exclamation-circle"></i>
-								  </div>
-								</div>
-								<div class="cont-col2">
-								    <div class="desc"> You must fill in the metadata of the file Something.txt. </div>
-								</div>
-							    </div>
-							</div>
-							<div class="col2">
-							    <div class="date"> 20 mins </div>
-							</div>
-						    </a>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-info">
-								  <i class="fa fa-check"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-info">Something.bam</span> has finished processing. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> 24 mins </div>
-						    </div>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-warning">
-								  <i class="fa fa-history"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-warning">Something.bam</span> is currently running. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-						<li>
-						    <a href="javascript:;" class="text-danger">
-							<div class="col1">
-							    <div class="cont">
-								<div class="cont-col1">
-								  <div class="label label-sm label-danger">
-								      <i class="fa fa-exclamation-circle"></i>
-								  </div>
-								</div>
-								<div class="cont-col2">
-								    <div class="desc"> You must fill in the metadata of the file Something.txt. </div>
-								</div>
-							    </div>
-							</div>
-							<div class="col2">
-							    <div class="date"> 20 mins </div>
-							</div>
-						    </a>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-info">
-								  <i class="fa fa-check"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-info">Something.bam</span> has finished processing. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> 24 mins </div>
-						    </div>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-warning">
-								  <i class="fa fa-history"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-warning">Something.bam</span> is currently running. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> Just now </div>
-						    </div>
-						</li>
-						<li>
-						    <a href="javascript:;" class="text-danger">
-							<div class="col1">
-							    <div class="cont">
-								<div class="cont-col1">
-								  <div class="label label-sm label-danger">
-								      <i class="fa fa-exclamation-circle"></i>
-								  </div>
-								</div>
-								<div class="cont-col2">
-								    <div class="desc"> You must fill in the metadata of the file Something.txt. </div>
-								</div>
-							    </div>
-							</div>
-							<div class="col2">
-							    <div class="date"> 20 mins </div>
-							</div>
-						    </a>
-						</li>
-						<li>
-						    <div class="col1">
-							<div class="cont">
-							    <div class="cont-col1">
-							      <div class="label label-sm label-info">
-								  <i class="fa fa-check"></i>
-							      </div>
-							    </div>
-							    <div class="cont-col2">
-								<div class="desc"> The file <span class="text-info">Something.bam</span> has finished processing. </div>
-							    </div>
-							</div>
-						    </div>
-						    <div class="col2">
-							<div class="date"> 24 mins </div>
-						    </div>
-						</li>
-					    </ul>
+						</div>
 					</div>
-
-				    </div>
 				</div>
-			    </div>
+			   
 			    <div class="col-lg-6 col-xs-12 col-sm-12">
 				<div class="portlet light tasks-widget bordered">
 				    <div class="portlet-title">
@@ -500,6 +475,27 @@ sort($visualizers);*/
                     </div>
 				</div>
 
+		<div class="modal fade bs-modal" id="modalTADkit" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title"></h4>
+                            </div>
+                            <div class="modal-body">
+															<div id="container-tad" style="width: 100%;height: 500px;">
+   <!-- <tadkit-viewer id="viewer" color="93AEBF" previews='[{"file_type": "tad","file_url": "visualizers/tadkit/tadkit-viewer/samples/tk-example-dataset-2K.json"}]'></tadkit-viewer>
+-->
+</div>
+                             </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+
+
 		<div class="modal fade bs-modal" id="modalDelete" tabindex="-1" role="basic" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -530,8 +526,29 @@ sort($visualizers);*/
                             </div>
                         </div>
                     </div>
-                </div>
+								</div>
 
+				<div class="modal fade bs-modal" id="modalMeta" tabindex="-1" role="basic" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+								<h4 class="modal-title">Project info</h4>
+							</div>
+							<div class="modal-body table-responsive">
+								<div id="meta-container" style="max-height: calc(100vh - 255px);">						
+								<div id="meta-summary">
+									
+								</div>
+								
+																</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
 				
 

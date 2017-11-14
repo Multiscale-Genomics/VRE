@@ -1,0 +1,128 @@
+<html><head><script src="tadkit-viewer.js" defer=""></script><!--
+@license
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><meta charset="UTF-8"></head><body><dom-module id="tadkit-viewer">
+  <template>
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .tadkit-viewer-wrapper {
+        position: relative;
+        height: 100%;
+        width: 100%;
+
+      }
+
+      .tadkit-viewer-wrapper:before {
+        content: "";
+        display: block;
+      }
+
+      .viewer-anchor {
+        position: relative;
+        display: inline-block;
+        height: 100%;
+        width: 100%;
+      }
+
+      .arrow-left {
+        font-size: 25px;
+        position: absolute;
+        top: 45%;
+        left: 4%;
+        cursor: pointer;
+        transform:rotate(135deg);
+        -webkit-transform:rotate(135deg);
+      }
+
+      .arrow-right {
+        font-size: 25px;
+        position: absolute;
+        top: 45%;
+        right: 4%;
+        cursor: pointer;
+        transform:rotate(-45deg);
+        -webkit-transform:rotate(-45deg);
+      }
+
+      .viewer {
+        height: 100%;
+        width: 99%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 1px solid #e0e0e0;
+        overflow: hidden;
+      }
+
+      .img-box-rel-size {
+        width: 100%;
+        height: 100%;
+      }
+
+      [class^=arrow-]{
+        z-index: 2;
+        border:       solid #222;
+        border-width: 0 .2em .2em 0;
+        display:      inline-block;
+        padding:      .20em;
+      }
+
+      .loader {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 44%;
+        left: 0;
+        font-size: 20px;
+        text-align: center;
+        z-index: 3;
+      }
+
+      .loader.error {
+        z-index: 1;
+      }
+
+    </style>
+
+    <div class="viewer-anchor">
+      
+
+        
+          <div class="img-box-rel-size">
+
+            <div class="tadkit-viewer-wrapper">
+              <div class="viewer" id="tadkit-viewer"></div>
+            </div>
+
+          </div>
+        
+
+      
+
+      <template is="dom-if" if="{{showViewerArrows(previews)}}">
+        <div class="arrow-left" on-click="showPreviousPreview"></div>
+        <div class="arrow-right" on-click="showNextPreview"></div>
+      </template>
+
+      <template is="dom-if" if="{{!isTADkitViewerReady}}">
+        <div class$="loader {{computeErrorClass(loadingMessage)}}">[[loadingMessage]]</div>
+      </template>
+    </div>
+
+  </template>
+
+
+  <div hidden="" by-vulcanize=""></div></dom-module>
+</body></html>

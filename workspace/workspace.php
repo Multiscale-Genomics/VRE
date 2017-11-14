@@ -25,7 +25,6 @@ $fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['fn']));
 $filePath = getAttr_fromGSFileId($_REQUEST['fn'],'path'); 
 $rfn      = $GLOBALS['dataDir']."/$filePath";
 
-
 //
 // Process operation
 
@@ -52,13 +51,46 @@ if (isset($_REQUEST['op'])){
 		exit(0);
 		break;
 
+	case 'downloadAll':
+
+		$newName= "files.tar.gz";
+		$tmpZip = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp/".basename($newName); 
+
+		$fls = "";
+
+		foreach( $_GET['fn'] as $v ) {
+			if($v !== 'undefined'){
+				$filePath2 = getAttr_fromGSFileId($v,'path'); 
+				//$rfn2      = $GLOBALS['dataDir']."/$filePath2";
+				$relpath = implode("/", array_slice(split('/',$filePath2), 0, -1));
+				$filnam = end(split('/',$filePath2));
+				$rfn2      = $GLOBALS['dataDir']."/$relpath";
+				$fls .= "-C $rfn2 $filnam ";
+				
+			}
+		}
+
+		$cmd = "/bin/tar czf $tmpZip $fls 2>&1";
+
+		exec($cmd,$output);
+		if ( !is_file($tmpZip) ){
+			$_SESSION['errorData']['Error'][] = "Uncompressed file not created.";
+			if ($output)
+				$_SESSION['errorData']['Error'][] = implode(" ", $output)."</br> <a href=\"javascript:location.reload();\">[ OK ]</a>";
+			break;
+		}
+		downloadFile($tmpZip);
+		unlink($tmpZip);
+		exit(0);
+		break;
+
 	case 'downloadtgz' :
 		if (filetype($rfn) != 'dir') {
 			$_SESSION['errorData']['Error'][] = "Cannot tar ".$_REQUEST['fn']." File is not a directory";
 			break;
 		}
 		$newName= $_REQUEST['fn'].".tar.gz";
-		$tmpZip = $GLOBALS['tmpDir']."/".basename($newName); 
+		$tmpZip = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp".basename($newName); 
 
 		$cmd = "/bin/tar -czf $tmpZip -C $rfn .  2>&1";
 		exec($cmd,$output);
@@ -115,8 +147,12 @@ if (isset($_REQUEST['op'])){
 		if (!$_REQUEST['fnPath']){
 			$_SESSION['errorData']['Error'][]="Cannot open file. Variable 'fnPath' not received. Please, try it latter or mail <a href=\"mailto:helpdesk@multiscalegenomics.eu\">helpdesk@multiscalegenomics.eu</a>";
 			break;	
-		}
-		$rfn = $GLOBALS['dataDir']."/".$_REQUEST['fnPath'];
+        }
+        if (preg_match('/^\//',$_REQUEST['fnPath']))
+    		$rfn = $_REQUEST['fnPath'];
+        else
+            $rfn = $GLOBALS['dataDir']."/".$_REQUEST['fnPath'];
+
 		$fileInfo = pathinfo($rfn);
 		$contentType = "text/plain";
 		$fileExtension = $fileInfo['extension'];
@@ -124,10 +160,10 @@ if (isset($_REQUEST['op'])){
 		if (array_key_exists($fileExtension, $content_types_list))
 			$contentType = $content_types_list[$fileExtension];
 
-		if (!$fileData && !preg_match('/\.log/',$rfn) ){
-            		break;
-	      	}
-        	if (!is_file($rfn) || !filesize($rfn)){
+		//if (!$fileData && !preg_match('/\.log/',$rfn) ){
+        //    		break;
+        //}
+        if (!is_file($rfn) || !filesize($rfn)){
 	        	$_SESSION['errorData']['error'][]= "'".basename($rfn). "' does not exist anymore or is empty. <a href=\"javascript:deleteMesg('".urlencode($_REQUEST['fn'])."')\">[ Delete ]</a> <a href=\"workspace/workspace.php\">[ OK ]</a>";
         		 break;
 		}
@@ -140,37 +176,73 @@ if (isset($_REQUEST['op'])){
 		print passthru("/bin/cat \"$rfn\"");
 		exit;
 
+	case 'deleteAll_obsolete':
+		foreach( $_GET['fn'] as $v ) {
+			$fileData2 = $GLOBALS['filesCol']->findOne(array('_id' => $v, 'owner' => $_SESSION['User']['id']));
+			$fileMeta2 = $GLOBALS['filesMetaCol']->findOne(array('_id' => $v));
+			$filePath2 = getAttr_fromGSFileId($v,'path'); 
+			$rfn2      = $GLOBALS['dataDir']."/$filePath2";
+            
+			$r = deleteGSFileBNS($v);
+			if ($r == 0){
+				$_SESSION['errorData']['error'][]="Cannot delete '$filePath' file from repository";
+				//break;
+			}
+			unlink($rfn2);
+			if (error_get_last()){
+				$_SESSION['errorData']['error'][]=error_get_last()["message"];
+				//break;
+			}
 
-	case 'deleteSure':
-		$r = deleteGSFileBNS($_REQUEST['fn']);
-		if ($r == 0)
+			if ($fileMeta2['format'] == "BAM"){
+				$bai  = $GLOBALS['dataDir']."/$filePath2.bai";
+				$_SESSION['errorData']['info'][]="Associated file BAI=$bai to be deleted. TODO";
+				if (is_file($bai)){
+					//TODO delete associated files
+					$_SESSION['errorData']['info'][]="TODO .. delete associated files";
+					//unlink ($bai);
+				}
+			}
+			$GLOBALS['filesMetaCol']->remove(array('_id'=> $v));
+		}
+		break;
+
+	case 'deleteSure_obsolete':
+        $r = deleteGSFileBNS($_REQUEST['fn']);
+		if ($r == 0){
+			$_SESSION['errorData']['error'][]="Cannot delete '$filePath' file from repository";
 			break;
-		unlink ($rfn);
+		}
+		unlink($rfn);
 		if (error_get_last()){
 			$_SESSION['errorData']['error'][]=error_get_last()["message"];
 			break;
 		}
 
-		if ($fileMeta['format'] == "BAM"){
-			$bai  = $GLOBALS['dataDir']."/".$_REQUEST['fn'].".bai";
-			$Rdata= $GLOBALS['dataDir']."/".$_REQUEST['fn'].".RData";
-			$cov  = $GLOBALS['dataDir']."/".$_REQUEST['fn'].".cov";
-			if (is_file($bai))
-				unlink ($bai);
-			if (is_file($Rdata))
-				unlink ($Rdata);
-			if (is_file($cov))
-				unlink ($cov);
-		}
 		$GLOBALS['filesMetaCol']->remove(array('_id'=> $_REQUEST['fn']));
 		break;
 
+	case 'deleteAll':
+    case 'deleteSure':
+        $r = deleteFiles($_REQUEST['fn']);
+        break;
+
 	case 'deleteDirOk':
-		$r = deleteGSDirBNS($_REQUEST['fn']);
-		if ($r == 0)
-			break;
-		exec ("rm -r \"$rfn\" 2>&1",$output);
-		$_SESSION['errorData']['error'][]=implode(" ",$output);
+
+        if (basename($filePath) == "uploads" || basename($filePath) == "repository" ){
+			$_SESSION['errorData']['error'][]="Cannot delete structural directory '$filePath'.";
+            break;
+        }
+        $r = deleteGSDirBNS($_REQUEST['fn']);
+
+		if ($r == 0){
+			$_SESSION['errorData']['error'][]="Cannot delete directory '$filePath' file from repository";
+            break;
+        }
+        exec ("rm -r \"$rfn\" 2>&1",$output);
+		if (error_get_last()){
+			$_SESSION['errorData']['error'][]=implode(" ",$output);
+        }
 		break;
 
 
@@ -267,13 +339,46 @@ if (isset($_REQUEST['op'])){
 		$rfn_Tmp  = "$proj_dir/".basename($fn_Tmp);
 		$cmd      = "";
 
-		switch ($extClean) {
+        switch ($extClean) {
+            case 'dsrc':
+                $cmd ="";
 			case 'tar':
 				#touch option force tar to update uncompressed files atime - required by the expiration time
 				$cmd = "tar --touch -xf \"" . $rfn . "\" 2>&1";
 				break;
-			case 'zip':
-				$cmd = "unzip -o \"" . $rfn . "\" 2>&1";
+            case 'zip':
+                list($files_compressed,$zip_output) = indexFiles_zip($rfn);
+                //check zip content 
+                if (count($files_compressed) == 0){
+                    $_SESSION['errorData']['Error'][]="No files found in given ZIP file '".basename($rfn)."'";
+                    $_SESSION['errorData']['Error'][].= implode("</br>", $zip_output)."</br>";
+                    break;
+                // do not accept more than 1 file
+                }elseif (count($files_compressed) > 1){
+                    $_SESSION['errorData']['Error'][]="File '".basename($rfn)."' contains more than one file. Extraction not supported.";
+                    $zip_output = str_replace("  ","&ensp;&ensp;",$zip_output);
+                    $_SESSION['errorData']['Error'][].= implode("</br>", $zip_output)."</br>";
+                    break;
+                // do not accept subfolders
+                }else{
+                    $err=0;
+                    foreach ($files_compressed as $name => $info){
+                        if (preg_match('/\//',$name)){
+                            $_SESSION['errorData']['Error'][]="File '".basename($rfn)."' contains subfolders. Only ZIPs without directory structures are supported.";
+                            $zip_output = str_replace("  ","&ensp;&ensp;",$zip_output);
+                            $_SESSION['errorData']['Error'][].= implode("</br>", $zip_output)."</br>";
+                            $err=1;
+                            break;
+                        }
+                    }
+                    if ($err){break;}
+                }
+                $cmd = "unzip -o \"" . $rfn . "\" -d $proj_dir 2>&1";
+                
+                /*  // unzip certain file from zip
+                $file_compressed_names =  array_keys($files_compressed);
+                $cmd = "unzip -j \"$rfn\"  \"".$file_compressed_names[0]."\"  -d \"$proj_dir\"  2>&1";
+                 */
 				break;
 			case 'bz2':
 				$cmd = "bzip2 -d \"" . $rfn . "\" 2>&1";
@@ -317,8 +422,9 @@ if (isset($_REQUEST['op'])){
 		}
 
 		if ($cmd){
-			print "<br>CMD IS $cmd expecting $rfn_Tmp<br/>";
 			exec($cmd, $output);
+
+            //$_SESSION['errorData']['Error'][] = "CMD = $cmd";
 
 			if (is_file($rfn_Tmp)){
 				$insertData = array(
@@ -331,7 +437,7 @@ if (isset($_REQUEST['op'])){
 				$insertMeta = $fileMeta;
 				$insertMeta['compress'] = 0;
 	
-				$r = uploadGSFileBNS($rfn_Tmp,$fn_Tmp,$insertData,$insertMeta,FALSE);
+				$r = uploadGSFileBNS($fn_Tmp,$rfn_Tmp,$insertData,$insertMeta,FALSE);
 				if ($r == 0)
 					break;
 
@@ -354,13 +460,13 @@ if (isset($_REQUEST['op'])){
 					//TODO register each of the files individually. Which metadata?
 				}
 				*/
-				$_SESSION['errorData']['error'][]=" Error inflating ".basename($filePath).". Directories cannot be uncompressed </br>";
+				$_SESSION['errorData']['Error'][]=" Error inflating ".basename($filePath).". Directories cannot be uncompressed </br>";
 				unlink($rfn_Tmp);
 		
 			}else{
-				$_SESSION['errorData']['error'][]= "Error wile uncompressing ".basename($filePath).". Outfile not created.<br/>";
+				$_SESSION['errorData']['Error'][]= "Error wile uncompressing ".basename($filePath).". Outfile not created.<br/>";
 				if ($output)
-					$_SESSION['errorData']['error'][].= implode("</br>", $output)."</br>";
+					$_SESSION['errorData']['Error'][].= implode("</br>", $output)."</br>";
 			}
 		}
 		unset($_REQUEST['op']);

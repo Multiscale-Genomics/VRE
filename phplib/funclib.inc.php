@@ -18,15 +18,21 @@ function getConf($path){
 			$buffer .= fgetss($handle, 5000);
 		}
 		fclose($handle);
-	}
-
+    }
+    $results=array();
+    foreach(explode(";",$buffer) as $a){
+        $r = explode(":",$a);
+        if (isset($r[1]))
+            array_push($results,$r[1]);
+    }
+/*
 	$a = explode(";",$buffer);
 	$l = explode(":",$a[0]);
 	$p = explode(":",$a[1]);
 	$s = explode(":",$a[2]);
 
 	$results = array($l[1],$p[1],$s[1]);
-
+ */
 	return $results;
 
 }
@@ -34,11 +40,19 @@ function getConf($path){
 function redirectOutside(){
 	if(!checkLoggedIn()){
 		redirect($GLOBALS['URL']);
+	}else if(!checkTermsOfUse()) {
+		if(pathinfo($_SERVER['PHP_SELF'])['filename'] != 'usrProfile') redirect($GLOBALS['PROFILE']);
 	}
 }
 
 function redirectAdminOutside(){
 	if(!checkAdmin()){
+		redirectInside();
+	}
+}
+
+function redirectToolDevOutside(){
+	if(!checkToolDev()){
 		redirectInside();
 	}
 }
@@ -64,7 +78,9 @@ function returnHumanDate($q){
 	$dma = explode("/", $d[0]);
 	$hms = explode(":", $d[1]);
 
-	return $dma[0]."/".$dma[1]."/".$dma[2]."<div style=\"display:none;\">".$hms[0].":".$hms[1]."</div>";
+	//return $dma[0]."/".$dma[1]."/".$dma[2]."<div style=\"display:none;\">".$hms[0].":".$hms[1]."</div>";
+	return $dma[0]."/".$dma[1]."/".$dma[2]." - ".$hms[0].":".$hms[1];
+
 }
 
 function returnHumanDateDashboard($q){
@@ -77,6 +93,12 @@ function returnHumanDateDashboard($q){
 function is_multi_array( $arr ) {
 	rsort( $arr );
 	return isset( $arr[0] ) && is_array( $arr[0] );
+}
+
+function maxlength($in, $length) {
+		
+	return strlen($in) > $length ? substr($in,0,$length)."..." : $in;
+
 }
 
 

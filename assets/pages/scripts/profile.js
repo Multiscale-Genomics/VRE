@@ -1,4 +1,124 @@
 var baseURL = $('#base-url').val();
+var isFirstTime = $('#is-first-time').val();
+
+var CountdownToken = function() {
+
+    return {
+        //main function to initiate the module
+        init: function() {
+
+					var countDownDate = $('#exp-token').val()*1000;
+
+					var iteration = 0;
+
+					var x = setInterval(function() {
+
+						//var now = new Date().getTime();
+						var now = ($('#curr-time').val() - iteration)*1000;
+
+						var distance = countDownDate - now;
+
+						var minutes = "0" + Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+						var seconds = "0" + Math.floor((distance % (1000 * 60)) / 1000);
+
+						var d = new Date(countDownDate);
+						var h = "0" + d.getHours();
+						var m = "0" + d.getMinutes();
+
+						var formattedTime = h.substr(-2) + ':' + m.substr(-2) + ' CET (' + d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + ')';
+
+						$("#token-exp-date").val("Token will expire in " + minutes.substr(-2) + "m " + seconds.substr(-2) + "s, at " + formattedTime);
+
+						if (distance < 0) {
+							clearInterval(x);
+							$("#token-exp-date").val("This Token is expired...  It needs a refresh!");
+						}
+
+						iteration --;
+
+					}, 1000);
+
+        }
+    }
+
+}();
+
+
+var CountdownRefreshToken = function() {
+
+    return {
+        //main function to initiate the module
+        init: function() {
+
+					var countDownDate = $('#exp-refrtoken').val()*1000;
+
+					var iteration = 0;
+
+					var x = setInterval(function() {
+
+						//var now = new Date().getTime();
+						var now = ($('#curr-time').val() - iteration)*1000;
+
+
+						var distance = countDownDate - now;
+
+						var hours = "0" + Math.floor((distance % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60));
+						var minutes = "0" + Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+						var seconds = "0" + Math.floor((distance % (1000 * 60)) / 1000);
+
+						var d = new Date(countDownDate);
+						var h = "0" + d.getHours();
+						var m = "0" + d.getMinutes();
+
+						var formattedTime = h.substr(-2) + ':' + m.substr(-2) + ' CET (' + d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + ')';
+
+						$("#refrtoken-exp-date").val("Token will expire in " + hours.substr(-2) + "h " + minutes.substr(-2) + "m " + seconds.substr(-2) + "s, at " + formattedTime);
+
+						if (distance < 0) {
+							clearInterval(x);
+							$("#refrtoken-exp-date").val("This Token is expired...  It needs a refresh!");
+						}
+
+						iteration --;
+
+					}, 1000);
+
+        }
+    }
+
+}();
+
+var ComponentsClipboard = function() {
+
+    return {
+        //main function to initiate the module
+        init: function() {
+        	var paste_text;
+
+        	$('.mt-clipboard').each(function(){
+        		var clipboard = new Clipboard(this);	
+
+        		clipboard.on('success', function(e) {
+				    paste_text = e.text;
+				    console.log(paste_text);
+				});
+        	});
+
+        	$('.mt-clipboard').click(function(){
+    			if($(this).data('clipboard-paste') == true){
+    				if(paste_text){
+        				var paste_target = $(this).data('paste-target');
+        				$(paste_target).val(paste_text);
+        				$(paste_target).html(paste_text);
+        			} else {
+        				alert('No text was copied or cut.');
+        			}
+        		} 
+    		});
+        }
+    }
+
+}();
 
 var Profile = function () {
 
@@ -18,10 +138,16 @@ var Profile = function () {
 				Inst: {
 					required: true
 				},
+				Country: {
+					required: true
+				},
+				terms: {
+					required:true
+				},
             },
 
             messages: {
-
+							terms: { required: "You must accept terms of use" }
             },
 
             invalidHandler: function(event, validator) { //display error alert on form submit
@@ -40,11 +166,15 @@ var Profile = function () {
 
             errorPlacement: function(error, element) {
 
-				if (element.closest('.input-icon').size() === 1) {
+							if (element.closest('.input-icon').size() === 1) {
                     error.insertAfter(element.closest('.input-icon'));
                 } else {
                     error.insertAfter(element);
                 }
+
+							if($(element).attr("id") == "terms") {
+									error.insertAfter(element.parent());
+							}
 
             },
 
@@ -66,6 +196,9 @@ var Profile = function () {
 							$('.top-menu span.username').html($('input[name="Name"]').val());
 							$('.top-menu #avatar-no-picture').html($('input[name="Name"]').val().slice(0,1) + $('input[name="Surname"]').val().slice(0,1));
 							$('.profile-userpic #avatar-usr-profile').html($('input[name="Name"]').val().slice(0,1) + $('input[name="Surname"]').val().slice(0,1));
+
+							if(isFirstTime == 1) location.href = baseURL + 'home';
+
 						}else{
 							$('#err-chg-prf').fadeIn(300);
 						}
@@ -196,6 +329,10 @@ var Profile = function () {
 
 jQuery(document).ready(function() {
     Profile.init();
+		ComponentsClipboard.init();
+		CountdownToken.init();
+		CountdownRefreshToken.init();
+
 });
 
 

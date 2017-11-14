@@ -193,12 +193,12 @@ print "<br/>";
 #saveUserJobs($_SESSION['User']['id'],$jobMeta);
 addUserJob($_SESSION['User']['_id'],$jobMeta,$jobMeta['_id']);
 
-print "<br/>";
+print "<br> ERROR DATA<br/>";
 print "<br/>";
 var_dump($_SESSION['errorData']);
 unset($_SESSION['errorData']);
 print "<br/>";
 
-redirect("/workspace/");
+//redirect("/workspace/");
 
 ?>

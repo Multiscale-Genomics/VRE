@@ -127,7 +127,7 @@ $gffFiles = glob("$pathGff/*gff");
                         <div class="row">
                   			    <div class="col-md-12">
                         				<p style="margin-top:0;">
-																General Statistics for <strong><?php echo basename($path); ?></strong> project.
+																General Statistics for <strong><?php echo basename($pathGff); ?></strong> project.
                                 </p>
 														</div>
 														<div class="col-md-12">
@@ -158,8 +158,9 @@ $gffFiles = glob("$pathGff/*gff");
 																case 'TSS': $type = "TSS Classification"; break;
 															}
 
-															$pngFiles = glob("../../".$pathTemp."/.".$fname."_stats*png");
-															$csvFiles = glob($wd."/.".$fname."_stats*csv");
+															$pngFiles = glob("../../".$pathTemp."/".$fname."_stats*png");
+															$csvFiles = glob($wd."/".$fname."_stats*csv");
+															$genesFiles = glob($wd."/".$fname."_genes_stats*csv");
 
 														?>
 
@@ -281,6 +282,8 @@ $gffFiles = glob("$pathGff/*gff");
 																						<?php } ?>
 
 																					<?php } ?>
+
+																					
 
 																				<?php } ?>
 																			</div>

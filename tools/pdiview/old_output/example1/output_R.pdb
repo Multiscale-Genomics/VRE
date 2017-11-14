@@ -1,0 +1,37 @@
+HEADER    output from Curves
+HETATM    1 C    ROC     2      56.650  68.451  34.894
+HETATM    2 C    ROC     2      57.981  69.224  31.199
+HETATM    3 C    ROC     3      56.736  71.442  35.434
+HETATM    4 C    ROC     3      65.768  69.549  42.593
+HETATM    5 C    ROC     4      56.948  74.447  36.095
+HETATM    6 C    ROC     4      53.143  71.138  49.619
+HETATM    7 C    ROC     5      57.086  77.153  36.893
+HETATM    8 C    ROC     5      54.380  77.753  35.679
+HETATM    9 C    ROC     6      57.139  80.066  37.815
+HETATM   10 C    ROC     6      57.441  81.542  32.912
+HETATM   11 C    ROC     7      57.198  83.116  38.694
+HETATM   12 C    ROC     7      54.568  85.801  28.104
+HETATM   13 C    ROC     8      57.179  86.130  39.352
+HETATM   14 C    ROC     8      54.602  88.975  22.915
+HETATM   15 C    ROC     9      57.107  89.257  39.757
+HETATM   16 C    ROC     9      59.764  90.691  23.646
+HETATM   17 C    ROC    10      57.079  92.651  39.881
+HETATM   18 C    ROC    10      55.690  92.648  26.022
+HETATM   19 C    ROC    11      57.037  96.059  39.751
+HETATM   20 C    ROC    11      60.906  95.745  33.976
+HETATM   21 C    ROC    12      57.047  99.120  39.524
+HETATM   22 C    ROC    12      66.923  99.102  44.031
+HETATM   23 C    ROC    13      57.202 102.029  39.377
+HETATM   24 C    ROC    13      55.429 102.330  49.255
+CONECT    1    2
+CONECT    3    4
+CONECT    5    6
+CONECT    7    8
+CONECT    9   10
+CONECT   11   12
+CONECT   13   14
+CONECT   15   16
+CONECT   17   18
+CONECT   19   20
+CONECT   21   22
+CONECT   23   24

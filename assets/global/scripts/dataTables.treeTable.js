@@ -70,6 +70,7 @@ $.extend(TreeTable.prototype, {
     // sourced data
     $(dtSettings.aoData.reverse()).each(function() {
       var data = this;
+		
       var rowdata = self._arrayToObject(data._aData);
       rowdata = self._getTTData(rowdata, data.nTr);
 
@@ -87,6 +88,9 @@ $.extend(TreeTable.prototype, {
     // new tree node (tr)
     var createdRow = function (row, data) {
       var $row = $(row);
+
+			//console.log(self);
+
       var parent = $table.treetable('node', data[self.c.parentIdAttr]);
       if (!parent) parent = null;
 
@@ -150,6 +154,9 @@ $.extend(TreeTable.prototype, {
 	addChildren: function (node, items)
 	{
 		var self = this;
+
+		//console.log(self);
+
 		var dtSettings = self.s.dt.settings()[0];
 		var table = dtSettings.oInstance;
 
@@ -220,7 +227,7 @@ TreeTable.defaults = {
 
 var Api = $.fn.dataTable.Api;
 
-Api.register('treeTable.addChildren()', function (node, data) {
+/*Api.register('treeTable.addChildren()', function (node, data) {
   return this.iterator('table', function (ctx) {
     if (ctx._treeTable._isArray(data))
       ctx._treeTable.addChildren(node, data);
@@ -229,10 +236,11 @@ Api.register('treeTable.addChildren()', function (node, data) {
 
 Api.register('treeTable.addChild()', function (node, data) {
   return this.iterator('table', function (ctx) {
+  	console.log(ctx);
     if (ctx._treeTable._isObject(data))
       ctx._treeTable.addChildren(node, [data]);
   } );
-} );
+} );*/
 
 TreeTable.version = '0.0.1-dev';
 

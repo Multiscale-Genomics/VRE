@@ -357,7 +357,7 @@
 function printCurvesImage() {
 
 	$code = '<table align="" border="0"><tr><td>';
-	$code .= '<img border="0" align="right" src="images/helicalParamsBPS2.png">';
+	$code .= '<img border="0" align="right" src="'.$GLOBALS['BASEURL'].'tools/naflex/'.'images/helicalParamsBPS2.png">';
 	$code .= '</td></tr><tr><td align="center">';
 	$code .= '<a href="http://gbio-pbil.ibcp.fr/Curves_plus/Helical_parameters.html" target="_blank"><i style="font-size:8pt"><br/><br/>[Image courtesy of Curves+]</i></a>';
 	$code .= '</td></tr></table>';

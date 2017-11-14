@@ -528,7 +528,7 @@
                 </tr></table>
                 <br/><br/>
 
-                <img border='1' width='700' src="<?php echo $GLOBALS[homeURL] ?>/<?php echo "$userPath/$file" ?>" border="0" width="300" align="center">
+                <img border='1' width='700' src="<?php echo "$userPath/$file" ?>" border="0" width="300" align="center">
 
                         <table align="" border="0" style="margin-top:30px;">
                         <tr><!--<td>

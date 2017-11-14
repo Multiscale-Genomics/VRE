@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="TADkit Viewer" />
+    <title>3D Viewer Web Component</title>
+    <meta name="theme-color" content="#2E3AA1">
+    <meta name="msapplication-TileColor" content="#3372DF">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="PSK">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.24/webcomponents-lite.min.js"></script>
+
+<link rel="import" href="dist/tadkit-viewer.html">
+    <style>
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
+
+    .container {
+        width: 80vw;
+        height: 80vh;
+    }
+    </style>
+
+</head>
+
+<body unresolved class="fullbleed layout vertical">
+
+<div class="container">
+    <tadkit-viewer id="viewer" color="93AEBF" previews='[{"file_type": "tad","file_url": "/files/MuGUSER57ecf22d91df3/tadbit_1/models.json"}]'></tadkit-viewer>
+</div>
+
+</body>
+
+</html>

@@ -2,7 +2,7 @@
 
 require "../phplib/genlibraries.php";
 require "../phplib/tools.inc.php";
-require "../phplib/Tooljob.php";
+#require "../phplib/Tooljob.php";
 
 redirectOutside();
 
@@ -21,20 +21,22 @@ if ($debug){
 	print "</br>RAW  INPUT_FILES ARE<br/>";
 	var_dump($_REQUEST['input_files']);
 	print "<br/>";
+	print "</br>RAW  INPUT_FILES PUBLIC ARE<br/>";
+	var_dump($_REQUEST['input_files_public_dir']);
+	print "<br/>";
 	foreach ($_REQUEST as $k=>$v){
-	if ($k!="arguments" && $k!="input_files" && $k!="fn"){
+	if ($k!="arguments" && $k!="input_files" && $k!="input_files_public_dir" && $k!="fn"){
 		print "<br/><br/>REQUEST[$k]</br>";
 		var_dump($v);
 	}
 	}
 }
-
 //
 // Get tool.
 
-$tool = getTool_fromId($_REQUEST['toolId'],1);
+$tool = getTool_fromId($_REQUEST['tool'],1);
 if (empty($tool)){
-	$_SESSION['errorData']['Error'][]="Tool not specified or not registered. Please, register '".$_REQUEST['toolId']."'";
+	$_SESSION['errorData']['Error'][]="Tool not specified or not registered. Please, register '".$_REQUEST['tool']."'";
     	redirect('/workspace/');
 }
 
@@ -49,7 +51,6 @@ if ($debug){
 	var_dump($jobMeta);
 }
 
-
 //
 // Check input file requirements
 
@@ -61,10 +62,9 @@ if (!isset($_REQUEST['input_files'])){
 
 
 //
-// Get medatada files (with associated_files)
+// Get input_files medatada (with associated_files)
 
 $files   = Array(); // distinct file Objs to stage in 
-
 
 $filesId = Array();
 foreach($_REQUEST['input_files'] as $input_file){
@@ -84,7 +84,6 @@ foreach ($filesId as $fnId){
     }
     $files[$file['_id']]=$file;
     $associated_files = getAssociatedFiles_fromId($fnId);
-	var_dump($associated_files);
     foreach ($associated_files as $assocId){
 	$assocFile = getGSFile_fromId($assocId);
     	if (!$assocFile){
@@ -102,11 +101,22 @@ if ($debug){
 }
 
 //
-// Stage in (fake)  TODO
-
+// Set Arguments
+$jobMeta->setArguments($_REQUEST['arguments'],$tool);
 
 //
-// Checking files locally
+// Set InputFiles
+$r = $jobMeta->setInput_files($_REQUEST['input_files'],$tool,$files);
+if ($debug){
+	print "<br/>TOOL Input_files are:</br>";
+	var_dump($jobMeta->input_files);
+}
+if ($r == "0"){
+        ?><script type="text/javascript">window.history.go(-1);</script><?php
+         exit(0);
+}
+//
+// Checking input_files locally
 
 foreach ($files as $fnId => $file) {
 
@@ -114,28 +124,45 @@ foreach ($files as $fnId => $file) {
     $rfn  = $GLOBALS['dataDir']."/$fn";
     if (! is_file($rfn)){
         $_SESSION['errorData']['Error'][]="File '".basename($fn)."' is not found or has size zero. Stopping execution";
-    	redirect('/workspace/');
+        ?><script type="text/javascript">window.history.go(-1);</script><?php
+         exit(0);
+    	//redirect($_SERVER['HTTP_REFERER']);
     }
 
 }
 
-
 //
-// Set Arguments
-$jobMeta->setArguments($_REQUEST['arguments']);
+// Set InputFilesPublic from public directory
 
+$files_pub = array();
+if ($_REQUEST['input_files_public_dir']){
 
-//
-// Set InputFiles
-$jobMeta->setInput_files($_REQUEST['input_files'],$tool,$files);
+    //Get input_file public data  medatadata
+    $files_pub  = $jobMeta->createMetadata_from_Input_files_public($_REQUEST['input_files_public_dir'],$tool);
+    if ($debug){
+    	print "<br/>TOOL METADATA for Input_files_public are:</br>";
+    	var_dump($files_pub);
+    }
+    if (!count($files_pub)){
+        ?><script type="text/javascript">window.history.go(-1);</script><?php
+         exit(0);
+    	//redirect($_SERVER['HTTP_REFERER']);
+    }
 
-if ($debug){
-	print "<br/>TOOL Input_files are:</br>";
-	var_dump($jobMeta->input_files);
+    // Set InputFiles public dir
+    $r = $jobMeta->setInput_files_public($_REQUEST['input_files_public_dir'],$tool,$files_pub);
+    if ($debug){
+    	print "<br/>TOOL Input_files public are:</br>";
+    	var_dump($jobMeta->input_files_pub);
+    }
+    if ($r == "0"){
+        ?><script type="text/javascript">window.history.go(-1);</script><?php
+         exit(0);
+    	//redirect($_SERVER['HTTP_REFERER']);
+    }
 }
-if ($jobMeta->input_files == 0)
-    	redirect('/workspace/');
 
+// Stage in (fake)  TODO
 
 //
 // Create working_dir
@@ -144,22 +171,25 @@ $jobId = $jobMeta->createWorking_dir();
 if ($debug)
 	echo "<br/></br>WD CREATED SCCESSFULLY AT: $jobMeta->working_dir<br/>";
 
-if (!$jobId)
-    	redirect('/workspace/');
-
+if (!$jobId){
+        ?><script type="text/javascript">window.history.go(-1);</script><?php
+         exit(0);
+    	//redirect($_SERVER['HTTP_REFERER']);
+}
 
 //
 // Setting Command line. Adding parameters
 
 
-$r = $jobMeta->prepareExecution($tool,$files);
+$r = $jobMeta->prepareExecution($tool,$files,$files_pub);
 
 if ($debug)
 	echo "<br/></br>PREPARE EXECUTION RETURNS ($r). <br/>";
-
-if($r == 0)
-    	redirect('/workspace/');
-
+if($r == 0){
+        ?><script type="text/javascript">window.history.go(-1);</script><?php
+         exit(0);
+    	//redirect($_SERVER['HTTP_REFERER']);
+}
 
 //
 // Launching Tooljob
@@ -169,7 +199,7 @@ $pid = $jobMeta->submit($tool);
 if ($debug)
 	echo "<br/></br>JOB SUBMITTED. PID = $pid<br/>";
 
-if($pid == 0)
+if(!$pid)
     	redirect('/workspace/');
 
 
@@ -181,26 +211,9 @@ if ($debug){
 	var_dump((array)$jobMeta);
 }
 
+if ($debug)
+	echo "<br/>Saving JOB MEDATA  USER <br/>";
 
-//TODO redirect to inputs.php instead of workspace
-
-$jobMeta2= array(
-            "inPaths" => Array("MuGUSER57ecf22d91df3/uploads/1diz_dna.pdb", "MuGUSER57ecf22d91df3/uploads/1diz_protein.pdb"),
-            "tool"    =>  $jobMeta->toolId,
-            "description" =>  $jobMeta->description,
-            "outDir"  =>  str_replace($GLOBALS['dataDir']."/","",$jobMeta->working_dir),
-            "project" =>  $jobMeta->project,
-            "title"   =>  $jobMeta->tool->title,
-            "outPaths"=>  Array(),
-            "metaData"=>  Array(),
-            "outCtrl" =>  str_replace($GLOBALS['dataDir']."/","",$jobMeta->stageout_file),
-            "shPath"  =>  str_replace($GLOBALS['dataDir']."/","",$jobMeta->submission_file),
-            "logPath" =>  str_replace($GLOBALS['dataDir']."/","",$jobMeta->log_file),
-            "_id"     =>  $jobMeta->pid,
-            "state"   =>  "PENDING"
-);
-
-#saveUserJobs($_SESSION['User']['id'],$jobMeta);
 addUserJob($_SESSION['User']['_id'],(array)$jobMeta,$jobMeta->pid);
 
 if ($debug)

@@ -6,7 +6,9 @@ $currentSection = '';
 switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'index':
 		if(dirname($_SERVER['PHP_SELF']) == '/home'){
-			$currentSection = 'hp';
+            $currentSection = 'hp';
+        }elseif(dirname($_SERVER['PHP_SELF']) == '/helpdesk') {
+            $currentSection = 'hd';
 		}else{
 				$currentSection = 'uw';
 		}
@@ -20,8 +22,36 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'uploadForm2': $currentSection = 'dt';
 					 	    $currentSubSection = 'lc';
 					 	    break;
-	case 'help1': $currentSection = 'he';
+	case 'general': $currentSection = 'he';
 					  $currentSubSection = 'h1';
+					  break;
+	case 'starting':$currentSection = 'he';
+					  $currentSubSection = 'h2';
+					  break;
+	case 'upload':	$currentSection = 'he';
+					  $currentSubSection = 'h3';
+					  break;	
+	case 'ws':$currentSection = 'he';
+					  $currentSubSection = 'h4';
+					  break;
+	case 'launch':$currentSection = 'he';
+					  $currentSubSection = 'h5';
+						break;
+	case 'tools':$currentSection = 'he';
+					  $currentSubSection = 'h6';
+					  break;
+
+	case 'hdesk':$currentSection = 'he';
+					  $currentSubSection = 'h7';
+					  break;
+	case 'related':$currentSection = 'he';
+					  $currentSubSection = 'h8';
+					  break;
+	case 'refs':$currentSection = 'he';
+					  $currentSubSection = 'h9';
+					  break;
+	case 'ackn':$currentSection = 'he';
+					  $currentSubSection = 'h10';
 					  break;
 	case 'repositoryList': 
 	case 'experiment': $currentSection = 'dt';
@@ -33,6 +63,9 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'dataFromID': $currentSection = 'dt';
 					 	   $currentSubSection = 'id';
 					  	   break;
+    case 'sampleDataList': $currentSection = 'dt';
+                          $currentSubSection = 'sd';
+                          break; 
 	case 'usrProfile': $currentSection = 'up';
 					  	   $currentSubSection = 'mp';
 						   break;
@@ -42,9 +75,61 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'adminUsers': $currentSection = 'ad';
 					  	   $currentSubSection = 'au';
 					  	   break;
+	case 'adminTools': $currentSection = 'ad';
+					  	   $currentSubSection = 'at';
+								 break;
+	case 'jsonValidator': $currentSection = 'ad';
+					  	   $currentSubSection = 'jv';
+					  	   break;
+	case 'help': $currentSection = 'he';
+							 $currentSubSection = 'h6';
+							 $a = explode("/", dirname($_SERVER['PHP_SELF']));
+							 $currentSubSubSection = $a[sizeof($a) - 2];
+							 break;
+	case 'method': $currentSection = 'he';
+							 $currentSubSection = 'h6';
+							 $a = explode("/", dirname($_SERVER['PHP_SELF']));
+							 $currentSubSubSection = $a[sizeof($a) - 2];
+							 $currentSubSubSubSection = 'met';
+							 break;
+	case 'inputs': $currentSection = 'he';
+							 $currentSubSection = 'h6';
+							 $a = explode("/", dirname($_SERVER['PHP_SELF']));
+							 $currentSubSubSection = $a[sizeof($a) - 2];
+							 $currentSubSubSubSection = 'inp';
+							 break;
+	case 'outputs': $currentSection = 'he';
+							 $currentSubSection = 'h6';
+							 $a = explode("/", dirname($_SERVER['PHP_SELF']));
+							 $currentSubSubSection = $a[sizeof($a) - 2];
+							 $currentSubSubSubSection = 'out';
+							 break;
+	case 'results': $currentSection = 'he';
+							 $currentSubSection = 'h6';
+							 $a = explode("/", dirname($_SERVER['PHP_SELF']));
+							 $currentSubSubSection = $a[sizeof($a) - 2];
+							 $currentSubSubSubSection = 'res';
+							 break;
+	case 'tutorials': $currentSection = 'he';
+							 $currentSubSection = 'h6';
+							 $a = explode("/", dirname($_SERVER['PHP_SELF']));
+							 $currentSubSubSection = $a[sizeof($a) - 2];
+							 $currentSubSubSubSection = 'tut';
+							 break;
+	case 'references': $currentSection = 'he';
+							 $currentSubSection = 'h6';
+							 $a = explode("/", dirname($_SERVER['PHP_SELF']));
+							 $currentSubSubSection = $a[sizeof($a) - 2];
+							 $currentSubSubSubSection = 'ref';
+							 break;
 
 
 }
+
+$tools = getTools_List();
+sort($tools);
+
+
 
 ?>
 
@@ -89,18 +174,6 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
                                     <!--<?php if($currentSection == 'uw') { ?><span class="selected"></span><?php } ?>
                                     <span class="arrow <?php if($currentSection == 'uw') { ?>open<?php } ?>"></span>-->
                                 </a>
-                               <!-- <ul class="sub-menu">
-                                    <li class="nav-item <?php if($currentSubSection == 'dt') { ?>active open<?php } ?>">
-                                        <a href="workspace/" class="nav-link ">
-                                            <span class="title">User Data</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item <?php if($currentSubSection == 'uf') { ?>active open<?php } ?>">
-                                        <a href="getdata/uploadForm.php" class="nav-link ">
-                                            <span class="title">Upload Files</span>
-                                        </a>
-                                    </li>
-                                </ul>-->
 														</li>
 														
 														<li class="nav-item  <?php if($currentSection == 'dt') { ?>active open<?php } ?>">
@@ -121,109 +194,164 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
                                             <span class="title">From Repository</span>
                                         </a>
                                     </li>
-																		<li class="nav-item <?php if($currentSubSection == 'id') { ?>active open<?php } ?>">
+                                    <li class="nav-item <?php if($currentSubSection == 'sd') { ?>active open<?php } ?>">
+                                        <a href="getdata/sampleDataList.php" class="nav-link ">
+                                            <span class="title">Import sample data</span>
+                                        </a>
+                                    </li>
+																		<!--<li class="nav-item <?php if($currentSubSection == 'id') { ?>active open<?php } ?>">
                                         <a href="getdata/dataFromID.php" class="nav-link ">
                                             <span class="title">From ID</span>
                                         </a>
                                     </li>
-																		<!--<li class="nav-item <?php if($currentSubSection == 'tx') { ?>active open<?php } ?>">
+																		<li class="nav-item <?php if($currentSubSection == 'tx') { ?>active open<?php } ?>">
                                         <a href="getdata/dataFromTxt.php" class="nav-link ">
                                             <span class="title">From Text</span>
                                         </a>
                                     </li>-->
                                 </ul>
                             </li>
-
-											
-                           <!-- <li class="nav-item  <?php if($currentSection == 're') { ?>active open<?php } ?>">
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-notebook"></i>
-                                    <span class="title">Repository</span>
-									<?php if($currentSection == 're') { ?><span class="selected"></span><?php } ?>
-                                    <span class="arrow <?php if($currentSection == 're') { ?>open<?php } ?>"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item  <?php if($currentSubSection == 'rl') { ?>active open<?php } ?>">
-                                        <a href="repository/repositoryList.php" class="nav-link ">
-                                            <span class="title">List of Experiments</span>
-                                        </a>
-                                    </li>                                    
-                                </ul>
-                            </li>-->
-                            <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-link"></i>
-                                    <span class="title">External Links</span>
-                                    <span class="arrow"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item  ">
-                                        <a href="http://www.multiscalegenomics.eu/MuGVRE/modules/BigNASimMuG/" target="_blank" class="nav-link ">
-                                            <span class="title">BigNASim</span>
-                                        </a>
-                                    </li>
-									<li class="nav-item  ">
-                                        <a href="http://mmb.irbbarcelona.org/NucleosomeDynamics/" target="_blank" class="nav-link ">
-                                            <span class="title">Nucleosome Dynamics</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="http://www.multiscalegenomics.eu/MuGVRE/flexibility-browser/" target="_blank" class="nav-link ">
-                                            <span class="title">Flexibility Browser</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="http://sgt.cnag.cat/3dg/tadkit/" target="_blank" class="nav-link ">
-                                            <span class="title">TADKit 3D genome visualizer</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="http://www.multiscalegenomics.eu/MuGVRE/modules/ConnectivityBrowser/" target="_blank" class="nav-link ">
-                                            <span class="title">MuG Information Network</span>
-                                        </a>
-                                    </li>
-                                </ul>
-							</li>
-							<li class="nav-item">
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-users"></i>
-                                    <span class="title">Forum</span>
-                                    <span class="arrow"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li class="nav-item">
-                                        <a href="/forum/" target="_blank"  class="nav-link ">
-                                            <span class="title">Go to Forum</span>
-                                        </a>
-									</li>
-								</ul>
-							</li>
-							<!--<li class="nav-item  <?php if($currentSection == 'he') { ?>active open<?php } ?>">
+                           
+														<li class="nav-item  <?php if($currentSection == 'he') { ?>active open<?php } ?>">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-question"></i>
                                     <span class="title">Help</span>
-									<?php if($currentSection == 'he') { ?><span class="selected"></span><?php } ?>
+																		<?php if($currentSection == 'he') { ?><span class="selected"></span><?php } ?>
                                     <span class="arrow <?php if($currentSection == 'he') { ?>open<?php } ?>"></span>
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="nav-item  <?php if($currentSubSection == 'h1') { ?>active open<?php } ?>">
-                                        <a href="help/help1.php" class="nav-link ">
-                                            <span class="title">Help Page 1</span>
+                                        <a href="help/general.php" class="nav-link ">
+                                            <span class="title">General information</span>
                                         </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link ">
-                                            <span class="title">Help Page 2</span>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h2') { ?>active open<?php } ?>">
+                                        <a href="help/starting.php" class="nav-link ">
+                                            <span class="title">Getting Started</span>
                                         </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javascript:;" class="nav-link ">
-                                            <span class="title">Help Page 3</span>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h3') { ?>active open<?php } ?>">
+                                        <a href="help/upload.php" class="nav-link ">
+                                            <span class="title">Get Data</span>
+                                        </a>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h4') { ?>active open<?php } ?>">
+                                        <a href="help/ws.php" class="nav-link ">
+                                            <span class="title">Workspace</span>
+                                        </a>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h5') { ?>active open<?php } ?>">
+                                        <a href="help/launch.php" class="nav-link ">
+                                            <span class="title">Launch Job</span>
+                                        </a>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h6') { ?>active open<?php } ?>">
+                                        <a href="help/tools.php" class="nav-link">
+                                            <span class="title">Tools</span>
+																						<span class="arrow <?php if($currentSubSection == 'h6') { ?>open<?php } ?>"></span>
+																				</a>
+																				<ul class="sub-menu">
+																					<?php foreach($tools as $t) { 
+																						
+																						$s = $GLOBALS['helpsCol']->find(array('tool' => $t["_id"]));
+
+																						$sections = iterator_to_array($s);
+
+																						$arrSect = array();
+
+																						foreach($sections as $sec) {
+																							$arrSect[] = $sec['help'];
+																						}
+
+																					?>
+																					<li class="nav-item <?php if($currentSubSubSection == $t["_id"]) { ?>active open<?php } ?>">
+																						<a href="tools/<?php echo $t["_id"]; ?>/help/help.php" class="nav-link">
+																						<span class="title"> <?php echo $t["name"]; ?> </span>
+																						<span class="arrow <?php if($currentSubSubSection == $t["_id"]) { ?>open<?php } ?>"></span>
+																						</a>
+																						<ul class="sub-menu">
+																						<?php if(in_array("method", $arrSect)) { ?>
+																						<li class="nav-item <?php if($currentSubSubSubSection == 'met') { ?>active open<?php } ?>">
+																							<a href="tools/<?php echo $t["_id"]; ?>/help/method.php" class="nav-link">
+																							<span class="title"> Method </span>
+																							</a>
+																						</li>
+																						<?php } ?>
+																						<?php if(in_array("inputs", $arrSect)) { ?>
+																						<li class="nav-item <?php if($currentSubSubSubSection == 'inp') { ?>active open<?php } ?>">
+																							<a href="tools/<?php echo $t["_id"]; ?>/help/inputs.php" class="nav-link">
+																							<span class="title"> Inputs </span>
+																							</a>
+																						</li>
+																						<?php } ?>
+																						<?php if(in_array("outputs", $arrSect)) { ?>
+																						<li class="nav-item <?php if($currentSubSubSubSection == 'out') { ?>active open<?php } ?>">
+																							<a href="tools/<?php echo $t["_id"]; ?>/help/outputs.php" class="nav-link">
+																							<span class="title"> Outputs </span>
+																							</a>
+																						</li>
+																						<?php } ?>
+																						<?php if(in_array("results", $arrSect)) { ?>
+																						<li class="nav-item <?php if($currentSubSubSubSection == 'res') { ?>active open<?php } ?>">
+																							<a href="tools/<?php echo $t["_id"]; ?>/help/results.php" class="nav-link">
+																							<span class="title"> Results </span>
+																							</a>
+																						</li>
+																						<?php } ?>
+																						<!--<li class="nav-item <?php if($currentSubSubSubSection == 'tut') { ?>active open<?php } ?>">
+																							<a href="tools/<?php echo $t["_id"]; ?>/help/tutorials.php" class="nav-link">
+																							<span class="title"> Tutorials </span>
+																							</a>
+																						</li>-->
+																						<?php if(in_array("references", $arrSect)) { ?>
+																						<li class="nav-item <?php if($currentSubSubSubSection == 'ref') { ?>active open<?php } ?>">
+																							<a href="tools/<?php echo $t["_id"]; ?>/help/references.php" class="nav-link">
+																							<span class="title"> References </span>
+																							</a>
+																						</li>
+																						<?php } ?>
+																				</ul>
+																					</li>
+																					<?php } ?>
+																				</ul>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h7') { ?>active open<?php } ?>">
+                                        <a href="help/hdesk.php" class="nav-link ">
+                                            <span class="title">Helpdesk</span>
+                                        </a>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h8') { ?>active open<?php } ?>">
+                                        <a href="help/related.php" class="nav-link ">
+                                            <span class="title">Related Links</span>
+                                        </a>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h9') { ?>active open<?php } ?>">
+                                        <a href="help/refs.php" class="nav-link ">
+                                            <span class="title">References</span>
+                                        </a>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h10') { ?>active open<?php } ?>">
+                                        <a href="help/ackn.php" class="nav-link ">
+                                            <span class="title">Acknowledgments</span>
                                         </a>
                                     </li>
                                 </ul>
-                            </li>-->
-							<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
+                            </li>
+															<li class="nav-item">
+                                <a href="/forum/" target="blank" class="nav-link nav-toggle">
+                                    <i class="icon-users"></i>
+                                    <span class="title">Forum</span>
+                                </a>
+                            </li>
+                            <li>
+                                <li class="nav-item <?php if($currentSection == 'hd') { ?>active open<?php } ?>">
+                                <a href="/helpdesk/" class="nav-link nav-toggle">
+                                    <i class="icon-earphones"></i>
+                                    <span class="title">Helpdesk</span>
+                                </a>
+                            </li>
+														
+							<!--<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
                             <li class="nav-item  <?php if($currentSection == 'up') { ?>active open<?php } ?>">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-user"></i>
@@ -239,8 +367,9 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 									</li>
 								</ul>
                             </li>
-							<?php } ?>
-							<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['ADMIN'])){ ?>
+                            <?php } ?>
+                            -->
+							<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['ADMIN']) || allowedRoles($_SESSION['User']['Type'], $GLOBALS['TOOLDEV'])){ ?>
                             <li class="nav-item  <?php if($currentSection == 'ad') { ?>active open<?php } ?>">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-settings"></i>
@@ -248,24 +377,42 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 									<?php if($currentSection == 'up') { ?><span class="selected"></span><?php } ?>
                                     <span class="arrow <?php if($currentSection == 'ad') { ?>open<?php } ?>"></span>
                                 </a>
-                                <ul class="sub-menu">
+																<ul class="sub-menu">
+																		<?php if(!allowedRoles($_SESSION['User']['Type'], $GLOBALS['TOOLDEV'])){ ?>
                                     <li class="nav-item  <?php if($currentSubSection == 'ds') { ?>active open<?php } ?>">
                                         <a href="admin/dashboard.php" class="nav-link ">
                                             <span class="title">Dashboard</span>
                                         </a>
-									</li>
+																		</li>
+																		<?php } ?>
+																		<?php if(!allowedRoles($_SESSION['User']['Type'], $GLOBALS['TOOLDEV'])){ ?>
                                     <li class="nav-item  <?php if($currentSubSection == 'au') { ?>active open<?php } ?>">
                                         <a href="admin/adminUsers.php" class="nav-link ">
                                             <span class="title">Users Administration</span>
+                                        </a>
+																		</li>
+																		<?php } ?>
+                                    <li class="nav-item  <?php if($currentSubSection == 'at') { ?>active open<?php } ?>">
+                                        <a href="admin/adminTools.php" class="nav-link ">
+                                            <span class="title">Tool Administration</span>
+                                        </a>
+																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'jv') { ?>active open<?php } ?>">
+                                        <a href="admin/jsonValidator.php" class="nav-link ">
+                                            <span class="title">JSON Validator</span>
                                         </a>
                                     </li>
 								</ul>
                             </li>
 							<?php } ?>
 
+													<li class="nav-item active open beta-long" style="color:#b4bcc8;margin-left:18px;margin-top:10px;font-size:12px;">This is a BETA version of MuG VRE</li>
+													<li class="nav-item active open beta-short" style="color:#b4bcc8;margin-left:8px;margin-top:10px;font-size:12px;display:none;">BETA</li>
+											
                         </ul>
                         <!-- END SIDEBAR MENU -->
-                        <!-- END SIDEBAR MENU -->
+												<!-- END SIDEBAR MENU -->
+
                     </div>
                     <!-- END SIDEBAR -->
                 </div>

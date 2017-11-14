@@ -106,15 +106,15 @@ var ComponentsBootstrapSwitch = function () {
               $('#nucd-reads').show();
               $('#nucd-reads input').prop('disabled', false);
               $('#nucd-roundp').hide();
-              $('#nucd-roundp input').prop('disabled', true);
+              //$('#nucd-roundp input').prop('disabled', true);
               $('#lab-nucd-reads').css('display', 'block');
-              $('#lab-nucd-roundp').hide();
+              //$('#lab-nucd-roundp').hide();
             }else{
               $('#nucd-roundp').show();
-              $('#nucd-roundp input').prop('disabled', false);
+             // $('#nucd-roundp input').prop('disabled', false);
               $('#nucd-reads').hide();
               $('#nucd-reads input').prop('disabled', true);
-              $('#lab-nucd-roundp').show();
+              //$('#lab-nucd-roundp').show();
               $('#lab-nucd-reads').hide();
             }
         });
@@ -212,6 +212,7 @@ var ValidateForm = function() {
                   $('.warn-nd', $('#nucleosome-dynamics')).show();
                   $('.err-nd', $('#nucleosome-dynamics')).hide();
                 }else{
+                	$('button[type="submit"]', $('#nucleosome-dynamics')).prop('disabled', true);
                   $('.warn-nd', $('#nucleosome-dynamics')).hide();
                   $('.err-nd', $('#nucleosome-dynamics')).hide();
                   var data = $('#nucleosome-dynamics').serialize();
@@ -256,16 +257,18 @@ var ValidateForm = function() {
 					});
         });
 
-        $("#params_nucdyn_range").rules("add", {required:true});
-        $("#params_nucdyn_maxdiff").rules("add", {required:true});
-        $("#params_nucdyn_maxlen").rules("add", {required:true});
-        $("#params_nucdyn_rpow").rules("add", {required:true});
-        $("#params_nucdyn_rsize").rules("add", {required:true});
-        $("#params_nucdyn_smag").rules("add", {required:true});
-        $("#params_nucdyn_shiftmn").rules("add", {required:true});
-        $("#params_nucdyn_shiftth").rules("add", {required:true});
-        $("#params_nucdyn_indelmn").rules("add", {required:true});
-        $("#params_nucdyn_indeth").rules("add", {required:true});
+				if($('#numInputs').val() > 1) {
+					$("#params_nucdyn_range").rules("add", {required:true});
+					$("#params_nucdyn_maxdiff").rules("add", {required:true});
+					$("#params_nucdyn_maxlen").rules("add", {required:true});
+					//$("#params_nucdyn_rpow").rules("add", {required:true});
+					$("#params_nucdyn_rsize").rules("add", {required:true});
+					//$("#params_nucdyn_smag").rules("add", {required:true});
+					$("#params_nucdyn_shiftmn").rules("add", {required:true});
+					$("#params_nucdyn_shiftth").rules("add", {required:true});
+					$("#params_nucdyn_indelmn").rules("add", {required:true});
+					$("#params_nucdyn_indeth").rules("add", {required:true});
+				}
         // Nucleosome-free regions
         $("#params_nfr_minw").rules("add", {required:true});
         $("#params_nfr_threshold").rules("add", {required:true});

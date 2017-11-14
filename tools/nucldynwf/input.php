@@ -11,6 +11,7 @@ if (!isset($_REQUEST['fn']) && !isset($_REQUEST['rerunDir'])){
 
 $rerunParams  = Array();
 $inPaths      = Array();
+$formats = Array();
 
 if ($_REQUEST['rerunDir']){
 	$dirMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['rerunDir'])); 
@@ -26,6 +27,7 @@ if ($_REQUEST['rerunDir']){
 		$file['path'] = $inPath;
 		$file['fn'] = getGSFileId_fromPath($inPath);
 		$file['format'] = getAttr_fromGSFileId($file['fn'],'format');
+		array_push($formats,$file['format']);
 		array_push($inPaths,$file);
 	}
 	$rerunParams = $dirMeta['raw_params'];
@@ -39,6 +41,7 @@ if ($_REQUEST['rerunDir']){
 		$file['path'] = getAttr_fromGSFileId($fn,'path');
 		$file['fn'] = $fn;
 		$file['format'] = getAttr_fromGSFileId($fn,'format');
+		array_push($formats,$file['format']);
 		array_push($inPaths,$file);
 	}
 	//array_push($inPaths,getAttr_fromGSFileId($fn,'path'));
@@ -46,6 +49,13 @@ if ($_REQUEST['rerunDir']){
 
 if(count($_REQUEST['fn']) == 0){
 	$_SESSION['errorData']['Error'][]="Please, select at least one file of format BAM for running this tool";
+	redirect('/workspace/');
+}
+
+$formats = array_unique($formats);
+
+if((count($formats) > 1) || (!(in_array("BAM", $formats)))) {
+	$_SESSION['errorData']['Error'][] = "To execute this tool you only can use BAM files as input files.";
 	redirect('/workspace/');
 }
 
@@ -72,7 +82,7 @@ $def = Array(
         "nucleR"=> Array(
                 "width"       => 147,
                 "pcKeepComp"  => 0.02,
-                "dyad__length" => 50,
+                "dyad_length" => 50,
                 "threshold" => "Percentage",
                 "thresholdValue" => "",
                 "thresholdPercentage" => "35%",
@@ -87,7 +97,7 @@ $def = Array(
                 "readSize"  => 140,
                 "maxDiff"   => 70 ,
                 "maxLen"    => 140,
-                "same__magnitude" => 2,
+                "same_magnitude" => 2,
 //              "threshold"=> "Percentage",
 //              "thresholdValue" => "" ,
 //              "thresholdPercentage" => "80%",
@@ -108,8 +118,8 @@ $def = Array(
         ),
         "txstart" => Array(
                 "window"        => 300,
-                "open__thresh"   => 215,
-                "max__uncovered" => 150
+                "open_thresh"   => 215,
+                "max_uncovered" => 150
         ),
         "gausfitting" => Array(
                 "range" => "All"
@@ -156,13 +166,13 @@ if (count($rerunParams)){
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>Nucleosome Dynamics Analysis</span>
+                                  <span>Nucleosome Dynamics Workflow</span>
                               </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> Nucleosome Dynamics Analysis
+                        <h1 class="page-title"> Nucleosome Dynamics Workflow
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -207,8 +217,9 @@ if (count($rerunParams)){
 								<span class="text-info" style="font-weight:bold;"><?php echo $p[1]; ?>  /</span> <?php echo $p[2]; ?>
 	
 								<?php if(($file['format'] == 'GFF') || ($file['format'] == 'BW') || ($file['format'] == 'BAM')) { ?>
-							
-									<a target="_blank" href="/visualizers/jbrowse/jbrowser_new.php/?user=<?php echo $_SESSION['User']['id']; ?>&tracks=<?php echo $file['fn']; ?>">
+	
+									<a target="_blank" href="visualizers/jbrowse/index.php/?user=<?php echo $_SESSION['User']['id']; ?>&fn[]=<?php echo $file['fn']; ?>">
+									<!--<a target="_blank" href="/visualizers/jbrowse/jbrowser_new.php/?user=<?php echo $_SESSION['User']['id']; ?>&tracks=<?php echo $file['fn']; ?>">-->
 										<div class="label label-sm label-info tooltips" style="padding:4px 5px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to preview this file with JBrowse.</p>">
 											<i class="fa fa-align-right font-white"></i>
                      </div>
@@ -227,10 +238,15 @@ if (count($rerunParams)){
                               </div>
                               <!-- END PORTLET 0: INPUTS -->
 			<form action="#" class="horizontal-form" id="nucleosome-dynamics">
-				 <input type="hidden" name="toolId" value="nucldynwf" />
+				 <input type="hidden" name="tool" value="nucldynwf" />
+                 <input type="hidden" name="input_files_public_dir[refGenome_chromSizes]" value="refGenomes/" />
+
 				  <?php foreach ($_REQUEST['fn'] as $fn) { ?>
 				  	<input type="hidden" id="fn1" name="fn[]" value="<?php echo $fn; ?>" />
-				  <?php } ?>
+					<?php } ?>
+					<input type="hidden" name="numInputs" id="numInputs" value="<?php echo count($_REQUEST['fn']); ?>" />
+
+					
 	
                               <!-- BEGIN PORTLET 1: ANALYZES -->
                               <div class="portlet box blue-oleo">
@@ -315,7 +331,7 @@ if (count($rerunParams)){
                                               <div class="col-md-6">
                                                   <div class="form-group">
                                                       <label class="control-label">Dyad Length <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Length of the reads that should be used for nucleosome calling to define the dyad of the nucleosomes keeping the given number of bases around the center of the read.</p>"></i></label>
-                                                      <input type="number" step="any" name="arguments[nucleR:dyad__length]" id="params_nuclr_dyad_len" class="form-control form-field-enabled" value="50">
+                                                      <input type="number" step="any" name="arguments[nucleR:dyad_length]" id="params_nuclr_dyad_len" class="form-control form-field-enabled" value="50">
                                                   </div>
                                               </div>
                                               <div class="col-md-6">
@@ -365,7 +381,8 @@ if (count($rerunParams)){
                                   </div>
                               </div>
                               <!-- END PORTLET 2: NUCLER -->
-                              <!-- BEGIN PORTLET 3: NUCLEOSOME DYNAMICS -->
+															<!-- BEGIN PORTLET 3: NUCLEOSOME DYNAMICS -->
+															<?php if(count($_REQUEST['fn']) > 1){ ?>
                               <div class="portlet box blue form-block-header" id="form-block-header2">
                                   <div class="portlet-title">
                                       <div class="caption">
@@ -438,11 +455,9 @@ if (count($rerunParams)){
                                                       <input type="number" step="any" name="arguments[nucDyn:maxLen]" id="params_nucdyn_maxlen" class="form-control form-field-enabled" value="140">
                                                   </div>
                                               </div>
-                                              <div class="col-md-6">
-
-                                              </div>
+                                              
                                           </div>
-                                          <div class="row">
+                                          <!--<div class="row">
                                             <div class="col-md-6">
                                               <div class="form-group">
                                               <label class="control-label">Equal Size <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>If set to TRUE, all sets will be set to the same length, conserving their original dyad position</p>"></i></label>
@@ -466,7 +481,7 @@ if (count($rerunParams)){
                                               <label class="control-label">Combined <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'> If TRUE, nearby hotspots will be combined. Otherwise, all the information about detected shifts and changes in coverage will be returned without further processing.</p>"></i></label>
                                               <div class="input-group">
                                                 <div id="nucd-samem">
-                                                  <input type="number" step="any" class="form-control form-field-enabled" id="params_nucdyn_smag" name="arguments[nucDyn:same__magnitude]" value="2" checked>
+                                                  <input type="number" step="any" class="form-control form-field-enabled" id="params_nucdyn_smag" name="arguments[nucDyn:same_magnitude]" value="2" checked>
                                                 </div>
                                                 <div id="nucd-samemf" class="display-hide">
                                                   <input class="form-control form-field-disabled">
@@ -478,7 +493,7 @@ if (count($rerunParams)){
                                               <span class="help-block-form display-block" id="lab-nucd-samem"> Same Magnitude  <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Only used if combined=TRUE. When combining two hotspots, this value is the maximum ratio between two spots to be considered with the same magnitude. Two hot spots with the same magnitude can be combined, but a large hotspot will not be merged with a much smaller one.</p>"></i></span>
                                               </div>
                                             </div>
-                                          </div>
+                                          </div>-->
                                           <div class="row">
                                               <div class="col-md-6">
                                                   <div class="form-group">
@@ -489,7 +504,7 @@ if (count($rerunParams)){
                                               <div class="col-md-6">
                                                   <div class="form-group">
                                                       <label class="control-label">Shifts threshold <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Minimum score for a 'SHIFT +' or a 'SHIFT -' hotspot</p>"></i></label>
-                                                      <input type="number" step="0.001" name="arguments[nucDyn:shift_threshold]" id="params_nucdyn_shiftth" class="form-control form-field-enabled" value="0.075">
+                                                      <input type="number" step="0.01" name="arguments[nucDyn:shift_threshold]" id="params_nucdyn_shiftth" class="form-control form-field-enabled" value="0.1">
                                                   </div>
                                               </div>
                                           </div>
@@ -497,19 +512,43 @@ if (count($rerunParams)){
                                               <div class="col-md-6">
                                                   <div class="form-group">
                                                       <label class="control-label">Indels minimum num. reads <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Minimum number of reads in an 'INCLUSION +' or a 'DELETION -' hotspot</p>"></i></label>
-                                                      <input type="number" step="any" name="arguments[nucDyn:indel_min_nreads]" id="params_nucdyn_indelmn" class="form-control form-field-enabled" value="15">
+                                                      <input type="number" step="any" name="arguments[nucDyn:indel_min_nreads]" id="params_nucdyn_indelmn" class="form-control form-field-enabled" value="3">
                                                   </div>
                                               </div>
                                               <div class="col-md-6">
                                                   <div class="form-group">
                                                       <label class="control-label">Indels threshold <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Minimum score for an 'INCLUSION' or a 'DELETION' hotspot</p>"></i></label>
-                                                      <input type="number" step="0.1" name="arguments[nucDyn:indel_threshold]" id="params_nucdyn_indeth" class="form-control form-field-enabled" value="0.5">
+                                                      <input type="number" step="0.01" name="arguments[nucDyn:indel_threshold]" id="params_nucdyn_indeth" class="form-control form-field-enabled" value="0.05">
                                                   </div>
+                                              </div>
+																					</div>
+																					<h4 class="form-section">Advanced Settings</h4>
+                                          <div class="row">
+                                              <div class="col-md-6">
+																								<div class="form-group">
+                                              <label class="control-label">Equal Size <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>If set to TRUE, all sets will be set to the same length, conserving their original dyad position</p>"></i></label>
+                                              <div class="input-group">
+																								<div id="nucd-roundp">
+																									<input class="form-control" disabled>
+                                                  <!--<input type="number" step="any" class="form-control form-field-enabled" id="params_nucdyn_rpow" name="arguments[nucDyn:roundPow]" value="5" >-->
+                                                </div>
+																								<div id="nucd-reads" class="display-hide">
+                                                    <input type="number" step="any" class="form-control" id="params_nucdyn_rsize" name="arguments[nucDyn:readSize]" value="140" disabled>
+                                                </div>
+																								<div class="input-group-btn">
+                                                    <input type="checkbox" class="make-switch" id="switch-eqsize" data-size="normal" data-on-text="TRUE" data-off-text="FALSE" data-on-color="info" data-off-color="default">
+                                                </div>
+                                              </div>
+                                              <!--<span class="help-block-form display-hide" id="lab-nucd-roundp"> Round Power  <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>When <i>equalSize</i> is <i>FALSE</i>, the start and end of each read will be rounded to a power of this number to allow a more granular analysis.</p>"></i></span>-->
+                                              <span class="help-block-form display-hide" id="lab-nucd-reads">  Read SIze  <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Length to which all reads will be set in case 'equalSize' is TRUE</p>"></i></span>
+                                              </div>
+
                                               </div>
                                           </div>
                                       </div>
                                   </div>
-                              </div>
+															</div>
+															<?php } ?>
                               <!-- END PORTLET 3: NUCLEOSOME DYNAMICS -->
                               <!-- BEGIN PORTLET 4: NUCLEOSOME FREE REGIONS -->
                               <div class="portlet box blue form-block-header" id="form-block-header3">
@@ -608,7 +647,7 @@ if (count($rerunParams)){
                                               <div class="col-md-6">
                                                   <div class="form-group">
                                                       <label class="control-label">Open threshold <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Distance between nucleosomes -1 and +1 to discriminate between 'open' and 'close' classes.</p>"></i></label>
-                                                      <input type="number" step="any" name="arguments[txstart:open__thresh]" id="params_txstart_opent" class="form-control form-field-enabled" value="215">
+                                                      <input type="number" step="any" name="arguments[txstart:open_thresh]" id="params_txstart_opent" class="form-control form-field-enabled" value="215">
                                                   </div>
                                               </div>
                                           </div>

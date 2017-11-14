@@ -9,7 +9,7 @@ require "phplib/globals.inc.php";
 # Printing Headers
 print headerNA("NAFlex. Nucleic Acids Flexibility",0);
 
-print projectHeader($_SESSION['projectData']);
+#print projectHeader($_SESSION['projectData']);
 
 $k = count($_POST);
 
@@ -34,7 +34,7 @@ $path = $_POST['path'];
 $cont = 0;
 foreach (array_keys($_POST['avg']) as $k){
 
-	$file = "$path/$k.avg.dat";
+	$file = "$path/${k}_avg.dat";
 	#echo "$k ($file) <br/>";
 
 	if(file_exists($file)){
@@ -103,18 +103,26 @@ array_shift($arr);
 array_shift($arr);
 array_shift($arr);
 array_shift($arr);
-$newPath = implode("/",$arr);
+array_shift($arr);
+array_shift($arr);
 
-$cmd = "perl /var/www/MDWeb/scripts/plotXYWithSeqgnuplot_mult.pl $filenameOut $cont \"Nucleotide\"  \"NOE (Angstroms)\" \"Selected Observables\" $legends";
+# MuG Guarrada!!
+$newPath = "../../files/".implode("/",$arr);
+
+# MuG path
+# files/MuGUSER57ecf22d91df3/.tmp/outputs_MuGUSER57ecf22d91df3_58da2820e473e8.27526033/NMR_NOE/pasted.avg.dat.png
+
+#$cmd = "perl /var/www/MDWeb/scripts/plotXYWithSeqgnuplot_mult.pl $filenameOut $cont \"Nucleotide\"  \"NOE (Angstroms)\" \"Selected Observables\" $legends";
+$cmd = "perl /orozco/services/Rdata/MuG/apps/NAFlex/plotXYWithSeqgnuplot_mult.pl $filenameOut $cont \"Nucleotide\"  \"NOE (Angstroms)\" \"Selected Observables\" $legends";
 $p = exec($cmd);
 
 ?>
 
 <div id="J1p2p-DNAAvgSelPlot" style="text-align:center; background-color: #:#E6E6FA;padding: 15px 20px;">
 <table border="0"><tr><td>
-<img border="1" src=' <?php echo $GLOBALS['homeURL'].'/'.$newPath.'/'.$filenameOut ?>.png' align='center'>
+<img border="1" src=' <?php echo $newPath.'/'.$filenameOut ?>.png' align='center'>
 </td><td>
-<p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $GLOBALS['homeURL'].'/'.$newPath ?>/pasted.avg.dat.png','SelObservables','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
+<p align="right" class="curvesDatText" onClick="javascript:window.open('<?php echo $newPath ?>/pasted.avg.dat.png','SelObservables','_blank,resize=1,width=800,height=600');">Open in New Window</p><br/>
 <a href="getFile.php?fileloc=<?php echo $newPath ?>/pasted.avg.dat&type=curves"> <p align="right" class="curvesDatText">Download Raw Data</p></a>
 </td></tr></table>
 </div>

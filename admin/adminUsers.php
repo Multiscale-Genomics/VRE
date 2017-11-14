@@ -11,8 +11,8 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
 
 
 $users = array();
-foreach (array_values(iterator_to_array($GLOBALS['usersCol']->find(array(),array('Surname'=>1, 'Name'=>1, 'Inst'=>1, 'Country'=>1, 'diskQuota'=>1, 'lastLogin'=>1, 'Type'=>1, 'Status'=>1))->sort(array('Surname'=>1)))) as $v)
-	$users[$v['_id']] = array($v['Surname'], $v['Name'], $v['Inst'], $v['Country'], $v['diskQuota'], $v['lastLogin'], $v['Type'], $v['Status']);
+foreach (array_values(iterator_to_array($GLOBALS['usersCol']->find(array(),array('Surname'=>1, 'Name'=>1, 'Inst'=>1, 'Country'=>1, 'diskQuota'=>1, 'lastLogin'=>1, 'Type'=>1, 'Status'=>1, 'id'=>1 ))->sort(array('Surname'=>1)))) as $v)
+	$users[$v['_id']] = array($v['Surname'], $v['Name'], $v['Inst'], $v['Country'], $v['diskQuota'], $v['lastLogin'], $v['Type'], $v['Status'],$v['id']);
 
 unset($users['guest@guest']);
 
@@ -51,6 +51,36 @@ unset($users['guest@guest']);
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
+
+												<div class="row">
+													<div class="col-md-12">
+													<?php  
+														$error_data = false;
+														if ($_SESSION['errorData']){ 
+															$error_data = true;
+														?>
+														<?php if ($_SESSION['errorData']['Info']) { ?> 
+															<div class="alert alert-info">
+														<?php } else { ?>
+															<div class="alert alert-danger">
+														<?php } ?>
+															
+																	<?php 
+														foreach($_SESSION['errorData'] as $subTitle=>$txts){
+																		print "<strong>$subTitle</strong><br/>";
+																	foreach($txts as $txt){
+																		print "<div>$txt</div>";
+															}
+														}
+															unset($_SESSION['errorData']);
+															?>
+															</div>
+															<?php } ?>
+														</div>
+													</div>
+
+
+
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- BEGIN EXAMPLE TABLE PORTLET-->
@@ -61,13 +91,19 @@ unset($users['guest@guest']);
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="btn-group">
-                                                        <button id="sample_editable_1_new" class="btn green"> Add New
+                                                        <!--<button id="sample_editable_1_new" class="btn green"> Add New
+                                                            <i class="fa fa-plus"></i>
+																												</button>-->
+																												<button class="btn green" onclick="location.href = 'admin/newUser.php'"> Add New
                                                             <i class="fa fa-plus"></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+																				</div>
+
+																				<input type="hidden" id="base-url" value="<?php echo $GLOBALS['BASEURL']; ?>" />
+
                                         <table class="table table-striped table-hover table-bordered" id="sample_editable_1">
                                             <thead>
                                                 <tr>
@@ -87,13 +123,13 @@ unset($users['guest@guest']);
 												foreach($users as $key => $value):
 												?>
 												<tr>
-													<td><a href="mailto:<?php echo $key; ?>"><?php echo $key; ?></a></td>
+													<td><a href="mailto:<?php echo $key; ?>"><?php echo $key; ?></a><br/><?php echo $value[8]; ?></td>
 													<td><?php echo $value[0]; ?></td>
 													<td><?php echo $value[1]; ?></td>
 													<td><?php echo $value[2]; ?></td>
 													<td><?php echo $countries[$value[3]]; ?><div style="display:none;">*<?php echo $value[3]; ?>*</div></td>
 													<td>
-														<div class="btn-group">
+														<!--<div class="btn-group">
 														<?php if($value[6] == 0){ ?>
 														<button disabled class="btn btn-xs blue dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" style="opacity:1;"> <?php echo $GLOBALS['ROLES'][$value[6]]; ?>
                                                             <i class="fa fa-circle-thin"></i>
@@ -109,10 +145,16 @@ unset($users['guest@guest']);
 														</ul>
 														<div style="display:none;">*<?php echo $value[6]; ?>*</div>
 														<?php } ?>
-														</div>
+														</div>-->
+														<?php 
+														$colorRole = '';
+														if($value[6] == 0) $colorRole = 'font-blue bold';
+														
+														echo "<span class='$colorRole'>".$GLOBALS['ROLES'][$value[6]]."</span>"; 
+														?>
 													</td>
 													<td><?php echo returnHumanDate($value[5]); ?></td>
-													<td><?php echo $value[4]; ?></td>
+													<td><?php echo ((($value[4] / 1024) / 1024) / 1024); ?> GB</td>
 													<td>
 														<?php if($value[6] != 0){ ?>
 														  <div class="btn-group">
@@ -132,12 +174,16 @@ unset($users['guest@guest']);
                                                           </button>
                                                           <ul class="dropdown-menu pull-right" role="menu">
                                                             <li>
-                                                                <a class="edit" href="javascript:;">
+                                                                <a class="" href="admin/editUser.php?id=<?php echo $value[8]; ?>">
                                                                     <i class="fa fa-pencil"></i> Edit user</a>
                                                             </li>
                                                               <li>
                                                                   <a class="enable" href="javascript:;">
                                                                       <i class="fa fa-ban"></i> Disable user</a>
+                                                              </li>
+                                                              <li>
+                                                                  <a href="javascript:deleteUser('<?php echo $value[8]; ?>');">
+                                                                      <i class="fa fa-trash"></i> Delete user</a>
                                                               </li>
                                                           </ul>
 														  <?php } ?>
@@ -159,6 +205,24 @@ unset($users['guest@guest']);
                     <!-- END CONTENT BODY -->
                 </div>
                 <!-- END CONTENT -->
+
+								<div class="modal fade bs-modal" id="modalDelete" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title">Warning!</h4>
+                            </div>
+                            <div class="modal-body">Are you sure you want to delete the selected file?
+                             </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+								<button type="button" class="btn red btn-modal-del">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+
 
                 <div class="modal fade bs-modal-sm" id="myModal1" tabindex="-1" role="basic" aria-hidden="true">
                     <div class="modal-dialog modal-sm">

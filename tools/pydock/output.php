@@ -39,21 +39,21 @@ $path = '/files/'.$_SESSION['User']['id'].'/'.$dir;
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>pyDock DNA</span>
+                                  <span>pyDock</span>
                               </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
                         <h1 class="page-title"> Results
-                            <small>pyDock DNA</small>
+                            <small>pyDock</small>
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
                         <div class="row">
                   			    <div class="col-md-12">
                         				<p style="margin-top:0;">
-										The compressed results file includes the PDB structures predicted by pyDockSAXS and their corresponding CRYSOL fit curves. Please, refer to the help section for further details.
+										The compressed results file includes the PDB structures predicted by pyDock. Please, refer to the help section for further details.
                                 </p>
 													</div>
 													<div class="col-md-12">
@@ -132,16 +132,23 @@ $path = '/files/'.$_SESSION['User']['id'].'/'.$dir;
                                   <div class="portlet-title">
                                     <div class="caption">
                                         <i class="icon-share font-red-sunglo hide"></i>
-                                        <span class="caption-subject font-dark bold uppercase">3D VISUALIZATION (TOP 1 MODEL)</span>
-                                    </div>
+                                        <span class="caption-subject font-dark bold uppercase">3D VISUALIZATION (TOP 10 MODELS)</span>
+																		</div>
+																		<div class="actions">
+                                    	<select id="models">
+																				<option value="">Loading models...</option>
+																			</select>
+																		</div>
                                   </div>
                                     <div class="portlet-body">
 										<div class="row">
 											<div class="col-md-12">
+																	
+																						<div id="loading-viewport" style="position:absolute;left:45%; top:200px;"><img src="/assets/layouts/layout/img/ring-alt.gif" /></div>
                                             <script>
-                                                document.addEventListener( "DOMContentLoaded", function(){
-                                                    stage1 = new NGL.Stage( "viewport1", {backgroundColor:"#94A0B2"} );
-													stage1.loadFile( "<?php echo $path; ?>/top_1.pdb", { defaultRepresentation: false } ).then( function( o ){
+                                                /*document.addEventListener( "DOMContentLoaded", function(){
+                                                    stage1 = new NGL.Stage( "viewport1", {backgroundColor:"#ddd"} );
+													stage1.loadFile( "<?php echo $path; ?>/top_structures.pdb", { defaultRepresentation: false } ).then( function( o ){
 
                                                       o.addRepresentation( "cartoon", {
                                                         color: "chainindex", aspectRatio: 4, scale: 1
@@ -152,14 +159,46 @@ $path = '/files/'.$_SESSION['User']['id'].'/'.$dir;
                                                       o.addRepresentation( "ball+stick", {
                                                         sele: "hetero and not(water or ion)", scale: 3, aspectRatio: 1.5
                                                       } );
-                                                      o.centerView(!1);
-
+                                                      stage1.centerView(!1);
+																											$("#loading-viewport").hide();
                                                     } );
                                                 } );
                                                 function handleResize(){ if(typeof stage1 != 'undefined') stage1.handleResize(); }
+                                                window.addEventListener( "resize", handleResize, false );*/
+
+																								document.addEventListener( "DOMContentLoaded", function(){
+                                                stage = new NGL.Stage( "viewport1", {backgroundColor:"#ddd"} );
+
+																								stage.loadFile( "<?php echo $path; ?>/top_structures.pdb", { defaultRepresentation: false } )
+																									.then( function( o ){
+																										o.setSelection('/0');
+																										o.addRepresentation( "cartoon", { color:"chainid" } ); //chainid
+																										o.addRepresentation( "base", { sele: "*", color: "resname" } );
+																										stage.centerView();
+																										$("#loading-viewport").hide();
+																										generateModelsList();
+																									} );
+
+																									switchModel = function(model) {
+																										stage.compList[0].setSelection('/' + model);
+																										if(model == '*') stage.compList[0].addRepresentation( "cartoon", { color:"modelindex" } );
+																										else stage.compList[0].addRepresentation( "cartoon", { color:"chainid" } );
+																									}
+
+																									generateModelsList = function(model) {
+																										console.log(model);
+																										var totalModels = stage.compList[0].structure.modelStore.count;
+																										$('#models').html('<option value="">Select models</option>');
+																										for(i = 0; i < totalModels; i ++)  $('#models').append('<option value="' + i + '">Top ' + (i + 1) + '</option>');
+																										$('#models').append('<option value="*">All models</option>');
+																									}
+	
+																								} );
+                                                function handleResize(){ if(typeof stage != 'undefined') stage.handleResize(); }
                                                 window.addEventListener( "resize", handleResize, false );
+
                                             </script>
-                                            <div id="viewport1" style="width:100%; height:500px;"></div>
+                                            <div id="viewport1" style="width:100%; height:500px;background:#ddd;"></div>
                                          </div>
 
 										</div>

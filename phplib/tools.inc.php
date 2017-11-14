@@ -141,6 +141,22 @@ function launchTool_PyDock(&$jobMeta,$cmds){
 ##########
 
 
+function parseSHFile_PMES($rfn){
+
+	$SH_parsed = array();
+    $json = json_decode(trim(file_get_contents($rfn)));
+
+    $json_array = json_decode(json_encode($json[0]), True);
+    foreach ($json_array as $k => $v_obj){
+        $v     = json_encode($v_obj, JSON_PRETTY_PRINT);
+        $v_txt = "<pre style='white-space: pre-wrap;'>$v</pre>";
+        $SH_parsed[$k]=$v_txt;
+    }
+    return $SH_parsed;
+}
+
+
+// DEPRECATED
 function parseSHFile_pyDock($rfn){
 
 	$cmdsParsed = array();
@@ -149,7 +165,7 @@ function parseSHFile_pyDock($rfn){
 	$cwd  = str_replace("cd ","",join("",preg_grep("/^cd /", file($rfn))));
 
 	$n=1;
-        foreach ($cmds as $cmd){
+    foreach ($cmds as $cmd){
 
 		$cmdsParsed[$n]['cmdRaw']    = $cmd;
 		$cmdsParsed[$n]['cwd']       = $cwd;
@@ -181,7 +197,7 @@ function parseSHFile_pyDock($rfn){
 			}
 		}
 		$n++;
-        }
+    }
 	return $cmdsParsed;
 }    
 

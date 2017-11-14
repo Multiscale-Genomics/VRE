@@ -7,11 +7,11 @@
 		},
 		"object" : {
 			"uuid" : "00000000-0000-0000-0001-000000000000",
-			"id" : "red",
-			"title" : "Red",
+			"id" : "gradient",
+			"title" : "Blue to Red",
 			"source" : "TADkit",
 			"url" : "local",
-			"description" : "Simple red.",
+			"description" : "Simple gradient from blue to red.",
 			"type" : "gradient",
 			"format" : "hex",
 			"components" : 2,
@@ -20,7 +20,7 @@
 				"overlaid" : false
 			}
 		},
-		"palette" : ["#ff0000","#ff0000"],
+		"palette" : ["#0000ff","#00ffff"],
 		"data" : [],
 		"colors" : {
 			"particles" : [],

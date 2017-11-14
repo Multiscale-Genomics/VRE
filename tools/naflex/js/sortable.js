@@ -12,7 +12,7 @@ Version 1.5.7
 
 /* You can change these values */
 //var image_path = "http://www.joostdevalk.nl/code/sortable-table/";
-var image_path = "images/";
+var image_path = "tools/naflex/images/";
 var image_up = "arrowup.gif";
 var image_down = "arrowdown.gif";
 var image_none = "arrownone.gif";

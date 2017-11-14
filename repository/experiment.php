@@ -4,13 +4,13 @@ require "../phplib/genlibraries.php";
 redirectOutside();
 
 $exp = array();
-foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array('_id'=>strtoupper($_GET['id'])),array('experimenttype'=>1, 'releasedate'=>1, 'accession'=>1, 'organism'=>1, 'name'=>1, 'assays'=>1, 'samples'=>1, 'arraydesign'=>1, 'protocol'=>1, 'description'=>1, 'lastupdatedate'=>1, 'provider'=>1, 'bibliography'=>1, 'files'=>1, 'secondaryaccession'=>1))->sort(array('releasedate'=>1)))) as $v)
-	$exp[$v['_id']] = array($v['experimenttype'], $v['releasedate'], $v['accession'], $v['organism'], $v['name'], $v['assays'], $v['samples'], $v['arraydesign'], $v['protocol'], $v['description'], $v['lastupdatedate'], $v['provider'], $v['bibliography'], $v['files'], $v['secondaryaccession']);
+foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array('_id'=>strtoupper($_GET['id'])),array('experimenttype'=>1, 'releasedate'=>1, 'accession'=>1, 'organism'=>1, 'name'=>1, 'assays'=>1, 'samples'=>1, 'arraydesign'=>1, 'protocol'=>1, 'description'=>1, 'lastupdatedate'=>1, 'provider'=>1, 'bibliography'=>1, 'files'=>1, 'secondaryaccession'=>1, 'mug_repository'=>1))->sort(array('releasedate'=>1)))) as $v)
+	$exp[$v['_id']] = array($v['experimenttype'], $v['releasedate'], $v['accession'], $v['organism'], $v['name'], $v['assays'], $v['samples'], $v['arraydesign'], $v['protocol'], $v['description'], $v['lastupdatedate'], $v['provider'], $v['bibliography'], $v['files'], $v['secondaryaccession'], $v['mug_repository']);
 
 $experiment = array();
 $experiment = $exp[$_GET['id']];
 
-//var_dump($experiment);
+
 
 ?>
 
@@ -52,18 +52,46 @@ $experiment = $exp[$_GET['id']];
                         <h1 class="page-title">Experiment <?php echo $experiment[2]; ?></h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
+		    <div class="row">
+			<div class="col-md-12">
+			<?php  
+				$error_data = false;
+			 	if ($_SESSION['errorData']){ 
+					$error_data = true;
+				?>
+				<?php if ($_SESSION['errorData']['Info']) { ?> 
+					<div class="alert alert-info">
+				<?php } else { ?>
+					<div class="alert alert-danger">
+				<?php } ?>
+					
+			        <?php 
+				foreach($_SESSION['errorData'] as $subTitle=>$txts){
+			        	print "<strong>$subTitle</strong><br/>";
+				       foreach($txts as $txt){
+				       	print "<div>$txt</div>";
+					}
+				}
+		  		unset($_SESSION['errorData']);
+		  		?>
+			     </div>
+			    <?php } ?>
+			  </div>
+			</div>
 
-												<div class="mt-element-step">
+
+								<div class="mt-element-step">
                                     <div class="row step-line">
                                         <div class="mt-step-desc">
-																				Please select any data of this experiment and it will be automatically uploaded to your workspace.
-																				</div>
+						Please select any data of this experiment and it will be automatically uploaded to your workspace.
+										</div>
 
 										<?php require "../htmlib/stepsup.inc.php"; ?>	
 										
                                     </div>
                                 </div>
 
+												<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
 
 
                         <div class="row">
@@ -105,7 +133,7 @@ $experiment = $exp[$_GET['id']];
 												   <?php } ?>
                                                 </tr>
                                                 <tr>
-                                                  <td class="col-1-te">Samples (<?php echo $experiment[6]; ?>)</td>
+                                                  <td class="col-1-te">Samples <!--(<?php echo $experiment[6]; ?>)--></td>  
                                                   <td><a href="https://www.ebi.ac.uk/arrayexpress/experiments/<?php echo $experiment[2]; ?>/samples/" target="_blank">Click for detailed sample information and links to data</a></td>
                                                 </tr>
 												<?php if(isset($experiment[7])){ ?>
@@ -171,7 +199,9 @@ $experiment = $exp[$_GET['id']];
                                                 <tr>
 												  <td class="col-1-te">
 													Citation</td>
-                                                  <td><a href="http://europepmc.org/abstract/MED/<?php echo $experiment[12]['accession']; ?>" target="_blank"><?php echo $experiment[12]['title']; ?></a> <?php echo $experiment[12]['authors']; ?></td>
+                                                  <td>
+                                                    <a href="http://europepmc.org/abstract/MED/<?php echo $experiment[12][0]['accession']; ?>" target="_blank"><?php echo $experiment[12][0]['title']; ?></a> <?php echo $experiment[12][0]['authors']; ?>
+                                                   </td>
 												</tr>
 												<?php } ?>
 												<?php if(isset($experiment[13])){ ?>
@@ -181,7 +211,7 @@ $experiment = $exp[$_GET['id']];
 													Files</td>
                                                   <td>
 													<?php 
-													$files = array();
+                                                    $files = array();
 													$files['idf'] = array();
 													$files['processed'] = array();
 													$files['raw'] = array();
@@ -218,6 +248,7 @@ $experiment = $exp[$_GET['id']];
 															<td class="col-1-subt">Sample and data relationship <?php if(sizeof($files['sdrf']) > 1) echo '('.sizeof($files['sdrf']).')'; ?></td>
 															<td class="col-2-subt">	
 															<?php foreach($files['sdrf'] as $k => $v): ?>
+                                <!--<a href="applib/getData.php?uploadType=repository&url=<?php echo $v['url'];?>&repo=<?php echo $experiment[15];?>" target="_blank"><i class="fa fa-cloud-upload"></i></a>&nbsp;&nbsp;-->
 																<a href="<?php echo $v['url']; ?>" target="_blank"><i class="fa fa-download"></i> <?php echo $v['name']; ?></a> 
 															<?php endforeach; ?>
 															<td>
@@ -305,6 +336,9 @@ $experiment = $exp[$_GET['id']];
 																<div class="form-actions">
 			
 																	<div id="bottom-validated-files">
+																	<div id=""><a href="javascript:openFilesList('<?php echo $_GET['id']; ?>');" class="btn green tooltips" aria-hidden="true" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to select the file from this experiment you want to import to workspace</p>"><i class="fa fa-cloud-upload"></i> IMPORT EXPERIMENT TO WORKSPACE </a></div>
+	
+																			<div id="" style="margin-top:20px"><a href="repository/JSONexperiment.php?id=<?php echo$_GET['id']; ?>" class="btn green" target="_blank"><i class="fa fa-file-code-o"></i> OPEN IN JSON FORMAT </a></div>
 
 																		<div id="go-out-uploadform"><input type="button" class="btn default" value="BACK TO REPOSITORY LIST" onclick="location.href='/repository/repositoryList.php';" /></div>
 																
@@ -317,7 +351,25 @@ $experiment = $exp[$_GET['id']];
                     </div>
                     <!-- END CONTENT BODY -->
                 </div>
-                <!-- END CONTENT -->
+								<!-- END CONTENT -->
+
+<div class="modal fade bs-modal" id="modalFilesList" tabindex="-1" role="basic" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+								<h4 class="modal-title">Experiment list of files</h4>
+							</div>
+							<div class="modal-body table-responsive">
+								<div id="meta-container" style="max-height: calc(100vh - 255px);">						
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
 <?php 
 

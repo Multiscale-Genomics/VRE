@@ -2,7 +2,6 @@
 
 function isGSDirBNS($col, $fn) {
 	$file = $col->findOne(array('_id'  => $fn,
-			'owner'=> $_SESSION['User']['id'],
 			'files' => array('$exists' => true)
 		   )
 	);
@@ -29,6 +28,7 @@ function getGSFilesFromDir($dataSelection=Array(),$onlyVisible=0){
         }
         $dirData = $GLOBALS['filesCol']->findOne($dataSelection);
 
+
         if (!isset($dirData['_id'])){
                 $_SESSION['errorData']['Error'][]="Data is not accessible or do not exist anymore. Please, try it later or mail <a href=\"mailto:".$GLOBALS['helpdeskMail']."\">".$GLOBALS['helpdeskMail']."</a>";
                 return FALSE;
@@ -53,7 +53,6 @@ function getGSFilesFromDir($dataSelection=Array(),$onlyVisible=0){
 		    continue;
 	    $fData['mtime'] = $fData['mtime']->sec;
 	    $files[$fData['_id']] = $fData; 
-
 	    if (isset($fData['files']) && count($fData['files'])>0 ){
 		foreach ($fData['files'] as $dd) {
 
@@ -72,11 +71,15 @@ function getGSFilesFromDir($dataSelection=Array(),$onlyVisible=0){
 
 }
 
-function getGSFileId_fromPath($fnPath) {
+function getGSFileId_fromPath($fnPath,$asRoot=0) {
 	$col = $GLOBALS['filesCol'];
-	$file = $col->findOne(array('path'  => $fnPath,
+	if ($asRoot){
+		$file = $col->findOne(array('path'  => $fnPath));
+	}else{
+		$file = $col->findOne(array('path'  => $fnPath,
 				    'owner' => $_SESSION['User']['id']
-	));
+		));
+	}
 	if (empty($file)){
 		return 0;
 	}else{
@@ -87,14 +90,30 @@ function getGSFileId_fromPath($fnPath) {
 	}
 }
 
-function getGSFile_fromId($fn) {
-	$fileData = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id']));
-	$fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $fn));
-	if (empty($fileData))
-		return 0;
-	if(!isset($fileMeta)) $fileMeta = array(); 
-	return array_merge($fileData,$fileMeta);	
-	
+function getGSFile_fromId($fn,$filter="",$asRoot=0) {
+    if ($asRoot)
+        $fileData = $GLOBALS['filesCol']->findOne(array('_id' => $fn) );
+    else
+    	$fileData = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id']));
+    $fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $fn));
+
+    if($filter == "onlyMetadata"){
+        if (empty($fileMeta))
+            return 0;
+        return $fileMeta;
+    
+    }elseif($filter == "onlyData"){
+        if (empty($fileData))
+            return 0;
+        return $fileData;
+    
+    }else{
+        if (empty($fileData))
+            return 0;
+        if(!isset($fileMeta)) $fileMeta = array();
+        return array_merge($fileData,$fileMeta);
+    }
+
 }
 
 function getGSFiles_filteredBy($fn,$filters) {
@@ -107,10 +126,9 @@ function getGSFiles_filteredBy($fn,$filters) {
 		else
 			$filter_filesMetaCol[$attr] = $v;
 	}	
-	$fileData = $GLOBALS['filesCol']->findOne($filter_filesCol);
-	$fileMeta = $GLOBALS['filesMetaCol']->findOne($filter_filesMetaCol);
+    $fileData = $GLOBALS['filesCol']->findOne($filter_filesCol);
+    $fileMeta = $GLOBALS['filesMetaCol']->findOne($filter_filesMetaCol);
 	$existMeta= $GLOBALS['filesMetaCol']->findOne(Array('_id' => $fn));
-
 
 	if (empty($fileData))
 		return 0;
@@ -123,6 +141,22 @@ function getGSFiles_filteredBy($fn,$filters) {
 	else
 		return array_merge($fileData,$fileMeta);	
 	
+}
+
+function addAssociatedFiles($masterId,$assocIds) {
+
+	$meta_master  = $GLOBALS['filesMetaCol']->findOne(array('_id' => $masterId));
+	if (!isset($meta_master['associated_files']))
+		$meta_master['associated_files']=array();
+
+	// update associated files metadata
+	foreach ($assocIds as $assocId){
+		array_push($meta_master['associated_files'],$assoc);
+		addMetadataBNS($assocId,array('associated_id'=>$masterId) );
+	}
+	// update master file metadata
+	modifyMetadataBNS($masterId,$meta_master);
+	return 1;
 }
 
 function getAssociatedFiles_fromId($fn,$assoc=Array()) {
@@ -274,59 +308,98 @@ function fromAbsPath_toPath($absPath){
 }
 
 
-function absolutePathGSDir($dir){
-	$root = $_SESSION['User']['id'];
-	if ( $root != $_SESSION['curDir'] && ! preg_match('/^(\/)*'.$root.'(\/|$)/',$_SESSION['curDir'])){
-		$_SESSION['errorData']['mongoDB'][]= "Current directory ".$_SESSION['curDir']." is not under the home directory $root. Restart login, please";
-		return array($dir,0);
-	}
-	if ( !preg_match('/^(\/)*'.$root.'(\/|$)/',$dir)){
-		return array($_SESSION['curDir']."/".$dir,1);
+function absolutePathGSDir($dir,$asRoot=0){
+	/*
+	if ($asRoot){
+		$root = $GLOBALS['dataDir'];
+		if (preg_match('/^\//',$dir)){
+			if (!preg_match('/^'.$root.'/',$dir)){
+				$_SESSION['errorData']['mongoDB'][]= "There cannot be files ouside $root. Failing to stage '$dir'";
+				return array($dir,0);
+			}
+			return array($dir,1);
+		}else
+			return array($GLOBALS['dataDir']."/".$dir,1);
+	*/
+	if ($asRoot){
+		if (preg_match('/^\//',$dir)){
+			$path = str_replace($GLOBALS['dataDir'],"",$dir);
+			$path = preg_replace('/^\//',"",$path);
+			return array($path,1);
+		}else{
+			return array($dir,1);
+		}	
+		
 	}else{
-		return array($dir,1);
+		$root = $_SESSION['User']['id'];
+		if ( $root != $_SESSION['curDir'] && ! preg_match('/^(\/)*'.$root.'(\/|$)/',$_SESSION['curDir'])){
+			$_SESSION['errorData']['mongoDB'][]= "Current directory ".$_SESSION['curDir']." is not under the home directory $root. Restart login, please";
+			return array($dir,0);
+		}
+		if (!preg_match('/^(\/)*'.$root.'(\/|$)/',$dir)){
+			return array($_SESSION['curDir']."/".$dir,1);
+		}else{
+			return array($dir,1);
+		}
 	}
 }
 
-function absolutePathGSFile($fn){
-	$root = $_SESSION['User']['id'];
-	if ( $root != $_SESSION['curDir'] && ! preg_match('/^(\/)*'.$root.'(\/|$)/',$_SESSION['curDir'])){
-		$_SESSION['errorData']['mongoDB'][] = "Current directory ".$_SESSION['curDir']." is not under the home directory $root. Restart login, please";
-		return array($fn,0);
-	}
-	if ( !preg_match('/^(\/)*'.$root.'\//',$fn)){
-		return array($_SESSION['curDir']."/".$fn,1);
+function absolutePathGSFile($fn,$asRoot){
+	if ($asRoot){
+                if (preg_match('/^\//',$fn)){
+                        $path = str_replace($GLOBALS['dataDir'],"",$fn);
+                        $path = preg_replace('/^\//',"",$path);
+                        return array($path,1);
+                }else{
+                        return array($fn,1);
+                }
+
 	}else{
-		return array($fn,1);
-	}
+		$root = $_SESSION['User']['id'];
+		if ( $root != $_SESSION['curDir'] && ! preg_match('/^(\/)*'.$root.'(\/|$)/',$_SESSION['curDir'])){
+			$_SESSION['errorData']['mongoDB'][] = "Current directory ".$_SESSION['curDir']." is not under the home directory $root. Restart login, please";
+			return array($fn,0);
+		}
+		if ( !preg_match('/^(\/)*'.$root.'\//',$fn)){
+			return array($_SESSION['curDir']."/".$fn,1);
+		}else{
+			return array($fn,1);
+		}
+	}	
 }
 
 
 // create new directory registry
 
-function createGSDirBNS($dirPath) {
-
+function createGSDirBNS($dirPath,$asRoot=0) {
 	$col = $GLOBALS['filesCol'];
 	//check dirPath
 	if (strlen($dirPath) == 0){
 		$_SESSION['errorData']['mongoDB'][]= "No directory path given";
 		return 0;
 	}
-	list($dirPath,$r) = absolutePathGSDir($dirPath);
+	list($dirPath,$r) = absolutePathGSDir($dirPath,$asRoot);
 	if ($r == "0"){
 		$_SESSION['errorData']['mongoDB'][]="Cannot create $dirPath . Target not under root directory ".$_SESSION['User']['id']." ?";
 		return 0;
 	}
-	$r = getGSFileId_fromPath($dirPath);
+
+	// already there?
+	$r = getGSFileId_fromPath($dirPath,1);
 	if ($r != "0"){
 		return $r;
 	}
-
+	
 	//check parent
 	if ( $dirPath == $_SESSION['User']['id'] ){
 		$parentId = 0;
+	}elseif($asRoot && (preg_match('/^'.preg_quote($GLOBALS['dataDir'], '/').'(\/)*[^\/.]+$/',$dirPath))  ){
+		$parentId = 0;
+	}elseif($asRoot && (preg_match('/^[^\/.]+$/',$dirPath))  ){
+		$parentId = 0;
 	}else{
 		$parentPath = dirname($dirPath);
-		$parentId   = getGSFileId_fromPath($parentPath);
+		$parentId   = getGSFileId_fromPath($parentPath,1);
 		if ($parentId == "0"){
 			$r = createGSDirBNS($parentPath);
 			if ($r=="0")
@@ -340,6 +413,15 @@ function createGSDirBNS($dirPath) {
 			return 0;
 		}
 	}
+	//check owner
+	$owner = $_SESSION['User']['id'];
+	if ($asRoot){
+		if ( preg_match('/^'.preg_quote($GLOBALS['dataDir'], '/').'(\/)*([^\/.]+)/',$dirPath,$m) ){
+			$owner = $m[2];
+		}elseif (preg_match('/^([^\/.]+)/',$dirPath,$m) ){
+			$owner = $m[1];
+		}
+	}
 
 	//store
 	$dirId = createLabel();
@@ -348,7 +430,7 @@ function createGSDirBNS($dirPath) {
 	   array('_id' => $dirId),
 	   array(
 			'_id'        => $dirId,
-			'owner'      => $_SESSION['User']['id'],
+			'owner'      => $owner,
 			'size'       => 0,
 			'path'       => $dirPath,
 			'type'       => 'dir',
@@ -368,48 +450,59 @@ function createGSDirBNS($dirPath) {
 	return $dirId;
 }
 
+
 // create new file registry
 // load file content to GRID, if load2grid===TRUE
-function uploadGSFileBNS($fnPath, $file, $attributes=Array(), $meta=Array(), $load2grid=false){
+function uploadGSFileBNS($fnPath, $file, $attributes=Array(), $meta=Array(), $load2grid=false,$asRoot=0){
 
 	$col = $GLOBALS['filesCol'];
 
 	//check fn
-	list($fnPath,$r) = absolutePathGSFile($fnPath);
+	list($fnPath,$r) = absolutePathGSFile($fnPath,$asRoot);
 	if ($r==0){
 		$_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath . Check current directory". $_SESSION['curDir'];
-                return $r;
-	}
-        $r = getGSFileId_fromPath($fnPath);
-        if ($r != "0"){
-		$_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath . File path already exists";
-                return $r;
-        }
+        return $r;
+    }
+    
+    $r = getGSFileId_fromPath($fnPath);
+    if ($r != "0"){
+           $_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath . File path already exists";
+           return $r;
+    }
 
 	//check parent
-	$parentPath  = dirname($fnPath);
-	if ($parentPath == "."){
-		$parentPath=$_SESSION['User']['id'];
-	}
-	$parentId  = getGSFileId_fromPath($parentPath);
-	if ($parentId == "0"){
-		$r = createGSDirBNS($parentPath);
-		if ($r=="0")
-			return 0;
-	}else{
-		if (!isGSDirBNS($col,$parentId) ){
-			$_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath. Parent $parentPath is not a directory";
-			return 0;
-	        }
-		$parentObj = $col->findOne(array(
-					'_id' => $parentId,
-					'owner' => $_SESSION['User']['id']
-					) );
-		if (isset($parentObj['permissions']) && $parentObj['permissions']== "000" ){
-			$_SESSION['errorData']['mongoDB'][]= "Not permissions to modify parent directory $parentPath";
-			return 0;
-		}
-	}
+    if (isset($attributes['parentDir']) ){
+        if (!$attributes['parentDir']){
+            $_SESSION['errorData']['Warning'][]="Given parent directory is invalid (".$attributes['parentDir']."). Infering it from '$fnPath' path file.";
+            unset($attributes['parentDir']);
+        }
+        $parentId = $attributes['parentDir'];
+    }
+    if (!$parentId){
+       $parentPath  = dirname($fnPath);
+       if ($parentPath == ".")
+               $parentPath=$_SESSION['User']['id'];
+       
+       $parentId  = getGSFileId_fromPath($parentPath,$asRoot);
+       if ($parentId == "0"){
+               $r = createGSDirBNS($parentPath,$asRoot);
+               if ($r=="0")
+                       return 0;
+       }else{
+               if (!isGSDirBNS($col,$parentId) ){
+                       $_SESSION['errorData']['mongoDB'][]="Cannot upload $fnPath. Parent '$parentPath' is not a directoryy";
+                       return 0;
+               }
+               $parentObj = $col->findOne(array(
+                                       '_id' => $parentId,
+                                       'owner' => $_SESSION['User']['id']
+                                       ) );
+               if (isset($parentObj['permissions']) && $parentObj['permissions']== "000" ){
+                       $_SESSION['errorData']['mongoDB'][]= "Not permissions to modify parent directory $parentPath";
+                       return 0;
+               }
+       }
+    }
 
 	//load file content to grid
 	if ($load2grid){
@@ -438,6 +531,98 @@ function uploadGSFileBNS($fnPath, $file, $attributes=Array(), $meta=Array(), $lo
 				$expiration = $GLOBALS['caduca'] * 24 * 3600;
 				$t = filemtime($file);
 				$attributes['expiration'] = new MongoDate($t + $expiration);
+        }
+        // insert file
+		$GLOBALS['filesCol']->update (
+			array('_id' => $fnId),
+			$attributes,
+			array('upsert'=> 1)
+		);
+
+		// add file to parent
+		$GLOBALS['filesCol']->update (
+			array("_id"=>$parentId),
+			array('$addToSet' => array("files" => $fnId))
+        );
+
+        // update parent
+		$timeObj = new MongoDate(strtotime("now"));
+		modifyGSFileBNS($parentId,"atime", new MongoDate(filemtime($file)));
+
+	}
+	// add metadata file
+	if (count($meta)){
+		modifyMetadataBNS($fnId,$meta);
+	}
+	return $attributes['_id'];
+}
+
+
+// create new file registry from a URL
+function uploadGSFileBNS_fromURL($url, $parentPath , $attributes=Array(), $meta=Array(), $asRoot=0){
+
+	$col = $GLOBALS['filesCol'];
+
+    //check url
+    if(!is_url($url)){
+        $_SESSION['errorData']['mongoDB'][]="Cannot upload '$url'. Invalid URL format";
+        return 0;
+    }
+    $r = getGSFileId_fromPath($url);
+    if ($r != "0"){
+		$_SESSION['errorData']['mongoDB'][]="Warning: Cannot upload '$url'. The resource was already there";
+        return $r;
+    }
+
+	//check parent
+	$parentId  = getGSFileId_fromPath($parentPath,$asRoot);
+	if ($parentId == "0"){
+		$r = createGSDirBNS($parentPath,$asRoot);
+		if ($r=="0")
+			return 0;
+	}else{
+		if (!isGSDirBNS($col,$parentId) ){
+			$_SESSION['errorData']['mongoDB'][]="Cannot upload '$url'. Parent '$parentPath' is not a directoryy";
+			return 0;
+        }
+		$parentObj = $col->findOne(array(
+					'_id' => $parentId,
+					'owner' => $_SESSION['User']['id']
+					) );
+		if (isset($parentObj['permissions']) && $parentObj['permissions']== "000" ){
+			$_SESSION['errorData']['mongoDB'][]= "Not permissions to modify parent directory $parentPath";
+			return 0;
+		}
+	}
+
+
+	// load File info to mongo
+
+	$fnId = (!isset($attributes['_id'])? createLabel():$attributes['_id']);
+
+	if ($attributes){
+		//set default file attributes
+		if (! isset($attributes['_id']))
+				$attributes['_id'] = $fnId;
+		if (! isset($attributes['owner']))
+				$attributes['owner'] = $_SESSION['User']['id'];
+		if (! isset($attributes['mtime']))
+				$attributes['mtime'] = new MongoDate(strtotime("now"));
+		if (! isset($attributes['size'])){
+                $ch = curl_init($params['url']);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_HEADER, TRUE);
+                curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+                $attributes['size'] = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+                curl_close($ch);
+        }
+		if (! isset($attributes['parentDir']))
+				$attributes['parentDir'] =$parentId;
+		if (! isset($attributes['path']))
+				$attributes['path'] = $url;
+		if (! isset($attributes['expiration'])){
+				$expiration = $GLOBALS['caduca'] * 24 * 3600;
+				$attributes['expiration'] = new MongoDate(strtotime("now") + $expiration);
 		}
 		$GLOBALS['filesCol']->update (
 			array('_id' => $fnId),
@@ -466,7 +651,7 @@ function uploadGSFileBNS($fnPath, $file, $attributes=Array(), $meta=Array(), $lo
 //overwrites all metadata
 function modifyMetadataBNS($fn, $metadata){
 	if (empty($GLOBALS['filesCol']->findOne(array('_id' => $fn))) ){
-		$_SESSION['errorData']['mongoDB'][]= "Cannot modify metadata for $fn. File not on Mongo";
+		$_SESSION['errorData']['mongoDB'][]= "Cannot modify metadata for $fn. File not in the repository";
 		return 0;
 	}
 	$GLOBALS['filesMetaCol']->update (
@@ -488,7 +673,7 @@ function modifyMetadataBNS($fn, $metadata){
 //add new metadata keys to previous metadata
 function addMetadataBNS($fn, $metadata){
 	if (empty($GLOBALS['filesCol']->findOne(array('_id' => $fn))) ){
-		$_SESSION['errorData']['mongoDB'][]= "Cannot add metadata for $fn. File not on Mongo";
+		$_SESSION['errorData']['mongoDB'][]= "Cannot add metadata for $fn. File not in the repository";
 		return 0;
 	}
 	foreach ($metadata as $k=>$v){
@@ -506,7 +691,7 @@ function addMetadataBNS($fn, $metadata){
 
 function modifyGSFileBNS($fn, $attribute, $value){
 
-	$file  = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id']) );
+	$file  = $GLOBALS['filesCol']->findOne(array('_id' => $fn) );
 	if ( empty($file)){
 		$_SESSION['errorData']['mongoDB'][] = " Cannot set $attribute=$value into file $fn. File not found.";
 		return 0;
@@ -526,8 +711,13 @@ function modifyGSFileBNS($fn, $attribute, $value){
 
 // delete file registry
 
-function deleteGSFileBNS($fn){ //fn == fnId
-	$file  = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id'] ) );
+function deleteGSFileBNS($fn,$asRoot=0){ //fn == fnId
+
+	// check file
+	if ($asRoot == 1)
+		$file  = $GLOBALS['filesCol']->findOne(array('_id' => $fn) );
+	else
+		$file  = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id'] ) );
 	if (empty($file)){
 		$_SESSION['errorData']['mongoDB'][]= " Cannot remove file with id=$fn. File not there anymore. Ignoring it</br> <a href=\"javascript:window.location=document.referrer\">[ OK ]</a>";
 		return 0;
@@ -540,23 +730,31 @@ function deleteGSFileBNS($fn){ //fn == fnId
 		$_SESSION['errorData']['mongoDB'][]= " Expected file type, but directory type for $fn";
 		return 0;
 	}
+
+	//check parent
 	$parentId = "";
-	if (isset($file['parentDir'])){
+	$parentPath="";
+	
+	if (isset($file['parentDir']) && $file['parentDir'] != "0" ){
 		$parentId= $file['parentDir'];
 	}else{
-		$parentPath = dirname($fn);
-		$parentId  = getGSFileId_fromPath($GLOBALS['filesCol'],$parentPath);
-		
-	}
-	if ( !$parentId or !isGSDirBNS($GLOBALS['filesCol'], $parentId)){
-		$_SESSION['errorData']['mongoDB'][] = " Cannot remove $fn . Parent $parentPath is not a directory.";
+		$filePath  = $file['path'];
+		$parentPath = dirname($filePath);
+		if ($parentPath == ".")
+            $parentPath=$_SESSION['User']['id'];
+        $parentId  = getGSFileId_fromPath($parentPath,$asRoot);
+
+    }
+	if (!$parentId or !isGSDirBNS($GLOBALS['filesCol'], $parentId)){
+		$_SESSION['errorData']['mongoDB'][] = " Cannot remove $filePath. 'parentPath' ($parentId)  is not a directory.";
 		return 0;
 	}   
-	if ( $parentId == "0"){
+	if ( ($parentPath == $_SESSION['User']['id'] || $parentId == "0") && !$asRoot){
 		$_SESSION['errorData']['mongoDB'][] = " Cannot remove home directory.";
 		return 0;
 	}   
 
+	// delete
 	if (!empty($file)){
 		$GLOBALS['filesCol']->remove(array('_id'=> $fn));
 		$GLOBALS['filesMetaCol']->remove(array('_id'=> $fn));
@@ -572,25 +770,29 @@ function deleteGSFileBNS($fn){ //fn == fnId
 
 // delete directory registry
 
-function deleteGSDirBNS($fn){
-	$dir  = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id']) );
+function deleteGSDirBNS($fn,$asRoot=0){
+	if ($asRoot == 1)
+		$dir  = $GLOBALS['filesCol']->findOne(array('_id' => $fn));
+	else
+		$dir  = $GLOBALS['filesCol']->findOne(array('_id' => $fn, 'owner' => $_SESSION['User']['id']) );
 
 	if (!isset($dir['parentDir'])){
 		$_SESSION['errorData']['mongoDB'][]= " Cannot find parent directory attribute for $fn . </br> <a href=\"javascript:history.go(-1)\">[ OK ]</a>";
-		return 0;
-	}
+	    return 0;
+    }
+    
 	$parentId= $dir['parentDir'];
 
-	if ( $parentId == "0"){
+	if ( $parentId == "0" && !$asRoot){
 		$_SESSION['errorData']['mongoDB'][]= " Cannot remove home directory.";
 		return 0;
 	}
 
 	foreach ($dir['files'] as $f ){
 		if ( isGSDirBNS($GLOBALS['filesCol'], $f) ){
-			$r = deleteGSDirBNS($f);
+			$r = deleteGSDirBNS($f,1);
 		}else{
-			$r = deleteGSFileBNS($f);
+			$r = deleteGSFileBNS($f,1);
 		}
 		if ($r == 0)
 			return 0;
@@ -702,6 +904,8 @@ function calcGSUsedSpace ($id) {
 			)
 		);
 	$d = $GLOBALS['filesCol']->aggregate($ops);
+
+
 	//print_r($d['result'][0]['size']);
 	return $d['result'][0]['size']+0.;
 }

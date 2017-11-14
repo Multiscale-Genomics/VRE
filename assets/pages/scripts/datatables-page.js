@@ -7,15 +7,20 @@ $(document).ready(function() {
 
   // CONFIGURACIÓ DATATABLES
   table = $('#workspace').DataTable({
+  //pagingType: "full_numbers",
 	pageLength: 20,
 	lengthMenu: [[5,15,20,-1],[5,15,20,"All"]],
 	orderCellsTop: true,
 	ordering: true,
-	treetable: {
-	  expandable: true
+	language: {
+        emptyTable: 'No files found for the selected tool <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align=\'left\' style=\'margin:3px;\'>Please go to the <em>Get Data</em> section to load tool input files.</p><p align=\'left\' style=\'margin:3px;\'>More information on what this tool expects below on the <em>Tools\' Help</em> box, or in the main <em>Help</em> section</p>"></i>'
 	},
+	/*treetable: {
+	  expandable: true
+	},*/
 	stateSave: true,
 	stateLoaded: function (settings, data) {
+		//console.log(data.start);
 	  if(data.columns[1].search.search != '') {
 		col1SearchValue = (data.columns[1].search.search);
 	  }
@@ -30,12 +35,15 @@ $(document).ready(function() {
 	columnDefs: [
 	  // columnes d'informació
 	  { targets: [0], orderable: false },
-	  { targets: [1], orderData: [ 3, 8, 1 ], orderable: false },
-	  { targets: [2], orderData: [ 3, 8, 2 ], orderable: false },
-	  { targets: [3], orderData: [ 3, 8, 1 ], orderable: false },
-	  { targets: [4], orderData: [ 9, 8, 4 ], orderable: false },
-	  { type: 'file-size', targets: 5, orderData: [ 10, 8, 5 ], orderable: false },
-	  { targets: [6], orderable: false },
+	  { targets: [1], orderData: [ 4, 8, 1 ], orderable: false },
+	  { targets: [2], orderData: [ 4, 8, 2 ], orderable: false },
+	  { targets: [3], orderData: [ 4, 8, 3 ], orderable: false },
+	  { targets: [4], orderData: [ 4, 8, 1 ], orderable: false },
+	  { targets: [5], orderData: [ 4, 8, 5 ], orderable: false },
+	  //{ targets: [5], orderData: [ 4, 8, 5 ], orderable: false },
+	  { type: 'file-size', targets: 6, orderData: [ 10, 8, 6 ], orderable: false },
+	  //{ targets: [6], orderable: false },
+	  
 	  { targets: [7], orderable: false },
 	  // columnes auxiliars d'ordenació (invisibles)
 	  { targets: [8], orderable: false, visible: false },
@@ -43,12 +51,38 @@ $(document).ready(function() {
 	  { targets: [10], orderable: false, visible: false }
    ],
    "createdRow": function( row, data, dataIndex ) {
+			
+		 if($(row).data('tt-parent-id') === undefined) {
+
+				$(row).css('font-weight', 'bold');
+				$(row).css('color', '#337ab7');
+				if($('td:first-child', row).hasClass('highlighted_folder')) {
+					var folderIcon = '<span class="fa-stack fa-lg" style="height: 0;">' +
+  				'<i class="fa fa-folder fa-stack-1x font-blue-oleo" style="left:-5px;top: -9px;"></i>' + 
+  				'<i class="fa fa-folder-o font-green" style="position: absolute;left: 5px;top: -9px;"></i>' + 
+					'</span>';
+				}else{
+
+					var folderIcon = '<i class="fa fa-folder" aria-hidden="true" style="font-size:18px;margin-left:5px;"></i>';
+				}
+		 		$('td:first-child .mt-checkbox', row).after(folderIcon);
+
+		 }else {
+		
+			 	if(!($(row).children('td').context.innerHTML.indexOf('mt-checkbox') != -1)) {
+			 		$(row).css('color', '#87a2b9'); 
+					$(row).addClass('row-disabled'); 
+				}
+
+		 }
+
    	   //console.log($(row).data('tt-id'), dataIndex);
-		if($(row).hasClass('leaf') && (!($(row).children('td').context.innerHTML.indexOf('enabled') != -1))) $(row).addClass('row-disabled');                               
+		//if($(row).hasClass('leaf') && (!($(row).children('td').context.innerHTML.indexOf('enabled') != -1))) $(row).addClass('row-disabled');                               
    	},
    "initComplete": function (settings, json) {
    		$('#loading-datatable').hide();
    		$('#workspace').show();
+   		$(".tooltips").tooltip();
 		// ***********************
  		//setTimeout(function(){  table.cell({ row: 4, column: 2 }).data('<span class="alert-danger">FINISH!!!</span>').draw(); }, 6000);
   		// ***********************
@@ -78,24 +112,69 @@ $(document).ready(function() {
 
   // INICIALITZACIÓ DE NODES A DESPLEGATS (S'HA DE FER PER TOTES LES CARPETES)
 		  
-  var folders = $('tr', table.rows().nodes());
-  folders.prevObject.each(function(index){
+  //var folders = $('tr[data-tt-id="1"]', table.rows().nodes());
+	//var folders = $('tr:not([data-tt-parent-id])');
+  /*folders.prevObject.each(function(index){
 	$('#workspace').treetable('expandNode', $(this).attr('data-tt-id'));
-  });
+  });*/
 
-  // BOTONS D'ORDENACIÓ DE COLUMNES array(File,Format,Proj,Date,Size,Expires)
-  var cols = new Array('asc','asc','asc','asc','asc');
-  $('.mock_button').click(function(){
-	i = $(this).attr("id").substring(11, 13);
-  	  folders.prevObject.each(function(index){
-		folderId = $(this).attr('data-tt-id');
-		if(cols[i] == 'asc'){
-		  table.cell({ row: (folderId - 1), column: 8 }).data('1000').draw();
-		  //alert(folderId + " changed to 1000");
-		}else{
-		  table.cell({ row: (folderId - 1), column: 8 }).data('-1000').draw();
-		  //alert(folderId + " changed to -1000");
-		}
+	var folders = $('#workspace tr[data-tt-id]', table.rows().nodes());
+	var foldersIndex = []
+	folders.prevObject.each(function(index){
+		if($(this).attr('data-tt-id').indexOf('.') == -1) foldersIndex.push($(this).attr('data-tt-id'));	
+	});
+
+  // BOTONS D'ORDENACIÓ DE COLUMNES array(File,Format,Proj,Date,Size,Data type)
+  var cols = new Array('asc','asc','asc','asc','asc', 'asc', 'asc');
+ /* $('.mock_button').click(function(){
+		i = $(this).attr("id").substring(11, 13);
+  	//folders.prevObject.each(function(index){
+		$.each(foldersIndex, function(index, value) {
+			//if(!$(this).data('tt-parent-id')) folderId = $(this).attr('data-tt-id');
+			//folderId = $(this).attr('data-tt-id');
+
+			//if($(this).attr('data-tt-id').indexOf('.') == -1) folderId = $(this).attr('data-tt-id');
+
+			//console.log(folderId);
+
+			//console.log($(this).data('tt-parent-id'));
+			//
+			folderId = value;
+
+			if(cols[i] == 'asc'){
+				console.log(table.cell({ row: (folderId - 1), column: 8 }).data());
+
+		  	table.cell({ row: (folderId - 1), column: 8 }).data('1000').draw();
+		  	//console.log(table.cell({ row: (folderId - 1), column: 8 }).data());
+		  	//console.log(folderId + " changed to 1000");
+			}else{
+		  	table.cell({ row: (folderId - 1), column: 8 }).data('-1000').draw();
+		  	//console.log(folderId + " changed to -1000");
+			}
+	  });
+	  cols[i] = (cols[i] =='asc' ? 'desc': 'asc');
+	  table.order(i,cols[i]).draw();
+				
+  });*/
+
+	$('.mock_button').click(function(){
+		i = $(this).attr("id").substring(11, 13);
+  	folders.prevObject.each(function(index){
+			if(cols[i] == 'asc'){
+				//console.log(table.cell({ row: index, column: 8 }).data());
+				if(table.cell({ row: index, column: 8 }).data() == '-1000')
+					table.cell({ row: index, column: 8 }).data('1000').draw();
+
+		  	//table.cell({ row: (folderId - 1), column: 8 }).data('1000').draw();
+		  	//console.log(table.cell({ row: (folderId - 1), column: 8 }).data());
+		  	//console.log(folderId + " changed to 1000");
+			}else{
+				if(table.cell({ row: index, column: 8 }).data() == '1000')
+					table.cell({ row: index, column: 8 }).data('-1000').draw();
+
+		  	//table.cell({ row: (folderId - 1), column: 8 }).data('-1000').draw();
+		  	//console.log(folderId + " changed to -1000");
+			}
 	  });
 	  cols[i] = (cols[i] =='asc' ? 'desc': 'asc');
 	  table.order(i,cols[i]).draw();
@@ -130,13 +209,14 @@ $(document).ready(function() {
   var allFolderChecked = [];
   // select all files of a folder 
   $('input[type=checkbox].foldercheck', table.rows().nodes()).change(function() {
-	var folderId = $(this).parent().parent().parent().attr('data-tt-id');
+		var folderId = $(this).parent().parent().parent().attr('data-tt-id');
     var checked = $(this).is(":checked");
-	$('input[type=checkbox]', table.rows().nodes()).each(function() {
-		if ($(this).parent().parent().parent().attr('data-tt-parent-id') == folderId) $(this).prop('checked', checked);
-	});
-	if(checked) allFolderChecked.push(folderId);
-	else allFolderChecked.remove(folderId);
+		$('input[type=checkbox]', table.rows().nodes()).each(function() {
+			if ($(this).parent().parent().parent().attr('data-tt-parent-id') == folderId
+					 && ($(this).parent().parent().parent().attr('data-tt-parent-id') !== undefined)) $(this).prop('checked', checked);
+		});
+		if(checked) allFolderChecked.push(folderId);
+		else allFolderChecked.remove(folderId);
   }); 
 
   /*'a.folder-node', table.rows().nodes()).click(function(){
@@ -169,19 +249,35 @@ $(document).ready(function() {
   // SELECT MULTIPLE FILES
   // array with the names of the folders
   var allFolders = [];
-  folders.prevObject.each(function(index){
+  /*folders.prevObject.each(function(index){
+  	//console.log($(this));
   	var jqTds = $('>td', $(this));
 		allFolders[$(this).attr('data-tt-id')] = jqTds[1].innerText.split('\n')[0];
 		//console.log(jqTds[1].innerText.split('\n')[0]);
-  });
+  });*/
+
+	function noEmpty(value) {
+		  return value != "";
+	}
 
   // JSON with the data of the files
   var files = $('tr', table.rows().nodes());
   files.prevObject.each(function(index) {
   	//console.log(table.cells({ row: index, column: 9 }).data()[0]);
+  	//
+  	//
 	var jqTds = $('>td', $(this));
 	var namesTds = $('td:nth-child(2) .enabled', $(this));
 	var metadata = '';
+
+	if($(this).context.innerHTML.indexOf('fa-folder') != -1) { 
+		var foldername = jqTds[1].innerText;
+		if(foldername.indexOf('0uploads') != -1) foldername = 'uploads';
+
+		allFolders[$(this).attr('data-tt-id')] = foldername.replace(/(\n\t|\n|\t)/gm,"*").split("*").filter(noEmpty)[0];
+		//console.log(jqTds[1].innerText.replace(/(\n\t|\n|\t)/gm,"*").split("*").filter(noEmpty)[0]);
+	}
+
 	if(jqTds[1].innerHTML.indexOf('extra_info') != -1){
 		metadata = jqTds[1].innerHTML.substring(jqTds[1].innerHTML.lastIndexOf('<table>') + 7, jqTds[1].innerHTML.lastIndexOf('</table>'));
 	}
@@ -190,7 +286,8 @@ $(document).ready(function() {
 	if((!$(this).hasClass('branch')) && (jqTds[0].innerHTML != '<span class="indenter" style="padding-left: 0px;"></span>')) allFiles.push({'folderId':$(this).attr('data-tt-parent-id'), 'folderName':allFolders[$(this).attr('data-tt-parent-id')],'fileName':nameFile, 'fileId':$('>td input', $(this)).val(), 'rowId':$(this).attr('data-tt-id'), 'checked':false, 'metadata':metadata});
   });
   //******************************************
-  //console.log(JSON.stringify(allFiles));
+  // console.log(JSON.stringify(allFiles));
+ 	// console.log(allFolders);
   //*******************************************
 
   // check if there's at least one file checked
@@ -245,7 +342,7 @@ $(document).ready(function() {
       '</div>'+
 	  '<div class="col2">'+
 		'<div class="label label-sm label-danger" style="float: right;padding:0">'+
-            '<a href="javascript:removeFromToolsList(\'tool-' + id  + '\', ' + id_or  + ');" title="Remove file" class="btn btn-icon-only red" style="width: 25px;height: 25px;padding-top: 1px;"><i class="fa fa-trash"></i></a>'+
+            '<a href="javascript:removeFromToolsList(\'tool-' + id  + '\', ' + id_or  + ');" title="Clear file from list" class="btn btn-icon-only red" style="width: 25px;height: 25px;padding-top: 1px;"><i class="fa fa-times-circle"></i></a>'+
         '</div>'+
       '</div>'+
 	  '</li>');
@@ -313,7 +410,7 @@ $(document).ready(function() {
 	//console.log(fcheck);
 	if(!fcheck) $('tr[data-tt-id=' + folderId + '] input[type=checkbox].foldercheck').prop('checked', false);
 	
-	if(checked) toastModal("The file selected has been added to the Run Tools box below the workspace table.");
+	if(checked) toastModal("The file selected has been added to the Manage Files box below the workspace table.");
 
   }
 
@@ -338,23 +435,25 @@ $(document).ready(function() {
 
   // add / remove all the files from a folder to the portlet
   $('input[type=checkbox].foldercheck', table.rows().nodes()).change(function() {
-	var row = $(this).parent().parent().parent();
-	var checked = $(this).is(":checked");
-	for(i in allFiles){
-		if((allFiles[i].folderId) == row.data('tt-id')) {
-			if(checked) {
-				if(!allFiles[i].checked) drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
-				allFiles[i].checked = true;
-			}else{ 
-				allFiles[i].checked = false;
-				drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
+		var row = $(this).parent().parent().parent();
+		var checked = $(this).is(":checked");
+		for(i in allFiles){
+			if((allFiles[i].folderId) == row.data('tt-id')) {
+				if(checked) {
+					if(allFiles[i].fileId !== undefined) {
+						if(!allFiles[i].checked) drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
+						allFiles[i].checked = true;
+					}
+				}else{ 
+					allFiles[i].checked = false;
+					drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
+				}
 			}
 		}
-	}
-	drawToolsMenu(checked);
-	//console.log(JSON.stringify(allFiles));
+		drawToolsMenu(checked);
+		//console.log(JSON.stringify(allFiles));
 
-	if(checked) toastModal("All the files of the selected folder have been added to the Run Tools box below the workspace table.");
+		if(checked) toastModal("All the files of the selected folder have been added to the Manage Files box below the workspace table.");
 
   });
 
@@ -364,8 +463,12 @@ $(document).ready(function() {
 	for(i in allFiles){
 		if(allFiles[i].rowId) {
 			if(checked) {
-				if(!allFiles[i].checked) drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
-				allFiles[i].checked = true;
+				console.log(allFiles[i])
+				if((allFiles[i].fileId === undefined) || (allFiles[i].folderId === undefined) || (allFiles[i].fileName === undefined)){
+				}else{
+					if(!allFiles[i].checked) drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
+					allFiles[i].checked = true;
+				}
 			}else{ 
 				allFiles[i].checked = false;
 				drawToolsList(checked, allFiles[i].rowId.toString().replace('.', ''), allFiles[i].fileName, allFiles[i].folderName, allFiles[i].rowId.toString(), allFiles[i].metadata);
@@ -383,7 +486,7 @@ $(document).ready(function() {
 			var select = $('<select style="width: 100%!important;" class="selector form-control input-sm input-xsmall input-inline"><option value="">All</option></select>')
 			column.data().unique().sort().each( function ( d, j ) {
 				if(d.indexOf('<span style="display:none;">0</span>') != -1)	d = "uploads";
-				//console.log(d.indexOf('<span style="display:none;">0</span>')); 
+				//console.log(d.indexOf('<span style="display:none;">0</span>'));
 				if((d.length) && (d != '&nbsp;')){
 		  		var sel = '';
 		  		if ((d == col2SearchValue) || (d == col3SearchValue)) sel = ' selected ';

@@ -147,7 +147,9 @@
 			<?php if($analysis == "PDB"){ 
 
 			print "<td width=\"50\"></td>\n";
-                        print "<td class=\"curvesText_hidden\"><a id='TIMESel' class='unselected' title='TIME Results'>Results by Time</a></td>\n";
+                        print "<td><a id='TIMESel' class='unselected' title='TIME Results'></a></td>\n";
+			#print "<td width=\"50\"></td>\n";
+                        #print "<td class=\"curvesText_hidden\"><a id='TIMESel' class='unselected' title='TIME Results'>Results by Time</a></td>\n";
 			}
 			else {
 			?>

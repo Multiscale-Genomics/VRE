@@ -21,7 +21,7 @@ logger("Factor Stiffness: $factorStiffness");
 	<tr><td align="center" rowspan="7" id="insertJmol">
 
 <script type="text/javascript">
-  var script="load <?php echo $GLOBALS['BASEURL'].'tools/naflex/'.$anim; ?>; cpk off; trace 0; select all; color red; anim mode palindrome; select backbone; trace 100; color blue; animation fps 5; anim on; background white;";
+  var script="load <?php echo $anim; ?>; cpk off; trace 0; select all; color red; anim mode palindrome; select backbone; trace 100; color blue; animation fps 5; anim on; background white;";
   var jmol = "jmol";
   jmol_isReady = function(applet) {
         Jmol._getElement(applet, "appletdiv");
@@ -71,8 +71,8 @@ logger("Factor Stiffness: $factorStiffness");
 			</select></p>
 
 			<input type="hidden" name="type" value= "<?php echo $analysisType; ?>" />
-			<input type="hidden" name="proj" value="<?php echo $proj; ?>" />
-			<input type="hidden" name="op" value="<?php echo $op; ?>" />
+			<input type="hidden" name="project" value="<?php echo $proj; ?>" />
+			<!--<input type="hidden" name="op" value="<?php echo $op; ?>" />-->
 
 			<input class="btn blue" type="submit" id="SendButton" value="View" />
 		</form>

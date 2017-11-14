@@ -58,12 +58,12 @@ logger("PWD: $pwd");
 
 			<!--<img border='1' width='600' src="<?php echo $GLOBALS[homeURL] ?>/<?php echo "$pwd/$file" ?>" border="0" width="300" align="center">-->
 
-			<img border='1' width='600' src="tools/naflex/NAFlex-Data/NAFlex_parmBSC1/<?php echo $_REQUEST['proj']."/".$_REQUEST['type']."/$file" ?>" border="0" width="300" align="center">
+			<img border='1' width='600' src="<?php echo $webdir.$_REQUEST['type']."/$file" ?>" border="0" width="300" align="center">
 
 			<table align="" border="0" style="margin-top:30px;"><tr><!--<td>
 			<p align="right" class="curvesDatText" onClick="window.open('tools/naflex/NAFlex-Data/NAFlex_parmBSC1/<?php echo $_REQUEST['proj']."/".$_REQUEST['type']."/$file" ?>','', '_blank,resize=1,width=800,height=400');">Open in New Window</p><br/>
 			</td>--><td>
-			<a href="<?php echo $GLOBALS['BASEURL']; ?>tools/naflex/getFile.php?fileloc=NAFlex-Data/NAFlex_parmBSC1/<?php echo $_REQUEST['proj']."/".$_REQUEST['type']."/$file" ?>&type=curves" class="btn blue"> Download Raw Data</a>
+			<a href="<?php echo $GLOBALS['BASEURL']; ?>tools/naflex/getFile.php?fileloc=<?php echo $downdir.$_REQUEST['type']."/$file" ?>&type=curves" class="btn blue"> Download Raw Data</a>
 			</td></tr></table>
 
                         </div></td>

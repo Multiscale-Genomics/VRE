@@ -40,22 +40,11 @@ foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array(),arr
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title">List of Experiments
+                        <h1 class="page-title">List of Experiments of Array Express
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
 											
-												<div class="mt-element-step">
-                                    <div class="row step-line">
-                                        <div class="mt-step-desc">
-																				Please select an experiment.
-																				</div>
-
-										<?php require "../htmlib/stepsup.inc.php"; ?>	
-										
-                                    </div>
-                                </div>
-
 	
                         <div class="row">
                             <div class="col-md-12">
@@ -74,11 +63,12 @@ foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array(),arr
                                         <table class="table table-striped table-hover table-bordered" id="table-repository">
                                             <thead>
                                                 <tr>
+                                                    <!--<th></th>-->
                                                     <th> Accession </th>
                                                     <th> Title </th>
                                                     <th> Type </th>
                                                     <th> Organism </th>
-                                                    <th> Assays </th>
+                                                    <!--<th> Assays </th>-->
                                                     <th> Released </th>
                                                     <th> Processed </th>
                                                     <th> Raw </th>
@@ -90,6 +80,11 @@ foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array(),arr
 											  ?>
 												
 											  <tr>
+                                                <!--<td style="vertical-align:middle;">
+                                                    <a href="javascript:;">
+                                                        <i class="font-green fa fa-cloud-upload tooltips" aria-hidden="true" style="font-size:22px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Import experiment to workspace (service not available yet)</p>"></i>
+                                                    </a>
+                                                </td>-->
                                                 <td><a href="repository/experiment.php?id=<?php echo $key; ?>"><?php echo $value[2]; ?></a></td>
                                                 <td><?php echo $value[4]; ?></td>
                                                 <td><?php echo $value[0]; ?></td>
@@ -102,19 +97,21 @@ foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array(),arr
 													echo $value[3]; 
 												}
 												?></td>
-                                                <td style="text-align:right;"><?php echo $value[5]; ?></td>
+                                                <!--<td style="text-align:right;"><?php echo $value[5]; ?></td>-->
 												<td><?php echo $value[1]; ?></td>
 												<?php 
 													$files = array();
 													$files['processed'] = array();
-													$files['raw'] = array();
+                                                    $files['raw'] = array();
+                                                    
+                                                    if(isset($value[6])) {
 													foreach($value[6] as $k => $v):
 													  
 													  if((gettype($v['kind']) == 'array') || ($v['kind'] == 'raw')) {
 
-														/*$aux = array();
-														$aux['name'] = $v['name'];
-														$aux['url'] = $v['url'];*/
+														//$aux = array();
+														//$aux['name'] = $v['name'];
+														//$aux['url'] = $v['url'];
 
 														if(gettype($v['kind']) == 'array'){
 															if(in_array('processed', $v['kind'])) $files['processed'][] = $v['url'];
@@ -126,7 +123,8 @@ foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array(),arr
 													  
 													  } 
 													
-													endforeach; 
+                                                    endforeach;
+                                                    }
 												?>
 												<td style="text-align:center;">
 													<?php 

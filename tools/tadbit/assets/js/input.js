@@ -138,12 +138,20 @@ var ValidateForm = function() {
 		$('#resolution').on('input', function() {
 
 			if($(this).val() >= 100000) {
-				$('#gen-matr').parent().show();
-				$('#gen-matr').removeAttr('disabled', 'disabled');
+				/*$('#gen_matr').parent().show();
+				$('#gen_matr').removeAttr('disabled', 'disabled');*/
+				$('#keep_matrices option:eq(3)').prop('disabled', false);
 			}else{
-				$('#gen-matr').parent().hide();
-				$('#gen-matr').attr('disabled', 'disabled');
+				/*$('#gen_matr').parent().hide();
+				$('#gen_matr').attr('disabled', 'disabled');*/
+				$('#keep_matrices option:eq(3)').prop('disabled', true);
 			}
+
+			$(".select2_tad3").select2({
+				placeholder: "Select keep matrices clicking here",
+				width: '100%'
+			});
+
 
 		});
 
@@ -155,7 +163,7 @@ var ValidateForm = function() {
 
 			if (array_selecteds !== null) {
 
-				if(array_selecteds.indexOf("10") != -1) {
+				if(array_selecteds.indexOf("5") != -1) {
 					$('#fg_min_dist_RE').show();
 					$('#min_dist_RE').prop('disabled', false);
 				} else {
@@ -163,12 +171,20 @@ var ValidateForm = function() {
 					$('#min_dist_RE').prop('disabled', true);
 				}
 
-				if(array_selecteds.indexOf("5") != -1) {
-					$('#fg_min_dist_RE2').show();
-					$('#min_dist_RE2').prop('disabled', false);
+				if(array_selecteds.indexOf("6") != -1) {
+					$('#fg_min_fragment_size').show();
+					$('#min_fragment_size').prop('disabled', false);
 				} else {
-					$('#fg_min_dist_RE2').hide();
-					$('#min_dist_RE2').prop('disabled', true);
+					$('#fg_min_fragment_size').hide();
+					$('#min_fragment_size').prop('disabled', true);
+				}
+
+				if(array_selecteds.indexOf("7") != -1) {
+					$('#fg_max_fragment_size').show();
+					$('#max_fragment_size').prop('disabled', false);
+				} else {
+					$('#fg_max_fragment_size').hide();
+					$('#max_fragment_size').prop('disabled', true);
 				}
 
 			}
@@ -222,8 +238,8 @@ var ValidateForm = function() {
 								data = data.replace(/%5B/g,"[");
                 data = data.replace(/%5D/g,"]");
 								data = data.replace(/%3A/g,":");
-                //location.href = baseURL + "applib/launchTool.php?" + data;
-                console.log(data);
+                location.href = baseURL + "applib/launchTool.php?" + data;
+                //console.log(data);
 
             }
         });
@@ -240,6 +256,18 @@ var ValidateForm = function() {
 					});
         });
 
+				if($("#map_refgenome").length) {
+					$("#map_refgenome").rules("add", {
+						required:true
+					});
+				}
+
+				if($("#ref_genome_gem1").length) {
+					$("#ref_genome_gem1").rules("add", {
+						required:true
+					});
+				}
+
         $("#rest_enzyme").rules("add", {
 					require_from_group: [1, ".tadbit-map-group"]
 				});
@@ -254,15 +282,29 @@ var ValidateForm = function() {
 
 				
 				// Parsing mapped reads
-				$("#ref_genome").rules("add", {
-					required:true
-				});
+				if($("#ref_genome").length) {
+					$("#ref_genome").rules("add", {
+						required:true
+					});
+				}
+
+				if($("#ref_genome_fasta").length) {
+					$("#ref_genome_fasta").rules("add", {
+						required:true
+					});
+				}
+
+				if($("#ref_genome_gem2").length) {
+					$("#ref_genome_gem2").rules("add", {
+						required:true
+					});
+				}
 
 				$("#chromosomes").rules("add", {
-					required:true, 
-					regx: /[^(chr)?[A-Za-z]?[0-9]{0,3}[XVI]{0,3}(?:ito)?[A-Z-a-z]?$]/,
+					//required:true, 
+					regx: /^(chr)?[A-Za-z]?[0-9]{0,3}[XVI]{0,3}(?:ito)?[A-Z-a-z]?$/,
 					messages: {
-						regx: "You must use the next format: 'xxx'",
+						regx: "You must use the next format: chrX, 1, 2B, chrMito, Mito, chrXIV",
 					}
 				});
 
@@ -272,15 +314,15 @@ var ValidateForm = function() {
 					required:true
 				});
 
-				$("#max_mol_length").rules("add", {
+				$("#min_fragment_size").rules("add", {
+					required:true
+				});
+
+				$("#max_fragment_size").rules("add", {
 					required:true
 				});
 
 				$("#min_dist_RE").rules("add", {
-					required:true
-				});
-
-				$("#min_dist_RE2").rules("add", {
 					required:true
 				});
 
@@ -290,26 +332,38 @@ var ValidateForm = function() {
 					required:true
 				});
 
-				$("#intra-chr-matr").rules("add", {
+				/*"#keep_matrices").rules("add", {
+						required:true
+					});*/
+
+				$("#chromosome_names1").rules("add", {
 					regx: /^([0-9a-zA-Z]+ ){0,}([0-9a-zA-Z]+)$/,
 					messages: {
 						regx: "Matrices, or sub-matrices to save. You can also input a list of chromosome names (e.g.: chr1 chr2 chrX)",
 					}
 				});
 
-				$("#inter-chr-matr").rules("add", {
+
+				/*$("#intra_chr_matr").rules("add", {
 					regx: /^([0-9a-zA-Z]+ ){0,}([0-9a-zA-Z]+)$/,
 					messages: {
 						regx: "Matrices, or sub-matrices to save. You can also input a list of chromosome names (e.g.: chr1 chr2 chrX)",
 					}
 				});
 
-				$("#gen-matr").rules("add", {
+				$("#inter_chr_matr").rules("add", {
 					regx: /^([0-9a-zA-Z]+ ){0,}([0-9a-zA-Z]+)$/,
 					messages: {
 						regx: "Matrices, or sub-matrices to save. You can also input a list of chromosome names (e.g.: chr1 chr2 chrX)",
 					}
 				});
+
+				$("#gen_matr").rules("add", {
+					regx: /^([0-9a-zA-Z]+ ){0,}([0-9a-zA-Z]+)$/,
+					messages: {
+						regx: "Matrices, or sub-matrices to save. You can also input a list of chromosome names (e.g.: chr1 chr2 chrX)",
+					}
+				});*/
 
 
 				
@@ -320,15 +374,26 @@ var ValidateForm = function() {
 						messages: {
 							required: "You must select all the file types.",
 						}
+						require_from_group: [1, ".tadbit-segm-group"],
 					});
         });*/
+			
+				if(($("#rich_a").length > 0) && ($("#rich_a").length > 0)) {
+					$("#rich_a").rules("add", {
+						require_from_group: [1, ".tadbit-segm-group"]
+					});
+
+					$("#rich_b").rules("add", {
+						require_from_group: [1, ".tadbit-segm-group"]
+					});
+				}
 		
 				$("#callers").rules("add", {
 					required:true
 				});
 
-				$("#chromosome_names").rules("add", {
-					required:true,
+				$("#chromosome_names2").rules("add", {
+					//required:true,
 					regx: /^(chr[0-9]+ ){0,}(chr[0-9]+)$/,
 					messages: {
 						regx: "You must use the next format: 'chr1 chr2 chrX'",
@@ -340,7 +405,7 @@ var ValidateForm = function() {
         $('#tadbit-form input').keypress(function(e) {
             if (e.which == 13) {
                 if ($('#tadbit-form').validate().form()) {
-                    $('#tadbit-form').submit(); //form validation success, call ajax form submit
+                    //$('#tadbit-form').submit(); //form validation success, call ajax form submit
                 }
                 return false;
             }
@@ -472,6 +537,12 @@ var Select2 = function () {
 				placeholder: "Select one or more callers clicking here",
 				width: '100%'
 			});
+
+			$(".select2_tad3").select2({
+				placeholder: "Select keep matrices clicking here",
+				width: '100%'
+			});
+
 		
 		
 

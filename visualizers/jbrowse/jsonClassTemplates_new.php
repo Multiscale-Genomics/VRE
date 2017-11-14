@@ -42,7 +42,8 @@ class Alignment extends Base{
 
 	public function __construct($label,$path,$file){
 		parent::__construct("Alignment",$label."_bam",$path,$file);
-
+###PROVA!!!
+		$this->chunkSizeLimit = "10000000"; 
 	}
 }
 
@@ -367,9 +368,9 @@ The movement of hotspots is scored according to how many moved reads are involve
 <span style='background: #BDBDBD;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> DECREASED FUZZINESS:</b> A fuzzy nucleosome in condition 1 tend to become better positioned in condition 2.<br/>
 ");
 
-		$newWin = new newWindow("View 1000 bp. around the hotspot","Nucleosome Dynamics plot",$GLOBALS['absURL']."getGraph.php?start={start}&end={end}&chr={seq_id}&label=".$label."&window=1000&win=no");
-//		$iframe = new iframeDialog("iframe","Nucleosome Dynamics plot",$GLOBALS['absURL']."getGraph.php?start={start}&end={end}&chr={seq_id}&label=".$label."&window=1000&win=no");
-//		$newWin2 = new newWindow("newWindow","Nucleosome Dynamics plot",$GLOBALS['absURL']."getGraph.php?start={start}&end={end}&chr={seq_id}&label=".$label."&window=1000&win=yes");
+		$newWin = new newWindow("View 1000 bp. around the hotspot","Nucleosome Dynamics plot",$GLOBALS['jbrowseURL']."getGraph.php?start={start}&end={end}&chr={seq_id}&label=".$label."&window=1000&win=no");
+//		$iframe = new iframeDialog("iframe","Nucleosome Dynamics plot",$GLOBALS['jbrowseURL']."getGraph.php?start={start}&end={end}&chr={seq_id}&label=".$label."&window=1000&win=no");
+//		$newWin2 = new newWindow("newWindow","Nucleosome Dynamics plot",$GLOBALS['jbrowseURL']."getGraph.php?start={start}&end={end}&chr={seq_id}&label=".$label."&window=1000&win=yes");
 //		$this->menuTemplate = array(array("label" => "View details"),$newWin,array("label" => "View 1000 bp. around the hotspot","children" => array($iframe,$newWin2)));
         $this->menuTemplate = array(array("label" => "View details"),$newWin);
 	$this->fmtDetailField_Score = "function () { return \"".attribute_help("ND","Score")."\"; }";
@@ -386,8 +387,8 @@ The movement of hotspots is scored according to how many moved reads are involve
 
 
 
-//    $this->fmtDetailValue_Type = "function (type,feature) { start=feature.get('start');end=feature.get('end');seq_id=feature.get('seq_id'); return type+\"  <a href='".$GLOBALS['absURL']."getGraph.php?start=\"+start+\"&end=\"+end+\"&chr=\"+seq_id+\"&label=".$label."&window=1000&win=no' target='_blank' style='text-decoration:none;' title='View 1000bp around the hotspot'> [ + ] </a>\"; }";
-      $this->fmtDetailValue_Type = "function (type,feature) { start=feature.get('start');end=feature.get('end');seq_id=feature.get('seq_id'); return type+\" <br/> <a href='".$GLOBALS['absURL']."getGraph.php?start=\"+start+\"&end=\"+end+\"&chr=\"+seq_id+\"&label=".$label."&window=1000&win=no' target='_blank' style='text-decoration:none;' title='View 1000bp around the hotspot'> [Click to view a detailed plot 1000bp around the change] </a>\"; }";
+//    $this->fmtDetailValue_Type = "function (type,feature) { start=feature.get('start');end=feature.get('end');seq_id=feature.get('seq_id'); return type+\"  <a href='".$GLOBALS['jbrowseURL']."getGraph.php?start=\"+start+\"&end=\"+end+\"&chr=\"+seq_id+\"&label=".$label."&window=1000&win=no' target='_blank' style='text-decoration:none;' title='View 1000bp around the hotspot'> [ + ] </a>\"; }";
+      $this->fmtDetailValue_Type = "function (type,feature) { start=feature.get('start');end=feature.get('end');seq_id=feature.get('seq_id'); return type+\" <br/> <a href='".$GLOBALS['jbrowseURL']."getGraph.php?start=\"+start+\"&end=\"+end+\"&chr=\"+seq_id+\"&label=".$label."&window=1000&win=no' target='_blank' style='text-decoration:none;' title='View 1000bp around the hotspot'> [Click to view a detailed plot 1000bp around the change] </a>\"; }";
 //        public $fmtDetailValue_Name = "function(name) { var patt=/_/; if (!patt.test(name)) { return '<a href=\"http://www.yeastgenome.org/cgi-bin/locus.fpl?locus='+name+'\" target=\"_blank\">'+name+'</a>';} else {return name;}}";
 
 	}

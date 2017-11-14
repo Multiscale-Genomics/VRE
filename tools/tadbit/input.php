@@ -5,12 +5,19 @@ redirectOutside();
 
 // check inputs
 if (!isset($_REQUEST['fn']) && !isset($_REQUEST['rerunDir'])){
-	$_SESSION['errorData']['Error'][]="Please, before running PyDock, select two files of format PDB for running this tool.";
+	$_SESSION['errorData']['Error'][]="Please, before running TADit, please select the input files for running this tool.";
 	redirect('/workspace/');
 }
 
+if(count($_REQUEST['fn']) < 2) {
+	$_SESSION['errorData']['Error'][] = "Please, select at least two FASTQ files.";
+	redirect('/workspace/');
+}
+
+
 $rerunParams  = Array();
 $inPaths = Array();
+$formats = Array();
 
 if ($_REQUEST['rerunDir']){
 	$dirMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['rerunDir'])); 
@@ -26,6 +33,7 @@ if ($_REQUEST['rerunDir']){
 		$file['path'] = $inPath;
 		$file['fn'] = getGSFileId_fromPath($inPath);
 		$file['format'] = getAttr_fromGSFileId($file['fn'],'format');
+		array_push($formats,$file['format']);
 		array_push($inPaths,$file);
 	}
 	$rerunParams = $dirMeta['raw_params'];
@@ -39,16 +47,30 @@ if ($_REQUEST['rerunDir']){
 		$file['path'] = getAttr_fromGSFileId($fn,'path');
 		$file['fn'] = $fn;
 		$file['format'] = getAttr_fromGSFileId($fn,'format');
+		array_push($formats,$file['format']);
 		array_push($inPaths,$file);
 	}
 	//array_push($inPaths,getAttr_fromGSFileId($fn,'path'));
 }
 
-if((count($_REQUEST['fn']) != 3) && (count($_REQUEST['fn']) != 4)){
-	$_SESSION['errorData']['Error'][] = "Please, select two FASTQ files, a FASTA file and, optionally, a BED or a BEDGRAPH file for running this tool";
+//var_dump($formats);
+
+$count_val = array_count_values($formats);
+
+if(!(in_array("FASTQ", $formats))) {
+	$_SESSION['errorData']['Error'][] = "Please, select at least two FASTQ files.";
+	redirect('/workspace/');
+} elseif($count_val['FASTQ'] != 2) {
+	$_SESSION['errorData']['Error'][] = "Please, select at least two FASTQ files.";
 	redirect('/workspace/');
 }
 
+if(in_array("FASTA", $formats) && !in_array("GEM", $formats)) {
+	$_SESSION['errorData']['Error'][] = "If you provide a FASTA file, you must provide a GEM file too.";
+	redirect('/workspace/');
+}
+
+$formats = array_unique($formats);
 
 // default project dir
 $dirNum="000";
@@ -218,7 +240,7 @@ if ($prevs->count() > 0){
                                               <div class="col-md-6">
                                                   <div class="form-group">
                                                       <label class="control-label">READ1 <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>From paired-end sequencing. This FASTQ should contain only one of the ends.</p>"></i></label>
-                                                      <select  name="input_files[mapping:read1]" class="form-control params_tadbit_inputs_mapping">
+                                                      <select  name="input_files[read1]" class="form-control params_tadbit_inputs_mapping">
 																												<option selected value> -- select a file -- </option>
 																												<?php foreach ($inPaths as $file) {  ?>
 																												<?php if($file['format'] == 'FASTQ') { ?>
@@ -233,7 +255,7 @@ if ($prevs->count() > 0){
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">READ2 <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>From paired-end sequencing. This FASTQ should contain only the other end.</p>"></i></label>
-                                                      <select  name="input_files[mapping:read2]" class="form-control params_tadbit_inputs_mapping">
+                                                      <select  name="input_files[read2]" class="form-control params_tadbit_inputs_mapping">
 																												<option selected value> -- select a file -- </option>
 																												<?php foreach ($inPaths as $file) {  ?>
 																												<?php if($file['format'] == 'FASTQ') { ?>
@@ -246,6 +268,34 @@ if ($prevs->count() > 0){
                                               </div>
 																							
 																						</div>
+
+																						<div class="row">
+                                              <div class="col-md-6">
+																								<div class="form-group " id="">
+																										<?php if(!(in_array("GEM", $formats))) { ?>
+																										<label>Indexed reference genome</label>
+																										<span class="tooltip-mt-radio"><i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome, indexed with gem-indexer, on which reads will be mapped.</p>"></i></span>
+																										<select name="arguments[mapping:refGenome]" id="map_refgenome" class="form-control">
+																											<option value="">Select the reference genome</option>
+																											<option value="refGenomes/Homo_sapiens/hg19/GEM/hg19.gem">Homo Sapiens (hg19)</option>
+																											<option value="refGenomes/Saccharomyces_cerevisiae/R64-1-1/GEM/R64-1-1.gem">Saccharomyces Cerevisiae (R64.1.1)</option>
+																											<option value="refGenomes/Drosophila_melanogaster/r5.01/GEM/r5.01.gem">Drosophila Melanogaster (r5.01)</option>
+																										</select>
+																										<?php } else { ?>
+                                                      <label class="control-label">Reference genome index <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome</p>"></i></label>
+                                                      <select  name="input_files[mapping:ref_genome_gem]" id="ref_genome_gem1" class="form-control">
+																												<?php foreach ($inPaths as $file) {  ?>
+																												<?php if($file['format'] == 'GEM') { ?>
+																												<?php $p = explode("/", $file['path']); ?>
+																												<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
+																												<?php } ?>
+																												<?php } ?>
+																											</select>		
+																										<?php } ?>
+																								</div>
+																						</div>
+																					</div>
+
                                           <h4 class="form-section">Settings</h4>
                                           <div class="row">
 																							<div class="col-md-6">
@@ -255,15 +305,17 @@ if ($prevs->count() > 0){
 																											<img class="Typeahead-spinner" src="assets/layouts/layout/img/loading-spinner-blue.gif" style="display: none;">	
                                                   </div>
                                               </div>
-                                              <!--<div class="col-md-6">
-												  												<div class="form-group">
-                                                      <label class="control-label">Iterative mapping <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Use iterative mapping instead of fragment-based mapping.</p>"></i></label>
-                                                      <select class="form-control valid" name="arguments[mapping:iterative_mapping]" id="iterative_mapping" aria-invalid="false">
-                                                          <option value="1" selected="">1</option>
-                                                          <option value="2">2</option>
-                                                      </select>
+                                          </div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                    <label class="control-label">Iterative mapping <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Use iterative mapping instead of fragment-based mapping.</p>"></i></label>
+																										<select  name="arguments[mapping:iterative_mapping]" id="iterative_mapping" class="form-control">
+																												<option selected value="0"> False </option>
+																												<option value="1"> True </option>
+																											</select>		
                                                   </div>
-                                              </div>-->
+																							</div>
 																							<div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Windows <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>For iterative mapping, or to refine fragment-based mapping. Should be like &quot;1:20 1:25 1:30 1:35 1:40 1:45 1:50&quot;</p>"></i></label>
@@ -271,16 +323,6 @@ if ($prevs->count() > 0){
                                                   </div>
 																							</div>
                                           </div>
-																					<!--<div class="row">
-                                              <div class="col-md-6">
-																									<div class="form-group">
-                                                      <label class="control-label">Windows <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>For iterative mapping, or to refine fragment-based mapping. Should be like &quot;1:20 1:25 1:30 1:35 1:40 1:45 1:50&quot;</p>"></i></label>
-																											<input type="text" name="arguments[mapping:windows]" id="windows" class="form-control tadbit-map-group" >
-                                                  </div>
-																							</div>
-																							<div class="col-md-6">
-																							</div>
-                                          </div>-->
                                       </div>
                                   </div>
                               </div>
@@ -294,12 +336,13 @@ if ($prevs->count() > 0){
                                   </div>
                                   <div class="portlet-body form" id="form-block2">
                                       <div class="form-body">
-                                          <h4 class="form-section">File inputs</h4>
+																					<h4 class="form-section">File inputs</h4>
+																					<?php if((in_array("FASTA", $formats) && in_array("GEM", $formats))) { ?>
 																					<div class="row">
                                               <div class="col-md-6">
-                                                  <div class="form-group">
-                                                      <label class="control-label">Reference genome <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome</p>"></i></label>
-                                                      <select  name="input_files[parsing:ref_genome]" id="ref_genome" class="form-control">
+																									<div class="form-group">
+                                                      <label class="control-label">Reference genome sequence <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome</p>"></i></label>
+                                                      <select  name="input_files[parsing:ref_genome_fasta]" id="ref_genome_fasta" class="form-control">
 																												<?php foreach ($inPaths as $file) {  ?>
 																												<?php if($file['format'] == 'FASTA') { ?>
 																												<?php $p = explode("/", $file['path']); ?>
@@ -309,14 +352,40 @@ if ($prevs->count() > 0){
 																											</select>		
                                                   </div>
                                               </div>
+																							<!--<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label">Reference genome index <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome</p>"></i></label>
+                                                      <select  name="input_files[parsing:ref_genome_gem]" id="ref_genome_gem2" class="form-control">
+																												<?php foreach ($inPaths as $file) {  ?>
+																												<?php if($file['format'] == 'GEM') { ?>
+																												<?php $p = explode("/", $file['path']); ?>
+																												<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
+																												<?php } ?>
+																												<?php } ?>
+																											</select>		
+                                                  </div>
+																							</div>-->
+																						</div>
+																					<?php } else { ?>
+																					<div class="row">
                                               <div class="col-md-6">
+																								<div class="form-group " id="">
+																									<label>Indexed reference genome <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome, indexed with gem-indexer, on which reads will be mapped.</p>"></i></label>
+																									<select name="arguments[parsing:refGenome]" id="ref_genome" class="form-control">
+																										<option value="">Select the reference genome</option>
+																										<option value="refGenomes/Homo_sapiens/hg19/GEM/hg19.gem">Homo Sapiens (hg19)</option>
+																										<option value="refGenomes/Saccharomyces_cerevisiae/R64-1-1/GEM/R64-1-1.gem">Saccharomyces Cerevisiae (R64.1.1)</option>
+																										<option value="refGenomes/Drosophila_melanogaster/r5.01/GEM/r5.01.gem">Drosophila Melanogaster (r5.01)</option>
+																									</select>
+																								</div>
 																							</div>
 																						</div>
+																					<?php } ?>
                                           <h4 class="form-section">Settings</h4>
                                           <div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
-                                                      <label class="control-label">Filter chromosomes <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>REGEXP to consider only chromosome names passing.</p>"></i></label>
+                                                      <label class="control-label">Filter chromosomes <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Only chromosome names passing. Ex: chrX, 1, 2B, chrMito, Mito, chrXIV.</p>"></i></label>
 																											<input type="text" name="arguments[parsing:chromosomes]" id="chromosomes" class="form-control" >
                                                   </div>
 																							</div>
@@ -351,7 +420,7 @@ if ($prevs->count() > 0){
             	<li> over-represented: reads coming from the top 0.5% most frequently detected restriction fragments, they may be prone to PCR artifacts or represent fragile regions of the genome or genome assembly errors</li>
             	<li> duplicated: the combination of the start positions (and direction) of the reads is repeated -> PCR artifact (only keep one copy)</li>
             	<li> random breaks: start position of one of the read is too far (more than Minimum distance to RE site) from RE cutting site. Non-canonical enzyme activity or random physical breakage of the chromatin.</li></ol></p>"></i></label>
-                                                      <select class="form-control valid select2_tad1" name="arguments[filtering:filters]" id="filters" aria-invalid="false" multiple="multiple">
+                                                      <select class="form-control valid select2_tad1" name="arguments[filtering:filters][]" id="filters" aria-invalid="false" multiple="multiple">
                                                           <option value=""></option>
                                                           <option value="1" selected>self-circle</option>
                                                           <option value="2" selected>dangling-end</option>
@@ -366,27 +435,27 @@ if ($prevs->count() > 0){
                                                       </select>
                                                   </div>
                                               </div>
-                                              <div class="col-md-6">
-																									<div class="form-group">
-                                                      <label class="control-label">Maximum molecule length <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Depends on the maximum size of the sequenced fragments (usually ~400 nt). Can be set to ~1 times this maximum size.</p>"></i></label>
-																											<input type="number" name="arguments[filtering:max_mol_length]" id="max_mol_length" class="form-control" value="500">
+																							<div class="col-md-6">
+																									<div class="form-group display-hide" id="fg_min_dist_RE">
+                                                      <label class="control-label">Minimum distance to RE site <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Used to exclude reads starting too close from a RE site. Such reads are called pseudo-dangling-ends.</p>"></i></label>
+																											<input type="number" name="arguments[filtering:min_dist_RE]" id="min_dist_RE" class="form-control" value="5" min="0" disabled>
                                                   </div>
 																							</div>
 																						</div>
                                           <div class="row">
-                                              <div class="col-md-6" id="fg_min_dist_RE">
-																									<div class="form-group">
-                                                      <label class="control-label">Minimum distance to RE site <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Depends on the maximum size of the sequenced fragments (usually ~400 nt). Can be set to ~1.5 times this maximum size.</p>"></i></label>
-																											<input type="number" name="arguments[filtering:min_dist_RE]" id="min_dist_RE" class="form-control" value="750">
-                                                  </div>
-																							</div>
 																							<div class="col-md-6">
-																									<div class="form-group display-hide" id="fg_min_dist_RE2">
-                                                      <label class="control-label">Minimum distance to RE site <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Used to exclude reads starting too close from a RE site. Such reads are called pseudo-dangling-ends.</p>"></i></label>
-																											<input type="number" name="arguments[filtering:min_dist_RE2]" id="min_dist_RE2" class="form-control" value="5" disabled>
+																									<div class="form-group display-hide" id="fg_min_fragment_size">
+                                                      <label class="control-label">Minimum fragment size <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>To exclude small genomic RE fragments (smaller than sequenced reads)</p>"></i></label>
+																											<input type="number" name="arguments[filtering:min_fragment_size]" id="min_fragment_size" class="form-control" value="50" min="0" disabled>
                                                   </div>
 																							</div>
-                                          </div>
+                                              <div class="col-md-6">
+																									<div class="form-group display-hide" id="fg_max_fragment_size">
+                                                      <label class="control-label">Maximum fragment size <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>to exclude large genomic RE fragments (probably resulting from gaps in the reference genome).</p>"></i></label>
+																											<input type="number" name="arguments[filtering:max_fragment_size]" id="max_fragment_size" class="form-control" value="100000" min="0" disabled>
+                                                  </div>
+																							</div>
+																					</div>
                                       </div>
                                   </div>
                               </div>
@@ -437,18 +506,38 @@ if ($prevs->count() > 0){
 																									</div>
 																								</div>
 																							</div>
-                                          </div>
+																					</div>
 																					<div class="row">
+                                              <div class="col-md-6">
+                                                  <div class="form-group">
+                                                      <label class="control-label">Keep matrices <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0;'>Matrices, or sub-matrices to save. Input a list of chromosome names (e.g.: chr1 chr2 chrX), by default all chromosomes (or all chromosome pairs) will be generated.</p>"></i></label>
+                                                      <select class="form-control valid select2_tad3" name="arguments[normalization:keep_matrices][]" id="keep_matrices" aria-invalid="false" multiple="multiple">
+                                                          <option value=""></option>
+                                                          <option value="1">Intra-chromosomal matrices</option>
+                                                          <option value="2">Inter-chromosomal matrices</option>
+																													<option value="3" disabled>Genomic matrices</option>
+                                                      </select>
+                                                  </div>
+                                              </div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label">Chromosome names <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Matrices, or sub-matrices to save. Input a list of chromosome names (e.g.: chr1 chr2 chrX), by default all chromosomes (or all chromosome pairs) will be generated.</p>"></i></label>
+																											<input type="text" name="arguments[normalization:chromosome_names]" id="chromosome_names1" class="form-control" placeholder="Chromosome names" >
+                                                  </div>
+																							</div>
+                                          </div>
+
+																					<!--<div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Keep matrices. Intra-chromosomal matrices <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Matrices, or sub-matrices to save. You can also input a list of chromosome names (e.g.: chr1 chr2 chrX).</p>"></i></label>
-																											<input type="text" name="arguments[normalization:intra-chr-matr]" id="intra-chr-matr" class="form-control" placeholder="Chromosome names" >
+																											<input type="text" name="arguments[normalization:intra_chr_matr]" id="intra_chr_matr" class="form-control" placeholder="Chromosome names" >
                                                   </div>
 																							</div>
 																							<div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Keep matrices. Inter-chromosomal matrices <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Matrices, or sub-matrices to save. You can also input a list of chromosome names (e.g.: chr1 chr2 chrX).</p>"></i></label>
-																											<input type="text" name="arguments[normalization:inter-chr-matr]" id="inter-chr-matr" class="form-control" placeholder="Chromosome names" >
+																											<input type="text" name="arguments[normalization:inter_chr_matr]" id="inter_chr_matr" class="form-control" placeholder="Chromosome names" >
                                                   </div>
 																							</div>
                                           </div>
@@ -456,12 +545,12 @@ if ($prevs->count() > 0){
                                               <div class="col-md-6">
 																									<div class="form-group display-hide">
                                                       <label class="control-label">Keep matrices. Genomic matrices <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Matrices, or sub-matrices to save. You can also input a list of chromosome names (e.g.: chr1 chr2 chrX).</p>"></i></label>
-																											<input type="text" name="arguments[normalization:gen-matr]" id="gen-matr" class="form-control" placeholder="Chromosome names" disabled>
+																											<input type="text" name="arguments[normalization:gen_matr]" id="gen_matr" class="form-control" placeholder="Chromosome names" disabled>
                                                   </div>
 																							</div>
 																							<div class="col-md-6">
 																							</div>
-                                          </div>
+                                          </div>-->
                                       </div>
                                   </div>
                               </div>
@@ -479,12 +568,13 @@ if ($prevs->count() > 0){
                                   </div>
                                   <div class="portlet-body form form-block" id="form-block5">
                                       <div class="form-body">
+																					<?php if(in_array("BED", $formats)) { ?>
                                           <h4 class="form-section">File inputs</h4>
 																					<div class="row">
                                               <div class="col-md-6">
                                                   <div class="form-group">
                                                       <label class="control-label">Rich in A compartments <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>BED or bedGraph file with list of protein coding gene or other active/inactive epigenetic mark, to be used to label compartments.</p>"></i></label>
-                                                      <select  name="input_files[segmentation:rich_a]" id="rich_a" class="form-control form-field-enabled params_tadbit_inputs_segmentation">
+                                                      <select  name="input_files[segmentation:rich_a]" id="rich_a" class="form-control form-field-enabled tadbit-segm-group params_tadbit_inputs_segmentation">
 																												<option selected value> -- select a file -- </option>
 																												<?php foreach ($inPaths as $file) {  ?>
 																												<?php if(($file['format'] == 'BED') || ($file['format'] == 'BEDGRAPH')) { ?>
@@ -498,7 +588,7 @@ if ($prevs->count() > 0){
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Rich in B compartments <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>BED or bedGraph file with list of protein coding gene or other active/inactive epigenetic mark, to be used to label compartments.</p>"></i></label>
-                                                      <select  name="input_files[segmentation:rich_b]" id="rich_b" class="form-control form-field-enabled params_tadbit_inputs_segmentation">
+                                                      <select  name="input_files[segmentation:rich_b]" id="rich_b" class="form-control form-field-enabled tadbit-segm-group params_tadbit_inputs_segmentation">
 																												<option selected value> -- select a file -- </option>
 																												<?php foreach ($inPaths as $file) {  ?>
 																												<?php if(($file['format'] == 'BED') || ($file['format'] == 'BEDGRAPH')) { ?>
@@ -510,12 +600,13 @@ if ($prevs->count() > 0){
                                                   </div>
 																							</div>
 																						</div>
+																					<?php } ?>
                                           <h4 class="form-section">Settings</h4>
                                           <div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Callers <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0;'>Search for TAD borders using TADbit's algorithm, and compartments using first EigenVector of the correlation matrix.</p>"></i></label>
-                                                      <select class="form-control form-field-enabled valid select2_tad2" name="arguments[segmentation:callers]" id="callers" aria-invalid="false" multiple="multiple">
+                                                      <select class="form-control form-field-enabled valid select2_tad2" name="arguments[segmentation:callers][]" id="callers" aria-invalid="false" multiple="multiple">
                                                           <option value=""></option>
                                                           <option value="1" selected>call TAD borders</option>
                                                           <option value="2" selected>call compartments</option>
@@ -525,7 +616,7 @@ if ($prevs->count() > 0){
 																							<div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Chromosomes names <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>List of chromosome names where to search for TAD borders or compartments (e.g.: chr1 chr2 chrX)</p>"></i></label>
-																											<input type="text" name="arguments[segmentation:chromosome_names]" id="chromosome_names" class="form-control form-field-enabled" >
+																											<input type="text" name="arguments[segmentation:chromosome_names]" id="chromosome_names2" class="form-control form-field-enabled" >
                                                   </div>
 																							</div>
                                           </div>
@@ -535,25 +626,29 @@ if ($prevs->count() > 0){
                               <!-- END PORTLET 6: Segmentation -->
 															<!-- BEGIN PORTLET 7: 3D modeling - parameter optimization -->
                               <div class="portlet box blue" id="form-block-header6">
-                                  <div class="portlet-title">
-                                      <div class="caption">
-                                         3D modeling - parameter optimization
-		                                  </div>
+																	<div class="portlet-title">
+																			<div class="caption">
+																				<input type="checkbox" class="make-switch switch-block" name="arguments[optimization]" id="switch-block6" data-size="mini">
+                                        <div style="float:right;margin-left:20px;">3D modeling - parameter optimization </div>
+																			</div>
+																			<div class="tools">
+                                          <a href="javascript:;" class="collapse"></a>
+                                      </div>
                                   </div>
-                                  <div class="portlet-body form" id="form-block6">
+                                  <div class="portlet-body form form-block" id="form-block6">
                                       <div class="form-body">
                                           <h4 class="form-section">Settings</h4>
                                           <div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Genomic position. Chromosome name. <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Coordinates of the genomic region to model.</p>"></i></label>
-																											<input type="text" name="arguments[optimization:gen_pos_chrom_name]" id="gen_pos_chrom_name" class="form-control" >
+																											<input type="text" name="arguments[optimization:gen_pos_chrom_name]" id="gen_pos_chrom_name" class="form-control form-field-enabled" >
                                                   </div>
 																							</div>
 																							<div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Genomic position. Begin. <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Coordinates of the genomic region to model.</p>"></i></label>
-																											<input type="number" name="arguments[optimization:gen_pos_begin]" id="gen_pos_begin" class="form-control" >
+																											<input type="number" name="arguments[optimization:gen_pos_begin]" id="gen_pos_begin" class="form-control form-field-enabled" >
                                                   </div>
 																							</div>
                                           </div>
@@ -561,13 +656,13 @@ if ($prevs->count() > 0){
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Genomic position. End. <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Coordinates of the genomic region to model.</p>"></i></label>
-																											<input type="number" name="arguments[optimization:gen_pos_end]" id="gen_pos_end" class="form-control" >
+																											<input type="number" name="arguments[optimization:gen_pos_end]" id="gen_pos_end" class="form-control form-field-enabled" >
                                                   </div>
 																							</div>
 																							<div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Number of models to compute <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Number of models to compute for each optimization step.</p>"></i></label>
-																											<input type="number" name="arguments[optimization:num_mod_comp]" id="num_mod_comp" class="form-control" value="50">
+																											<input type="number" name="arguments[optimization:num_mod_comp]" id="num_mod_comp" class="form-control form-field-enabled" value="50">
                                                   </div>
 																							</div>
                                           </div>
@@ -575,13 +670,13 @@ if ($prevs->count() > 0){
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Number of models to keep <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Number of models to keep from the total of models computed, for the comparison with original Hi-C matrix.</p>"></i></label>
-																											<input type="number" name="arguments[optimization:num_mod_keep]" id="num_mod_keep" class="form-control" value="20">
+																											<input type="number" name="arguments[optimization:num_mod_keep]" id="num_mod_keep" class="form-control form-field-enabled" value="20">
                                                   </div>
 																							</div>
 																							<div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Maximum distance <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Range of numbers for optimal maxdist parameter, i.e. 400:1000:100; or just a single number e.g. 800; or a list of numbers e.g. 400 600 800 1000.</p>"></i></label>
-																											<input type="text" name="arguments[optimization:max_dist]" id="max_dist" class="form-control" value="400:1000:200">
+																											<input type="text" name="arguments[optimization:max_dist]" id="max_dist" class="form-control form-field-enabled" value="400:1000:200">
                                                   </div>
 																							</div>
                                           </div>
@@ -589,13 +684,13 @@ if ($prevs->count() > 0){
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Upper bound for Z-scored frequencies of interaction <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Range of numbers for optimal upfreq parameter, i.e. 0:1.2:0.3; or just a single number e.g. 0.8; or a list of numbers e.g. 0.1 0.3 0.5 0.9.</p>"></i></label>
-																											<input type="text" name="arguments[optimization:upper_bound]" id="upper_bound" class="form-control" value="0:1.2:0.3" >
+																											<input type="text" name="arguments[optimization:upper_bound]" id="upper_bound" class="form-control form-field-enabled" value="0:1.2:0.3" >
                                                   </div>
 																							</div>
 																							<div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Lower bound for Z-scored frequencies of interaction <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Range of numbers for optimal low parameter, i.e. -1.2:0:0.3; or just a single number e.g. -0.8; or a list of numbers e.g. -0.1 -0.3 -0.5 -0.9.</p>"></i></label>
-																											<input type="text" name="arguments[optimization:lower_bound]" id="lower_bound" class="form-control" value="-1.2:0:0.3">
+																											<input type="text" name="arguments[optimization:lower_bound]" id="lower_bound" class="form-control form-field-enabled" value="-1.2:0:0.3">
                                                   </div>
 																							</div>
                                           </div>
@@ -603,7 +698,7 @@ if ($prevs->count() > 0){
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Cutoff distance to consider an interaction between 2 particles <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Range of numbers for optimal cutoff distance. Cutoff is computed based on the resolution. This cutoff distance is calculated taking as reference the diameter of a modeled particle in the 3D model. i.e. 1.5:2.5:0.5; or just a single number e.g. 2; or a list of numbers e.g. 2 2.5.</p>"></i></label>
-																											<input type="text" name="arguments[optimization:cutoff]" id="cutoff" class="form-control" value="2" >
+																											<input type="text" name="arguments[optimization:cutoff]" id="cutoff" class="form-control form-field-enabled" value="2" >
                                                   </div>
 																							</div>
 																							<div class="col-md-6">
@@ -615,25 +710,29 @@ if ($prevs->count() > 0){
                               <!-- END PORTLET 7: 3D modeling - parameter optimization -->
 															<!-- BEGIN PORTLET 8: 3D modeling - generation of models -->
                               <div class="portlet box blue" id="form-block-header7">
-                                  <div class="portlet-title">
-                                      <div class="caption">
-                                         3D modeling - generation of models
-		                                  </div>
+																	<div class="portlet-title">
+																			<div class="caption">
+																				<input type="checkbox" class="make-switch switch-block" name="arguments[generation]" id="switch-block7" data-size="mini">
+                                        <div style="float:right;margin-left:20px;">3D modeling - generation of models </div>
+																			</div>
+																			<div class="tools">
+                                          <a href="javascript:;" class="collapse"></a>
+                                      </div>
                                   </div>
-                                  <div class="portlet-body form" id="form-block7">
+                                  <div class="portlet-body form form-block" id="form-block7">
                                       <div class="form-body">
                                           <h4 class="form-section">Settings</h4>
                                           <div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Number of models to compute <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Number of models to compute for each optimization step.</p>"></i></label>
-																											<input type="number" name="arguments[generation:num_models_comp]" id="num_models_comp" class="form-control" value="500">
+																											<input type="number" name="arguments[generation:num_models_comp]" id="num_models_comp" class="form-control form-field-enabled" value="500">
                                                   </div>
 																							</div>
 																							<div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Number of models to keep <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Number of models to keep from the total of models computed, for the comparison with original Hi-C matrix.</p>"></i></label>
-																											<input type="number" name="arguments[generation:num_models_keep]" id="num_models_keep" class="form-control" value="500">
+																											<input type="number" name="arguments[generation:num_models_keep]" id="num_models_keep" class="form-control form-field-enabled" value="100">
                                                   </div>
 																							</div>
                                           </div>

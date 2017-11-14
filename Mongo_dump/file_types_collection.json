@@ -1,0 +1,44 @@
+{ "_id" : "FASTQ", "extension" : [ "FASTQ", "FQ" ] }
+{ "_id" : "FASTA", "extension" : [ "FASTA", "FA", "FN" ] }
+{ "_id" : "BAI", "extension" : [ "BAI" ] }
+{ "_id" : "BAM", "extension" : [ "BAM" ] }
+{ "_id" : "BW", "extension" : [ "BW", "BIGWIG" ] }
+{ "_id" : "PDB", "extension" : [ "PDB" ] }
+{ "_id" : "TSV", "extension" : [ "TSV" ] }
+{ "_id" : "GEM", "extension" : [ "GEM" ] }
+{ "_id" : "JSON", "extension" : [ "JSON" ] }
+{ "_id" : "MDCRD", "extension" : [ "MDCRD", "CRD", "TRJ" ] }
+{ "_id" : "HDF5", "extension" : [ "HDF5" ] }
+{ "_id" : "CSV", "extension" : [ "CSV" ] }
+{ "_id" : "XTC", "extension" : [ "XTC" ] }
+{ "_id" : "BED", "extension" : [ "BED" ] }
+{ "_id" : "GFF", "extension" : [ "GFF" ] }
+{ "_id" : "PNG", "extension" : [ "PNG" ] }
+{ "_id" : "RST", "extension" : [ "RST", "RST7" ] }
+{ "_id" : "WIG", "extension" : [ "WIG" ] }
+{ "_id" : "GTF", "extension" : [ "GTF" ] }
+{ "_id" : "GFF3", "extension" : [ "GFF3", "GFF" ] }
+{ "_id" : "BEDGRAPH", "extension" : [ "BEDGRAPH" ] }
+{ "_id" : "NETCDF", "extension" : [ "NETCDF", "NC" ] }
+{ "_id" : "PARMTOP", "extension" : [ "PARMTOP", "PRMTOP", "TOP" ] }
+{ "_id" : "BB", "extension" : [ "BB", "BIGBED" ] }
+{ "_id" : "TAR", "extension" : [ "TAR", "TGZ", "TBZ", "TBZ2" ] }
+{ "_id" : "TIFF", "extension" : [ "TIF", "TIFF" ] }
+{ "_id" : "BWT", "extension" : [ "BWT", "AMB", "ANN", "PAC", "SA" ] }
+{ "_id" : "TXT", "extension" : [ "TXT", "LOG" ] }
+{ "_id" : "TBI", "extension" : [ "TBI" ] }
+{ "_id" : "DCD", "extension" : [ "DCD" ] }
+{ "_id" : "VCF", "extension" : [ "VCF" ] }
+{ "_id" : "TPR", "extension" : [ "TPR" ] }
+{ "_id" : "PDF", "extension" : [ "PDF" ] }
+{ "_id" : "LIF", "extension" : [ "LIF" ] }
+{ "_id" : "CPT", "extension" : [ "CPT" ] }
+{ "_id" : "AMB", "extension" : [ "AMB" ] }
+{ "_id" : "ANN", "extension" : [ "ANN" ] }
+{ "_id" : "PAC", "extension" : [ "PAC" ] }
+{ "_id" : "SA", "extension" : [ "SA" ] }
+{ "_id" : "BT2", "extension" : [ "BT2", "BT2L" ] }
+{ "_id" : "IDX", "extension" : [ "IDX" ] }
+{ "_id" : "RDATA", "extension" : [ "RDATA" ] }
+{ "_id" : "TOP", "extension" : [ "TOP" ] }
+{ "_id" : "PICKLE", "extension" : [ "PICKLE" ] }

@@ -2,7 +2,7 @@
 	'use strict';
 
 	// ANGULAR APP
-	angular.module('TADkit',['ui.router','ngMaterial','uuid4','d3','angularAwesomeSlider']);
+	angular.module('TADkit',['ui.router','ngMaterial','uuid4','d3','angularAwesomeSlider','angularResizable']);
 	     
 })();
 (function() {
@@ -275,10 +275,13 @@
 		//$scope.width = $scope.canvas_width = parseInt($scope.state.width)-2*parseInt($scope.state.margin); // strip PX units
 		var scene_component = Storyboards.getComponentById('Chromatin');
 		var scene_width = 0;
+		var scene_height = 0;
 		if(typeof scene_component !== 'undefined') {
-			scene_width = parseInt(scene_component.object.state.width);
+			$scope.settings.views.scene_width = scene_width = parseInt(scene_component.object.state.width);
+			$scope.settings.views.scene_height = scene_height = parseInt(scene_component.object.state.height);
 		}
-		$scope.width = $scope.state.width = $scope.canvas_width = $window.innerWidth - scene_width - 50 - 2*parseInt($scope.state.margin);
+		$scope.width = $scope.state.width = $window.innerWidth - scene_width - 50 - 2*parseInt($scope.state.margin);
+		$scope.canvas_width = 2*$scope.width;
 		$scope.height = $scope.state.height =  parseInt($scope.state.height)-2*parseInt($scope.state.margin); // strip PX units
 		$scope.canvas_height = $scope.canvas_width;
 //		if($scope.data.n === 0) {
@@ -296,11 +299,28 @@
 		    return $window.innerWidth;
 		  },
 		  function (value) {
-		    $scope.width = $scope.state.width = $scope.canvas_width = value - scene_width - 50 - 2*parseInt($scope.state.margin);
+		    $scope.width = $scope.state.width = value - scene_width - 50 - 2*parseInt($scope.state.margin);
+		  	$scope.canvas_width = 2*$scope.width;
 		  	//$scope.$apply();
 		  },
 		  true
 		);
+		$scope.$watch('settings.views.scene_width', function( newValue, oldValue ) {
+			if ( newValue !== oldValue ) {
+				// playback.autoRotate = !playback.autoRotate;
+				$scope.width = $scope.state.width = $window.innerWidth - newValue - 50 - 2*parseInt($scope.state.margin);
+		  		$scope.canvas_width = 2*$scope.width;
+		  		$scope.state.offsetx = parseInt($scope.state.offsetx) - (oldValue-newValue);
+		  		$scope.update_width();
+			}
+		});
+		$scope.$watch('settings.views.scene_height', function( newValue, oldValue ) {
+			if ( newValue !== oldValue ) {
+				// playback.autoRotate = !playback.autoRotate;
+				$scope.height = $scope.state.height =  parseInt(newValue)-2*parseInt($scope.state.margin)+1; 
+				$scope.update_height();
+			}
+		});
 		if($scope.data.n === 0) {
 			var promise = Datasets.loadHic();
 			promise.then(function(data) {
@@ -508,7 +528,7 @@
 		                
 		                var val, x , y = 0;
 		                var Logmin = 0;
-				var Logmax = 0;
+		                var Logmax = 0;
 		                if(scope.data.max !== 0) Logmax = Math.log(scope.data.max);
 		                if(scope.data.min !== 0) Logmin = Math.log(scope.data.min);
 		                var container_width = parseInt(scope.state.width);
@@ -592,9 +612,15 @@
 							var resolution, start_tad, end_tad = 0;
 							var polygon_tad, start_tad_scaled, end_tad_scaled, tad_height; 
 							polygon_tads = [];
+							var max_score_tad = 0;
+							var min_score_tad = 99;
 							for(i=0;i<scope.data.tads.length;i++) {
-			                	stroke_width = Math.round(scope.data.tads[i][3]/10);
-			                	// assuming tads given in absolute position
+								if(scope.data.tads[i][3] > max_score_tad) max_score_tad = scope.data.tads[i][3];
+								if(scope.data.tads[i][3] < min_score_tad) min_score_tad = scope.data.tads[i][3];
+							}
+							for(i=0;i<scope.data.tads.length;i++) {
+			                	stroke_width = (scope.data.tads[i][3]-min_score_tad)/(max_score_tad-min_score_tad)+0.1;
+								// assuming tads given in absolute position
 			                	resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments; // base pairs
 								start_tad = Math.round(((scope.data.tads[i][1])-scope.settings.current.chromStart)/resolution);
 			                	end_tad = Math.round((scope.data.tads[i][2]-scope.settings.current.chromStart)/resolution);
@@ -643,11 +669,11 @@
 								.style("color", "#333")
 								.text("0");
 
-			                /*svg.on("mousedown", function(){
+			                svg.on("mousedown", function(){
 						        mouseDown = true;
 						        startDragOffset.x = d3.event.clientX - scope.translatePos.x;
-						        startDragOffset.y = d3.event.clientY- scope.translatePos.y;
-						    });*/
+						        //startDragOffset.y = d3.event.clientY- scope.translatePos.y;
+						    });
 						 
 						    svg.on("mouseup", function(){
 						    	if(!mouseMove) {
@@ -702,10 +728,23 @@
 						    svg.on("mousemove", function(){
 						        if (mouseDown) {
 						            scope.translatePos.x = d3.event.clientX - startDragOffset.x;
-						            scope.translatePos.y = d3.event.clientY - startDragOffset.y;
+						            //scope.translatePos.y = d3.event.clientY - startDragOffset.y;
 						            mouseMove = true;
-						            scope.update();
-						            scope.update_marks();
+						            
+						            //scope.update();
+						            var x_orig = parseFloat(handle.attr("cx"));
+						            
+						            //scope.update();
+						            var part = (x_orig-parseInt(scope.state.offsetx)-scope.translatePos.x)/(scope.scale*Math.sqrt(2));
+						            var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments;	
+						            if(part != scope.settings.current.particle && part <= scope.data.value.length && part > 0) {
+							            scope.settings.current.hic_position += (part-scope.settings.current.particle)*resolution;
+							            scope.$apply(scope.settings.current.hic_position);
+							            //scope.update_marks();
+						            }
+						            
+						            
+					            	
 						        }
 						    });
 							
@@ -739,6 +778,7 @@
 						var rect = hic_data_container.getBoundingClientRect();
 						scope.translatePos.x = scope.settings.current.leftborder-rect.left;
 						scope.scale = (scope.settings.current.rightborder-scope.settings.current.leftborder)/(Math.sqrt(2)*scope.data.n); 
+						scope.settings.current.hic_position = scope.settings.current.position;
 						scope.update();
 						scope.update_marks();
 					}
@@ -779,10 +819,7 @@
 		                ti.invert();
 		                var m = t.m;
 		                ctx.setTransform(m[0], m[1], m[2], m[3], m[4], m[5]);
-		                
 		                ctx.drawImage(scope.imageObject,0,0);
-
-		                
             			ctx.restore();
 		            }
 				};
@@ -815,6 +852,16 @@
 					}
 				};
 				
+				scope.update_width =  function() {
+					scope.settings.current.hic_position += 1;
+				};
+
+				scope.update_height =  function() {
+					scope.rendered = false;
+					scope.update();
+					scope.update_marks();
+				};
+					
 				scope.$watch('highlighted_tad', function(newvalue,oldvalue) {
 		        	if ( newvalue !== oldvalue) {
 		        		if(newvalue ==-1) {
@@ -956,13 +1003,42 @@
 		.module('TADkit')
 		.controller('PanelIgvjsController', PanelIgvjsController);
 
-	function PanelIgvjsController($scope, $timeout, Overlays, uuid4, Networks, d3Service, Users) {
+	function PanelIgvjsController($scope, $window, $timeout, Overlays,Storyboards, uuid4, Networks, d3Service, Users) {
 
 		if(angular.isUndefined($scope.settings.current.speciesUrl)) return;
-		
-		$scope.width = $scope.state.width; // strip PX units
-		$scope.height = $scope.state.height; // strip PX units
 
+		var scene_component = Storyboards.getComponentById('Chromatin');
+		var scene_width = 0;
+		if(typeof scene_component !== 'undefined') {
+			scene_width = parseInt(scene_component.object.state.width);
+		}
+		$scope.width = $scope.state.width = $window.innerWidth - scene_width - 50 - 2*parseInt($scope.state.margin);
+		$scope.height = $scope.state.height =  parseInt($scope.state.height)-2*parseInt($scope.state.margin); // strip PX units
+		
+		//$scope.width = $scope.state.width; // strip PX units
+		//$scope.height = $scope.state.height; // strip PX units
+		$scope.$watch('settings.views.scene_width', function( newValue, oldValue ) {
+			if ( newValue !== oldValue ) {
+				// playback.autoRotate = !playback.autoRotate;
+				$scope.width = $scope.state.width = $window.innerWidth - newValue - 50 - 2*parseInt($scope.state.margin);
+		  		$scope.myIgv.genomicStateList.forEach(function (genomicState) {
+            		$scope.myIgv.updateWithLocusIndex( genomicState );
+        		});
+			}
+		});
+
+		var w = angular.element($window);
+		$scope.$watch(
+		  function () {
+		    return $window.innerWidth;
+		  },
+		  function (value) {
+		    $scope.width = $scope.state.width = value - scene_width - 50 - 2*parseInt($scope.state.margin);
+		  	//$scope.$apply();
+		  },
+		  true
+		);
+		
 		var originalOverlay = Overlays.getCurrentIndex();
 		
 		var igvjs_start = (($scope.settings.current.chromStart));
@@ -988,7 +1064,7 @@
 			$scope.view.settings.showNav = true;
 			if($scope.view.settings.species_data[$scope.settings.current.speciesUrl].cytobandURL) {
 				igv_reference.cytobandURL = $scope.view.settings.species_data[$scope.settings.current.speciesUrl].cytobandURL;
-				$scope.view.settings.showCyto = true;
+				$scope.view.settings.showCyto = false;
 			} else {
 				$scope.view.settings.showCyto = false;
 			}
@@ -1016,7 +1092,7 @@
 		            showRuler: true,
 		            showIdeogram: $scope.view.settings.showCyto,
 		            showKaryo: $scope.view.settings.showCyto,
-		            flanking: 0,
+		            flanking: 100000,
 		            reference: igv_reference,
 					locus: chrom+':'+igvjs_start+'-'+($scope.settings.current.chromEnd),
 					tracks: $scope.tracks.slice()
@@ -1041,7 +1117,8 @@
 			}
 			$scope.hideTadkitMarkers();
 			$scope.updateTadkitTAD();
-			$scope.$apply();
+			
+			$timeout(function() {$scope.$apply();});
 		};
 		$scope.applyOverlay =  function(track,features) {
 			var self = this;
@@ -1098,9 +1175,14 @@
 
 			var featureColor = [];
 			var scored_color = false;
+			var motifcolor;
+			var feature;
+			var nbrmotif;
+			var tmpfeature = [];
 			angular.forEach(features, function(feature) {
 				if(typeof feature.color == 'undefined') {
 					if(typeof feature.score !== 'undefined') featureColor.push(feature.score);
+					if(typeof feature.value !== 'undefined') featureColor.push(feature.value);
 					scored_color = true;
 				} else {
 					featureColor.push(feature.color);
@@ -1109,28 +1191,63 @@
 			if(scored_color) {
 				var hexEnd = '#0000ff';
 				var hexStart = '#ffffff';
-				max_val = Math.max.apply(Math, featureColor);
-				min_val = Math.min.apply(Math, featureColor);
-				for(k=0;k<featureColor.length;k++) {
-					featureColor[k] = d3.interpolateHcl(hexStart, hexEnd)((featureColor[k]-min_val)/(max_val-min_val));
+				var first_start = 0;
+				var n = 0;
+				l = 0;
+				while(n<featureColor.length) {
+					totallength = 0;
+					motifcolor = 0;
+					nbrmotif = 0;
+					first_start = features[n].start;
+					while(totallength < 1 && n < featureColor.length) {
+						feature = features[n];
+						totallength = (feature.end - first_start)/$scope.settings.current.segmentLength;
+						motifcolor = motifcolor + parseFloat(featureColor[n]);
+						nbrmotif++;
+						n++;
+					}
+					tmpfeature.push(motifcolor);
 				}
+				max_val = Math.max.apply(Math, tmpfeature);
+				min_val = Math.min.apply(Math, tmpfeature);
+				
+				n = 0;
+				l = 0;
+				while(n<featureColor.length) {
+					totallength = 0;
+					motifcolor = 0;
+					first_start = features[n].start;
+					while(totallength < 1 && n < featureColor.length) {
+						feature = features[n];
+						totallength = (feature.end - first_start)/$scope.settings.current.segmentLength;
+						motifcolor = motifcolor + parseFloat(featureColor[n]);
+						n++;
+					}
+					featureColor[l] = d3.interpolateHcl(hexStart, hexEnd)((motifcolor-min_val)/(max_val-min_val));
+					j = Math.round((first_start - $scope.settings.current.chromStart)/$scope.settings.current.segmentLength);
+					for(k=j;k<(j+Math.round(totallength)) && k<$scope.settings.current.segmentsCount;k++) {
+						igvJsOverlay.colors.chromatin[k] = featureColor[l];
+					}
+					l++;
+				}
+			} else {
+				angular.forEach(features, function(feature) {
+					j = Math.round((feature.start - $scope.settings.current.chromStart)/$scope.settings.current.segmentLength);
+					totallength = Math.round((feature.end - feature.start)/$scope.settings.current.segmentLength);
+					for(k=j;k<(j+totallength) && k<$scope.settings.current.segmentsCount;k++) {
+						igvJsOverlay.colors.chromatin[k] = featureColor[l];
+					}
+					l++;
+				});
 			}
-			angular.forEach(features, function(feature) {
-				j = Math.round((feature.start - $scope.settings.current.chromStart)/$scope.settings.current.segmentLength);
-				totallength = Math.round((feature.end - feature.start)/$scope.settings.current.segmentLength);
-				for(k=j;k<(j+totallength) && k<$scope.settings.current.segmentsCount;k++) {
-					igvJsOverlay.colors.chromatin[k] = featureColor[l];
-				}
-				l++;
-			});
-
 			var newOverlay = Overlays.addDirect(igvJsOverlay);
 			var overlay = overlays.loaded[newOverlay];
 			
 			overlay.colors.particles = [];
-			overlay.colors.network.RGB = Networks.linePiecesRGB(overlay, $scope.settings.current.edgesCount);
-			overlay.colors.network.alpha = Networks.linePiecesAlpha(overlay, $scope.settings.current.edgesCount);
-
+			//overlay.colors.network.RGB = Networks.linePiecesRGB(overlay, $scope.settings.current.edgesCount);
+			//overlay.colors.network.alpha = Networks.linePiecesAlpha(overlay, $scope.settings.current.edgesCount);
+			overlay.colors.network.RGB = [];
+			overlay.colors.network.alpha = [];
 			$scope.toggleOverlay(newOverlay);
 			//Overlays.setOverlaid(newOverlay);
 			//Overlays.set(newOverlay);
@@ -1170,7 +1287,8 @@
 		$scope.myIgv.$searchInput.off('change');
         
 		// Hide search icon
-		var search_icon = angular.element(document.querySelector('.igv-fa-search'))[0];
+		//var search_icon = angular.element(document.querySelector('.igv-fa-search'))[0];
+		var search_icon = angular.element(document.querySelector('.igv-search-container'))[0];
 		$(search_icon).hide();
 		// Show center guide by default. The centerguide will be tadkit position in the 2D and 3D
 		$scope.myIgv.centerGuide.$centerGuideToggle.click();
@@ -1179,7 +1297,7 @@
 		 Remove Karyo panel. With the igv config is not working very well with firefox
 		 So we do it the hard way
 		 *  */
-		$scope.myIgv.karyoPanel.$karyoPanelToggle.hide();
+		//$scope.myIgv.karyoPanel.$karyoPanelToggle.hide();
 		var karyo = angular.element(document.querySelector('#igvKaryoDiv'))[0];
         karyo.remove();
         $scope.myIgv.karyoPanel = null;
@@ -1255,6 +1373,13 @@
                     }
                 }
             };
+        
+        $scope.$watch('settings.current.hic_position', function(newPos, oldPos) {
+            if(!angular.equals(newPos, oldPos) && newPos != $scope.settings.current.position) {
+            	$scope.myIgv.goto(($scope.settings.current.chrom),newPos);
+            }    
+        });            
+        
         /*
          markers_position gets updated when we click on the 2D panel with the genomic positions that are interacting in the
          clicked position.
@@ -1305,7 +1430,8 @@
 	            than the start of our chromatin model*/
 	            if($scope.settings.current.chromStart>centerBP) {
 					if($scope.settings.current.chromStart-ps<=0) {
-						referenceFrame.start = 0;
+						//referenceFrame.start = 0;
+						referenceFrame.start = $scope.settings.current.chromStart-ps;
 					} else {
 						referenceFrame.start = $scope.settings.current.chromStart-ps;
 					}
@@ -1324,7 +1450,7 @@
 				*/
 				var px_start = ($scope.settings.current.chromStart-referenceFrame.start)/referenceFrame.bpPerPixel;
 				var px_end = ($scope.settings.current.chromEnd-referenceFrame.start)/referenceFrame.bpPerPixel;
-		
+				
 				$scope.updatePosition(centerBP, px_start+50 , px_end+50);
 					
 			});
@@ -1440,7 +1566,7 @@
             
             all = [];
             if (trackView.track.menuItemList) {
-                all = menuItems.concat( trackMenuList(trackView.track.menuItemList(popover)) );
+                all = menuItems.concat( trackMenuItemListHelper(trackView.track.menuItemList(popover)) );
             }
             
             if (trackView.track.removable !== false) {
@@ -1459,36 +1585,36 @@
             return all;
         };
         
-        function trackMenuList(itemList) {
+        function trackMenuItemListHelper(itemList) {
 
-            var list = [];
+	        var list = [];
 
-            if (_.size(itemList) > 0) {
+	        if (_.size(itemList) > 0) {
 
-                list = _.map(itemList, function(item, i) {
-                    var $e;
+	            list = _.map(itemList, function(item, i) {
+	                var $e;
 
-                    if (item.name) {
-                        $e = $('<div class="igv-track-menu-item">');
-                        $e.text(item.name);
-                    } else {
-                        $e = item.object;
-                    }
+	                if (item.name) {
+	                    $e = $('<div "igv-track-menu-item">');
+	                    $e.text(item.name);
+	                } else {
+	                    $e = item.object;
+	                }
 
-                    if (0 === i) {
-                        $e.addClass('igv-track-menu-border-top');
-                    }
+	                if (0 === i) {
+	                    $e.addClass('igv-track-menu-border-top');
+	                }
 
-                    if (item.click) {
-                        $e.click(item.click);
-                    }
+	                if (item.click) {
+	                    $e.click(item.click);
+	                }
 
-                    return { object: $e, init: (item.init || undefined) };
-                });
-            }
+	                return { object: $e, init: (item.init || undefined) };
+	            });
+	        }
 
-            return list;
-        }
+	        return list;
+	    }
         
 	}
 })();
@@ -1577,6 +1703,13 @@
 
 	function PanelInspectorController($scope, $mdDialog) {
 
+		$scope.$watch('settings.views.scene_width', function( newValue, oldValue ) {
+			if ( newValue !== oldValue ) {
+				// playback.autoRotate = !playback.autoRotate;
+				$scope.width = $scope.state.width = newValue;
+		  		
+			}
+		});
 		$scope.optionsState = false;
 		$scope.toggleOptions = function() {
 			$scope.optionsState = !$scope.optionsState;
@@ -1891,8 +2024,8 @@
 		.factory('Chromatin', Chromatin);
 
 	// constructor for chromatin model instances
-	function Chromatin(Paths, PathControls) {
-		return function(data, colors, settings) {
+	function Chromatin(Paths, PathControls, ColorConvert) {
+		return function(data, colors, settings, resolution_scale) {
 			// console.log(colors);
 
 			var defaults = {
@@ -1905,7 +2038,13 @@
 				radiusSegments: 16,
 				endcap: false,
 				pathClosed: false,
-				tubed: true
+				tubed: true,
+				resolution_scales : {
+					"2000" : 1,
+					"10000" : 10,
+					"50000" : 20,
+					"100000" : 50
+				}
 			};		
 			settings = settings || {};
 			angular.extend(this, angular.copy(defaults), settings);
@@ -1938,10 +2077,11 @@
 			/*** TODO: Calculate PathSegments based on number of base pairs in the model ***/
 			var cubicPath = Paths.cubicBezier(pathControls.vertices, pathSegments, this.pathClosed);
 			var cubicGeom = cubicPath.createPointsGeometry(pathSegments);
-			for (var j = cubicGeom.vertices.length - 1; j >= 0; j--) {
-				var cubicGeomColor = new THREE.Color(colors[j]);
-				cubicGeom.colors.unshift(cubicGeomColor);
-			}
+			//for (var j = cubicGeom.vertices.length - 1; j >= 0; j--) {
+			//	var cubicGeomColor = new THREE.Color(colors[j]);
+			//	cubicGeom.colors.unshift(cubicGeomColor);
+			//}
+			var j;
 			cubicGeom.name = "cubicGeom";
 
 			// ********************************************
@@ -1957,16 +2097,18 @@
 			var chromatinRadius = 5; // 10nm * 0.5
 			// Chromatin density == 1080 BP : 11nm
 			var chromatinLength = this.genomeLength * 11 / 1080;
-			this.radius = (pathLength * chromatinRadius) / chromatinLength;
-			// console.log(this.radius);
+			//this.radius = (pathLength * chromatinRadius) / chromatinLength;
+			this.radius = resolution_scale*chromatinRadius;
+			//console.log(this.radius);
 
 
 			// Generate Chromatin model
 			var chromatinFiber = new THREE.Object3D(); // unmerged network
+			var i;
 			
 			var chromatinGeometry;
 			if(settings.tubed) {
-				chromatinGeometry = new THREE.TubeGeometry(cubicPath, pathSegments, 4, 8, this.pathClosed);
+				chromatinGeometry = new THREE.TubeGeometry(cubicPath, pathSegments, this.radius, 8, this.pathClosed);
 				
 				
 //					
@@ -1995,11 +2137,23 @@
 			        overdraw: true
 			    }));
 
-			    for(var k=0;k< chromatinGeometry.faces.length;k++) {
+			    //for(var k=0;k< chromatinGeometry.faces.length;k++) {
 			    	//if(k%12) chromatinGeometry.faces[k].color.setRGB(1,0,0);
 			    	//else chromatinGeometry.faces[k].color.setRGB(0,0,0);
-			    	chromatinGeometry.faces[k].color.setRGB(1,0,0);
+			    //	chromatinGeometry.faces[k].color.setRGB(1,0,0);
+				//}
+			    var newChromatinColor;
+			    for (i = 0; i < colors.length; i++) {
+					if(ColorConvert.testIfHex(colors[i]) || colors[i].indexOf('#')===0) {
+						newChromatinColor =  new THREE.Color(colors[i]);	 
+					} else {
+						newChromatinColor =  new THREE.Color(ColorConvert.nameToHex(colors[i]));
+					} 
+					for (j = 0; j < 16; j++) {
+						tubeMesh.geometry.faces[i*16+j].color.set(newChromatinColor);
+					}
 				}
+			 
 			    
 			    tubeMesh.dynamic = true;
 			    tubeMesh.needsUpdate = true;
@@ -2011,7 +2165,7 @@
 				// Rings
 					chromatinGeometry = new THREE.Geometry(); // to calculate merged bounds
 
-				for ( var i = 0 ; i < pathSegments; i++) {
+				for ( i = 0 ; i < pathSegments; i++) {
 					// cap if end segment
 					this.endcap = ( i === 0 || i === pathSegments - 1 ) ? false : true ;
 					// color linked to scene scope
@@ -2765,6 +2919,15 @@
 			bool = !bool;
 			console.log(bool);
 		};
+		
+		$scope.$on("angular-resizable.resizeEnd", function (event, args) {
+			if(args.width)
+				$scope.state.width = $scope.settings.views.scene_width = args.width;
+
+			if(args.height)
+				$scope.state.height = $scope.settings.views.scene_height = args.height;
+			$scope.resizeCanvas();
+        });
 		// $scope.keyControls = function (e, component) {
 		// 	if (event.keyCode === 32 || event.charCode === 32) {
 		// 		component.view.controls.autoRotate = !component.view.controls.autoRotate; 
@@ -2827,15 +2990,25 @@
 
 							//GEOMETRY: CHROMATIN
 							scope.view.settings.chromatin.particleSegments = scope.settings.current.particleSegments;
-							chromatin = new Chromatin(scope.currentmodel.data, scope.currentoverlay.colors.chromatin, scope.view.settings.chromatin);
+							var resolution = scope.data.object.resolution; // base pairs
+							var resolution_scale;
+							if(angular.isUndefined(scope.data.object.radius_scale)) {
+								angular.forEach(scope.view.settings.chromatin.resolution_scales, function(value, key) {
+									  if(parseInt(key) <= resolution) resolution_scale = value;
+								});
+							} else {
+								resolution_scale = parseInt(scope.data.object.radius_scale);
+							}
+							chromatin = new Chromatin(scope.currentmodel.data, scope.currentoverlay.colors.chromatin, scope.view.settings.chromatin, resolution_scale);
 							// chromatin = new Chromatin(scope.model.data, scope.overlay.colors.chromatin, scope.view.settings.chromatin);
 							chromatin.visible = scope.view.settings.chromatin.visible;
 							scene.add(chromatin);
 							scope.view.settings.chromatin.radius = chromatin.boundingSphere.radius;
 							
 							if(scope.view.settings.chromatin.tubed) {
-
-								var ringGeometry = new THREE.RingGeometry(6, 10, 50);
+								
+								var radius = chromatin.children[0].geometry.parameters.radius+0.2*chromatin.children[0].geometry.parameters.radius;
+								var ringGeometry = new THREE.RingGeometry(radius, radius+1.0*radius, 50);
 								//ringGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
 								ring = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({ color: 0x32cd32, side: THREE.DoubleSide}));
 								ring.position.x = particles.geometry.vertices[0].x;
@@ -2845,7 +3018,6 @@
 								scene.add(ring);
 
 								spheres = new THREE.Object3D();
-								var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments; // base pairs
 								var start_tad, end_tad, radius_cloud, centre_of_mass;
 								for (var i = 0; i < scope.data.tad_data.tads.length; i++) {
 									start_tad = Math.round(((scope.data.tad_data.tads[i][1])-scope.settings.current.chromStart)/resolution);
@@ -3228,15 +3400,13 @@
 					// -----------------------------------
 					scope.resizeCanvas = function () {
 
-						contW = viewport.parentNode.clientWidth * 0.66;
-						contH = contW * 0.66;
-						windowHalfX = contW / 2;
-						windowHalfY = contH / 2;
-
+						contW = parseInt(scope.state.width);
+						contH = parseInt(scope.state.height);
+						
 						camera.aspect = contW / contH;
 						camera.updateProjectionMatrix();
 
-						renderer.setSize( contW, contH );
+						renderer.setSize( contW, contH  );
 					};
 
 					scope.lookAtTAD = function (position, target, translate) {
@@ -5343,66 +5513,70 @@
 		// console.log($scope);
 
 		$scope.current.dataset = Datasets.getDataset();
-		$scope.current.model = Datasets.getModel();
-		
-		// Get dataset scene icon component
-		$scope.clusterComponent = Components.getComponentById("datasets-scene-icon");
-
-		// Set cluster color to gradient
-		// Recalculate specifically for single segment per particle in cluster scene
-		var gradientOverlay = Overlays.getOverlayById("gradient");
-		var clusterLength = $scope.current.model.data.length / $scope.current.dataset.object.components;
-		var gradientColors = Segments.gradientHCL(gradientOverlay, clusterLength);
-		$scope.clusterComponent.overlay = gradientColors;
-
-		// Calculate consistent camera position (translation) from combined dataset models
-		var datasetModels = new THREE.BufferGeometry();
-		for (var h = $scope.current.dataset.models.length - 1; h >= 0; h--) {
-			datasetModels.addAttribute( 'position', new THREE.BufferAttribute( $scope.current.dataset.models[h], 3 ) );
-		}
-		datasetModels.computeBoundingSphere();
-		$scope.clusterComponent.view.viewpoint.translate = datasetModels.boundingSphere.radius;
-
-		// Create collection of cluster models
-		$scope.clusters = [];
-		var clusterLists = $scope.current.dataset.clusters;
-		var models = $scope.current.dataset.models;
-		for (var i = clusterLists.length - 1; i >= 0; i--) {
-			var cluster = {};
-			cluster.number = i + 1;
-			cluster.list = clusterLists[i];
-			cluster.centroidIndex = cluster.list.indexOf(Datasets.getCentroid(cluster.number));
-			cluster.data = [];
-			for (var j = cluster.list.length - 1; j >= 0; j--) {
-				var modelData;
-				for (var k = models.length - 1; k >= 0; k--) {
-					var model = models[k];
-					if (parseInt(model.ref) == cluster.list[j]) {
-						modelData = model.data;
-						// console.log("Model " + model.ref + " in Cluster " + cluster.number);
-					}
-				}
-				if (modelData) {cluster.data.unshift(modelData);}
-					else {console.log("Listed model not found!");}
-			}
-			// Add cluster to cluster collection
-			$scope.clusters.unshift(cluster);
-		}
-		// console.log($scope.clusters);
-		$scope.currentPage = 0;
-	    $scope.pageSize = 10;
-	    $scope.numberOfPages=function(){
-	        return Math.ceil($scope.clusters.length/$scope.pageSize);                
-	    };
-
-		// On click set selected cluster
-		$scope.selectCluster = function(index) {
-			$scope.clusterArray = Datasets.setCluster(index + 1);
-			$scope.centroidRef = Datasets.getCentroid();
+		if($scope.current.dataset.models.length>0) {
 			$scope.current.model = Datasets.getModel();
-			console.log("Current Cluster: " + (index + 1) + "(Centroid Model: " + $scope.centroidRef + ")");
+			
+			// Get dataset scene icon component
+			$scope.clusterComponent = Components.getComponentById("datasets-scene-icon");
+	
+			// Set cluster color to gradient
+			// Recalculate specifically for single segment per particle in cluster scene
+			var gradientOverlay = Overlays.getOverlayById("gradient");
+			var clusterLength = $scope.current.model.data.length / $scope.current.dataset.object.components;
+			var gradientColors = Segments.gradientHCL(gradientOverlay, clusterLength);
+			$scope.clusterComponent.overlay = gradientColors;
+	
+			// Calculate consistent camera position (translation) from combined dataset models
+			var datasetModels = new THREE.BufferGeometry();
+			for (var h = $scope.current.dataset.models.length - 1; h >= 0; h--) {
+				datasetModels.addAttribute( 'position', new THREE.BufferAttribute( $scope.current.dataset.models[h], 3 ) );
+			}
+			datasetModels.computeBoundingSphere();
+			$scope.clusterComponent.view.viewpoint.translate = datasetModels.boundingSphere.radius;
+	
+			// Create collection of cluster models
+			$scope.clusters = [];
+			var clusterLists = $scope.current.dataset.clusters;
+			var models = $scope.current.dataset.models;
+			for (var i = clusterLists.length - 1; i >= 0; i--) {
+				var cluster = {};
+				cluster.number = i + 1;
+				cluster.list = clusterLists[i];
+				cluster.centroidIndex = cluster.list.indexOf(Datasets.getCentroid(cluster.number));
+				cluster.data = [];
+				for (var j = cluster.list.length - 1; j >= 0; j--) {
+					var modelData;
+					for (var k = models.length - 1; k >= 0; k--) {
+						var model = models[k];
+						if (parseInt(model.ref) == cluster.list[j]) {
+							modelData = model.data;
+							// console.log("Model " + model.ref + " in Cluster " + cluster.number);
+						}
+					}
+					if (modelData) {cluster.data.unshift(modelData);}
+						else {console.log("Listed model not found!");}
+				}
+				// Add cluster to cluster collection
+				$scope.clusters.unshift(cluster);
+			}
+			// console.log($scope.clusters);
+			$scope.currentPage = 0;
+		    $scope.pageSize = 10;
+		    $scope.numberOfPages=function(){
+		        return Math.ceil($scope.clusters.length/$scope.pageSize);                
+		    };
+	
+			// On click set selected cluster
+			$scope.selectCluster = function(index) {
+				$scope.clusterArray = Datasets.setCluster(index + 1);
+				$scope.centroidRef = Datasets.getCentroid();
+				$scope.current.model = Datasets.getModel();
+				console.log("Current Cluster: " + (index + 1) + "(Centroid Model: " + $scope.centroidRef + ")");
+				$state.go('browser');
+			};
+		} else {
 			$state.go('browser');
-		};
+		}
 
 	}
 })();
@@ -5493,17 +5667,21 @@
 		.module('TADkit')
 		.controller('ProjectLoaderController', ProjectLoaderController);
 
-	function ProjectLoaderController($q, $http, $state, $scope, Datasets, Overlays, Storyboards, Users, Hic_data) {
+	function ProjectLoaderController($q, $http, $state, $scope, Datasets, Overlays, Components, Storyboards, Users, Hic_data) {
 
 		$scope.updateCurrent = function() {
 			$scope.current.dataset = Datasets.getDataset();
+			delete $scope.settings.current.tad_selected;
 			$scope.current.model = Datasets.getModel();
 			var overlays = Overlays.get();
 			while (overlays.loaded.length > 1) { // remove all overlays
 				overlays.loaded.pop();
 			}
 			Overlays.set(0);
+			
 			$scope.current.overlay = Overlays.getOverlay();
+			$scope.current.components = Components.load();
+			$scope.current.storyboards = Storyboards.load();
 			$scope.current.storyboard = Storyboards.getStoryboard();
 			console.log("Current dataset, model, overlay and storyboard updated.");			
 		};
@@ -5517,7 +5695,10 @@
 				$scope.updateCurrent();
 				// ADD FILENAME (SEE OVERLAY-IMPORT)
 				console.log("Dataset added."); //: " + $stateParams.loadDataset);			
-				$state.go('dataset');
+				if($scope.current.dataset.models.length>0)
+					$state.go('dataset');
+				else
+					$state.go('browser');
 			});			
 		};
 		$scope.cleanDataset = function(event) {
@@ -5677,15 +5858,16 @@
 
 		// Calculating Initial Proximities
 		//NOTE in future if more than 1 currentModel need same number of currentProximities
+		var scene_component;
 		$scope.allProximities = Proximities.get(); // for Scene
-		if($scope.allProximities.dimension > 0) { // we have models
+		if($scope.current.dataset.models.length > 0) { // we have models
 			$scope.currentProximities = Proximities.at($scope.settings.current.particle); // for D3 tracks
 	
 			// Calculating Initial Restraints
 			//NOTE in future if more than 1 currentModel need same number of currentRestraints
 			$scope.currentRestraints = Restraints.at($scope.settings.current.particle); // for D3 tracks
 		} else { // we have only the matrix
-			var scene_component = Storyboards.getComponentById('Chromatin');
+			scene_component = Storyboards.getComponentById('Chromatin');
 			if(typeof scene_component !== 'undefined') Storyboards.removeComponentById("Chromatin");
 		}
 		// Assign data and overlays for each component by type
@@ -5696,7 +5878,8 @@
 				if (component.object.type == "scene") {
 					all_data = {
 						tad_data: Hic_data.get(),
-						data: $scope.current.model.data 
+						data: $scope.current.model.data,
+						object: $scope.current.dataset.object
 					};
 					component.data = all_data;
 					//component.data = $scope.current.model.data;
@@ -6347,6 +6530,7 @@
 			},
 			getComponentByType: function (type) {
 				var component, defaultComponent, found;
+				found = -1;
 				if (type !== undefined || type !== false) {
 					for (var i = components.loaded.length - 1; i >= 0; i--) {
 						if (components.loaded[i].object.type === type) {
@@ -6359,7 +6543,7 @@
 						}
 					}
 				}
-				if (!found) {
+				if (found<0) {
 					component = defaultComponent;
 					console.log("Component type '" + type + "' not found: returning default.");
 				}
@@ -6813,7 +6997,9 @@
 				//     4         ==  ((4*4)-4)*0.5  = 6 pairs of colors
 				var self = this;
 				var featuresCount = overlay.data.length;
-				var colorPairs = new Float32Array(edgeCount * 6); // ie. * 2 (vertices) * 3 (RGB)
+				var usedEdgeCount = edgeCount*6;
+				if( usedEdgeCount > Math.pow(2, 10)-1) usedEdgeCount = Math.pow(2, 10)-1;
+				var colorPairs = new Float32Array(usedEdgeCount); // ie. * 2 (vertices) * 3 (RGB)
 				var defaultRGB = new THREE.Color("#000000");
 				for (var h = colorPairs.length - 1; h >= 0; h--) {
 					colorPairs[i] = defaultRGB;
@@ -6843,7 +7029,10 @@
 			},
 			linePiecesAlpha: function(overlay, edgeCount) {
 				var self = this;
-				var alphaPairs = new Float32Array(edgeCount * 2); // ie. * 2 (vertices)
+				var usedEdgeCount = edgeCount*2;
+				if( usedEdgeCount > Math.pow(2, 10)-1) usedEdgeCount = Math.pow(2, 10)-1;
+				
+				var alphaPairs = new Float32Array(usedEdgeCount); // ie. * 2 (vertices)
 				var defaultAlpha = 0.0;
 				for (var h = alphaPairs.length - 1; h >= 0; h--) {
 					alphaPairs[h] = defaultAlpha;
@@ -7789,9 +7978,10 @@
 			getMaxDistance: function(vertices) {
 				// Where maxDistance is the max diameter of the cluster of vertices
 				// Calculation is of distance from center to each vertex.
+				var typedArr = new Float32Array(vertices);
 				var maxDistCalc = 0;
 				var clusterGeometry = new THREE.BufferGeometry();
-				clusterGeometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+				clusterGeometry.addAttribute( 'position', new THREE.BufferAttribute( typedArr, 3 ) );
 				clusterGeometry.computeBoundingSphere();
 				var clusterDiameter = Math.ceil(clusterGeometry.boundingSphere.radius * 2.0);
 				return clusterDiameter;
@@ -8257,7 +8447,7 @@
 				//settings.current.particleSegments = Math.round((dataset.object.chromEnd - dataset.object.chromStart) / (5*dataset.object.resolution));
 				// Max rings in 3d aprox 2000
 				//settings.current.particlesCount = dataset.models[0].data.length / dataset.object.components;
-				settings.current.particlesCount = Math.round((dataset.object.end/dataset.object.resolution-dataset.object.start/dataset.object.resolution));
+				settings.current.particlesCount = Math.round((dataset.object.chromEnd-dataset.object.chromStart)/dataset.object.resolution);
 				settings.current.particleSegments = Math.ceil(2500/settings.current.particlesCount);
 				settings.current.edgesCount = ((settings.current.particlesCount*settings.current.particlesCount)-settings.current.particlesCount)*0.5;
 				settings.current.segmentsCount = settings.current.particlesCount * settings.current.particleSegments;
@@ -8302,16 +8492,20 @@
 			getSegment: function (chromPosition) {
 				chromPosition = chromPosition || settings.current.position;
 				var self = this;
-				var chromOffset = self.getRange(settings.current.chromStart, chromPosition);
-				var chromRange = self.getRange(settings.current.chromStart, settings.current.chromEnd);
+				//var chromOffset = self.getRange(settings.current.chromStart, chromPosition);
+				//var chromRange = self.getRange(settings.current.chromStart, settings.current.chromEnd);
+				var chromOffset = chromPosition-settings.current.chromStart;
+				var chromRange = settings.current.chromEnd-settings.current.chromStart;
 				var segment = Math.ceil((chromOffset * settings.current.segmentsCount) / chromRange);
 				return segment;
 			},
 			getParticle: function (chromPosition) {
 				chromPosition = chromPosition || settings.current.position;
 				var self = this;
-				var chromOffset = self.getRange(settings.current.chromStart, chromPosition);
-				var chromRange = self.getRange(settings.current.chromStart, settings.current.chromEnd);
+				//var chromOffset = self.getRange(settings.current.chromStart, chromPosition);
+				//var chromRange = self.getRange(settings.current.chromStart, settings.current.chromEnd);
+				var chromOffset = chromPosition-settings.current.chromStart;
+				var chromRange = settings.current.chromEnd-settings.current.chromStart;
 				var particle = Math.ceil((chromOffset * settings.current.particlesCount) / chromRange);
 				return particle;
 			},
@@ -8350,17 +8544,14 @@
 			load: function() {
 				var deferral = $q.defer();
 				var dataUrl = "assets/defaults/tk-defaults-storyboards.json";
-				if( storyboards.loaded.length > 0 ) {
-					console.log("Storyboards already loaded.");
+				
+				$http.get(dataUrl)
+				.success( function(data) {
+					storyboards.loaded = data;
+					console.log("Storyboards (" + data.length + ") loaded from " + dataUrl);
 					deferral.resolve(storyboards);
-				} else {
-					$http.get(dataUrl)
-					.success( function(data) {
-						storyboards.loaded = data;
-						console.log("Storyboards (" + data.length + ") loaded from " + dataUrl);
-						deferral.resolve(storyboards);
-					});
-				}
+				});
+				
 				return deferral.promise;
 			},
 			add: function(details) {

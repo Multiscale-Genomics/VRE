@@ -123,9 +123,12 @@ redirectOutside();
 				</div>
 			     </div>
 
-			    <form name="uploadFiles" id="uploadFiles" action="" method="post" enctype="multipart/form-data">
-					<input type="hidden" name="op" id="op">
-					<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+			    <!--<form name="uploadFiles" id="uploadFiles" action="" method="post" enctype="multipart/form-data">
+					<input type="hidden" name="op" id="op" value="1">
+					<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>-->
+
+					<input type="hidden" name="numFiles" id="numFiles" value="<?php echo sizeof($filesData); ?>">
+
 			    <div class="note note-info">
 				  <div class="mt-radio-list" style="padding-bottom:0;">
 					<?php
@@ -167,6 +170,9 @@ redirectOutside();
 							$validationState = "NOT VALIDATED";
 							$classState = $GLOBALS['STATES_COLOR'][4];
 						}
+
+						$filetypes = getFileTypesList();
+
 						?>
 					      <label class="mt-radio mt-radio-outline">
 						<h4><?php echo  basename($fnPath);?> &bull; 
@@ -187,18 +193,6 @@ redirectOutside();
 			    <?php
 			    //TODO add $defs as global like reference genomes?¿
 			    //metadata default values
-			    /*$defs = Array(
-					//general
-					'format'     => 'UNK',
-					'description'=> "",
-					'compressed' => 0,
-					'validated'  => 0,
-					//specific for aligned coords (BW, GFF, FASTQ aligned, etc..)
-					'refGenome'  => "",
-					//specific for BAM
-					'paired'     => 'paired',
-					'sorted'     => TRUE,
-				);*/
 
 			    //extract or guess file formats
 			    foreach ($filesData as $idx => $v ) {
@@ -206,10 +200,16 @@ redirectOutside();
 				$fileExtension = "";
 				if (isset($_REQUEST['format']) && isset($_REQUEST['format'][$idx]) && $_REQUEST['format'][$idx]){
 					$fileExtension=$_REQUEST['format'][$idx];
-				}elseif (isset($filesMeta[$idx]['format'])){
+				}elseif (isset($filesMeta[$idx]['format']) && $filesMeta[$idx]['format'] ){
 					$fileExtension=$filesMeta[$idx]['format'];
 				}elseif(isset($filesData[$idx]['_id'])){
-					$fnPath = $filesData[$idx]['path'];
+                    $fnPath = $filesData[$idx]['path'];
+                    list($fileExtension,$_REQUEST['compressed'][$idx]) = getFileExtension($fnPath);
+                    list($fileExtension,$compressionType) = getFileExtension($fnPath);
+                    if ($compressionType){
+                        $_REQUEST['compressed'][$idx]=1;
+                    }
+                    /*
 					$fileInfo = pathinfo($fnPath);
 					if (isset($fileInfo['extension'])){
 					      $fileExtension = strtoupper($fileInfo['extension']);
@@ -221,7 +221,8 @@ redirectOutside();
 					      }else{
 						  $_REQUEST['compressed'][$idx]=0;
 					      }
-					}
+                    }
+                     */
 				}
 
 
@@ -234,7 +235,12 @@ redirectOutside();
 					}
 				}*/
 
-				?>
+?>
+
+				<form name="uploadFiles<?php echo $idx;?>" id="uploadFiles<?php echo $idx;?>" class="uploadFiles" action="#" method="post" enctype="multipart/form-data">
+					<input type="hidden" name="op" id="op<?php echo $idx;?>" value="1">
+					<input type="hidden" id="base-url<?php echo $idx;?>"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+
 				<!-- Start Metadata Division per File. Displayed only if File is active (according radio button)  -->	
 				<div class="note note-info formInputs" id="formInputs<?php echo $idx;?>" style="position:relative;">
 
@@ -248,10 +254,14 @@ redirectOutside();
 
 				  <div class="form-group formatTR" id="formatTR<?php echo $idx;?>">
 				        <label>File Format</label>
-				        <select id="format<?php echo $idx;?>" name="format" onchange="customfromFormat(this.value, <?php echo $idx;?>)" class="form-control formatSelector">
-						 <!--<option value="" >Select the file format</option>-->
+								<select id="format<?php echo $idx;?>" name="format" onchange="customfromFormat(this.value, <?php echo $idx;?>)" class="form-control formatSelector">
+								<option value="" >Select the file format</option>
+								<?php foreach($filetypes as $ft) { ?>
+								<option value="<?php echo $ft['_id']; ?>" <?php if (in_array($fileExtension,$ft['extension'])){echo "selected";}?>><?php echo $ft['_id']; ?></option>
+								<?php } ?>
+
+						 <!--<option value="" >Select the file format</option>
 						 <option value="BAM"  <?php if ($fileExtension =="BAM") {echo "selected";}?> >BAM</option>
-						 <!-- <option value="SAM"  <?php if ($fileExtension =="SAM") {echo "selected";}?> >SAM </option> -->
 						 <option value="BED"  <?php if ($fileExtension =="BED") {echo "selected";}?> >BED </option>
 						 <option value="BEDGRAPH"<?php if ($fileExtension=="BEDGRAPH"){echo "selected";}?>>BEDGRAPH</option>
 						 <option value="WIG"  <?php if ($fileExtension =="WIG") {echo "selected";}?> >WIG</option>
@@ -263,12 +273,112 @@ redirectOutside();
 						 <option value="PDB"  <?php if ($fileExtension =="PDB") {echo "selected";}?> >PDB</option>
 						 <option value="TXT"  <?php if ($fileExtension =="TXT"){echo "selected";}?> >TXT</option>
 						 <option value="DCD"  <?php if ($fileExtension =="DCD") {echo "selected";}?> >DCD</option>
- 						 <option value="GRO"  <?php if ($fileExtension =="GRO") {echo "selected";}?> >GRO</option>
-						 <option value="UNK"  <?php if ($fileExtension =="UNK"){echo "selected";}?> >OTHER</option>
+						 <option value="GRO"  <?php if ($fileExtension =="GRO") {echo "selected";}?> >GRO</option>
+							<option value="GEM"  <?php if ($fileExtension =="GEM") {echo "selected";}?> >GEM</option>
+							<option value="PARMTOP"  <?php if (in_array($fileExtension,Array("PARMTOP","PRMTOP","TOP"))){echo "selected";}?> >PARMTOP</option>
+						<option value="MDCRD"  <?php if (in_array($fileExtension,Array("MDCRD","TRJ"))){echo "selected";}?> >MDCRD</option>
+						 <option value="UNK"  <?php if ($fileExtension =="UNK"){echo "selected";}?> >OTHER</option>-->
+								</select>
+				  </div>
+
+					<div class="form-group display-hide" id="dataType<?php echo $idx;?>">
+				        <label>Data Type <i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Data type description"></i></span></label>
+				        <select name="data_type" id="data_type_sel<?php echo $idx;?>" class="form-control" onchange="customfromDataType(this.value, <?php echo $idx;?>)" disabled>
+								</select>
+								<!--<span class="help-block font-red warn1" style="display:none;">This field is required.</span>-->
+				  </div>
+
+					<!--<div class="form-group display-hide" id="taxonG<?php echo $idx;?>">
+				        <label>Taxon  <i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Taxon description"></i></span></label> 
+				        <input type="text" id="taxon<?php echo $idx;?>" class="form-control taxon" placeholder="Please enter the taxon name" />
+					</div>-->
+
+					<div class="form-group display-hide" id="taxonG<?php echo $idx;?>">
+          	<label class="control-label" id="label-taxon<?php echo $idx;?>">Taxon <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Insert the taxon for this file. You can provide it by name, ID, or avoid this step.</p>"></i></label>
+						<div class="input-group">
+							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_1 taxon_name" name="taxon_name_id" id="taxonName<?php echo $idx;?>" placeholder="Please enter the taxon name" disabled>
+							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_2 taxon_id" style="display:none;" name="taxon_id_name" id="taxonID<?php echo $idx;?>" placeholder="Please enter the taxon ID" disabled>
+							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_3" style="display:none;" id="" disabled placeholder="No taxon provided">
+							<div class="input-group-btn">
+									<img class="Typeahead-spin" src="assets/layouts/layout/img/loading-spinner-blue.gif" style="display:none;">	
+									<button type="button" class="btn green dropdown-toggle" data-toggle="dropdown"><span class="arg_dependency<?php echo $idx;?>">Taxon Name</span>
+											<i class="fa fa-angle-down"></i>
+									</button>
+									<ul class="dropdown-menu pull-right">
+											<li>
+													<a class="arg_dependency<?php echo $idx;?>_1" href="javascript:changeArgDependency('<?php echo $idx;?>', '1', true);"> Taxon Name </a>
+											</li>
+											<li>
+													<a class="arg_dependency<?php echo $idx;?>_2" href="javascript:changeArgDependency('<?php echo $idx;?>', '2', true);"> Taxon ID </a>
+											</li>
+											<li>
+													<a class="arg_dependency<?php echo $idx;?>_3" href="javascript:changeArgDependency('<?php echo $idx;?>', '3', false);"> No Taxon </a>
+											</li>
+									</ul>
+							</div>
+						</div>
+					</div>
+
+					<input type="hidden" name="taxon_id" name="taxon_id<?php $idx; ?>" value="" />
+				
+
+					<div class="form-group display-hide" id="refGenomeTR<?php echo $idx;?>">
+				        <label>Assembly <i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Assembly description"></i></span></label> 
+								<select name="refGenome" id="refGenome<?php echo $idx;?>" class="form-control" disabled>
+						<option value="">Select the assembly</option>
+						<?php
+                                                $refList  = scanDir($GLOBALS['refGenomes']);
+                                                foreach ($refList as $ref){
+                                                    if ( preg_match('/^\./', $ref) || !is_dir($GLOBALS['refGenomes']) )
+                                                        continue;
+                                                    if (isset($GLOBALS['refGenomes_names'][$ref]))
+                                                        $refName=$GLOBALS['refGenomes_names'][$ref];
+                                                    else
+                                                        $refName=$ref;
+                                                    if ($filesMeta[$idx]['refGenome'] == $ref){
+                                                        print "<option selected value=\"$ref\">$refName</option>";
+                                                    }else{
+                                                        print "<option value=\"$ref\">$refName</option>";
+                                                    }
+                                                }
+						?>
+					
 				        </select>
 				  </div>
 
-				  <div class="form-group refGenomeTR" id="refGenomeTR<?php echo $idx;?>">
+					<div class="form-group display-hide" id="pairedTR<?php echo $idx;?>">
+				        <label>BAM type</label>
+				        <div class="mt-radio-inline">
+					   <label class="mt-radio mt-radio-outline">
+					       <input type="radio" name="paired" class="paired<?php echo $idx;?>" value="paired" checked> Paired-End
+					       <span></span>
+					   </label>
+					   <label class="mt-radio mt-radio-outline">
+					       <input type="radio" name="paired" class="paired<?php echo $idx;?>" value="single"> Single-End
+					       <span></span>
+					   </label>
+				        </div>
+				  </div>
+
+				  <div class="form-group display-hide" id="sortedTR<?php echo $idx;?>">
+				        <label>Coordinates sorting</label>
+				        <div class="mt-radio-inline">
+					   <label class="mt-radio mt-radio-outline">
+					       <input type="radio" name="sorted" class="sorted<?php echo $idx;?>" value="sorted" onclick="showHideSortInfo(0,<?php echo $idx;?>)" checked> Sorted	
+					       <span></span>
+					   </label>
+					   <label class="mt-radio mt-radio-outline">
+					       <input type="radio" name="sorted" class="sorted<?php echo $idx;?>" value="unsorted" onclick="showHideSortInfo(1, <?php echo $idx;?>)" > Unsorted
+					       <span></span>
+					   </label>
+				        </div>
+				  </div>
+
+				  <div class="alert alert-warning display-hide" id="sortInfo<?php echo $idx;?>">
+				      <strong>BAM</strong> file will be authomatically sorted by coordinate order
+				  </div>
+
+				  <!--<div class="form-group refGenomeTR" id="refGenomeTR<?php echo $idx;?>">
 				        <label>Assembly</label>
 				        <span class="tooltip-mt-radio"><i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Assembly description"></i></span>
 				        <select name="refGenome" class="form-control">
@@ -276,6 +386,7 @@ redirectOutside();
 						<?php
 						$refList  = scanDir($GLOBALS['refGenomes']);
 						foreach ($refList as $specie){
+						  var_dump(is_link($specie));
 						  if ( preg_match('/^\./', $specie) || !is_dir($GLOBALS['refGenomes']))
 						    continue;
 						  $scaffoldList  = scanDir($GLOBALS['refGenomes']."/$specie");
@@ -329,12 +440,12 @@ redirectOutside();
 
 				  <div class="alert alert-warning sortInfo" id="sortInfo<?php echo $idx;?>">
 				      <strong>BAM</strong> file will be authomatically sorted by coordinate order
-				  </div>
+				  </div>-->
 
 
 				  <div class="form-group descriptionTR" id="descriptionTR<?php echo $idx;?>">
 				        <label>Description</label>
-				        <textarea name="description" id="description" class="form-control" rows="6" placeholder="Write a short description here..."><?php echo $filesMeta[$idx]['description'];?></textarea>
+				        <textarea name="description" id="description<?php echo $idx;?>" class="form-control" rows="6" placeholder="Write a short description here..."><?php echo $filesMeta[$idx]['description'];?></textarea>
 				  </div>
 
 				  <!--<input type="hidden" name="validated[]" value="<?php print $filesMeta[$idx]['validated'];?>"/>-->
@@ -342,10 +453,13 @@ redirectOutside();
 
 
 				  <div class="form-actions btn-send-data">
-				  	<input type="button" class="btn green snd-metadata-btn" value="SEND METADATA" onclick="sendMetadata(<?php echo $idx; ?>, 1);" style="position:relative;z-index:20;" >
+						<!--<input type="button" class="btn green snd-metadata-btn" value="SEND METADATA" onclick="sendMetadata(<?php echo $idx; ?>, 1);" style="position:relative;z-index:20;" >-->
+						<input type="button" class="btn green snd-metadata-btn" id="snd<?php echo $idx; ?>" value="SEND METADATA" style="position:relative;z-index:20;" >
 				  </div>
 				
 				</div>
+
+				</form>
 				
 				<?php
 				if (isset($_SESSION['validation'][$fn]['msg'])){ ?>
@@ -420,7 +534,7 @@ redirectOutside();
 
 
 			  </div>		
-			</form>
+			<!--</form>-->
 
 			<?php }else{ ?>
 

@@ -60,7 +60,7 @@ exec("$cmd",$output);
 //http://www.example.com/?start=913&end=1152&chr=chrI&label=120502_SN365_B_L002_GGM-34_120502_SN365_B_L002_GGM-35&window=500
 
 //$url_png = "http://mmb.pcb.ub.es/NucleosomeDynamics/JBrowse/JBrowse-1.11.6/user_data/$user/.tmp/$filename.html";
-$url_png = $GLOBALS['absURL']."/JBrowse-1.11.6/user_data/$user/.tmp/$filename.html";
+$url_png = $GLOBALS['jbrowseURL']."/JBrowse-1.11.6/user_data/$user/.tmp/$filename.html";
 print "<iframe src=$url_png style='height:100%;width:100%'></iframe>";
 
 ?> 

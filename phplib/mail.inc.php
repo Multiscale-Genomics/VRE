@@ -4,7 +4,7 @@ require_once('class.smtp.php');
 require_once('class.phpmailer.php');
 //require "admin.inc.php";
 
-function sendEmail($recipient, $subject, $body){
+function sendEmail($recipient, $subject, $body, $reply = null, $bcc = null){
 
 	$conf = getConf(dirname(__DIR__)."/../conf/mail.conf");
 	
@@ -18,11 +18,21 @@ function sendEmail($recipient, $subject, $body){
 	$mail->IsHTML(true);
 	$mail->Username = $conf[0];
 	$mail->Password = $conf[1];
-	$mail->AddReplyTo($GLOBALS['FROMMAIL'], $GLOBALS['FROMNAME']);
-	$mail->SetFrom($GLOBALS['FROMMAIL'], $GLOBALS['FROMNAME']);
+
+	if(!isset($reply)) $reply = $GLOBALS['ADMINMAIL'];
+
+	$mail->AddReplyTo($reply, $GLOBALS['FROMNAME']);
+	$mail->SetFrom($reply, $GLOBALS['FROMNAME']);
 	$mail->Subject = $subject;
 	$mail->Body = $body;
+	// ******************
 	$mail->AddAddress($recipient);
+	// ******************
+	//$mail->AddAddress("genis.bayarri@irbbarcelona.org");
+
+	if(isset($bcc)) {
+		$mail->addBcc($bcc);
+	}
 
 	if(!$mail->Send()) {
 		return false;

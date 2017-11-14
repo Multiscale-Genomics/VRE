@@ -1,5 +1,7 @@
 var baseURL = $('#base-url').val();
 
+//console.log(baseURL);
+
 var TableDatatablesEditable = function () {
 
     var handleTable = function () {
@@ -20,6 +22,13 @@ var TableDatatablesEditable = function () {
             oTable.fnDraw();
         }
 
+				function bytesToSize(bytes) {
+					var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+					if (bytes == 0) return '0 Byte';
+					var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+					return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+				};
+
         function editRow(oTable, nRow) {
             var aData = oTable.fnGetData(nRow);
             var jqTds = $('>td', nRow);
@@ -34,6 +43,8 @@ var TableDatatablesEditable = function () {
             jqTds[8].innerHTML = '<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-save"></i> Save user</a></li><li><a class="cancel" href="javascript:;"><i class="fa fa-times-circle"></i> Cancel edition</a></li></ul></div>';
         }
 
+	
+
         function editNewRow(oTable, nRow) {
             var aData = oTable.fnGetData(nRow);
             var jqTds = $('>td', nRow);
@@ -44,7 +55,8 @@ var TableDatatablesEditable = function () {
 			jqTds[4].innerHTML = countriesSelect; 
             jqTds[5].innerHTML = rolesSelect;
             jqTds[6].innerHTML = '&nbsp;';
-            jqTds[7].innerHTML = '&nbsp;';
+            //jqTds[7].innerHTML = '&nbsp;';
+						jqTds[7].innerHTML = '<input type="number" class="form-control input-xsmall input-sm" value="50">';
             jqTds[8].innerHTML = '<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-save"></i> Save new user</a></li><li><a class="cancel" href="javascript:;"><i class="fa fa-times-circle"></i> Cancel</a></li></ul></div>';
         }
 
@@ -76,7 +88,7 @@ var TableDatatablesEditable = function () {
 				if (jqSelects[1].value == 0) {
 				oTable.fnUpdate('', nRow, 8, false);
 				}else{
-            	oTable.fnUpdate('<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-pencil"></i> Edit user</a></li>  <li><a class="enable"  href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li></ul></div>', nRow, 8, false);
+            	oTable.fnUpdate('<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-pencil"></i> Edit User</a></li>  <li><a class="enable"  href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li>  <li><a class="" href="javascript:deleteUser(\''+jqInputs[0].value+'\');"><i class="fa fa-trash"></i> Delete user</a></li>   </ul></div>', nRow, 8, false);
 				}
             	oTable.fnDraw();
 				return true;
@@ -116,7 +128,7 @@ var TableDatatablesEditable = function () {
               oTable.fnUpdate('new user', nRow, 6, false);
               oTable.fnUpdate(diskLimit, nRow, 7, false);
               if(jqSelects[1].value == 0) oTable.fnUpdate('', nRow, 8, false);
-              else oTable.fnUpdate('<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-pencil"></i> Edit user</a></li>  <li><a class="enable"  href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li></ul></div>', nRow, 8, false);
+              else oTable.fnUpdate('<div class="btn-group"><button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i></button><ul class="dropdown-menu pull-right" role="menu"><li><a class="edit" href="javascript:;"><i class="fa fa-pencil"></i> Edit User</a></li>  <li><a class="enable"  href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li>  <li><a class="" href="javascript:deleteUser(\''+jqInputs[0].value+'\');"><i class="fa fa-trash"></i> Delete user</a></li>  </ul></div>', nRow, 8, false);
               oTable.fnDraw();
               return true;
             }else{
@@ -135,8 +147,8 @@ var TableDatatablesEditable = function () {
             //"dom": "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
 
             "lengthMenu": [
-                [5, 15, 20, -1],
-                [5, 15, 20, "All"] // change per page values here
+                [5, 10, 20, -1],
+                [5, 10, 20, "All"] // change per page values here
             ],
 
             // Or you can use remote translation file
@@ -145,7 +157,7 @@ var TableDatatablesEditable = function () {
             //},
 
             // set the initial value
-            "pageLength": 5,
+            "pageLength": 10,
 
             "language": {
                 "lengthMenu": " _MENU_ records"
@@ -326,7 +338,7 @@ var TableDatatablesEditable = function () {
 				$.ajax({
            			type: "POST",
            			url: baseURL + "applib/changeStatusOfUser.php",
-           			data: 'id=' + $('td:first', nRow)[0].innerText + '&s=1', 
+           			data: 'id=' + $('td:first', nRow)[0].innerText.split('\n')[0] + '&s=1', 
            			success: function(data) {
 						d = data.replace(/(\r\n|\n|\r|\t)/gm,"");
                			if(d == '1'){
@@ -336,10 +348,12 @@ var TableDatatablesEditable = function () {
                                               '</button>'+
                                               '<ul class="dropdown-menu pull-right" role="menu">'+
                                                 '<li>'+
-                                                  '<a class="edit" href="javascript:;"><i class="fa fa-pencil"></i> Edit user</a>'+
+                                                  '<a class="" href="admin/editUser.php?id='+$('td:first', nRow)[0].innerText.split('\n')[1]+'"><i class="fa fa-pencil"></i> Edit User</a>'+
                                                 '</li>'+
                                                 '<li>'+
                                                 '<a class="enable" href="javascript:;"><i class="fa fa-ban"></i> Disable user</a></li>'+
+                                                '<li>'+
+                                                '<a class="" href="javascript:deleteUser(\''+$('td:first', nRow)[0].innerText.split('\n')[1]+'\');"><i class="fa fa-trash"></i> Delete user</a></li>'+
                                                '</ul>'+
 											   '</div>';
 							oTable.fnUpdate(newActions, nRow, 8, false);
@@ -352,7 +366,7 @@ var TableDatatablesEditable = function () {
          		});
 
             } else if (/*nEditing === null &&*/ this.innerHTML.indexOf("Disable user") != -1 ) {
-				
+
 				var actionsButton = $('button', $('td:last', nRow)[0]);				
 				var actionsList = 	$('ul', $('td:last', nRow)[0]);
 				
@@ -362,7 +376,7 @@ var TableDatatablesEditable = function () {
 				$.ajax({
            			type: "POST",
            			url: baseURL + "applib/changeStatusOfUser.php",
-           			data: 'id=' + $('td:first', nRow)[0].innerText + '&s=0', 
+           			data: 'id=' + $('td:first', nRow)[0].innerText.split('\n')[0] + '&s=0', 
            			success: function(data) {
 						d = data.replace(/(\r\n|\n|\r|\t)/gm,"");
                			if(d == '1'){
@@ -453,6 +467,20 @@ var TableDatatablesEditable = function () {
 
 }();
 
+var userID;
+
+function deleteUser(user){
+  $('#modalDelete .modal-body').html('Are you sure you want to delete the selected user and ALL her / his data? This operation cannot be undone!');
+  $('#modalDelete').modal({ show: 'true' });
+	userID = user;
+}
+
+
 jQuery(document).ready(function() {
     TableDatatablesEditable.init();
+
+		$('#modalDelete').find('.modal-footer .btn-modal-del').on('click', function(){
+			location.href= baseURL + "applib/delUser.php?id=" + userID;
+		});
+
 });

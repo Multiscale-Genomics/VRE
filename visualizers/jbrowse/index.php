@@ -7,22 +7,18 @@ redirectOutside();
 # Classes to build json tracks
 include "jsonClassTemplates_new.php";
 
-#$user = $_REQUEST["user"];
-#$user = $_SESSION['userId'];
 $user = $_SESSION['User']['id'];
 
 # JBrowse url
-$url = "JBrowse-1.11.6/index.html?";
+#$url = "JBrowse-1.11.6/index.html?";
+$url = "JBrowse-1.12.1-yeast/index.html?";
 $url = $url . "data=" . urlencode("user_data/$user/.jbrowse");
-$url = $url . "&loc=" . urlencode("chrI:30000..50000");
+$url = $url . "&loc=" . urlencode("chrII:30000..50000");
 $url = $url . "&tracks=";
 $url_tracks = "";
 
-# tail of trackList.json, closing tags
-#$trackTail = file_get_contents('../JBrowse/templates/trackTail.json', FILE_USE_INCLUDE_PATH); 
 
 # user track file trackList.json
-$file = "/data2/www/inb/NucleosomeDynamics/JBrowse/JBrowse-1.11.6/user_data/" . $user . "/.jbrowse/trackList.json";
 $file = $GLOBALS['dataDir']."/". $user . "/.jbrowse/trackList.json";
 //print $file;
 $trackf = fopen($file, "w");
@@ -38,17 +34,12 @@ $first = true;
 $refGlobal;
 
 foreach ($arr_tracks as $id) {
-	### FALTA agafar reference genome i fer links: seq, tracks, names(?)
 
 	$label = $id;
 	$fileData = getGSFile_fromId($id);
-        //$fileData = $GLOBALS['filesMetaCol']->findOne(array('_id' => $id));
-        //$fileData2 = $GLOBALS['filesCol']->findOne(array('_id' => $id));
 
         $filepath = $fileData['path'];
 	$filename = basename($filepath);
-#        $type = $fileData['trackType'];
-#$type= "GFF";
 	$type = $fileData['data_type'];
 	$format = $fileData['format'];
         $ref = $fileData['refGenome'];
@@ -56,51 +47,43 @@ foreach ($arr_tracks as $id) {
 	if (!$ref){
                 $_SESSION['errorData']['JBrowse'][] ="$filename cannot be visualized, unknown reference genome $ref";
 		redirect("/visualizers/error.php");
-                 //$_SESSION['ErrorData']['JBrowse'][] ="$filename cannot be visualized, unknown reference genome $ref. <a href=\"javascript:self.close()\">[ Close  ]</a>";
-		//exit(0);
 	}
 
         $a_project = split("/",dirname($filepath));
         $project = array_pop($a_project);
 
-
 	if ($first) {
-		# head of trackList.json, having all common tracks 
-		$trackHead = file_get_contents("JBrowse-1.11.6/data/tracks/$ref/trackList_head.json", FILE_USE_INCLUDE_PATH);
-		$trackTail = file_get_contents("JBrowse-1.11.6/data/tracks/$ref/trackList_tail.json", FILE_USE_INCLUDE_PATH);
-		# Common tracks (reference sequence, genes, GC, etc.)
-		fwrite($trackf, $trackHead);
-		$refGlobal=$ref;
+                if ($ref  == "hg38"){
+                        # head of trackList.json, having all common tracks 
+                        //print "HUMAN";
+                        $trackHead = file_get_contents("JBrowse-1.12.1/data/$ref/jbrowse/tracks/trackList_head.json", FILE_USE_INCLUDE_PATH);
+                        $trackTail = file_get_contents("JBrowse-1.12.1/data/$ref/jbrowse/tracks/trackList_tail.json", FILE_USE_INCLUDE_PATH);
+                        # Common tracks (reference sequence, genes, GC, etc.)
+                        fwrite($trackf, $trackHead);
+                        $refGlobal=$ref;
+
+                } else {
+			# head of trackList.json, having all common tracks 
+			$trackHead = file_get_contents("JBrowse-1.11.6/data/$ref/jbrowse/tracks/trackList_head.json", FILE_USE_INCLUDE_PATH);
+			$trackTail = file_get_contents("JBrowse-1.11.6/data/$ref/jbrowse/tracks/trackList_tail.json", FILE_USE_INCLUDE_PATH);
+			# Common tracks (reference sequence, genes, GC, etc.)
+			fwrite($trackf, $trackHead);
+			$refGlobal=$ref;
+#print "HEAD: $trackHead";
+#print "TAIL: $trackTail";
+		}
 	}
 
-
-//	$filename = exec("grep -P \"^$label\\t\" metadata.txt |cut -f2");
-//	$type = exec("grep -P \"^$label\\t\" metadata.txt |cut -f3");
-//	$project = exec("grep -P \"^$label\\t\" metadata.txt |cut -f4");
-//	$ref = exec("grep -P \"^$label\\t\" metadata.txt |cut -f5");
-// print "LABEL: " . $label . " " . "FILENAME: " . $filename . " TYPE: " . $type . " PROJECT: " . $project . " REF: " . $ref . "<br/>";
+print "LABEL: " . $label . " " . "FILENAME: " . $filename . " TYPE: " . $type . " FORMAT : " .$format . " PROJECT: " . $project . " REF: " . $ref . "<br/>";
 
 	if ($refGlobal != $ref){
                 $_SESSION['errorData']['JBrowse'][] ="All selected tracks should have the same Reference Genome.";
                 redirect("/visualizers/error.php");
-
-//		print errorPage("Error", "All selected tracks should have the same Reference Genome. <a href=\"javascript:self.close()\">[ Close  ]</a>");
-//		exit(0);
-
 	}
 
 	if ($type == "FALSE"){
-//		if ($filename == "lala.gff"){ 
-//			$type = "GFF";
-//		} elseif ($filename == "prova.bw"){
-//			$type = "BW";
-//		} else {
                 $_SESSION['errorData']['JBrowse'][] ="$filename cannot be visualized, file has no track type.";
                 redirect("/visualizers/error.php");
-
-//		print errorPage("Error", "$filename cannot be visualized, file has no track type. <a href=\"javascript:self.close()\">[ Close  ]</a>");
-//                exit(0);
-//		}
 	}
 
 
@@ -122,33 +105,25 @@ foreach ($arr_tracks as $id) {
 	 } elseif ($type == "BW_cov"){
                 $e = new Coverage($label,"$project",$filename);
                 
-#	} elseif ($type == "GFF_NR"){
 	} elseif ($type == "nucleosome_positioning"){
                 $e = new GFF_NR($label,"$project",$filename);
                 
-#	} elseif ($type == "GFF_ND"){
-        } elseif ($type == "nucleosome_dynamics"){
+        } elseif ($type == "nucleosome_dynamics" && ( $format=="GFF3" || $format=="GFF" ) ){
                 $e = new GFF_ND($label,"$project",$filename);
-#        } elseif ($type == "GFF_TX"){
+        } elseif ($type == "nucleosome_dynamics" && $format=="BW"){
+                $e = new BW_P($label,"$project",$filename);
         } elseif ($type == "tss_classification_by_nucleosomes"){
                 $e = new GFF_TX($label,"$project",$filename);
-#        } elseif ($type == "GFF_NFR"){
         } elseif ($type == "nucleosome_free_regions"){
                 $e = new GFF_NFR($label,"$project",$filename);
-#        } elseif ($type == "GFF_GAU"){
         } elseif ($type == "nucleosome_stiffness"){
                 $e = new GFF_GAU($label,"$project",$filename);
-
-#        } elseif ($type == "GFF_P"){
-        } elseif ($type == "nucleosome_gene_phasing" && $format="GFF"){
+        } elseif ($type == "nucleosome_gene_phasing" && ( $format=="GFF3" || $format=="GFF" ) ){
                 $e = new GFF_P($label,"$project",$filename);
-#        } elseif ($type == "BW_P"){
-        } elseif ($type == "nucleosome_gene_phasing" && $format="BW"){
+        } elseif ($type == "nucleosome_gene_phasing" && $format=="BW"){
                 $e = new BW_P($label,"$project",$filename);
-#        } elseif ($type == "GFF"){
-	} elseif ($format == "GFF"){
+	} elseif ($format == "GFF" || $format=="GFF3"){
                 $e = new GFF($label,"$project",$filename);
-#        } elseif ($type == "BW"){
         } elseif ($format == "BW"){
                 $e = new BW($label,"$project",$filename);
         } elseif ($format == "BAM"){
@@ -167,11 +142,10 @@ foreach ($arr_tracks as $id) {
                 $e = new AlignmentCoverage($label,"$project",$filename);
 
 	} else {
-//		print $type;
-//		print "unknown trackType<br>";
-//                print errorPage("Error", "$filename cannot be visualized, unknown track type $type. <a href=\"javascript:self.close()\">[ Close  ]</a>");
-		print "ERROR: $filename cannot be visualized, unknown track type $type. <a href=\"javascript:self.close()\">[ Close  ]</a>";
-                exit(0);
+#                $_SESSION['errorData']['JBrowse'][] ="$filename cannot be visualized.  Unknown track type '$type' or unsupported format '$format'.";
+                $_SESSION['errorData']['JBrowse'][] ="$filename cannot be visualized.  Unsupported format '$format'.<br>Supported formats are: GFF, GFF3, BW and BAM.";
+
+                redirect("/visualizers/error.php");
 	}
 
 	if ($e != null) {
@@ -199,16 +173,18 @@ foreach ($arr_tracks as $id) {
 # If we got here, trackType's and refGenome's are OK
 
 $seqfrom = $GLOBALS['dataDir']."/". $user . "/.jbrowse/seq";
-$seqto = $GLOBALS['jbrowseData']."/seq/$ref";
+$seqto = $GLOBALS['refGenomes']."$ref/jbrowse/seq/";
 $tracksfrom = $GLOBALS['dataDir']."/". $user . "/.jbrowse/tracks";
-$tracksto = $GLOBALS['jbrowseData']."/tracks/$ref";
+$tracksto = $GLOBALS['refGenomes']."$ref/jbrowse/tracks/";
 $namesfrom = $GLOBALS['dataDir']."/". $user . "/.jbrowse/names";
-$namesto = $GLOBALS['jbrowseData']."/names/$ref";
+$namesto = $GLOBALS['refGenomes']."$ref/jbrowse/names/";
 		//symlink($GLOBALS['jbrowseData']."/names/","$dataDirP/.jbrowse/names"); // OJ // OJOO
 
 //print "SEQFROM: $seqfrom<br/>SEQTO: $seqto<br/><br/>TRACKSFROM: $tracksfrom<br/>TRACKSTO: $tracksto<br/><br/>";
 
+
 if(file_exists($seqfrom)) {
+//print "Exists";
     if(is_link($seqfrom)) {
 	$seqto_ant = readlink($seqfrom);
 //print "SEQTO_ANT: $seqto_ant<br/>";
@@ -223,6 +199,8 @@ if(file_exists($seqfrom)) {
         exit("$linkfile exists but not symbolic link\n");
     }
 } else {
+//print "not exists";
+	unlink($seqfrom);
 	symlink($seqto,$seqfrom);
 }
 
@@ -241,6 +219,7 @@ if(file_exists($tracksfrom)) {
         exit("$linkfile exists but not symbolic link\n");
     }
 } else {
+	unlink($tracksfrom);
 	symlink($tracksto,$tracksfrom);
 }
 
@@ -259,25 +238,29 @@ if(file_exists($namesfrom)) {
         exit("$linkfile exists but not symbolic link\n");
     }
 } else {
+    unlink($namesfrom);
     symlink($namesto,$namesfrom);
 }
-
-
-//symlink($GLOBALS['jbrowseData']."/seq/$ref", $GLOBALS['dataDir']."/". $user . "/.jbrowse/seq");
-//symlink($GLOBALS['jbrowseData']."/tracks/$ref", $GLOBALS['dataDir']."/". $user . "/.jbrowse/tracks");
 
 
 fwrite($trackf, $trackTail);
 fclose($trackf);
 
-if ($ref == "dmel-r5.1"){
-	$url = "../JBrowse/JBrowse-1.12.0/index.html?";
+if ($ref == "r5.01"){
+	$url = "JBrowse-1.12.0/index.html?";
 	$url = $url . "data=" . urlencode("user_data/$user/.jbrowse");
 	$url = $url . "&loc=" . urlencode("chrI:30000..50000");
 	$url = $url . "&tracks=";
+} else if ($ref == "hg38"){
+        $url = "JBrowse-1.12.1/index.html?";
+        $url = $url . "data=" . urlencode("user_data/$user/.jbrowse");
+        $url = $url . "&loc=" . urlencode("chr1:30000..50000");
+        $url = $url . "&tracks=";
 }
+
+
 //$url = $url . $url_tracks;
-$url = $GLOBALS['absURL'] . $url;
+$url = $GLOBALS['jbrowseURL'] . $url;
 //print $url;
 
 header('Location: ' . $url);

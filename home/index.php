@@ -3,12 +3,13 @@
 require "../phplib/genlibraries.php";
 redirectOutside();
 
-$tls = getTools_List();
+$tls = getTools_List(1);
+$tlsProv = getTools_List(0);
 $vslzrs = getVisualizers_List();
 
-$tools = array_merge($tls, $vslzrs);
+$toolList = array_merge($tls, $tlsProv, $vslzrs);
 
-sort($tools);
+sort($toolList);
 
 ?>
 
@@ -35,20 +36,18 @@ sort($tools);
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> Homepage
-                        </h1>
+                       <!-- <h1 class="page-title"> Homepage</h1> -->
                         <!-- END PAGE TITLE-->
 												<!-- END PAGE HEADER-->
 
 												<p>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum faucibus tempor augue, id condimentum libero vestibulum id. Nulla tristique sed odio vitae vulputate. Integer placerat massa sem, sed pulvinar lacus convallis sed. Donec viverra tortor ac ipsum pulvinar porttitor. Curabitur eu nisl ante. Donec felis neque, euismod sed laoreet a, laoreet et dui. Vestibulum tincidunt est ut orci finibus egestas. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
                         </p>
 												<div class="portfolio-content portfolio-3">
 
 														<?php 
 														
 														$kw = array();
-														foreach($tools as $t) { 
+														foreach($toolList as $t) { 
 															foreach($t['keywords'] as $tk) $kw[] = $tk;
 														}
 
@@ -62,7 +61,7 @@ sort($tools);
 																		<div data-filter="*" class="cbp-filter-item-active cbp-filter-item btn blue btn-outline uppercase">All</div>
 		
 																		<?php foreach($kw as $k) { ?>
-																		<div data-filter=".<?php echo $k; ?>" class="cbp-filter-item btn blue btn-outline uppercase"><?php echo str_replace("-", " ", $k); ?></div>
+																		<div data-filter=".<?php echo $k; ?>" class="cbp-filter-item btn blue btn-outline uppercase"><?php echo /*str_replace("-", " ", $k);*/ $k; ?></div>
 																		<?php } ?>																	
 	
                                 </div>
@@ -71,7 +70,7 @@ sort($tools);
 		
 																<?php 
 
-																foreach($tools as $t) { 
+																foreach($toolList as $t) { 
 
 																$kw = implode(" ", $t['keywords']);
 

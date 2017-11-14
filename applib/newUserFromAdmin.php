@@ -11,6 +11,7 @@ if($_POST){
 		$newArray = $_POST;
 		$newArray['pass1'] = generatePassword();
 		createUserFromAdmin($newArray);
+		// change that for json: show password to admin
 		echo "1";
 	}else{
 		echo "0";

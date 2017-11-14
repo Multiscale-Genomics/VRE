@@ -48,11 +48,11 @@ redirectOutside();
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>NAFlex</span>
+                                  <span>NAFlex analyses</span>
 																	<i class="fa fa-circle"></i>
                               </li>
 															 <li>
-                                  <a href="tools/naflex/output.php?proj=<?php echo $_REQUEST['proj']; ?>">Output</a>
+                                  <a href="tools/naflex/output.php?project=<?php echo $_REQUEST['project']; ?>">Output <?php echo basename(getAttr_fromGSFileId($_REQUEST['project'],'path')); ?></a>
                               </li>
 
                             </ul>
@@ -60,7 +60,7 @@ redirectOutside();
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
                         <h1 class="page-title"> Results
-                            <small>Nucleic Acids Flexibility</small>
+                            <small>Nucleic Acids Flexibility Analyses</small>
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
@@ -74,42 +74,49 @@ redirectOutside();
 //$data = getNUCDBData($_REQUEST['proj'], True);
 
 
-if ($_REQUEST['proj'])
-    $proj = $_REQUEST['proj'];
+if ($_REQUEST['project'])
+    $proj = $_REQUEST['project'];
 
 if ($_REQUEST['type'])
 	$analysisType = $_REQUEST['type'];
 else
 	$analysisType = "";
 
-$project = $_REQUEST[proj];
-$op = $_REQUEST[proj];
+$project = $_REQUEST['project'];
+//$op = $_REQUEST[proj];
+$op = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
 $nuc = $_REQUEST[nuc];
 $analysis = $analysisType;
 
 //$dir = $GLOBALS['webDir'].$GLOBALS['parmbsc1Dir'];
-$dir = '/orozco/services/parmbsc1_naflex_Data/NAFlex_parmBSC1/';
+//$dir = '/orozco/services/parmbsc1_naflex_Data/NAFlex_parmBSC1/';
+$dir = $GLOBALS['dataDir'].$_SESSION['User']['id']."/.tmp";
+$webdir = "files/".$_SESSION['User']['id']."/.tmp/outputs_".$project."/";
+$downdir = "../../files/".$_SESSION['User']['id']."/.tmp/outputs_".$project."/";
+
 
 #$userPath = "userData/$proj/$analysis";
 
-$path = "$dir/$proj/$analysis";
+$path = "$dir/outputs_$proj/$analysis";
 
-$userPath = $GLOBALS['parmbsc1Dir']."/$proj/$analysis";
+//$userPath = $GLOBALS['parmbsc1Dir']."/$proj/$analysis";
+$userPath = $downdir.$analysis;
 
 if($analysis == "STACKING_2"){
-	$path = "$dir/$proj/STACKING";
+	$path = "$dir/outputs_$proj/STACKING";
 	$userPath = $GLOBALS['parmbsc1Dir']."/$proj/STACKING";
 }
 
 if($analysis == "EXPvsMD"){
-	$path = "$dir/$proj/CURVES";
+	$path = "$dir/outputs_$proj/CURVES";
 	$userPathCurves = $GLOBALS['parmbsc1Dir']."/$proj/CURVES";
 	$userPathCurvesEXP = $GLOBALS['parmbsc1Dir']."/${proj}_EXP/CURVES";
 }
 
 if($analysis == "PDB"){
-	$path = "$dir/$proj/PDB/CURVES";
-	$userPath = $GLOBALS['parmbsc1Dir']."/$proj/PDB/CURVES";
+	$path = "$dir/outputs_$proj/CURVES";
+	$userPath = $downdir."CURVES";
+	#$userPath = $GLOBALS['parmbsc1Dir']."/$proj/CURVES";
 }
 
 # Checking Parameters
@@ -160,9 +167,12 @@ switch($analysisType){
 			$evec = $_REQUEST['evec'];
 		else
 			$evec = 1;
-		$plot = "$userPath/${proj}_pcazipOut.proj$evec.plot.dat.png";
-		$dat = "$userPath/${proj}_pcazipOut.proj$evec.plot.dat";
-		$anim = "$userPath/${proj}_pcazipOut.anim$evec.pdb";
+
+		$proj_pcazip = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+
+		$plot = "$userPath/${proj_pcazip}_pcazipOut.proj$evec.plot.dat.png";
+		$dat = "$userPath/${proj_pcazip}_pcazipOut.proj$evec.plot.dat";
+		$anim = "$userPath/${proj_pcazip}_pcazipOut.anim$evec.pdb";
 
 ?>
 	<h2 align="center"> Nucleic Acid Analysis - Principal Component Analysis <br>
@@ -345,23 +355,53 @@ if (file_exists("$path/CURVES/seq.info")){
 	$checkDuplex = checkDuplex("$path/CURVES/seq.info");
 }
 
-if (file_exists("$path/CURVES/helical_bp") && is_dir("$path/CURVES/helical_bp") && $checkDuplex) {
+$fromPDB = false;
+
+if (file_exists("$path/CURVES/curvespdb.mug")){
+	$fromPDB = true;
+}
+
+
+if($fromPDB) { 
 
 ?>
-<div class="col-md-3 col-sm-4">
+	<div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=CURVES">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=PDB">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/curves.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=CURVES">Curves Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=PDB">PDB Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=CURVES" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=PDB" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
-</div>
-<?php 
+	</div>
+
+<?php
+
+}else{
+
+	if (file_exists("$path/CURVES/helical_bp") && is_dir("$path/CURVES/helical_bp") && $checkDuplex) {
+
+	?>
+	<div class="col-md-3 col-sm-4">
+		<div class="thumbnail">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=CURVES">
+					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/curves.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
+				</a>
+				<div class="caption">
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=CURVES">Curves Analysis</a></h3>
+						<p>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=CURVES" class="btn green"> View Analysis </a>
+						</p>
+				</div>
+		</div>
+	</div>
+	<?php 
+
+	}
 
 }
 
@@ -370,13 +410,13 @@ if (file_exists("$path/STIFFNESS/FORCE_CTES/rise_avg.dat.gnuplot")  && $checkDup
 ?>
 <div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=STIFFNESS">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=STIFFNESS">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/stiffness.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=STIFFNESS">Stiffness Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=STIFFNESS">Stiffness Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=STIFFNESS" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=STIFFNESS" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
@@ -385,18 +425,18 @@ if (file_exists("$path/STIFFNESS/FORCE_CTES/rise_avg.dat.gnuplot")  && $checkDup
 
 }
 
-if ( is_dir("$path/PCAZIP") && file_exists("$path/PCAZIP/pcazdump.info.log") && file_exists("$path/PCAZIP/${project}_pcazipOut.anim1.pdb")) {
+if ( is_dir("$path/PCAZIP") && file_exists("$path/PCAZIP/pcazdump.info.log") && file_exists("$path/PCAZIP/".basename(getAttr_fromGSFileId($_REQUEST['project'],'path'))."_pcazipOut.anim1.pdb")) {
 
 ?>
 <div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=PCAZIP">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=PCAZIP">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/pcazip.gif') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=PCAZIP">PCAzip Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=PCAZIP">PCAzip Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=PCAZIP" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=PCAZIP" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
@@ -410,13 +450,13 @@ if (file_exists("$path/NMR_JC") && is_dir("$path/NMR_JC")) {
 ?>
 <div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=NMR_JC">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=NMR_JC">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/nmr_jc.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=NMR_JC">NMR_JC Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=NMR_JC">NMR_JC Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=NMR_JC" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=NMR_JC" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
@@ -430,13 +470,13 @@ if (file_exists("$path/NMR_NOE") && is_dir("$path/NMR_NOE")) {
 ?>
 <div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=NMR_NOE">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=NMR_NOE">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/nmr_noe.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=NMR_NOE">NMR_NOEs Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=NMR_NOE">NMR_NOEs Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=NMR_NOE" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=NMR_NOE" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
@@ -450,13 +490,13 @@ if (file_exists("$path/HBs") && is_dir("$path/HBs") /*&& $data['rev_sequence'] !
 ?>
 <div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=HBs">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=HBs">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/hbs.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=HBs">HBs Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=HBs">HBs Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=HBs" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=HBs" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
@@ -472,13 +512,13 @@ if($checkDuplex){
 ?>
 <div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=STACKING">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=STACKING">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/stacking.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=STACKING">Stacking Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=STACKING">Stacking Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=STACKING" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=STACKING" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
@@ -490,13 +530,13 @@ if($checkDuplex){
 ?>
 <div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=STACKING_2
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=STACKING_2">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/stacking.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=STACKING_2">Stacking Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=STACKING_2">Stacking Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=STACKING_2" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=STACKING_2" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
@@ -513,13 +553,13 @@ if (file_exists("$path/CONTACTS") && is_dir("$path/CONTACTS") /*&& $data['rev_se
 ?>
 <div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=CONTACTS">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=CONTACTS">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/contacts.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=CONTACTS">Contacts Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=CONTACTS">Contacts Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=CONTACTS" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=CONTACTS" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
@@ -533,13 +573,13 @@ if (file_exists("$path/EXPvsMD") && is_dir("$path/EXPvsMD") and ( ! preg_match('
 ?>
 <div class="col-md-3 col-sm-4">
 		<div class="thumbnail">
-				<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=EXPvsMD">
+				<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=EXPvsMD">
 					<div style="width: 100%; height: 200px; background:#fff url('tools/naflex/images/output/expvsmd.png') no-repeat center center;background-size:contain; border:1px solid #e8e8e8;"></div>
 				</a>
 				<div class="caption">
-						<h3><a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=EXPvsMD">Experimental vs MD Analysis</a></h3>
+						<h3><a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=EXPvsMD">Experimental vs MD Analysis</a></h3>
 						<p>
-								<a href="tools/naflex/output.php?proj=<?php echo $project; ?>&type=EXPvsMD" class="btn green"> View Analysis </a>
+								<a href="tools/naflex/output.php?project=<?php echo $project; ?>&type=EXPvsMD" class="btn green"> View Analysis </a>
 						</p>
 				</div>
 		</div>
@@ -626,19 +666,36 @@ function plotAVG ($userPath,$plotname){
 
         $plot = "$userPath/$plotname.dat.png";
         $dat = "$userPath/$plotname.dat";
+        $datfile = "$GLOBALS[webDir]/$dat";
+	$count = substr_count(file_get_contents($datfile), "\n");
         $file = "$GLOBALS[webDir]/$plot";
 	logger("PLOT: $file");
         if( file_exists($file) && filesize($file) != 0){
 
-                ?>
-                <table border="0"><tr><td>
-                <img border="1" src="<?php echo $GLOBALS['BASEURL']; ?>tools/naflex/<?php echo $plot ?>">
-                </td><td>
-                <!--<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$plot ?>","<?php echo $plotname ?>","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>-->
-                <a href="<?php echo $GLOBALS['BASEURL']; ?>tools/naflex/getFile.php?fileloc=<?php echo $dat ?>&type=curves"> <p align="right" class="btn blue" style="margin:0;">Download Raw Data</p></a>
-                </td></tr></table>
+		# Long sequences (as chromatin in MuG)
+		if ($count > 25) {
 
-                <?php
+	                ?>
+        	        <table border="0"><tr><td>
+                	<img border="1" style="width: 1000px; height: 500px;" src="<?php echo $GLOBALS['BASEURL']; ?>tools/naflex/<?php echo $plot ?>">
+	                </td><td>
+        	        <p align="right" class="btn blue" style="margin:0;" onClick='window.open("<?php echo $GLOBALS['BASEURL']; ?>tools/naflex/<?php echo $plot ?>","<?php echo $plotname ?>","_blank,resize=1,width=1200,height=800");'>Open in New Window</p><br/>
+                	<a href="<?php echo $GLOBALS['BASEURL']; ?>tools/naflex/getFile.php?fileloc=<?php echo $dat ?>&type=curves"> <p align="right" class="btn blue" style="margin:0;">Download Raw Data</p></a>
+	                </td></tr></table>
+                	<?php
+
+		}
+		else {
+	                ?>
+        	        <table border="0"><tr><td>
+                	<img border="1" src="<?php echo $GLOBALS['BASEURL']; ?>tools/naflex/<?php echo $plot ?>">
+	                </td><td>
+        	        <!--<p align="right" class="curvesDatText" onClick='window.open("<?php echo $GLOBALS['homeURL'].'/'.$plot ?>","<?php echo $plotname ?>","_blank,resize=1,width=800,height=600");'>Open in New Window</p><br/>-->
+                	<a href="<?php echo $GLOBALS['BASEURL']; ?>tools/naflex/getFile.php?fileloc=<?php echo $dat ?>&type=curves"> <p align="right" class="btn blue" style="margin:0;">Download Raw Data</p></a>
+	                </td></tr></table>
+                	<?php
+		}
+
         } else {
                 echo "<p><b><i>Sorry, information not available...</i></b></p>";
         }
