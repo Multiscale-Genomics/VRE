@@ -3,7 +3,7 @@
 $GLOBALS['fsStyle'] = "fsMongo"; # fsMongo,fs,mongo 
 
 //VRE installation paths
-$GLOBALS['shared']     = "/orozco/services/MuG/";
+$GLOBALS['shared']     = "/orozco/services/MuG_dev/";
 $GLOBALS['dataDir']    = $GLOBALS['shared']."MuG_userdata/";
 $GLOBALS['pubDir']     = $GLOBALS['shared']."MuG_public/";
 $GLOBALS['appsDir']    = $GLOBALS['shared']."apps/soft/";

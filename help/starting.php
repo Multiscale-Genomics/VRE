@@ -63,7 +63,7 @@ redirectOutside();
 
 												<p><strong>MuG VRE</strong> gives the possibility to work as a registered user.</p>
 
-												<p>Users can register directly giving personal data or via <strong>OAuth2</strong> using OrcID, Google or LinkedIn.</p>
+												<p>Users can register directly giving personal data or via <strong>OAuth2</strong> using Google or LinkedIn.</p>
 
 												<p><img src="assets/layouts/layout/img/help/starting02.png" style="width:800px;max-width:100%;" /></p>
 

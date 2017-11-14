@@ -13,7 +13,7 @@ catch (MongoException $e) {
     die('Error: ' . $e->getMessage());
 }
 
-$GLOBALS['db']          = $MuGVREConn->MuGVRE_irb;
+$GLOBALS['db']          = $MuGVREConn->MuGVRE_irb_dev;
 $GLOBALS['usersCol']    = $GLOBALS['db']->users;
 $GLOBALS['countriesCol']= $GLOBALS['db']->countries;
 $GLOBALS['filesCol']    = $GLOBALS['db']->files;
