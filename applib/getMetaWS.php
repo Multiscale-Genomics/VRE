@@ -129,6 +129,46 @@ if($_REQUEST["type"] == 1) {
 
 <?php
 
+// Expiration date
+
+
+$expiration ="";
+if (isset($mt['expiration'])){
+    if (isset($mt['expiration']->sec)){
+        $days2expire = intval(( $mt['expiration']->sec - time() ) / (24 * 3600));
+        $mt['expiration'] = strftime('%Y/%m/%d %H:%M', $mt['expiration']->sec);
+        if ($days2expire < 0 ){
+            $expiration = "File/folder has not expiration date";
+        }else{
+            if ($days2expire < 7)
+                $expiration = $mt['expiration'] ." ( in <span style=\"color:#b30000;font-weight:bold;\">".$days2expire."</span> days)";
+            else
+                $expiration  =$mt['expiration'] ." ( in $days2expire days)";
+        }
+    }elseif ($mt['expiration'] == -1){
+        $expiration = "This file/folder never expires";
+    }else{
+        $expiration = $mt['expiration'];
+    }
+}else{
+    $expiration = "File/folder has not expiration date";
+}
+?>
+
+<table class="table table-striped table-bordered">
+	<tbody><tr>
+			<th><b>File expiration</b></th>
+				       </tr>
+			<tr>
+				<td><?php echo $expiration; ?></td>
+                
+			</tr>
+	</tbody>
+</table>
+
+
+<?php
+
 // Tool and Input files
 
 if(isset($mt["tool"]) && isset($mt['input_files'])) {

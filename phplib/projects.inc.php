@@ -628,11 +628,12 @@ function formatData($data) {
 			$data['format']="";
 		//expiration
 		if (isset($data['expiration'])){
-			$days2expire = intval(( $data['expiration']->sec  -time() ) / (24 * 3600));
+			$data['expiration'] = strftime('%Y/%m/%d %H:%M', $data['expiration']->sec);
+			$days2expire = intval(( $data['expiration']  -time() ) / (24 * 3600));
 			if ($days2expire < 7)
-				$data['expiration'] ="<span style=\"color:#b30000;font-weight:bold;\">".$days2expire."</span>";
+				$data['expiration'] =$data['expiration'] ."( in <span style=\"color:#b30000;font-weight:bold;\">".$days2expire."</span> days)";
 			else
-				$data['expiration'] =$days2expire;
+				$data['expiration'] =$data['expiration'] . "( in $days2expire days)";
 		}else{
 			$data['expiration'] ="";
 		}

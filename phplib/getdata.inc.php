@@ -112,7 +112,7 @@ function getData_fromLocal() {
 			);
 		
 
-					$fnId = uploadGSFileBNS("$wd/$fnNew", $rfnNew, $insertData,$metaData,FALSE);
+			$fnId = uploadGSFileBNS("$wd/$fnNew", $rfnNew, $insertData,$metaData,FALSE);
 
 			if ($fnId == "0"){
 				$_SESSION['errorData']['upload']="Error occurred while registering the uploaded file";

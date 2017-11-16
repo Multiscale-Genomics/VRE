@@ -123,7 +123,7 @@ foreach($files as $f) {
 						echo '</td>';
 
 						echo '<td>';
-						echo "<a href=\"https://dev.multiscalegenomics.eu/applib/getData.php?uploadType=repository&url=$urlFile&repo=AE&taxon=$taxon&id=$repID\" 
+						echo "<a href=\"".$GLOBALS['URL']."/applib/getData.php?uploadType=repository&url=$urlFile&repo=AE&taxon=$taxon&id=$repID\" 
 						class=\"btn green\"><i class=\"fa fa-cloud-upload\"></i> IMPORT FILE TO WORKSPACE </a>";
 						echo '</td>';
 

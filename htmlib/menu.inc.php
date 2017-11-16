@@ -337,12 +337,12 @@ sort($tools);
                                     </li>
                                 </ul>
                             </li>
-															<li class="nav-item">
+															<!--<li class="nav-item">
                                 <a href="/forum/" target="blank" class="nav-link nav-toggle">
                                     <i class="icon-users"></i>
                                     <span class="title">Forum</span>
                                 </a>
-                            </li>
+                            </li>-->
                             <li>
                                 <li class="nav-item <?php if($currentSection == 'hd') { ?>active open<?php } ?>">
                                 <a href="/helpdesk/" class="nav-link nav-toggle">

@@ -178,10 +178,12 @@ if((count($_REQUEST['fn']) > 2) && ((in_array('PDB', $formats) || in_array('GRO'
 	
 						<?php foreach($inPaths as $f) { ?>
 
-							<?php 
-							if(pathinfo($f['path'])['extension']) $ext = pathinfo($f['path'])['extension'];
-							else $ext = 'pdb';
-							?>
+							<?php
+
+						if(pathinfo($f['path'])['extension']) $ext = pathinfo($f['path'])['extension'];
+						else $ext = 'pdb';
+
+						?>
 
 							<?php if($f['data_type'] == 'na_traj') {	?>
 
@@ -216,16 +218,19 @@ if((count($_REQUEST['fn']) > 2) && ((in_array('PDB', $formats) || in_array('GRO'
 
 						<?php } ?>
 
-							<?php 
-							if(pathinfo($f['path'])['extension']) $ext = pathinfo($f['path'])['extension'];
-							else $ext = 'pdb';
-							?>
 						
 						<?php if($vis_type == 'trajectory') { ?>
-						// structure file + trajectory file
+								// structure file + trajectory file
+								//
+							<?php
+
+						if(pathinfo($f['path'])['extension']) $ext = pathinfo($f['path'])['extension'];
+						else $ext = 'pdb';
+
+						?>
 
 							// input file as a trajectory
-							stage.loadFile( "files/<?php echo $arr_traj[0]["path"]; ?>", { defaultRepresentation: false, firstModelOnly: true, ext: '<?php echo $ext; ?>' } )
+							stage.loadFile( "files/<?php echo $arr_traj[0]["path"]; ?>", { defaultRepresentation: false, firstModelOnly: true/*, ext: '<?php echo $ext; ?>'*/ } )
 							.then( function( o ){
 								o.addRepresentation( "cartoon", { colorScheme: 'residueindex'  } );
 								o.addRepresentation( "base", { colorScheme: 'residueindex'  } );

@@ -15,7 +15,8 @@ foreach ($files as $file)
 		        unlink($file);
 
 # TADkit url
-$absURL = "http://dev.multiscalegenomics.eu/visualizers/tadkit/tadkit/index.html";
+$absURL = $GLOBALS['URL']."/visualizers/tadkit/tadkit/index.html";
+
 $user_data = "user_data/";
 $uid = uniqid();
 $url = "#/project/dataset";

@@ -64,15 +64,18 @@ $count_val = array_count_values($formats);
 	redirect('/workspace/');
 }*/
 
+//var_dump($count_val['TXT']);
+//die();
+
 //if((count($_REQUEST['fn']) == 2) && ($formats[0] != 'TXT') && (count($formats) > 1)/*(!in_array("TXT", $formats)) && (count($formats) > 1)*/) {
 if(count($_REQUEST['fn']) == 2) {
 	if(!in_array("TXT", $formats)) {
-		$_SESSION['errorData']['Error'][] = "Please, select two TXT files with DNA sequences.";
+		$_SESSION['errorData']['Error'][] = "Please, select two TXT files with DNA sequences1.";
 		redirect('/workspace/');
-	} elseif($count_val['TXT'] != 2) {
-		$_SESSION['errorData']['Error'][] = "Please, select two TXT files with DNA sequences.";
+	} elseif(($count_val['TXT'] != 2) /*&& ($count_val['GFF3'] != 1)*/) {
+		$_SESSION['errorData']['Error'][] = "Please, select two TXT files with DNA sequences2.";
 		redirect('/workspace/');
-	}
+		}
 }
 
 if((count($_REQUEST['fn']) == 1) && !in_array("GFF3", $formats)) {
@@ -254,10 +257,10 @@ if ($prevs->count() > 0){
                                                       <select  name="input_files[sequence]" id="sequence" class="form-control form-field-enabled params_chromdyn_inputs">
 																												<option selected value> -- select a file -- </option>
 																													<?php foreach ($inPaths as $file) {  ?>
-																													<?php if($file['format'] == 'TXT') { ?>
+																													<?php //if($file['format'] == 'TXT') { ?>
 																													<?php $p = explode("/", $file['path']); ?>
                                                       		<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
-																													<?php } ?>
+																													<?php //} ?>
 																													<?php } ?>
 																											</select>		
                                                   </div>
@@ -268,10 +271,10 @@ if ($prevs->count() > 0){
                                                       <select  name="input_files[nuclPos]" id="nuclPos" class="form-control form-field-enabled params_chromdyn_inputs">
 																												<option selected value> -- select a file -- </option>
 																													<?php foreach ($inPaths as $file) {  ?>
-																													<?php if($file['format'] == 'TXT') { ?>
+																													<?php //if($file['format'] == 'GFF3') { ?>
 																													<?php $p = explode("/", $file['path']); ?>
                                                       		<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
-																													<?php } ?>
+																													<?php //} ?>
 																													<?php } ?>
 																											</select>		
                                                   </div>

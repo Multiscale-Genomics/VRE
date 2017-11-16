@@ -3,7 +3,7 @@
 $GLOBALS['fsStyle'] = "fsMongo"; # fsMongo,fs,mongo 
 
 //VRE installation paths
-$GLOBALS['shared']     = "/orozco/services/MuG_dev/";
+$GLOBALS['shared']     = "/orozco/services/MuG/";
 $GLOBALS['dataDir']    = $GLOBALS['shared']."MuG_userdata/";
 $GLOBALS['pubDir']     = $GLOBALS['shared']."MuG_public/";
 $GLOBALS['appsDir']    = $GLOBALS['shared']."apps/soft/";
@@ -21,11 +21,11 @@ $GLOBALS['sampleData_default'] = "basic";
 $GLOBALS['htmlib'] = "/var/www/html/htmlib";
 
 //File manager config
-$GLOBALS['caduca']            = "90"; //days
-//$GLOBALS['disklimit']         = 12*1024*1024*1024;
-//$GLOBALS['disklimitAnon']     = 4*1024*1024*1024;
-//$GLOBALS['limitFileSize']     = '900M';
-//$GLOBALS['max_execution_time']= 2000;
+$GLOBALS['caduca']            = "92"; //days
+$GLOBALS['disklimit']         = 12*1024*1024*1024;
+$GLOBALS['disklimitAnon']     = 4*1024*1024*1024;
+$GLOBALS['limitFileSize']     = '900M';
+$GLOBALS['max_execution_time']= 2000;
 
 //File names of tool executions
 $GLOBALS['tool_config_file']     = ".config.json";
