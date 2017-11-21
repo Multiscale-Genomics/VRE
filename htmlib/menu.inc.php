@@ -6,11 +6,13 @@ $currentSection = '';
 switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'index':
 		if(dirname($_SERVER['PHP_SELF']) == '/home'){
-            $currentSection = 'hp';
-        }elseif(dirname($_SERVER['PHP_SELF']) == '/helpdesk') {
-            $currentSection = 'hd';
+      $currentSection = 'hp';
+    }elseif(dirname($_SERVER['PHP_SELF']) == '/helpdesk') {
+			$currentSection = 'hd';
+		}elseif(dirname($_SERVER['PHP_SELF']) == '/cookies') {
+      $currentSection = '';
 		}else{
-				$currentSection = 'uw';
+			$currentSection = 'uw';
 		}
 		break;
 	case 'input': 
@@ -199,12 +201,12 @@ sort($tools);
                                             <span class="title">Import sample data</span>
                                         </a>
                                     </li>
-																		<!--<li class="nav-item <?php if($currentSubSection == 'id') { ?>active open<?php } ?>">
+																		<li class="nav-item <?php if($currentSubSection == 'id') { ?>active open<?php } ?>">
                                         <a href="getdata/dataFromID.php" class="nav-link ">
                                             <span class="title">From ID</span>
                                         </a>
                                     </li>
-																		<li class="nav-item <?php if($currentSubSection == 'tx') { ?>active open<?php } ?>">
+																		<!--<li class="nav-item <?php if($currentSubSection == 'tx') { ?>active open<?php } ?>">
                                         <a href="getdata/dataFromTxt.php" class="nav-link ">
                                             <span class="title">From Text</span>
                                         </a>

@@ -373,7 +373,8 @@ function loadUser($login, $pass) {
     return $user;
 }
 
-function loadUserWithToken($login, $token){
+function loadUserWithToken($userinfo, $token){
+    $login = $userinfo['username'];
     $user = $GLOBALS['usersCol']->findOne(array('_id' => $login));
 
     if (!$user['_id'] || $user['Status'] == 0)
@@ -382,6 +383,7 @@ function loadUserWithToken($login, $token){
 	$auxlastlog = $user['lastLogin'];
     $user['lastLogin'] = moment();
     $user['Token']     = $token;
+    $user['TokenInfo'] = $userinfo;
     updateUser($user);
     setUser($user,$auxlastlog);
 

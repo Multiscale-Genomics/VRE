@@ -73,17 +73,6 @@ for ($i = 0; $i < count($_FILES['file']['tmp_name']); ++$i) {
 		die("0");
 	}
 
-    //do not overwrite, rename
-    /*if (is_file($rfnNew)){
-           foreach (range(1, 99) as $N) {
-               $tmpNew= $rfnNew."_".$N;
-               if (!is_file($tmpNew)){
-                   $rfnNew = $tmpNew;
-                   break;
-               }
-           }
-	}*/
-
 	// GENIS: change renaming function
 	if (is_file($rfnNew)){
 		foreach (range(1, 99) as $N) {

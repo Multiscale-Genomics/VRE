@@ -274,7 +274,7 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
 						}
 					}
 					unset($_SESSION['errorData']);
-					?>
+            ?>
 					</div>
 
 				<?php } ?>
@@ -402,8 +402,15 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
 </table>
 -->
 
+                                        <div class="form-group">
+                                        <label class="control-label">Token User information<i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Information returned by Oauth2 provider when the user token is beared</p>"></i></label>
+                                         <br/>
+                                         <pre><?php echo json_encode($_SESSION['User']['TokenInfo'],JSON_PRETTY_PRINT);?></pre>
+                                        </div>
 
                                         </div>
+
+
                                         <!-- END CHANGE PASSWORD TAB -->
 
 

@@ -1642,7 +1642,7 @@ function getDiskLimit($login = '') {
         }
         $sp = getUser_diskQuota($login);
         if ($sp === false){
-                return $GLOBALS['disklimit'];
+                return $GLOBALS['DISKLIMIT'];
         }else{
                 return $sp;
         }
@@ -1741,7 +1741,7 @@ function refresh_token($force=false){
 
     if (!$_SESSION['User']['Token']['access_token']){
        ob_clean();
-       header('Location: '.$GLOBALS['URL'].'errors/errordb.php?msg=MuG Authentification Session Expired. <a href='.$GLOBALS['URL'].'>Login again</a>');
+       header('Location: '.$GLOBALS['URL'].'/errors/errordb.php?msg=MuG Authentification Session Expired. <a href='.$GLOBALS['URL'].'>Login again</a>');
     }
     $existingTokenO = new AccessToken($_SESSION['User']['Token']);
 

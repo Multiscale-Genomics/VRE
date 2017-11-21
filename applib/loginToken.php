@@ -76,7 +76,8 @@ if (!isset($_GET['code'])) {
     }
 
     // load user
-	$user = loadUserWithToken($resourceOwner['username'],$accessToken);
+	//$user = loadUserWithToken($resourceOwner['username'],$accessToken);
+	$user = loadUserWithToken($resourceOwner,$accessToken);
     
     if($user){
         // remediate resource user, if needed 

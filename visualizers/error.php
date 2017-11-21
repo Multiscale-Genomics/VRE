@@ -2,6 +2,20 @@
 
 require "../phplib/genlibraries.php";
 redirectOutside();
+
+/*if(isset($_SESSION['errorData'])) {
+	foreach($_SESSION['errorData'] as $subTitle=>$txts){
+		print "<strong>$subTitle</strong><br/>";
+		foreach($txts as $txt){
+			print "$txt<br/>";;
+		}
+	}
+}*/
+
+//var_dump($_SESSION['errorData']);
+
+if(isset($_SESSION['errorData'])) header("location:../workspace/");
+die();
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +69,7 @@ redirectOutside();
 									print "$txt<br/>";;
 								}
 							}
-							unset($_SESSION['errorData']);
+							//unset($_SESSION['errorData']);
 							}
 							?>
 						</p>

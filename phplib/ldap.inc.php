@@ -13,14 +13,14 @@ try {
     $ldapConn = ldap_connect("ldap://".$serv);
 }
 catch (\Exception $e){
-    header('Location: '.$GLOBALS['URL'].'errors/errordb.php?msg='.$e->getMessage());	
+    header('Location: '.$GLOBALS['URL'].'/errors/errordb.php?msg='.$e->getMessage());	
 }
 
 ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
 $login = ldap_bind($ldapConn,$user,$pass);
 
 if (!$login){
-    header('Location: '.$GLOBALS['URL'].'errors/errordb.php?msg=Cannot connect to MuG user access protocol');
+    header('Location: '.$GLOBALS['URL'].'/errors/errordb.php?msg=Cannot connect to MuG user access protocol');
 }
 
 $GLOBALS['ldap']    = $ldapConn;

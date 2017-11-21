@@ -7,13 +7,14 @@ try {
 }
 catch (MongoConnectionException $e){
     //die('Error Connecting Mongo DB: ' . $e->getMessage());
-    header('Location: '.$GLOBALS['URL'].'errors/errordb.php?msg=Cannot connect to VRE MuG database');	
+    header('Location: '.$GLOBALS['URL'].'/errors/errordb.php?msg=Cannot connect to VRE MuG database');	
 }
 catch (MongoException $e) {
     die('Error: ' . $e->getMessage());
 }
 
-$GLOBALS['db']          = $MuGVREConn->MuGVRE_irb;
+
+$GLOBALS['db']          = $MuGVREConn->$GLOBALS['dbname_VRE'];
 $GLOBALS['usersCol']    = $GLOBALS['db']->users;
 $GLOBALS['countriesCol']= $GLOBALS['db']->countries;
 $GLOBALS['filesCol']    = $GLOBALS['db']->files;
@@ -26,12 +27,13 @@ $GLOBALS['dataTypesCol']= $GLOBALS['db']->data_types;
 $GLOBALS['helpsCol']    = $GLOBALS['db']->helps;
 $GLOBALS['sampleDataCol']= $GLOBALS['db']->sampleData;
 
-$GLOBALS['dbData']      = $MuGVREConn->MuGVREData;
+$GLOBALS['dbData']      = $MuGVREConn->$GLOBALS['dbname_Data'];
 $GLOBALS['studiesCol']  = $GLOBALS['dbData']->studies;
 $GLOBALS['repositoriesCol']= $GLOBALS['dbData']->repositories;
 $GLOBALS['sdrfCol']     = $GLOBALS['dbData']->AEsdrfData;
 
-$GLOBALS['dbPDB']       = $MuGVREConn->FlexPortal;
+
+$GLOBALS['dbPDB']       = $MuGVREConn->$GLOBALS['dbname_PDB'];
 $GLOBALS['pdbCol']      = $GLOBALS['dbPDB']->PDB_Entry;
 $GLOBALS['monomersCol'] = $GLOBALS['dbPDB']->PDB_Monomers;
 

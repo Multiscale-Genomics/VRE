@@ -16,6 +16,19 @@
                     </div>
 								</div>
 
+
+<div class="mt-cookie-consent-bar mt-cookie-consent-bar-light">
+                            <div class="mt-cookie-consent-bar-holder">
+                                <div class="mt-cookie-consent-bar-content"> This website uses cookies to ensure you get the best experience on our website.
+                                    <a href="cookies/">Our Cookie Policy</a>
+                                </div>
+                                <div class="mt-cookie-consent-bar-action">
+                                    <a href="javascript:;" class="mt-cookie-consent-btn btn green">Understand</a>
+                                </div>
+                            </div>
+                        </div>
+
+
 </div>
             <!-- END CONTAINER -->
             <!-- BEGIN FOOTER -->

@@ -223,7 +223,7 @@ $(document).ready(function() {
 });
 
 function loadWSTool(op) {
-
+	table.state.clear();	
 	location.href = baseURL + "workspace/?tool=" + op.value;
 
 }

@@ -1,3 +1,6 @@
+var toolSelected = $("#toolSelected").val();
+var table;
+
 $(document).ready(function() {
 
   // VARIABLES 'GLOBALS' PER stateSave
@@ -39,9 +42,10 @@ $(document).ready(function() {
 	  { targets: [2], orderData: [ 4, 8, 2 ], orderable: false },
 	  { targets: [3], orderData: [ 4, 8, 3 ], orderable: false },
 	  { targets: [4], orderData: [ 4, 8, 1 ], orderable: false },
-	  { targets: [5], orderData: [ 4, 8, 5 ], orderable: false },
+	  { targets: [5], orderData: [ 4, 8, 9 ], orderable: false },
 	  //{ targets: [5], orderData: [ 4, 8, 5 ], orderable: false },
-	  { type: 'file-size', targets: 6, orderData: [ 10, 8, 6 ], orderable: false },
+	  //{ type: 'file-size', targets: 6, orderData: [ 10, 8, 6 ], orderable: false },
+		{ type: 'file-size', targets: 6, orderData: [ 4, 8, 6 ], orderable: false },
 	  //{ targets: [6], orderable: false },
 	  
 	  { targets: [7], orderable: false },
@@ -83,6 +87,11 @@ $(document).ready(function() {
    		$('#loading-datatable').hide();
    		$('#workspace').show();
    		$(".tooltips").tooltip();
+
+			/*if($("#toolSelected").val() != "") {
+				$('#workspace').DataTable().state.clear();
+			}*/
+
 		// ***********************
  		//setTimeout(function(){  table.cell({ row: 4, column: 2 }).data('<span class="alert-danger">FINISH!!!</span>').draw(); }, 6000);
   		// ***********************

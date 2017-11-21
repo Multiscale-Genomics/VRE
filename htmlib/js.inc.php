@@ -28,7 +28,8 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <!-- END CORE PLUGINS -->
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
+				<!-- BEGIN PAGE LEVEL PLUGINS -->
+				<script src="assets/global/plugins/jquery-cookiebar/jquery.cookieBar.min.js" type="text/javascript"></script>
 		<?php
 		switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'index2': ?>
@@ -441,6 +442,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			?>
 			<script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
 			<script src="assets/layouts/layout/scripts/main.js" type="text/javascript"></script>
+			<script src="assets/layouts/layout/scripts/cookie-toolbar.js" type="text/javascript"></script>
 			<?php break; ?>
 		<?php } ?>
 		<!-- END THEME LAYOUT SCRIPTS -->

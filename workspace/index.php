@@ -98,8 +98,15 @@ sort($visualizers);*/
 					</div>
 				<?php }
 
-				if(isset($_SESSION['errorData'])) { ?>
+				if(isset($_SESSION['errorData'])) {
+					if(isset($_SESSION['errorData']['Info'])) {	
+					?>
+					<div class="alert alert-info">
+					<?php
+					}else{
+					?>
 					<div class="alert alert-warning">
+					<?php } ?>
 					<?php foreach($_SESSION['errorData'] as $subTitle=>$txts){
 						print "$subTitle<br/>";
 						foreach($txts as $txt){
@@ -151,7 +158,7 @@ sort($visualizers);*/
 					    <input type="hidden" name="op"     value=""/>
 					    <input type="hidden" name="userId" value="<?php echo $_SESSION['userId'];?>"/>
 							<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
-
+							<input type="hidden" id="toolSelected"     value="<?php echo $_REQUEST['tool']; ?>"/>
 
 					    <?php
 					    //print showFolder( array('_id'=> $_SESSION['User']['dataDir']) );

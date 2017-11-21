@@ -3,7 +3,6 @@ require  __DIR__ .'/../vendor/autoload.php';
 
 require "session.inc.php";
 require "globals.inc.php";
-require "globalsDM.inc.php";
 require "funclib.inc.php";
 require "Email.php";
 require "mail.inc.php";
