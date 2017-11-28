@@ -47,10 +47,10 @@ redirectOutside();
                                 <div class="mt-element-step">
                                     <div class="row step-line">
                                         <div class="mt-step-desc">
-										  <p>You can <a href="javascript:$('.nav-tabs a[href=\'#tab_1_1_1\']').click();">upload multiple files</a> to your workspace just drag and dropping 
+										  <p>You can <a href="javascript:$('.nav-tabs a[href=\'#upload_files\']').click();">upload multiple files</a> to your workspace just drag and dropping 
 											them over the area below. You can also 
-											<a href="javascript:$('.nav-tabs a[href=\'#tab_1_1_2\']').click();">create a text file</a> from 
-											a sequence or <a href="javascript:$('.nav-tabs a[href=\'#tab_1_1_3\']').click();">load a file</a> 
+											<a href="javascript:$('.nav-tabs a[href=\'#create_file\']').click();">create a text file</a> from 
+											a sequence or <a href="javascript:$('.nav-tabs a[href=\'#load_from_url\']').click();">load a file</a> 
 											to your workspace from an external URL.</p>
 
 											<!--<p>List of actions:</p>
@@ -84,24 +84,24 @@ redirectOutside();
 												<div class="tabbable-custom nav-justified">
 														<ul class="nav nav-tabs nav-justified">
 																<li class="active uppercase">
-																		<a href="#tab_1_1_1" data-toggle="tab"> Upload files from your local computer </a>
+																		<a href="#upload_files" data-toggle="tab"> Upload files from your local computer </a>
 																</li>
 																<li class="uppercase">
-																		<a href="#tab_1_1_2" data-toggle="tab"> Create new file from text </a>
+																		<a href="#create_file" data-toggle="tab"> Create new file from text </a>
 																</li>
 																<li class="uppercase">
-																		<a href="#tab_1_1_3" data-toggle="tab"> Load file from an external URL </a>
+																		<a href="#load_from_url" data-toggle="tab"> Load file from an external URL </a>
 																</li>
 														</ul>
 														<div class="tab-content">
-																<div class="tab-pane active" id="tab_1_1_1">
+																<div class="tab-pane active" id="upload_files">
 																<p> Just drag & drop your files over the area below or click it to open your browser (as a BETA version, the maximum upload size is <strong><?php echo $GLOBALS['MAXSIZEUPLOAD']; ?>M</strong>) </p>
 																		<form action="applib/getData.php" class="dropzone dropzone-file-area" id="my-dropzone" style="/*width: 500px;*/ font-size:24px; font-weight:600; margin: 10px 0;">
 																			<input type="hidden" name="baseURL" id="base-url" value="<?php echo $GLOBALS['BASEURL']; ?>" />
 																			<input type="hidden" name="uploadType" value="file" />
 																		</form>
 																</div>
-																<div class="tab-pane" id="tab_1_1_2">
+																<div class="tab-pane" id="create_file">
 																		<p> Insert below the text you want to convert into a file </p>
 																		<form name="uploadFromTxt" id="uploadFromTxt" action="javascript:;" method="post">
 																			<div class="alert alert-danger display-hide" id="alert-down-form">
@@ -110,12 +110,12 @@ redirectOutside();
 
 																			<input type="hidden" name="uploadType" value="txt" />									
 																			<div class="form-group " id="">
-																				<label>File Name</label>
+																				<label>File Name (including extension) *</label>
 																				<input type="text" name="filename" id="filename" class="form-control" placeholder="Insert your file name here">
 																			</div>
 
 																			<div class="form-group " id="">
-																				<label>Text Data</label>
+																				<label>Text Data *</label>
 																				<textarea name="txtdata" id="txtdata" class="form-control" rows="6" placeholder="Insert your text data here"></textarea>
 																			</div>
 
@@ -130,19 +130,43 @@ redirectOutside();
 																			</div>	
 																	</form>
 																</div>
-																<div class="tab-pane" id="tab_1_1_3">
+																<div class="tab-pane" id="load_from_url">
 																		<p> Insert the URL from which you want to get the data </p>
+
+																		<?php 
+
+																		if(isset($_SESSION['errorData'])) {
+																			if(isset($_SESSION['errorData']['Info'])) {	
+																			?>
+																			<div class="alert alert-info">
+																			<?php
+																			}else{
+																			?>
+																			<div class="alert alert-warning">
+																			<?php } ?>
+																			<?php foreach($_SESSION['errorData'] as $subTitle=>$txts){
+																				print "$subTitle<br/>";
+																				foreach($txts as $txt){
+																					print "<div style=\"margin-left:20px;\">$txt</div>";
+																				}
+																			}
+																			unset($_SESSION['errorData']);
+																			?>
+																			</div>
+
+																		<?php } ?>
+
 																		<form class="down-form" action="javascript:;" method="post">
 										<div class="alert alert-danger display-hide" id="alert-down-form2">
 																			Error downloading file, please, try again.
 										</div>
 																		<div class="form-group">
-											<label>External URL</label>
+											<label>External URL *</label>
 
 												<div class="input-icon">
 													<i class="fa-li fa fa-cloud-download font-green" style="line-height:10px;"></i>
-													<input type="url" class="form-control" name="url"  placeholder="http://public/path/to/file">
-													<input type="hidden" name="uploadType" value="url" />
+													<input type="url" class="form-control" id="dfUrl" name="url"  placeholder="http://public/path/to/file">
+													<input type="hidden" id="dfUploadType" name="uploadType" value="url" />
 												</div>
 											<button class="btn green" type="submit" id="btn-down-remote" style="margin-top:20px;">SEND DATA</button>
 

@@ -51,7 +51,9 @@ var FormDownRemoteFile = function () {
 							
 								//console.log($('.down-form').serialize());
 					
-								$.ajax({
+								location.href = baseURL + "applib/getData.php?uploadType=" + $("#dfUploadType").val() + "&url=" + $("#dfUrl").val();
+
+								/*$.ajax({
 									type: "POST",
 									url: baseURL + "applib/getData.php",
 									data: $('.down-form').serialize(),
@@ -61,7 +63,7 @@ var FormDownRemoteFile = function () {
 											//console.log(output);
 											$('.progress-bar-down .progress-bar').css('width', output[output.length - 2] + '%');
 										}
-									}, 
+									},
 									success: function(data) {
 										var output = data.split(/\n/);
 										var d = output[output.length - 1];
@@ -80,10 +82,10 @@ var FormDownRemoteFile = function () {
 
 											setTimeout(function(){ location.href = baseURL + "getdata/uploadForm2.php?fn[]=" + d; }, 500);	
 
-										}		
+										}	
 
 									}
-								});
+								});*/
 
             	}
 

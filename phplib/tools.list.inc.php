@@ -106,9 +106,9 @@ function launchToolInternal($toolId,$inputs=array(),$args=array(),$outs=array(),
 	// Set Arguments
 	$args['working_dir']=$jobMeta->working_dir;
 
-	$jobMeta->setArguments($args,$tool);
+    $jobMeta->setArguments($args,$tool);
 
-	// Create working_dir
+    // Create working_dir
 	$jobId = $jobMeta->createWorking_dir();
 	if (!$jobId){
 		$_SESSION['errorData']['Error'][]="Cannot create tool temporal working dir";

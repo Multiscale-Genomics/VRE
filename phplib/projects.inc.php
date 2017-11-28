@@ -295,12 +295,13 @@ function save_fromSampleDataMetadata($meta_folder,$dataDir,$sampleData,$type){
         // register sample data
         $fileId   = getGSFileId_fromPath($meta_folder_ok['file_path'],1);
         if ($fileId){
-                $_SESSION['errorData']['Info'][]= "Sample folder '<strong>".$meta_folder['file_path']."</strong>' already in user workspace";# registered as $fileId";
+                $_SESSION['errorData']['Info'][]= "Sample data already in your workspace. Data '<strong>".basename($meta_folder['file_path'])."</strong>'";# registered as $fileId";
         }else{
-                //convert metadata from MuGfile to VREfile
-                list($file,$metadata) = getVREfile_fromFile($meta_folder_ok);
-         //saving metadata
-		if ($type=="folder"){
+            //convert metadata from MuGfile to VREfile
+            list($file,$metadata) = getVREfile_fromFile($meta_folder_ok);
+
+            //saving metadata
+    		if ($type=="folder"){
 	                $newId = createGSDirBNS($meta_folder_ok['file_path'],1);
                 	if ($newId == "0" ){
 	                        $_SESSION['errorData']['Error'][] = "Cannot register data sample '".$meta_folder_ok['file_path']."'";
@@ -310,15 +311,18 @@ function save_fromSampleDataMetadata($meta_folder,$dataDir,$sampleData,$type){
                 	if ($r == "0" ){
 	                        $_SESSION['errorData']['login'][] = "Cannot register data sample '".$meta_folder_ok['file_path']."'";
 		                return 0;
-	                }
-		}elseif ($type=="file"){
+                    }
+                $_SESSION['errorData']['Info'][]= "Sample data imported in your workspace. New Project: '<strong>".basename($meta_folder['file_path'])."</strong>'";# registered as $fileId";
+    		}elseif ($type=="file"){
                     $newId = uploadGSFileBNS($meta_folder_ok['file_path'], $rfn, $file,$metadata,FALSE,1);
                		if ($newId == "0" ){
 	                        $_SESSION['errorData']['Error'][] = "Cannot register data sample '".$meta_folder_ok['file_path']."'";
 	                        return 0;
-	                }
-		}
-		$_SESSION['errorData']['Info'][]="Sample data '<strong>".$meta_folder['file_path']."</strong>' successfully injected into user workspace"; #($newId)";
+                    }
+                if (preg_match('/uploads/',$meta_folder['file_path'])){
+                    $_SESSION['errorData']['Info'][]= "Sample data imported in your <strong>uploads</strong> folder. New File: '<strong>".basename($meta_folder['file_path'])."</strong>'";# registered as $fileId";
+                }
+    		}
         }
 	return 1;
 }
@@ -355,29 +359,31 @@ function getFilesToDisplay($dirSelection,$filter_data_types=array()) {
 	// Merge pending files and mongo data
 
 	if ($filesPending){
-		foreach ($filesPending as $r){
-			// Update $files[parentId][files]
-			if (!isset($filesPending[$r['_id']]['parentDir'])) {
-				$_SESSION['errorData']['Error'][]="Pending file ".$filesPending[$r['_id']]['path']." has no parentDir";
-				continue;
-			}
-			$parentId = $filesPending[$r['_id']]['parentDir'];
-			if (!isset($files[$parentId])){
-                if ($r['pending']){
-                    $_SESSION['errorData']['Warning'][]="Cannot display '".$filesPending[$r['_id']]['path']."'. Its execution folder '".$r['title']."' does not exist anymore.";
-    				unset($filesPending[$r['_id']]);
-               }else{
-                   $_SESSION['errorData']['Error'][] ="Cannot display '".$filesPending[$r['_id']]['path']."'. FS inconsistency. Its parent folder ($parentId) does not exist anymore or is unaccessible.";
-    				unset($filesPending[$r['_id']]);		
-			    }
-			    continue;
-			}
-			array_push($files[$parentId]['files'],$r['_id']);
+	    foreach ($filesPending as $r){
+
+		// Update $files[parentId][files]
+		if (!isset($filesPending[$r['_id']]['parentDir'])) {
+			$_SESSION['errorData']['Error'][]="Pending file ".$filesPending[$r['_id']]['path']." has no parentDir";
+			continue;
 		}
-		$filesAll=array_merge($files,$filesPending);
+		$parentId = $filesPending[$r['_id']]['parentDir'];
+
+		if (!isset($files[$parentId])){
+                	if ($r['pending']){
+	                    $_SESSION['errorData']['Warning'][]="Cannot display '".$filesPending[$r['_id']]['path']."'. Its execution folder '".$r['title']."' does not exist anymore.";
+			    unset($filesPending[$r['_id']]);
+			}else{
+			    $_SESSION['errorData']['Error'][] ="Cannot display '".$filesPending[$r['_id']]['path']."'. FS inconsistency. Its parent folder ($parentId) does not exist anymore or is unaccessible.";
+    			    unset($filesPending[$r['_id']]);		
+			}
+			continue;
+		}
+		array_push($files[$parentId]['files'],$r['_id']);
+	    }
+	    $filesAll=array_merge($files,$filesPending);
 	}else{
-		$filesAll=$files;
-    }
+	    $filesAll=$files;
+    	}
 
     // Filter files by data_types
 
@@ -407,7 +413,7 @@ function getFilesToDisplay($dirSelection,$filter_data_types=array()) {
 //add datatable tree nodes and hidden cols values
 function addTreeTableNodesToFiles($filesAll){
 	$n=1;
-	foreach ($filesAll as $r){
+    foreach ($filesAll as $r){
 	        // Add Tree Nodes
         	if (isset($r['files'])){
 	            $filesAll[$r['_id']]['tree_id']     = $n;
@@ -416,6 +422,7 @@ function addTreeTableNodesToFiles($filesAll){
 	            $filesAll[$r['_id']]['mtime_parent']=(isset($r['atime'])? $r['atime']->sec : $r['mtime']);
 	            $i=1;
 	            foreach ($r['files'] as $rr){
+
 	                $filesAll[$rr]['tree_id']       = "$n.$i";
 	                $filesAll[$rr]['tree_id_parent']= $n;
 	                $filesAll[$rr]['size_parent']   = $filesAll[$r['_id']]['size_parent'];
@@ -427,10 +434,13 @@ function addTreeTableNodesToFiles($filesAll){
 			if (isset($r['pending']) ){
 				$dir = $r['parentDir'];
 				$filesAll[$dir]['pending']="true";
-			}	
+			}
 		}
    	}
 
+	
+    foreach ($filesAll as $r){
+    }
 	return $filesAll;
 
 }
@@ -547,8 +557,6 @@ function getToolsByDT($data_type, $status = 1) {
 	foreach($tl as $tool){
 
 		$combinations = $tool["input_files_combinations_internal"];
-
-		//if($data_type == "hic_sequences") var_dump($combinations);
 
 		if(isset($combinations)) {
 
@@ -1028,7 +1036,7 @@ function processPendingFiles($sessionId,$files){
 		    print "RUNNING JOB";
 
             	//set dummy id
-            	$dummyId  = $job['pid'];
+            	$dummyId  = $job['pid']."_dummy";
             	//$dummyId  = createLabel()."_dummy";
 
 		//get dummy parentDir
@@ -1745,7 +1753,8 @@ function refresh_token($force=false){
     }
     $existingTokenO = new AccessToken($_SESSION['User']['Token']);
 
-    $provider = new MuG_Oauth2Provider\MuG_Oauth2Provider(['redirectUri'=> 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']]);
+    //$provider = new MuG_Oauth2Provider\MuG_Oauth2Provider(['redirectUri'=> 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']]);
+    $provider = new MuG_Oauth2Provider\MuG_Oauth2Provider(['redirectUri'=> $GLOBALS['URL'] . $_SERVER['PHP_SELF']]);
 
     if ($force || $existingTokenO->hasExpired()) {
         try {

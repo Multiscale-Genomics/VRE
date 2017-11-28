@@ -101,5 +101,24 @@ function maxlength($in, $length) {
 
 }
 
+function getSize($bytes) {
+
+	if ($bytes >= 1073741824) {
+		$bytes = (number_format($bytes / 1073741824, 2) + 0). ' GB';
+	}
+	elseif ($bytes >= 1048576) {
+		$bytes = (number_format($bytes / 1048576, 2) + 0) . ' MB';
+	}
+		elseif ($bytes >= 1024) {
+	$bytes = (number_format($bytes / 1024, 2) + 0). ' KB';
+	}
+	elseif ($bytes >= 0) {
+		$bytes = ($bytes + 0). ' B';
+	}
+
+	return $bytes;
+
+}
+
 
 ?>

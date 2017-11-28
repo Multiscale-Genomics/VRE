@@ -263,7 +263,7 @@ redirectOutside();
 				     TODO "conversions" should be included as "actions" -->
 
 				  <div class="form-group formatTR" id="formatTR<?php echo $idx;?>">
-				        <label>File Format</label>
+				        <label>File Format *</label>
 				        <select id="format<?php echo $idx;?>" name="format" onchange="customfromFormat(this.value, <?php echo $idx;?>)" class="form-control formatSelector">
 								<option value="" >Select the file format</option>
 								<?php foreach($filetypes as $ft) { ?>
@@ -295,7 +295,7 @@ redirectOutside();
 					<input type="hidden" id="data_type_selected" value="<?php echo $filesMeta[$idx]['data_type']; ?>" >
 
 					<div class="form-group display-hide" id="dataType<?php echo $idx;?>">
-				        <label>Data Type <i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Data type description"></i></span></label>
+				        <label>Data Type * <i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Data type description"></i></span></label>
 				        <select name="data_type" id="data_type_sel<?php echo $idx;?>" class="form-control" onchange="customfromDataType(this.value, <?php echo $idx;?>)" disabled>
 								</select>
 								<!--<span class="help-block font-red warn1" style="display:none;">This field is required.</span>-->
@@ -303,7 +303,7 @@ redirectOutside();
 
 	
 					<div class="form-group display-hide" id="taxonG<?php echo $idx;?>">
-          	<label class="control-label" id="label-taxon<?php echo $idx;?>">Taxon <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Insert the taxon for this file. You can provide it by name, ID, or avoid this step.</p>"></i></label>
+          	<label class="control-label" id="label-taxon<?php echo $idx;?>">Taxon * <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Insert the taxon for this file. You can provide it by name, ID, or avoid this step.</p>"></i></label>
 						<div class="input-group">
 							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_1 taxon_name" name="taxon_name_id" id="taxonName" placeholder="Please enter the taxon name" value="<?php echo fromTaxonID2TaxonName($filesMeta[$idx]['taxon_id'])." (".$filesMeta[$idx]['taxon_id'].")"; ?>">
 							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_2 taxon_id" style="display:none;" name="taxon_id_name" id="taxonID" placeholder="Please enter the taxon ID" disabled>
@@ -334,7 +334,7 @@ redirectOutside();
 
 		
 					<div class="form-group display-hide" id="refGenomeTR<?php echo $idx;?>">
-				        <label>Assembly <i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Assembly description"></i></span></label> 
+				        <label>Assembly * <i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Assembly description"></i></span></label> 
 					<select name="refGenome" id="refGenome<?php echo $idx;?>" class="form-control" disabled>
 						<option value="">Select the assembly</option>
 						<?php

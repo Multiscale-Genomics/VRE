@@ -12,7 +12,7 @@ if(! $_REQUEST['uploadType']){
 switch ($_REQUEST['uploadType']){
 	case 'file': getData_fromLocal();
 							 break;
-	case 'url': $source = $_POST['url'];
+	case 'url': $source = $_REQUEST['url'];
 							getData_fromURL($source);
 							break;
 	case 'txt': getData_fromTXT();

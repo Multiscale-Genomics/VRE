@@ -20,7 +20,7 @@ foreach($_REQUEST['fn'] as $fn){
 	}
 
 	if(($file['format'] != 'PDB') && ($file['format'] != 'GRO') && ($file['format'] != 'DCD')) {
-		$_SESSION['errorData']['NGL'][] = "ERROR: incorrect format for NGL Viewer";
+		$_SESSION['errorData']['NGL'][] = "ERROR: incorrect format for NGL Viewer. Accepted file types are PDB, GRO and DCD for trajectories.";
 		header('Location: '.$GLOBALS['BASEURL'].'visualizers/error.php');
 		die();
 		//echo "<script>window.close();</script>";
@@ -54,7 +54,7 @@ if((count($_REQUEST['fn']) == 2) && ((in_array('PDB', $formats) || in_array('GRO
 }
 
 if((count($_REQUEST['fn']) > 2) && ((in_array('PDB', $formats) || in_array('GRO', $formats)) && in_array('DCD', $formats))){
-	$_SESSION['errorData']['NGL'][] = "ERROR: if you provide a trajectory, please provide just a PDB or GRO file.";
+	$_SESSION['errorData']['NGL'][] = "ERROR: if you provide a trajectory, please provide a PDB or GRO file.";
 	header('Location: '.$GLOBALS['BASEURL'].'visualizers/error.php');
 }
 
@@ -118,9 +118,10 @@ if((count($_REQUEST['fn']) > 2) && ((in_array('PDB', $formats) || in_array('GRO'
             stage = new NGL.Stage();
             NGL.StageWidget( stage );
 					
-						<?php 
+<?php
+
 						if(!isset($vis_type)) {
-								$_SESSION['errorData']['NGL'][] = "ERROR: incorrect format for NGL Viewer";
+								$_SESSION['errorData']['NGL'][] = "ERROR: incorrect format for NGL Viewer. If you provided a DCD file, remember to provide a PDB file too.";
 								header('Location: '.$GLOBALS['BASEURL'].'visualizers/error.php');
 						}
 						?>

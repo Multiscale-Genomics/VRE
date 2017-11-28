@@ -15,7 +15,6 @@ if($_REQUEST){
 //if($_POST){
 
     // End oauth2 session
-    //$provider = new MuG_Oauth2Provider(['redirectUri'=> 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']]);
     $provider = new MuG_Oauth2Provider(['redirectUri'=> $GLOBALS['URL'] . $_SERVER['PHP_SELF']]);
 
     /*

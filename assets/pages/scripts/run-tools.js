@@ -129,7 +129,9 @@ $(document).ready(function() {
 	$('#visualization').click(function () {
   	// Only call notifications when opening the dropdown
     if (!$(this).parent().hasClass('open')) {
-		
+	
+			$('#visualizers_list').html('');
+
 			var files = '';
 
 			for(i in allFiles){
