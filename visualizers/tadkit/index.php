@@ -123,7 +123,10 @@ if(sizeof($arr_datasets)>0) {
                 	$igv_type = "annotation";
 	        } elseif ($type == "BW"){
         	        $type = "bigwig";
-                	$igv_type = "wig";
+                    $igv_type = "wig";
+        } elseif ($type == "WIG"){
+                    $type = "wig";
+                    $igv_type = "wig";
 		} else {
 	//		print $type;
 	//		print "unknown trackType<br>";
