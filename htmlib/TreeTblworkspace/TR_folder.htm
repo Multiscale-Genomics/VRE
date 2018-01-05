@@ -6,7 +6,7 @@
 	 </label>
 </td>
 <td>
-	##filename##
+	<span class="truncate" title="##longfilename##">##longfilename## </span>     
 	<!--  span style="font-weight:bold;" search="yes"   type="project" -->
 	<!--<span class="expand_info" onclick="expandInfo(this)"></span>-->
 	<div class="extra_info">
@@ -19,12 +19,12 @@
 
   		</table>
 	</div>
-	<a href="javascript:viewFileMeta('##_id##', '##longfilename##', 0);"><i class="fa fa-info-circle"></i></a>
+	<a href="javascript:viewFileMeta('##_id##', '##longfilename##', 0);" style="margin-left:5px;"><i class="fa fa-info-circle"></i></a>
 </td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
-<td>##filename##</td>
-<td>##mtime##</td>
+<td title="##longfilename##"><span class="truncate">##longfilename##</span></td>
+<td title="##mtime##"><span class="truncate2" title="##mtime##">##mtime##</span></td>
 <td>##size##</td>
 <td>
 	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;">

@@ -18,6 +18,8 @@ if(isset($_REQUEST['Tool'])) {
 	$tool_name = ' - '.$toolProp["name"];
 }
 
+$ticketnumber = 'VRE-'.rand(1000, 9999);
+
 $message = '
 	Ticket ID: '.$ticketnumber.'<br>
 	User name: '.$_REQUEST["Name"].'<br>
@@ -25,8 +27,6 @@ $message = '
 	Request type: '.$req.$tool_name.'<br>
 	Request subject: '.$_REQUEST["Subject"].'<br>
 	Request message: '.$_REQUEST["Message"];
-
-$ticketnumber = 'VRE-'.rand(1000, 9999);
 
 $messageUser = '
 	Copy of the message sent to our technical team:<br><br>

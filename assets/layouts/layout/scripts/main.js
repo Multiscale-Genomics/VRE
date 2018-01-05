@@ -63,29 +63,64 @@ jQuery(document).ready(function() {
 
 	// LOGOUT
 	$('#logout-button').on('click', function() {
-		
-		App.blockUI({
-        	boxed: true,
-			message: 'Logging out...'
-        });
 
-		$.ajax({
-			type: "POST",
-			//url: "/applib/logout.php",
-			url: "/applib/logoutToken.php",
-			data:"id=1",
-			success: function(data) {
-				d = data.replace(/(\r\n|\n|\r|\t)/gm,"");
-				if(d == '1'){
-					setTimeout(function(){ location.href = '/'; }, 1000);	
-				}else{
-					App.unblockUI();
+		if($("#type-of-user").val() == 3) {
+		
+			$('#modalLogoutGuest').modal({ show: 'true' });
+
+		} else {
+
+			App.blockUI({
+						boxed: true,
+				message: 'Logging out...'
+					});
+
+			$.ajax({
+				type: "POST",
+				//url: "/applib/logout.php",
+				url: "/applib/logoutToken.php",
+				data:"id=1",
+				success: function(data) {
+					d = data.replace(/(\r\n|\n|\r|\t)/gm,"");
+					if(d == '1'){
+						setTimeout(function(){ location.href = '/'; }, 1000);	
+					}else{
+						App.unblockUI();
+					}
 				}
-			}
-		});
+			});
+
+		}
 	
+	});
+
+
+	$('#modalLogoutGuest').on('click', '.btn-ok', function(e) {
+
+		$('#modalLogoutGuest').modal('hide');
+
+		App.blockUI({
+						boxed: true,
+				message: 'Logging out...'
+					});
+
+			$.ajax({
+				type: "POST",
+				//url: "/applib/logout.php",
+				url: "/applib/logoutToken.php",
+				data:"id=1",
+				success: function(data) {
+					d = data.replace(/(\r\n|\n|\r|\t)/gm,"");
+					if(d == '1'){
+						setTimeout(function(){ location.href = '/'; }, 1000);	
+					}else{
+						App.unblockUI();
+					}
+				}
+			});
 	});
 
 	
 });
+
 

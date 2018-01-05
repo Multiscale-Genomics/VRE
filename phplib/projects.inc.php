@@ -18,6 +18,7 @@ function setUserWorkSpace($dataDir,$sampleData="") {
     if ($sampleData == "")
         $sampleData = $GLOBALS['sampleData_default'];
 
+    if ($sampleData != $GLOBALS['sampleData_default'])
 	$_SESSION['errorData']['Info'][] = "Preparing user workspace named '$dataDir' with sample data '$sampleData'";
 	
 	$dataDirP  = $GLOBALS['dataDir']."/$dataDir";
@@ -28,6 +29,7 @@ function setUserWorkSpace($dataDir,$sampleData="") {
 		//creating home directory
 
 		$dataDirId  = createGSDirBNS($dataDir,1);
+        if ($sampleData != $GLOBALS['sampleData_default'])
 		$_SESSION['errorData']['Info'][] = "Creating main user directory: $dataDirP ($dataDirId)";
 
 		if ($dataDirId == "0" ){
@@ -47,6 +49,7 @@ function setUserWorkSpace($dataDir,$sampleData="") {
 		//creating uploads directory
 
 		$upDirId  = createGSDirBNS($dataDir."/uploads",1);
+        if ($sampleData != $GLOBALS['sampleData_default'])
 		$_SESSION['errorData']['Info'][] = "Creating  uploads directory: $dataDir/uploads ($upDirId)";
 
 		if ($upDirId == "0" ){
@@ -66,6 +69,7 @@ function setUserWorkSpace($dataDir,$sampleData="") {
 		//creating repository directory
 
 		$repDirId  = createGSDirBNS($dataDir."/repository",1);
+        if ($sampleData != $GLOBALS['sampleData_default'])
 		$_SESSION['errorData']['Info'][] = "Creating  repository directory: $dataDir/repository ($repDirId)";
 
 		if ($repDirId == "0" ){
@@ -94,10 +98,12 @@ function setUserWorkSpace($dataDir,$sampleData="") {
 		// injecting sample data
 		
 		$r = setUserWorkSpace_sampleData($sampleData,$dataDir);		
-		if ($r=="0")
+		if ($r=="0"){
 			$_SESSION['errorData']['Warning'][] = "Cannot fully inject sample data '$sampleData' into user workspace.";
-		else
-			$_SESSION['errorData']['Info'][] = "Sample data '$sampleData' successfully injected into user workspace.";
+        }else{
+            if ($sampleData != $GLOBALS['sampleData_default'])
+            $_SESSION['errorData']['Info'][] = "Sample data '$sampleData' successfully injected into user workspace.";
+        }
 	}
 
 	$GLOBALS['filesCol']->update(
@@ -295,6 +301,7 @@ function save_fromSampleDataMetadata($meta_folder,$dataDir,$sampleData,$type){
         // register sample data
         $fileId   = getGSFileId_fromPath($meta_folder_ok['file_path'],1);
         if ($fileId){
+                if ($sampleData != $GLOBALS['sampleData_default'])
                 $_SESSION['errorData']['Info'][]= "Sample data already in your workspace. Data '<strong>".basename($meta_folder['file_path'])."</strong>'";# registered as $fileId";
         }else{
             //convert metadata from MuGfile to VREfile
@@ -312,6 +319,7 @@ function save_fromSampleDataMetadata($meta_folder,$dataDir,$sampleData,$type){
 	                        $_SESSION['errorData']['login'][] = "Cannot register data sample '".$meta_folder_ok['file_path']."'";
 		                return 0;
                     }
+                if ($sampleData != $GLOBALS['sampleData_default'])
                 $_SESSION['errorData']['Info'][]= "Sample data imported in your workspace. New Project: '<strong>".basename($meta_folder['file_path'])."</strong>'";# registered as $fileId";
     		}elseif ($type=="file"){
                     $newId = uploadGSFileBNS($meta_folder_ok['file_path'], $rfn, $file,$metadata,FALSE,1);
@@ -320,6 +328,7 @@ function save_fromSampleDataMetadata($meta_folder,$dataDir,$sampleData,$type){
 	                        return 0;
                     }
                 if (preg_match('/uploads/',$meta_folder['file_path'])){
+                    if ($sampleData != $GLOBALS['sampleData_default'])
                     $_SESSION['errorData']['Info'][]= "Sample data imported in your <strong>uploads</strong> folder. New File: '<strong>".basename($meta_folder['file_path'])."</strong>'";# registered as $fileId";
                 }
     		}
@@ -465,7 +474,13 @@ function printTable($filesAll=Array() ) {
 					continue;
 				}
 				if (isset($r['pending'])){
-					print parseTemplate(formatData($r), getTemplate('/TreeTblworkspace/TR_folderPending.htm'));
+					if(basename($r['path']) == "uploads"){
+						print parseTemplate(formatData($r), getTemplate('/TreeTblworkspace/TR_folder_uploads.htm'));
+					}elseif(basename($r['path']) == "repository"){
+						print parseTemplate(formatData($r), getTemplate('/TreeTblworkspace/TR_folder_repository.htm'));
+					}else{
+						print parseTemplate(formatData($r), getTemplate('/TreeTblworkspace/TR_folderPending.htm'));
+					}
 				}elseif(basename($r['path']) == "uploads"){
 					print parseTemplate(formatData($r), getTemplate('/TreeTblworkspace/TR_folder_uploads.htm'));
 				}elseif(basename($r['path']) == "repository"){
@@ -621,7 +636,20 @@ function formatData($data) {
 		if (isset($data['mtime'])){
 			if (is_object($data['mtime']))
 				$data['mtime']=$data['mtime']->sec;
+
+			$timestamp = $data['mtime'];
+
 			$data['mtime'] = strftime('%Y/%m/%d %H:%M', $data['mtime']);
+
+			$hoursleft = (time() - $timestamp) / 3600;
+
+			//if($hoursleft < 1) $data['lastuploaded'] = '<i class="fa fa-star-o font-green" style="margin-left:3px;" title="File recently added"></i>';
+			if($hoursleft < 1) $data['lastuploaded'] = '<span class="badge badge-info" title="File recently added"> new </span>';
+			else $data['lastuploaded'] = '';
+
+			//$data['mtime'] .= $data['hoursleft'];
+		 		
+
 		}else{
 			$data['mtime']="";
 		}
@@ -660,8 +688,16 @@ function formatData($data) {
 		if (isset($data['parentDir'])){
 			$data['parentDir'] = getAttr_fromGSFileId($data['parentDir'],'path');
 			$projectName = array_pop(split("/",$data['parentDir']));
-			if($projectName == 'uploads') $projectName = "<span style='display:none;'>0</span>uploads";
+			if($projectName == 'uploads') {
+				$projectName = "<span style='display:none;'>0</span>uploads";
+				$data['longprojectname'] = 'uploads';
+				$data['short_project'] ="<span style='display:none;'>0</span>uploads";
+			}else{
+				$data['short_project'] = maxlength(basename($projectName), 15);
+				$data['longprojectname'] = $projectName;
+			}
 			$data['project'] = $projectName;
+			
 		}
 		// description
 		if (isset($data['description'])){
@@ -681,11 +717,11 @@ function formatData($data) {
 				#$data['viewLog'] = "<tr><td>Log file:</td><td><a target=\"_blank\" href=\"workspace/workspace.php?op=openPlainFileFromPath&fnPath=".urlencode($data['logPath'])."\" class=\"$viewLog_state\">View</a></td></tr>";
 				#$data['logPath'] = basename($data['logPath']);
 			}else{
-				$data['filename']= maxlength(basename($data['path']), 25);
+				$data['filename']= maxlength(basename($data['path']), 15);
 				$data['longfilename']= basename($data['path']);
 			}
 		}else{
-			$data['filename']= maxlength(basename($data['path']), 25);
+			$data['filename']= maxlength(basename($data['path']), 15);
 			$data['longfilename']= basename($data['path']);
 		}
 		// TODO for debug. Temporal. To delete
@@ -748,6 +784,7 @@ function formatData($data) {
 		if ($data['data_type']){
 			$dt = $GLOBALS['dataTypesCol']->findOne(array('_id' => $data['data_type']));
 			$data['file_data_type'] = $dt['name'];
+			$data['short_file_data_type'] = maxlength(basename($dt['name']), 20);
 			$data['data_type'] = "<tr><td>Data type:</td><td>".$dt['name']."</td></tr>";
 		}else{
 			$data['data_type']="";
@@ -797,11 +834,11 @@ function formatData($data) {
 				case 'PDB':
 				case 'GRO':
 					$ext = 'pdb';
-					if ($pos = strrpos($data['filename'], '.')) {
-						$name = substr($data['filename'], 0, $pos);
-						$ext = substr($data['filename'], $pos);
+					if ($pos = strrpos($data['longfilename'], '.')) {
+						$name = substr($data['longfilename'], 0, $pos);
+						$ext = substr($data['longfilename'], $pos);
 					} else {
-						$name = $data['filename'];
+						$name = $data['longfilename'];
 					}
 
 					$e = ltrim($ext, ".");
@@ -816,13 +853,26 @@ function formatData($data) {
 				case 'GFF3':
 				case 'BW':
 					$data['jbrowseLink'] = "<li><a target=\"_blank\" href=\"/visualizers/jbrowse/index.php/?user=".$_SESSION['User']['id']."&fn[]=".$data['_id']."\"><i class=\"fa fa-align-right\"></i> View in JBrowse</a></li>";
-					break;
-				case 'JSON':
 					if ($pos = strrpos($data['filename'], '.')) {
 						$name = substr($data['filename'], 0, $pos);
 						$ext = substr($data['filename'], $pos);
 					} else {
 						$name = $data['filename'];
+					}
+
+					$data['PDBView'] = "<li><a href=\"javascript:openTADbit('".$data['_id']."', '".$name."');\"><i class=\"fa fa-window-maximize\"></i> Preview in 3D</a></li>";
+					$data['tadkitLink'] = "<li><a target=\"_blank\" href=\"visualizers/tadkit/index.php/?user=".$_SESSION['User']['id']."&fn=".$data['_id']."\"><i class=\"fa fa-cubes fa-rotate-180\"></i> View in TADkit</a></li>";
+					break;
+				case 'BED':
+        case 'JSON':
+        case 'WIG':
+        case 'BEDGRAPH':
+        case 'VCF':
+					if ($pos = strrpos($data['longfilename'], '.')) {
+						$name = substr($data['longfilename'], 0, $pos);
+						$ext = substr($data['longfilename'], $pos);
+					} else {
+						$name = $data['longfilename'];
 					}
 
 					$data['PDBView'] = "<li><a href=\"javascript:openTADbit('".$data['_id']."', '".$name."');\"><i class=\"fa fa-window-maximize\"></i> Preview in 3D</a></li>";

@@ -408,8 +408,8 @@ sort($tools);
                             </li>
 							<?php } ?>
 
-													<li class="nav-item active open beta-long" style="color:#b4bcc8;margin-left:18px;margin-top:10px;font-size:12px;">This is a BETA version of MuG VRE</li>
-													<li class="nav-item active open beta-short" style="color:#b4bcc8;margin-left:8px;margin-top:10px;font-size:12px;display:none;">BETA</li>
+													<li class="nav-item active open beta-long" style="color:#b4bcc8;margin-left:18px;margin-top:10px;font-size:12px;">This is the 1.0 version of MuG VRE</li>
+													<li class="nav-item active open beta-short" style="color:#b4bcc8;margin-left:8px;margin-top:10px;font-size:12px;display:none;">v1.0</li>
 											
                         </ul>
                         <!-- END SIDEBAR MENU -->

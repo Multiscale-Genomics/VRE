@@ -36,12 +36,14 @@ class User {
             $this->crypPassword = '{SSHA}' . base64_encode(sha1( $f['pass1'].$salt, TRUE ). $salt);
         }elseif ($f['Token']){
             $this->Token        = $f['Token'];
+        }elseif ($f['Type'] == 3){
         }else{
-                return 0;
+            return 0;
         }
     	$this->Status       = "1";
+    	$this->Type         = (!isset($this->Type)?$this->Type=2:$this->Type=$this->Type);
     	$this->_id          = $this->Email;
-    	$this->id           = uniqid($GLOBALS['AppPrefix'] . "USER");
+    	$this->id           = ($this->Type!=3?uniqid($GLOBALS['AppPrefix'] . "USER"):uniqid($GLOBALS['AppPrefix'] . "ANON"));
     	$this->lastLogin    = moment();
     	$this->registrationDate = moment();
     	$this->Surname      = ucfirst($this->Surname);

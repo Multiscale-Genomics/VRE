@@ -208,13 +208,14 @@
 			case 'tutorials':
 			case 'references':
 			case 'tools':
+			case 'restoreLink':
 	
 	?>		
 			<link href="assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />
         	<link href="assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />			
 			<?php break; ?>
 		<?php } ?>
-        <link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/layouts/layout/css/custom.min.css?v=<?php echo rand(); ?>" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
 				<link rel="icon" href="assets/layouts/layout/img/icon.png" sizes="32x32" />
 		

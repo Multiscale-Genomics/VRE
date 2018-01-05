@@ -1,7 +1,7 @@
 // delete files / folders
 var fileName = '';
 var option = '';
-
+var intJobStatus;
 var baseURL = $('#base-url').val();
 
 function deleteFile(file){
@@ -172,6 +172,7 @@ editAllFiles = function() {
 }
 
 checkJobStatus = function() {
+	//console.log("checking job status");
 	$.ajax({
 			type: "GET",
 			//url: baseURL + "workspace/workspace.php",
@@ -186,7 +187,11 @@ checkJobStatus = function() {
 
 $(document).ready(function() {
 
-	setInterval(checkJobStatus, 10000);
+	if ( $(".job-running").length ) {
+		intJobStatus = setInterval(checkJobStatus, 10000);
+	} else {
+		clearInterval(intJobStatus);
+	}
 
 	$('#modalDelete').find('.modal-footer .btn-modal-del').on('click', function(){
 		$('#modalDelete').find('.modal-footer .btn-modal-del').prop('disabled', true);
@@ -218,6 +223,33 @@ $(document).ready(function() {
 			}
 		});
 
+	});
+
+	
+	// Optimalisation: Store the references outside the event handler:
+  var $window = $(window);
+	
+  function checkWidthWS() {
+		var windowsize = $window.width();
+		if (windowsize < 989){
+			$('.truncate').css('max-width', '70px');
+			$('.truncate2').css('max-width', '70px');
+		}else if ((windowsize < 1120) && (windowsize > 990)){
+			$('.truncate').css('max-width', '100px');
+			$('.truncate2').css('max-width', '140px');
+		}else {
+			$('.truncate').css('max-width', '140px');
+			$('.truncate2').css('max-width', '140px');
+		}
+  }
+	// Execute on load
+	checkWidthWS();
+	// Bind event listener
+	$(window).resize(checkWidthWS);
+
+	
+	$('#modalGuest').on('hidden.bs.modal', function () {
+		location.href = baseURL + "applib/modifyUserFirstTime.php";
 	});
 
 });

@@ -617,7 +617,8 @@ function getData_fromRepository($params=array()) { //url, repo, id, taxon
             redirect($url_experiment);
         }else{
             $_SESSION['errorData']['Info'][] ="Remote file '".basename($fnP)."' imported into the 'repository' folder below. Please, edit its metadata once the job has finished";
-            redirect("../workspace");
+						//redirect("../workspace");
+						header("Location:".$GLOBALS['url']."/workspace/");
         }
         //FIXME END
        
@@ -656,6 +657,7 @@ function getData_wget($url,$outdir,$referer,$meta=array()) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
     curl_setopt($ch, CURLOPT_HEADER, TRUE);
+    curl_setopt($ch, CURLOPT_VERBOSE,TRUE);
     curl_setopt($ch, CURLOPT_NOBODY, TRUE);
     $curl_data = curl_exec($ch);
     //status
@@ -668,16 +670,17 @@ function getData_wget($url,$outdir,$referer,$meta=array()) {
     $filename="";
     if (preg_match('/^Content-Disposition: .*?filename=(?<f>[^\s]+|\x22[^\x22]+\x22)\x3B?.*$/m', $curl_data,$m)){
         $filename = trim($m['f'],' ";');
-    }elseif (preg_match('/^Content-Length:\s*(\d+)/m', $curl_data,$m)){
-        $hasLength = $m[1];
-        if ($hasLength){
-            $filename = basename($url);
-        }
+    }else{
+        $filename = basename($url);
     }
     if (!$filename){
-        $msg = "Resource URL ('".$url."') has not a valid HTTP header. 'Content-Length' not found or zero";
+        $msg = "Resource URL ('".$url."') has not a valid HTTP header. Filename not found";
         if($referer == "die"){die($msg);}else{$_SESSION['errorData']['Error'][] =$msg; redirect($referer);}
     }
+
+    $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+    $header = substr($curl_data, 0, $header_size);
+
     //size
     $size   = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
     $usedDisk     = (int)getUsedDiskSpace();
@@ -686,6 +689,7 @@ function getData_wget($url,$outdir,$referer,$meta=array()) {
         $msg = "Resource URL ('".$url."') is pointing to an empty resource (size = 0)";
         if($referer == "die"){die($msg);}else{$_SESSION['errorData']['Error'][] =$msg; redirect($referer);}
     }
+
     if ($size > ($diskLimit-$usedDisk) ) {
         $msg = "Cannot import file. There will be not enough space left in the workspace (size = ".getSize($size).")";
 				if($referer == "die"){
@@ -800,9 +804,11 @@ function getData_wget($url,$outdir,$referer,$meta=array()) {
         if ($pid == 0){
             $msg ="File imported from URL '".basename($fnP)."' cannot be imported. Error occurred while preparing the job 'Get remote file'";
             if($referer == "die"){die($msg);}else{$_SESSION['errorData']['Error'][] =$msg; redirect($referer);}
-        }else{
+				}else{
+
             $_SESSION['errorData']['Info'][] ="File from URL '".basename($fnP)."' is being imported into the '$outdir' folder below. Please, edit its metadata once the import has finished";
-            redirect("../workspace");
+						// redirect($GLOBALS['url']."/workspace");
+						header("Location:".$GLOBALS['url']."/workspace/");
         }
         //FIXME END
        
@@ -860,7 +866,8 @@ function getData_fromSampleData($params=array()) { //sampleData
             redirect($GLOBALS['url']."/getdata/sampleDataList.php");
         }else{
             $_SESSION['errorData']['Info'][] = "Sample data successfuly imported.";
-            redirect("../workspace");
+						//redirect("../workspace");
+						header("Location:".$GLOBALS['url']."/workspace/");
 	    }
     }
 

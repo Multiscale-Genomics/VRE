@@ -62,11 +62,11 @@ var ValidateForm = function() {
         });
 
         // rules by ID instead of NAME
-				$("#chains").rules("add", { required:true });
+				//$("#chains").rules("add", { required:true });
 
 
 				$("#chains").rules("add", {
-						required:true, 
+						//required:true, 
 						regx: /^([A-Z](,)){0,}[A-Z]$/,
 						messages: {
 							regx: "You must use the next format: A,B,C (uppercase and sepparated by commas)",

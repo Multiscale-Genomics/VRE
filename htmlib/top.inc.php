@@ -68,6 +68,15 @@ if (file_exists($avatarImg)){
                                         <a href="user/lockScreen.php">
                                             <i class="fa fa-lock" style="font-size:16px;"></i> Lock Screen </a>
                                     </li>-->
+									<?php }else{ ?>
+                                    <!--<li>
+                                        <a id="" href="user/restoreLink.php">
+                                            <i class="fa fa-link" style="font-size:16px;"></i> Restore Link </a>
+                                    </li>
+                                    <li>
+                                        <a id="" href="applib/loginToken.php">
+                                            <i class="fa fa-sign-out" style="font-size:16px;"></i> Sign in ¿? </a>
+                                    </li>-->
 									<?php } ?>
                                     <li>
                                         <a id="logout-button" href="javascript:;">

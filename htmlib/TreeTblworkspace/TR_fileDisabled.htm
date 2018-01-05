@@ -1,10 +1,14 @@
 <tr data-tt-id="##tree_id##" data-tt-parent-id="##tree_id_parent##">
 
 <td>
+	<label style="padding-left: 30px;">
+		
+	</label>
+	##lastuploaded##
 </td>
 
 <td>
-	<a class="##state##"  href="workspace/workspace.php?op=##openFunction##&fn=##_id_URL##" title="open file ##filename##" target="_blank">##filename##</a>
+	<a class="##state## truncate"  href="workspace/workspace.php?op=##openFunction##&fn=##_id_URL##" title="open file ##filename##" target="_blank">##filename##</a>
     <!--<span class="expand_info display-hide" onclick="expandInfo(this)"></span>-->
 	<div class="extra_info display-hide">
 	  <table>
@@ -18,12 +22,12 @@
 		##paired##
 	  </table>
   	</div>
-    <a href="javascript:viewFileMeta('##_id##', '##longfilename##', 1);" style="margin-left:3px;"><i class="fa fa-info-circle"></i></a>
+    <a href="javascript:viewFileMeta('##_id##', '##longfilename##', 1);" style="margin-left:3px;" class="font-yellow-saffron"><i class="fa fa-exclamation-triangle"></i></a>
 </td>
 <td>##format##</td>
 <td></td>
-<td>##project##</td>
-<td>##mtime##</td>
+<td title="##project##"><span class="truncate">##project##</span></td>
+<td title="##mtime##"><span class="truncate2" title="##mtime##">##mtime##</span></td>
 <td>##size##</td>
 <td>
 	<div class="btn-group" style="float:left; position:absolute; margin-top:-10px!important;">

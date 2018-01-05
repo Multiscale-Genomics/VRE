@@ -47,7 +47,7 @@ if ($_REQUEST['rerunDir']){
 // check tool inputs
 
 if((count($_REQUEST['fn']) <  3)){
-	$_SESSION['errorData']['Error'][] = "Please, select one FASTA file, one FASTQ and at least one INDEX file for running this tool";
+	$_SESSION['errorData']['Error'][] = "Please, select one or two FASTQ files, one FASTA and  one INDEX file for running this tool";
 	redirect('/workspace/');
 }
 
@@ -178,7 +178,7 @@ $tool   = getTool_fromId($toolId,1);
                               </div>
                               <!-- END PORTLET 0: INPUTS -->
 
-			 <form action="#" class="horizontal-form" id="process-genome">
+			 <form action="#" class="horizontal-form" id="process-chipseq">
                     <input type="hidden" name="tool" value="<?php echo $toolId;?>" />
                     <input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
 
@@ -231,48 +231,245 @@ $tool   = getTool_fromId($toolId,1);
                                                 <label class="control-label"><?php echo $tool['input_files']['loc']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['input_files']['loc']['help']?></p>"></i></label>
                                                 <select  name="input_files[<?php echo $tool['input_files']['loc']['name']?>]" class="form-control form-field-enabled params_chipseq_inputs">
 																								<option selected="" value=""> -- select a file -- </option>
- 													<?php foreach ($inPaths as $file) {  ?>
-															<?php $p = explode("/", $file['path']); ?>
-        													<option value="<?php echo $file['fn']; ?>" ><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
-													<?php } ?>
-													</select>		
+ 																								<?php foreach ($inPaths as $file) {  ?>
+																									<?php if($file['format'] == 'FASTQ') { ?>
+																									<?php $p = explode("/", $file['path']); ?>
+																									<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
+																									<?php } ?>
+																								<?php } ?>
+																								</select>		
                                                  </div>
                                              </div>
 
-																							<!-- input_file: genome -->
-                                             <div class="col-md-6">
+																							<?php if(count($_REQUEST['fn']) == 4) { ?>
+																							<div class="col-md-6">
             																	<div class="form-group">
-                                                <label class="control-label"><?php echo $tool['input_files']['genome']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['input_files']['genome']['help']?></p>"></i></label>
-                                                <select  name="input_files[<?php echo $tool['input_files']['genome']['name']?>]" class="form-control form-field-enabled params_chipseq_inputs">
+                                                <label class="control-label"><?php echo $tool['input_files']['bg_loc']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['input_files']['bg_loc']['help']?></p>"></i></label>
+                                                <select  name="input_files[<?php echo $tool['input_files']['bg_loc']['name']?>]" class="form-control form-field-enabled params_chipseq_inputs">
 																								<option selected="" value=""> -- select a file -- </option>
- 													<?php foreach ($inPaths as $file) {  ?>
-															<?php $p = explode("/", $file['path']); ?>
-        													<option value="<?php echo $file['fn']; ?>" ><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
-													<?php } ?>
-													</select>		
+ 																								<?php foreach ($inPaths as $file) {  ?>
+																									<?php if($file['format'] == 'FASTQ') { ?>
+																									<?php $p = explode("/", $file['path']); ?>
+																									<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
+																									<?php } ?>
+																								<?php } ?>
+																								</select>		
                                                  </div>
-                                             </div>
+																						 </div>
+																							<?php } ?>
+																							
                                           </div>
 
 																					<div class="row">
+
+																						<!-- input_file: genome -->
+                                             <div class="col-md-6">
+            																	<div class="form-group">
+                                                <label class="control-label"><?php echo $tool['input_files']['genome']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['input_files']['genome']['help']?></p>"></i></label>
+                                                <select  name="input_files[<?php echo $tool['input_files']['genome']['name']?>]" class="form-control form-field-enabled  ">
+																								<?php foreach ($inPaths as $file) {  ?>
+																									<?php if($file['format'] == 'FASTA') { ?>
+																									<?php $p = explode("/", $file['path']); ?>
+																									<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
+																									<?php } ?>
+																								<?php } ?>
+																								</select>	
+                                                 </div>
+                                             </div>
+																						
+																							
                                              <!-- input_file: index -->
                                              <div class="col-md-6">
             																	<div class="form-group">
                                                 <label class="control-label"><?php echo $tool['input_files']['index']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['input_files']['index']['help']?></p>"></i></label>
-                                                <select  name="input_files[<?php echo $tool['input_files']['index']['name']?>]" class="form-control form-field-enabled params_chipseq_inputs">
-																								<option selected="" value=""> -- select a file -- </option>
- 													<?php foreach ($inPaths as $file) {  ?>
-															<?php $p = explode("/", $file['path']); ?>
-        													<option value="<?php echo $file['fn']; ?>" ><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
-													<?php } ?>
-													</select>		
+                                                <select  name="input_files[<?php echo $tool['input_files']['index']['name']?>]" class="form-control form-field-enabled  ">
+																								<?php foreach ($inPaths as $file) {  ?>
+																									<?php if($file['format'] == 'TAR') { ?>
+																									<?php $p = explode("/", $file['path']); ?>
+																									<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
+																									<?php } ?>
+																								<?php } ?>
+																								</select>		
                                                  </div>
-                                             </div>
+																						 </div>
 
 																							
-                                          </div>
+																					</div>
 
-
+																					<h4 class="form-section">Settings</h4>
+                                          <div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_gsize_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_gsize_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_gsize_param']['name']?>]" id="<?php echo $tool['arguments']['macs_gsize_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_tsize_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_tsize_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_tsize_param']['name']?>]" id="<?php echo $tool['arguments']['macs_tsize_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																					</div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_bw_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_bw_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_bw_param']['name']?>]" id="<?php echo $tool['arguments']['macs_bw_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_qvalue_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_qvalue_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_qvalue_param']['name']?>]" id="<?php echo $tool['arguments']['macs_qvalue_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																					</div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_pvalue_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_pvalue_param']['help']?></p>"></i></label>
+							<input type="text" name="arguments[<?php echo $tool['arguments']['macs_pvalue_param']['name']?>]" id="<?php echo $tool['arguments']['macs_pvalue_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_mfold_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_mfold_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_mfold_param']['name']?>]" id="<?php echo $tool['arguments']['macs_mfold_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																					</div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_nolambda_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_nolambda_param']['help']?></p>"></i></label>
+																											<!--<input type="text" name="arguments[<?php echo $tool['arguments']['macs_nolambda_param']['name']?>]" id="<?php echo $tool['arguments']['macs_nolambda_param']['name']?>" class="form-control" value="">-->
+																											<select  name="arguments[<?php echo $tool['arguments']['macs_nolambda_param']['name']?>]" id="<?php echo $tool['arguments']['macs_nolambda_param']['name']?>" class="form-control">
+																												<option value="1">True</option>	
+																												<option value="0" selected>False</option>
+																											</select>
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_slocal_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_slocal_param']['help']?></p>"></i></label>
+							<input type="text" name="arguments[<?php echo $tool['arguments']['macs_slocal_param']['name']?>]" id="<?php echo $tool['arguments']['macs_slocal_param']['name']?>" class="form-control" value="0">
+																											<!--
+																											<select  name="arguments[<?php echo $tool['arguments']['macs_slocal_param']['name']?>]" id="<?php echo $tool['arguments']['macs_slocal_param']['name']?>" class="form-control">
+																												<option value="1" >True</option>	
+																												<option value="0" selected>False</option>
+																											</select> -->
+                                                  </div>
+																							</div>
+																					</div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_llocal_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_llocal_paramo']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_llocal_param']['name']?>]" id="<?php echo $tool['arguments']['macs_llocal_param']['name']?>" class="form-control" value="0">
+<!--																											<select  name="arguments[<?php echo $tool['arguments']['macs_llocal_param']['name']?>]" id="<?php echo $tool['arguments']['macs_llocal_param']['name']?>" class="form-control">
+																												<option value="1" >True</option>	
+																												<option value="0" selected>False</option>
+																											</select> -->
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_fix-bimodal_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_fix-bimodal_param']['help']?></p>"></i></label>
+																											<!--<input type="text" name="arguments[<?php echo $tool['arguments']['macs_fix-bimodal_param']['name']?>]" id="<?php echo $tool['arguments']['macs_fix-bimodal_param']['name']?>" class="form-control" value="">-->
+																											<select  name="arguments[<?php echo $tool['arguments']['macs_fix-bimodal_param']['name']?>]" id="<?php echo $tool['arguments']['macs_fix-bimodal_param']['name']?>" class="form-control">
+																												<option value="1" >True</option>	
+																												<option value="0" selected>False</option>
+																											</select>
+                                                  </div>
+																							</div>
+																					</div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_nomodel_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_nomodel_param']['help']?></p>"></i></label>
+																											<!--<input type="text" name="arguments[<?php echo $tool['arguments']['macs_nomodel_param']['name']?>]" id="<?php echo $tool['arguments']['macs_nomodel_param']['name']?>" class="form-control" value="">-->
+																											<select  name="arguments[<?php echo $tool['arguments']['macs_nomodel_param']['name']?>]" id="<?php echo $tool['arguments']['macs_nomodel_param']['name']?>" class="form-control">
+																												<option value="1" >True</option>	
+																												<option value="0" selected>False</option>
+																											</select>
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_extsize_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_extsize_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_extsize_param']['name']?>]" id="<?php echo $tool['arguments']['macs_extsize_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																					</div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_shift_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_shift_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_shift_param']['name']?>]" id="<?php echo $tool['arguments']['macs_shift_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_keep-dups_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_keep-dups_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_keep-dups_param']['name']?>]" id="<?php echo $tool['arguments']['macs_keep-dups_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																					</div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_broad_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_broad_param']['help']?></p>"></i></label>
+																											<!--<input type="text" name="arguments[<?php echo $tool['arguments']['macs_broad_param']['name']?>]" id="<?php echo $tool['arguments']['macs_broad_param']['name']?>" class="form-control" value="">-->
+																											<select  name="arguments[<?php echo $tool['arguments']['macs_broad_param']['name']?>]" id="<?php echo $tool['arguments']['macs_broad_param']['name']?>" class="form-control">
+																												<option value="1" >True</option>	
+																												<option value="0" selected>False</option>
+																											</select>
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_broad-cutoff_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_broad-cutoff_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_broad-cutoff_param']['name']?>]" id="<?php echo $tool['arguments']['macs_broad-cutoff_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																					</div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_to-large_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_to-large_param']['help']?></p>"></i></label>
+																											<!--<input type="text" name="arguments[<?php echo $tool['arguments']['macs_to-large_param']['name']?>]" id="<?php echo $tool['arguments']['macs_to-large_param']['name']?>" class="form-control" value="">-->
+																											<select  name="arguments[<?php echo $tool['arguments']['macs_to-large_param']['name']?>]" id="<?php echo $tool['arguments']['macs_to-large_param']['name']?>" class="form-control">
+																												<option value="1" >True</option>	
+																												<option value="0" selected>False</option>
+																											</select>
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_down-sample_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_down-sample_param']['help']?></p>"></i></label>
+																											<!--<input type="text" name="arguments[<?php echo $tool['arguments']['macs_down-sample_param']['name']?>]" id="<?php echo $tool['arguments']['macs_down-sample_param']['name']?>" class="form-control" value="">-->
+																											<select  name="arguments[<?php echo $tool['arguments']['macs_down-sample_param']['name']?>]" id="<?php echo $tool['arguments']['macs_down-sample_param']['name']?>" class="form-control">
+																												<option value="1" >True</option>	
+																												<option value="0" selected>False</option>
+																											</select>
+                                                  </div>
+																							</div>
+																					</div>
+																					<div class="row">
+                                              <div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_bdg_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_bdg_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_bdg_param']['name']?>]" id="<?php echo $tool['arguments']['macs_bdg_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label"><?php echo $tool['arguments']['macs_call-summits_param']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['macs_call-summits_param']['help']?></p>"></i></label>
+																											<input type="text" name="arguments[<?php echo $tool['arguments']['macs_call-summits_param']['name']?>]" id="<?php echo $tool['arguments']['macs_call-summits_param']['name']?>" class="form-control" value="">
+                                                  </div>
+																							</div>
+																					</div>
                                      </div>
                                   </div>
                               </div>

@@ -88,15 +88,58 @@ sort($visualizers);*/
 				If you want apply a Tool to a file, please select it from the dropdown menu on the Tools column. If you need to apply a Tool
 				to more than one file, check the selected files and they will be loaded in the <i>Manage Files</i> list at the bottom of the table.
 				</p>-->
-				<?php if($_SESSION['User']['Type'] == 100) { ?>
+                <?php
+                if($_SESSION['User']['Type'] == 100) { ?>
 					<div class="alert alert-warning">
 						Your request for a premium user account is being processed. In the meantime, you can use the platform as a common user.
 					</div>	
-				<?php }else if($_SESSION['User']['Type'] == 3) { ?>
-					<div class="alert alert-info">
-						As a guest user you have reduced functionalities in the platform.
-					</div>
-				<?php }
+                <?php }
+
+	 			if($_SESSION['User']['Type'] == 3) {
+
+				?>
+
+	 			<div class="profile-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="portlet light ">
+                                <div class="portlet-title tabbable-line">
+                                    <div class="caption caption-md">
+                                        <i class="icon-globe theme-font hide"></i>
+                                        <span class="caption-subject font-blue-madison bold uppercase">Restore Link</span>
+                                        <label class="control-label" style="margin: 0 2px; vertical-align:middle;"><i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:5px;'>Using the following link, you'll be able to restore your anonymous session. Please, copy and save it if you are interested in recovering your data even after the current session ends. Pasting back the URL in your web browser will allow you to keep working on your data up to 10 days after your first access.</p><p align='left' style='margin:5px' >For being granted a permanent workspace, abandon the <i>anonymous</i> mode and simply sign-in into VRE!</p>"></i></label>
+
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="tab-content">
+
+                                        <!-- PERSONAL INFO TAB -->
+                                        <div class="tab-pane active" id="tab_1_1">
+													<div class="input-group">
+														<input id="mt-target-1" type="text" class="form-control" value="<?php echo $GLOBALS['URL']."/applib/loginAnonymous.php?id=".$_SESSION['User']['_id']; ?>" readonly style="background:#fff;" >
+															<span class="input-group-btn">
+															<button class="btn green mt-clipboard" data-clipboard-action="copy" data-clipboard-target="#mt-target-1" type="button"><i class="fa fa-copy"></i> Copy to clipboard</button>
+    														</span>
+                                                    </div>
+                                            <br/>
+                                            <!--<p>Using the following link, you'll be able to restore your anonymous session. Please, copy and save it if you are interested in recovering your data even after the current session ends. Pasting back the URL in your web browser will allow you to keep working on your data up to 10 days after your first access (check the <a href="javascript:openTermsOfUse();" >Terms of Use</a> for more details).</p>
+                                            <p>For being granted a permanent workspace, abandon the <i>anonymous</i> mode and simply <a target="_blank" href="applib/loginToken.php">sign in</a> into VRE!</p>-->
+                                            
+                                        </div>
+                                        <!-- END PERSONAL INFO TAB -->
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+				<?php
+
+		 		}
 
 				if(isset($_SESSION['errorData'])) {
 					if(isset($_SESSION['errorData']['Info'])) {	
@@ -121,7 +164,8 @@ sort($visualizers);*/
 
 	
 			<?php
-                    $toolsList = getTools_List();
+					$toolsList = getTools_List();
+					sort($toolsList);
 			?>
 			
 				<!-- BEGIN EXAMPLE TABLE PORTLET -->
@@ -482,6 +526,25 @@ sort($visualizers);*/
                     </div>
 				</div>
 
+		<div class="modal fade bs-modal" id="modalGuest" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title"></h4>
+								Welcome to MuG Virtual Research Environment!
+                            </div>
+							<div class="modal-body">
+As an <strong>anonymous user</strong>, you can access to all VRE functionalities, yet your workpace is not permanent!<br/>
+If you want to <strong>re-use your session</strong>, make sure you save the <strong><em>'Restore link'</em></strong> that appears on your workspace. Otherwise, your data will be unreachable in the moment the session ends. <br/>
+                            <img source=""/>
+                             </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Understood</button>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+
 		<div class="modal fade bs-modal" id="modalTADkit" tabindex="-1" role="basic" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -557,7 +620,7 @@ sort($visualizers);*/
 					</div>
 				</div>
 
-				
+											
 
 
 <?php 
@@ -566,3 +629,12 @@ require "../htmlib/footer.inc.php";
 require "../htmlib/js.inc.php";
 
 ?>
+
+<?php if(!isset($_SESSION['User']['firstTime'])) { 
+if($_SESSION['User']['Type'] == 3) {
+?>
+<script>
+	$('#modalGuest').modal({ show: 'true', backdrop: 'static', keyboard: false});
+									</script>
+
+<?php } } ?>

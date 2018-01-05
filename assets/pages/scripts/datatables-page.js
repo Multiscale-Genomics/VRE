@@ -21,6 +21,7 @@ $(document).ready(function() {
 	/*treetable: {
 	  expandable: true
 	},*/
+	responsive:true,
 	stateSave: true,
 	stateLoaded: function (settings, data) {
 		//console.log(data.start);
@@ -492,9 +493,10 @@ $(document).ready(function() {
   $('#workspace #headerSearch').children().each(function(index,element) {
 		if($( this ).hasClass("selector")){
 			var column = table.column(index);
-			var select = $('<select style="width: 100%!important;" class="selector form-control input-sm input-xsmall input-inline"><option value="">All</option></select>')
+			var select = $('<select style="width: 100%!important;" class="selector form-control input-sm input-xsmall input-inline"><option value="">All</option></select>');
 			column.data().unique().sort().each( function ( d, j ) {
 				if(d.indexOf('<span style="display:none;">0</span>') != -1)	d = "uploads";
+				if(d.indexOf('<span class=\"truncate\">') != -1) d = d.replace('<span class=\"truncate\">', '').replace('</span>', '');
 				//console.log(d.indexOf('<span style="display:none;">0</span>'));
 				if((d.length) && (d != '&nbsp;')){
 		  		var sel = '';

@@ -16,6 +16,25 @@
                     </div>
 								</div>
 
+								<input type="hidden" id="type-of-user" value="<?php echo $_SESSION['User']['Type']; ?>" />
+
+<div class="modal fade bs-modal" id="modalLogoutGuest" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title">You are closing your session</h4>
+                            </div>
+														<div class="modal-body table-responsive">
+															Are you sure you want to close your session? As an anonymous user you won't be able to come back unless you save the restore link provided on the Workspace page.
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                							<a class="btn btn-danger btn-ok">I'm aware</a>	
+                            </div>
+                        </div>
+                    </div>
+								</div>
 
 <div class="mt-cookie-consent-bar mt-cookie-consent-bar-light">
                             <div class="mt-cookie-consent-bar-holder">

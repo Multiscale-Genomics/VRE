@@ -2,7 +2,7 @@
 	'use strict';
 
 	// ANGULAR APP
-	angular.module('TADkit',['ui.router','ngMaterial','uuid4','d3','angularAwesomeSlider','angularResizable']);
+	angular.module('TADkit',['ui.router','ngMaterial','uuid4','d3','angularAwesomeSlider','angularResizable','ui.grid','ui.grid.resizeColumns']);
 	     
 })();
 (function() {
@@ -221,6 +221,26 @@
 				}
 			},
 		})
+		.state('data-import', {
+			parent: 'browser',
+			url: '/data/import',
+			views: {
+				'modal@main': {
+					templateUrl: 'assets/templates/data-import.html',
+					controller: 'DataImportController'
+				}
+			},
+		})
+		.state('data-mining', {
+			parent: 'browser',
+			url: '/data/mining/:func',
+			views: {
+				'modal@main': {
+					templateUrl: 'assets/templates/data-mining.html',
+					controller: 'DataMiningController'
+				}
+			},
+		})
 		.state('404', {
 			url: '/404',
 			templateUrl: 'assets/templates/404.tpl.html',
@@ -276,7 +296,6 @@
 		$scope.slideoptions = {};
 		$scope.slidevalue = "10;0.001";
 		if(angular.isUndefined($scope.data)) return;
-		//$scope.width = $scope.canvas_width = parseInt($scope.state.width)-2*parseInt($scope.state.margin); // strip PX units
 		var scene_component = Storyboards.getComponentById('Chromatin');
 		var scene_width = 0;
 		var scene_height = 0;
@@ -327,17 +346,19 @@
 		});
 		if($scope.data.n === 0) {
 			var promise = Datasets.loadHic();
-			promise.then(function(data) {
-			    if(data.n === 0) {
-					$scope.no_hic_data = true; 
-					$scope.slidevalue = "10;0.001";
-					$scope.slideoptions = {};
-					return;
-				} else  {
-					$scope.no_hic_data = false;
-				}
-			    $scope.update_data(data);
-			});
+			if(promise) {
+				promise.then(function(data) {
+				    if(data.n === 0) {
+						$scope.no_hic_data = true; 
+						$scope.slidevalue = "10;0.001";
+						$scope.slideoptions = {};
+						return;
+					} else  {
+						$scope.no_hic_data = false;
+					}
+				    $scope.update_data(data);
+				});
+			}
 		}
         
 		w.bind('resize', function(){
@@ -519,6 +540,7 @@
                 
 				scope.render = function(data_max, data_min) {
 		            //canvas = document.getElementById("hic_canvas");
+		            if(scope.data.n === 0) return;
 		            canvas = angular.element(document.querySelector('#hic_canvas'))[0];
 		            if (canvas.getContext) {
 		                console.log("Drawing hic matrix");
@@ -598,13 +620,13 @@
 								.style("fill", "#fff")
 								.style("stroke", "#ccc")
 								.style("stroke-widt", 2)
-								.attr("cx", (scope.settings.current.particle*Math.sqrt(2))*scope.scale+(scope.translatePos.x*Math.sqrt(2)))
+								.attr("cx", ((scope.settings.current.particle-0.5)*Math.sqrt(2))*scope.scale+(scope.translatePos.x*Math.sqrt(2)))
 								.attr("cy", container_height-2*parseInt(scope.state.margin))
 								.attr("r", 4);
 
 							position = hic_svg.append("text")
 								.attr("id", "circ_position")
-								.attr("x", (scope.settings.current.particle*Math.sqrt(2))*scope.scale+(scope.translatePos.x*Math.sqrt(2))-2)
+								.attr("x", ((scope.settings.current.particle-0.5)*Math.sqrt(2))*scope.scale+(scope.translatePos.x*Math.sqrt(2))-2)
 								.attr("y", container_height-2*parseInt(scope.state.margin)-5)
 								.style("text-anchor", "bottom")
 								.style("font-family", "sans-serif")
@@ -626,8 +648,8 @@
 			                	stroke_width = (scope.data.tads[i][3]-min_score_tad)/(max_score_tad-min_score_tad)+0.1;
 								// assuming tads given in absolute position
 			                	resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments; // base pairs
-								start_tad = Math.round(((scope.data.tads[i][1])-scope.settings.current.chromStart)/resolution);
-			                	end_tad = Math.round((scope.data.tads[i][2]-scope.settings.current.chromStart)/resolution);
+								start_tad = Math.round(((scope.data.tads[i][1])-scope.settings.current.chromStart[scope.settings.current.chromIdx])/resolution);
+			                	end_tad = Math.round((scope.data.tads[i][2]-scope.settings.current.chromStart[scope.settings.current.chromIdx])/resolution);
 			                 	start_tad_scaled = Math.round((start_tad*Math.sqrt(2))*scope.scale+(scope.translatePos.x*Math.sqrt(2)));
 			                	polygon_tad = hic_svg.append("rect")
 			                 		.attr("id",scope.data.tads[i][0])
@@ -710,10 +732,31 @@
 						            		.text(value_text)
 						            		.attr('display', 'block');
 						            	
-						            	var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments; // base pairs
-						            	markers_position = [transformCoords[0]*resolution+scope.settings.current.chromStart,transformCoords[1]*resolution+scope.settings.current.chromStart];
-						            	scope.settings.current.markers_position = markers_position;
-						            	scope.$apply(scope.settings.current.markers_position);
+						            	if(scope.settings.current.chromosomeIndexes.length<=2) {
+							            	var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments; // base pairs
+							            	var x_mark, y_mark;
+							            	scope.settings.current.markers_chr = [scope.settings.current.chromosomeIndexes[0],scope.settings.current.chromosomeIndexes[0]];
+							            	var chr_bins = 0;
+							            	var i = 0;
+							            	while(chr_bins<transformCoords[0]) {
+							            		x_mark = (transformCoords[0]-chr_bins)*resolution+(scope.settings.current.chromStart[i]);
+							            		chr_bins += Math.round(scope.settings.current.chromEnd[i]/resolution)-Math.round(scope.settings.current.chromStart[i]/resolution); 
+							            		i++;
+							            	}
+							            	scope.settings.current.markers_chr[0] = scope.settings.current.chromosomeIndexes[i-1];
+							            	chr_bins = 0;
+							    			i = 0;
+							            	while(chr_bins<transformCoords[1]) {
+							            		y_mark = (transformCoords[1]-chr_bins)*resolution+(scope.settings.current.chromStart[i]);
+							            		chr_bins += Math.round(scope.settings.current.chromEnd[i]/resolution)-Math.round(scope.settings.current.chromStart[i]/resolution); 
+							            		i++;
+							            	}
+							            	scope.settings.current.markers_chr[1] = scope.settings.current.chromosomeIndexes[i-1];
+					
+							    			markers_position = [x_mark,y_mark];
+							            	scope.settings.current.markers_position = markers_position;
+							            	scope.$apply(scope.settings.current.markers_position);
+							            }
 						            }
 						            
 						    	}
@@ -741,9 +784,10 @@
 						            
 						            //scope.update();
 						            var part = (x_orig-parseInt(scope.state.offsetx)-scope.translatePos.x)/(scope.scale*Math.sqrt(2));
-						            var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments;	
-						            if(part != scope.settings.current.particle && part <= scope.data.value.length && part > 0) {
-							            scope.settings.current.hic_position += (part-scope.settings.current.particle)*resolution;
+						            var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments;
+						            var pos = scope.settings.current.hic_position + (part-scope.settings.current.particle)*resolution;
+						            if(pos >= scope.settings.current.chromStart[scope.settings.current.chromIdx] && pos <= scope.settings.current.chromEnd[scope.settings.current.chromIdx]) {
+							            scope.settings.current.hic_position = pos;
 							            scope.$apply(scope.settings.current.hic_position);
 							            //scope.update_marks();
 						            }
@@ -768,21 +812,25 @@
 		                scope.render(scope.data.max, scope.data.min);
 		        	}
 		        });
-		        scope.$watch('settings.current.particle', function(newParticle, oldParticle) {
-					if ( newParticle !== oldParticle) {
-						if (typeof scope.settings.current.leftborder != 'undefined') {
-							var rect = hic_data_container.getBoundingClientRect();
-							scope.translatePos.x = scope.settings.current.leftborder-rect.left;
-						}
-						scope.update();
-						scope.update_marks();
-					}
-				});
+//		        scope.$watch('settings.current.particle', function(newParticle, oldParticle) {
+//					if ( newParticle !== oldParticle) {
+//						if (typeof scope.settings.current.leftborder != 'undefined') {
+//							var rect = hic_data_container.getBoundingClientRect();
+//							scope.translatePos.x = scope.settings.current.leftborder-rect.left;
+//						}
+//						scope.update();
+//						scope.update_marks();
+//					}
+//				});
 		        scope.$watch('settings.current.leftborder', function(newPos, oldPos) {
 					if ( newPos !== oldPos && scope.data.n > 0) {
 						var rect = hic_data_container.getBoundingClientRect();
 						scope.translatePos.x = scope.settings.current.leftborder-rect.left;
-						scope.scale = (scope.settings.current.rightborder-scope.settings.current.leftborder)/(Math.sqrt(2)*scope.data.n); 
+						var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments;
+						//var first_n = Math.round((scope.settings.current.chromEnd[0]-scope.settings.current.chromStart[0])/resolution)+1;
+						
+						scope.scale = (scope.settings.current.rightborder-scope.settings.current.leftborder)/(Math.sqrt(2)*scope.data.n);
+						
 						scope.settings.current.hic_position = scope.settings.current.position;
 						scope.update();
 						scope.update_marks();
@@ -801,7 +849,12 @@
 		        		scope.render(scope.data.max-datamax,scope.data.max-datamin);
 		        	}
 				});
-
+		        scope.$watch('settings.current.chromosomeIndexes', function(newvalue,oldvalue) {
+		        	if ( newvalue !== oldvalue && !angular.isUndefined(newvalue)) {
+		        		scope.data = Hic_data.get();
+		        		scope.update_data(scope.data);
+		        	}
+		        });	
 		        // UPDATE
 				scope.update = function() {
 					
@@ -830,9 +883,10 @@
 				};
 
 				scope.update_marks =  function() {
-					var x = (scope.settings.current.particle*Math.sqrt(2))*scope.scale+(scope.translatePos.x)+parseInt(scope.state.offsetx);
+					if (typeof handle == 'undefined') return;
+					var x = (((scope.settings.current.particle-1)+0.5)*Math.sqrt(2))*scope.scale+(scope.translatePos.x)+parseInt(scope.state.offsetx);
 					handle.attr("cx",x);
-					position.attr("x",x).text(scope.settings.current.particle+1);
+					position.attr("x",x).text(scope.settings.current.particle);
 					
 					contact_marker.attr('display', 'none');
 	            	contact_marker_value.attr('display', 'none');
@@ -844,7 +898,7 @@
 					if(scope.show_tads) {
 						for(var i=0;i<polygon_tads.length;i++) {
 							resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments; // base pairs
-							start_tad = Math.round(((scope.data.tads[i][1])-scope.settings.current.chromStart)/resolution);
+							start_tad = Math.round(((scope.data.tads[i][1])-scope.settings.current.chromStart[scope.settings.current.chromIdx])/resolution);
 							start_tad_scaled = Math.round((start_tad*Math.sqrt(2))*scope.scale+(scope.translatePos.x)+parseInt(scope.state.offsetx));
 							
 							polygon_tads[i]
@@ -877,11 +931,11 @@
 		        		var start_tad_segment, end_tad_segment, i;
 		        		if(oldvalue>-1) {
 			        		polygon_tads[oldvalue].style("fill-opacity", 0.5);
-			        		start_tad_segment = Math.round((parseInt(polygon_tads[oldvalue].attr("start")) - scope.settings.current.chromStart)/scope.settings.current.segmentLength);
-			        		end_tad_segment = Math.ceil((parseInt(polygon_tads[oldvalue].attr("end")) - scope.settings.current.chromStart)/scope.settings.current.segmentLength);
+			        		start_tad_segment = Math.round((parseInt(polygon_tads[oldvalue].attr("start")) - scope.settings.current.chromStart[scope.settings.current.chromIdx])/scope.settings.current.segmentLength);
+			        		end_tad_segment = Math.ceil((parseInt(polygon_tads[oldvalue].attr("end")) - scope.settings.current.chromStart[scope.settings.current.chromIdx])/scope.settings.current.segmentLength);
 		        		}
-		        		start_tad_segment = Math.round((parseInt(polygon_tads[newvalue].attr("start")) - scope.settings.current.chromStart)/scope.settings.current.segmentLength);
-		        		end_tad_segment = Math.ceil((parseInt(polygon_tads[newvalue].attr("end")) - scope.settings.current.chromStart)/scope.settings.current.segmentLength);
+		        		start_tad_segment = Math.round((parseInt(polygon_tads[newvalue].attr("start")) - scope.settings.current.chromStart[scope.settings.current.chromIdx])/scope.settings.current.segmentLength);
+		        		end_tad_segment = Math.ceil((parseInt(polygon_tads[newvalue].attr("end")) - scope.settings.current.chromStart[scope.settings.current.chromIdx])/scope.settings.current.segmentLength);
 		        		scope.settings.current.tad_selected = newvalue;
 		        	}
 				});
@@ -920,7 +974,9 @@
 			    };
 			    scope.update_data = function(data){
 			    	scope.data = data;
-			    	scope.scale = (scope.settings.current.rightborder-scope.settings.current.leftborder)/(Math.sqrt(2)*scope.data.n);
+			    	var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments;
+					//var first_n = Math.round((scope.settings.current.chromEnd[0]-scope.settings.current.chromStart[0])/resolution)+1;
+					scope.scale = (scope.settings.current.rightborder-scope.settings.current.leftborder)/(Math.sqrt(2)*scope.data.n);
 			    	if (typeof scope.settings.current.leftborder != 'undefined') {
 						var rect = hic_data_container.getBoundingClientRect();
 						scope.translatePos.x = scope.settings.current.leftborder-rect.left;
@@ -1000,6 +1056,889 @@
                 });
 			}
 		};
+	}
+})();
+(function() {
+	'use strict';
+	angular
+		.module('TADkit')
+		.controller('PanelIgvjsControllerBeta', PanelIgvjsControllerBeta);
+
+	function PanelIgvjsControllerBeta($scope, $window, $timeout, $mdDialog, Overlays,Storyboards, uuid4, Track_data, d3Service, Datasets, Users, Settings) {
+
+		$scope.showInfo = function(info) {
+			$mdDialog.show({
+			      parent: angular.element(document.body),
+			      template: '<md-dialog md-theme="default" aria-label="Information">' +
+			        '  <md-dialog-content class="md-default-theme">' + info +
+			        '<div class="md-actions"><md-button ng-click="closeDialog();" class="md-primary md-button md-default-theme"><span class="ng-binding ng-scope">Close</span></md-button></div>' +
+			        '  </md-dialog-content>' +
+			        '</md-dialog>',
+			      locals: {
+
+			      },
+			      controller: DialogController
+			    });
+		};
+
+		function DialogController($scope, $mdDialog) {
+			$scope.closeDialog = function() {
+			  $mdDialog.hide();
+			};
+		}
+		
+		if(angular.isUndefined($scope.settings.current.speciesUrl) || angular.isUndefined($scope.view.settings.species_data[$scope.settings.current.speciesUrl])) {
+			$scope.settings.current.speciesUrl = Datasets.setSpeciesUrl();
+			if(angular.isUndefined($scope.settings.current.speciesUrl) || angular.isUndefined($scope.view.settings.species_data[$scope.settings.current.speciesUrl])) {
+				var output = '<div class="component-caption" layout="column" layout-align="left center">No species specified in the dataset</div>'; 
+				$timeout(function() {$scope.showInfo(output);});
+				return;
+			}
+		}
+
+		var scene_component = Storyboards.getComponentById('Chromatin');
+		var scene_width = 0;
+		if(typeof scene_component !== 'undefined') {
+			scene_width = parseInt(scene_component.object.state.width);
+		} else {
+			var inspector_component = Storyboards.getComponentById('Inspector');
+			var inspector_width = 0;
+			if(typeof inspector_component !== 'undefined') {
+				inspector_width = parseInt(inspector_component.object.state.width);
+			}
+			scene_width = inspector_width;
+		}
+		$scope.width = $scope.state.width = $window.innerWidth - scene_width - 50 - 2*parseInt($scope.state.margin);
+		$scope.height = $scope.state.height =  parseInt($scope.state.height)-2*parseInt($scope.state.margin); // strip PX units
+		
+		//$scope.width = $scope.state.width; // strip PX units
+		//$scope.height = $scope.state.height; // strip PX units
+		$scope.$watch('settings.views.scene_width', function( newValue, oldValue ) {
+			if ( newValue !== oldValue ) {
+				// playback.autoRotate = !playback.autoRotate;
+				$scope.width = $scope.state.width = $window.innerWidth - newValue - 50 - 2*parseInt($scope.state.margin);
+				$scope.myIgv.repaint();
+//		  		$scope.myIgv.genomicStateList.forEach(function (genomicState) {
+//            		$scope.myIgv.updateWithLocusIndex( genomicState );
+//        		});
+			}
+		});
+
+		var w = angular.element($window);
+		$scope.$watch(
+		  function () {
+		    return $window.innerWidth;
+		  },
+		  function (value) {
+		    $scope.width = $scope.state.width = value - scene_width - 50 - 2*parseInt($scope.state.margin);
+		  	//$scope.$apply();
+		  },
+		  true
+		);
+		
+		var originalOverlay = Overlays.getCurrentIndex();
+		var track_data = Track_data.get();
+		var resolution = $scope.settings.current.segmentLength*$scope.settings.current.particleSegments;
+		var igvjs_start = (($scope.settings.current.chromStart[$scope.settings.current.chromIdx])-1*resolution);
+		if(igvjs_start<0) igvjs_start = 0;
+		var chrom = ($scope.settings.current.chrom);
+		if(!$scope.view.settings.leading_chr) chrom = ($scope.settings.current.chrom).replace('chr','');
+		
+		/*
+		Configuration of igvjs object
+
+		$scope.view.settings.species_data: configuration array containing the location of the reference genome. 
+			It can be a file or url where the browser will fetch the data.
+		$scope.view.settings.showNav: true/false whether to show the navigation panel in igvjs 
+		$scope.view.settings.showCyto: true/false wheter to show cytoband panel in igvjs
+		*/
+		if(typeof $scope.settings.current.assemblyUrl === 'undefined' || typeof $scope.view.settings.species_data[$scope.settings.current.speciesUrl][$scope.settings.current.assemblyUrl] === 'undefined') {
+			$scope.settings.current.assemblyUrl = Object.keys($scope.view.settings.species_data[$scope.settings.current.speciesUrl])[0]; 
+		}
+			
+		var igv_reference;
+		if($scope.view.settings.species_data[$scope.settings.current.speciesUrl][$scope.settings.current.assemblyUrl].fastaURL) {
+			igv_reference = {
+				id: $scope.view.settings.species_data[$scope.settings.current.speciesUrl][$scope.settings.current.assemblyUrl].id,
+				fastaURL:$scope.view.settings.species_data[$scope.settings.current.speciesUrl][$scope.settings.current.assemblyUrl].fastaURL,
+				cytobandURL:null
+			};
+			$scope.view.settings.showNav = true;
+			if($scope.view.settings.species_data[$scope.settings.current.speciesUrl][$scope.settings.current.assemblyUrl].cytobandURL) {
+				igv_reference.cytobandURL = $scope.view.settings.species_data[$scope.settings.current.speciesUrl][$scope.settings.current.assemblyUrl].cytobandURL;
+				$scope.view.settings.showCyto = false;
+			} else {
+				$scope.view.settings.showCyto = false;
+			}
+		} else {
+			igv_reference = {
+				id: $scope.settings.current.speciesUrl
+			};
+			$scope.view.settings.showNav = true;
+		}
+		$scope.tracks = Users.getTracks();
+		if($scope.view.settings.species_data[$scope.settings.current.speciesUrl][$scope.settings.current.assemblyUrl].tracks) {
+			$scope.tracks = $scope.tracks.concat($scope.view.settings.species_data[$scope.settings.current.speciesUrl][$scope.settings.current.assemblyUrl].tracks);
+		}
+		
+		
+		/* 
+		div dom element where to include igvjs browser
+		*/
+		$scope.igvDiv = angular.element(document.querySelector('#igvDiv'))[0];
+		/* 
+		igvjs options. See igvjs docs for details
+		*/
+		$scope.igvOptions = {
+		            showNavigation: $scope.view.settings.showNav,
+		            showRuler: true,
+		            showIdeogram: $scope.view.settings.showCyto,
+		            showKaryo: $scope.view.settings.showCyto,
+		            flanking: 100000,
+		            reference: igv_reference,
+					locus: chrom+':'+igvjs_start+'-'+($scope.settings.current.chromEnd[$scope.settings.current.chromIdx]),
+					tracks: $scope.tracks.slice()
+		        };
+			
+		$scope.updatePosition =  function(position, leftborder, rightborder) {
+			//console.log(position);
+			var span_region = 0;
+			var resolution = $scope.settings.current.segmentLength*$scope.settings.current.particleSegments;
+			for(var i = 0; i<$scope.settings.current.chromosomeIndexes.length;i++) {
+				span_region += $scope.settings.current.chromEnd[i] - $scope.settings.current.chromStart[i];			
+			}
+			span_region += $scope.settings.current.chromStart[0];
+			if(position >= $scope.settings.current.chromStart[$scope.settings.current.chromIdx] && position <= span_region) {
+				$scope.settings.current.position = position;
+			}
+			if(position < $scope.settings.current.chromStart[$scope.settings.current.chromIdx]) {
+				$scope.settings.current.position = $scope.settings.current.chromStart[$scope.settings.current.chromIdx];
+			}  
+			if(position > span_region) {
+				$scope.settings.current.position = span_region;
+			}
+			if($scope.settings.current.leftborder != leftborder || $scope.settings.current.rightborder != rightborder) {
+				$scope.settings.current.leftborder = leftborder;
+				$scope.settings.current.rightborder = rightborder;
+			}
+			$scope.hideTadkitMarkers();
+			$scope.updateTadkitTAD();
+			
+			$timeout(function() {$scope.$apply();});
+		};
+		$scope.applyOverlay =  function(track,features) {
+			var self = this;
+			var overlays = Overlays.get();
+			for(var i=0;i<overlays.loaded.length;i++) {
+				if (overlays.loaded[i].object.title === track) {
+					$scope.toggleOverlay(overlays.loaded[i].object.state.index);
+					return true;
+				}
+			}
+			
+			var igvJsOverlay =
+							{
+								"metadata": {
+									"version" : 1.0,
+									"type" : "overlay",
+									"generator" : "TADkit"
+								},
+								"object" : {
+									"uuid" : uuid4.generate(),
+									"id" : overlays.loaded.length,
+									"title" : track,
+									"source" : "igvJs track",
+									"url" : "local",
+									"description" : "igvJs track overlay", 
+									"type" : "igvJs",
+									"format" : "variable",
+									"components" : 2,
+									"name" : track,
+									"state" : {
+										"index" : 0, // make real index???
+										"overlaid" : false
+									}
+								},
+								"palette" : [],
+								"data" : [],
+								"colors" : {
+									"particles" : [],
+									"chromatin" : [],
+									"network" : {
+										"RGB" : [],
+										"alpha" : []
+									}
+								}
+							};
+			var totallength;
+			var k, max_val, min_val;
+			var j = 0;
+			var l = 0;
+			
+			for(k=0;k<$scope.settings.current.segmentsCount;k++) {
+				igvJsOverlay.colors.chromatin[k] = "gray";
+			}
+
+			var featureColor = [];
+			var scored_color = false;
+			var motifcolor;
+			var feature;
+			var nbrmotif;
+			var tmpfeature = [];
+			angular.forEach(features, function(feature) {
+				if(typeof feature.color == 'undefined') {
+					if(typeof feature.score !== 'undefined') featureColor.push(feature.score);
+					if(typeof feature.value !== 'undefined') featureColor.push(feature.value);
+					scored_color = true;
+				} else {
+					featureColor.push(feature.color);
+				}
+			});
+			if(scored_color) {
+				var hexEnd = '#0000ff';
+				var hexStart = '#ffffff';
+				var first_start = 0;
+				var n = 0;
+				l = 0;
+				while(n<featureColor.length) {
+					totallength = 0;
+					motifcolor = 0;
+					nbrmotif = 0;
+					first_start = features[n].start;
+					while(totallength < 1 && n < featureColor.length) {
+						feature = features[n];
+						totallength = (feature.end - first_start)/$scope.settings.current.segmentLength;
+						motifcolor = motifcolor + parseFloat(featureColor[n]);
+						nbrmotif++;
+						n++;
+					}
+					tmpfeature.push(motifcolor);
+				}
+				max_val = Math.max.apply(Math, tmpfeature);
+				min_val = Math.min.apply(Math, tmpfeature);
+				
+				n = 0;
+				l = 0;
+				while(n<featureColor.length) {
+					totallength = 0;
+					motifcolor = 0;
+					first_start = features[n].start;
+					while(totallength < 1 && n < featureColor.length) {
+						feature = features[n];
+						totallength = (feature.end - first_start)/$scope.settings.current.segmentLength;
+						motifcolor = motifcolor + parseFloat(featureColor[n]);
+						n++;
+					}
+					featureColor[l] = d3.interpolateHcl(hexStart, hexEnd)((motifcolor-min_val)/(max_val-min_val));
+					j = Math.round((first_start - $scope.settings.current.chromStart[$scope.settings.current.chromIdx])/$scope.settings.current.segmentLength);
+					for(k=j;k<(j+Math.round(totallength)) && k<$scope.settings.current.segmentsCount;k++) {
+						igvJsOverlay.colors.chromatin[k] = featureColor[l];
+					}
+					l++;
+				}
+			} else {
+				angular.forEach(features, function(feature) {
+					j = Math.round((feature.start - $scope.settings.current.chromStart[$scope.settings.current.chromIdx])/$scope.settings.current.segmentLength);
+					totallength = Math.round((feature.end - feature.start)/$scope.settings.current.segmentLength);
+					for(k=j;k<(j+totallength) && k<$scope.settings.current.segmentsCount;k++) {
+						igvJsOverlay.colors.chromatin[k] = featureColor[l];
+					}
+					l++;
+				});
+			}
+			var newOverlay = Overlays.addDirect(igvJsOverlay);
+			var overlay = overlays.loaded[newOverlay];
+			
+			overlay.colors.particles = [];
+			//overlay.colors.network.RGB = Networks.linePiecesRGB(overlay, $scope.settings.current.edgesCount);
+			//overlay.colors.network.alpha = Networks.linePiecesAlpha(overlay, $scope.settings.current.edgesCount);
+			overlay.colors.network.RGB = [];
+			overlay.colors.network.alpha = [];
+			$scope.toggleOverlay(newOverlay);
+			//Overlays.setOverlaid(newOverlay);
+			//Overlays.set(newOverlay);
+			//$scope.currentoverlay = Overlays.set(newOverlay);
+		};
+		$scope.toggleOverlay = function(index) {
+			$scope.overlaid = Overlays.getOverlay(index).object.state.overlaid;
+			if (!$scope.overlaid) {
+				Overlays.setOverlaid(index);
+				Overlays.set(index);
+				$scope.currentoverlay = Overlays.getOverlay();
+			} else {
+				Overlays.setOverlaid(originalOverlay);
+				Overlays.set(originalOverlay);
+				$scope.currentoverlay = Overlays.getOverlay();
+			}
+			//$scope.$apply($scope.currentoverlay.colors.chromatin);
+			//$scope.toggleColor($scope.currentoverlay.colors.chromatin);
+			$scope.toggleColor($scope.currentoverlay);
+			// $scope.overlay.object.state.overlaid = !$scope.overlay.object.state.overlaid;
+		};
+		$scope.removeOverlay =  function(track) {
+			var overlays = Overlays.get();
+			angular.forEach(overlays.loaded, function(overlay) {
+				if (overlay.object.title === track) {
+					$scope.toggleOverlay(overlay.object.state.index);
+				}
+
+			});
+		};
+		/* 
+		Creation of igvjs javascript object
+		*/
+		$scope.myIgv = igv.createBrowser($scope.igvDiv, $scope.igvOptions);
+		
+		// Disable search input
+		//$scope.myIgv.$searchInput.off('change');
+        
+		// Hide search icon
+		//var search_icon = angular.element(document.querySelector('.igv-fa-search'))[0];
+		var search_icon = angular.element(document.querySelector('.igv-search-container'))[0];
+		$(search_icon).hide();
+		// Show center guide by default. The centerguide will be tadkit position in the 2D and 3D
+		$scope.myIgv.centerGuide.$centerGuideToggle.click();
+		
+		
+		/*
+		Create div indicating selected tad in the browser.
+		#tad-highlight-tadkit should be styled in the main css
+		*/
+		var d = angular.element("<div id=\"tad-highlight-tadkit\" style=\"width='0px;';display=none;\"></div>");
+		var trackContainer = angular.element($scope.myIgv.trackContainerDiv);
+		trackContainer.append(d);
+		
+		var dl = angular.element("<div id=\"trackbar-tadkit-left-mark\" style=\"display=none\"></div>");
+		trackContainer.append(dl);
+		var dr = angular.element("<div id=\"trackbar-tadkit-right-mark\" style=\"display=none\"></div>");
+		trackContainer.append(dr);
+		
+		/*
+		Main function moving and resizing the #tad-highlight-tadkit depending on the current tad
+		*/
+		$scope.updateTadkitTAD = function() {
+        	if(typeof($scope.settings.current.tad_selected) != 'undefined' && $scope.settings.current.tad_selected!=-1) {
+        		/* Look for the referenceFrame of the reference sequence.
+        		referenceFrame contains:
+        			start: the genomic position corresponding to the left border of the browser
+        			bpPerPixel: corresponding base pairs per 1 pixel
+        		*/
+        		var genomicState = _.first($scope.myIgv.genomicStateList);
+            	var referenceFrame = genomicState.referenceFrame;
+        		// Compute left position and width of the #tad-highlight-tadkit
+        		if(typeof(referenceFrame) != 'undefined') {
+	            	//trackPane.style.backgroundColor = "rgba(0,0,0,0.05)";
+	            	var start_tad = $scope.data.tad_data.tads[$scope.settings.current.tad_selected][1];
+	            	var end_tad = $scope.data.tad_data.tads[$scope.settings.current.tad_selected][2];
+	            	
+	            	var leftpos = Math.round((start_tad-referenceFrame.start)/referenceFrame.bpPerPixel);
+	                d.css("left",Math.floor(leftpos+50) + "px");
+	                var rightpos = Math.round((end_tad-referenceFrame.start)/referenceFrame.bpPerPixel);
+	                d.css("width",Math.floor(rightpos-leftpos) + "px");
+	                d.css("display","block");
+        		}
+        		
+                
+            } else {
+            	//trackPane.style.backgroundColor = "";
+            	d.css("width","0px");
+            	d.css("display","none");
+            	
+            }
+        };
+
+        $scope.myIgv.zoomHandlers = {
+                in: {
+                    click: function (e) {
+                        $scope.myIgv.zoomIn();
+                    }
+                },
+                out:{
+                    click: function (e) {
+                        $scope.myIgv.zoomOut();
+                    }
+                }
+            };
+        
+        $scope.synchronizeViewports = function(marks) {
+
+        	var genomicState,
+        		mainGenomicState,
+        		offset,
+	            viewportWidth,
+	            referenceFrame,
+	            resolution,
+	            start,
+	            end;
+	    	
+        	resolution = $scope.settings.current.segmentLength*$scope.settings.current.particleSegments;
+        	mainGenomicState = $scope.myIgv.genomicStateList[0];
+        	viewportWidth = igv.browser.viewportContainerWidth()/mainGenomicState.locusCount;
+        	offset = (mainGenomicState.referenceFrame.bpPerPixel * viewportWidth) + mainGenomicState.referenceFrame.start;
+        	offset -= ($scope.settings.current.chromEnd[0]-$scope.settings.current.chromStart[0]);
+        	
+        	genomicState = $scope.myIgv.genomicStateList[1];
+	    	referenceFrame = genomicState.referenceFrame;
+        
+    		referenceFrame.bpPerPixel = mainGenomicState.referenceFrame.bpPerPixel;
+    		start = ($scope.settings.current.chromStart[1]-1*resolution + offset);
+    		start = Math.max(0, start);
+    		referenceFrame.start = start;
+
+	    	for(var t=0;t<$scope.myIgv.trackViews.length;t++) {
+    			$scope.myIgv.trackViews[t].update();
+    		}
+	    	//$scope.myIgv.update();
+        };
+        
+        $scope.$watch('settings.current.hic_position', function(newPos, oldPos) {
+            if(!angular.equals(newPos, oldPos) && newPos != $scope.settings.current.position) {
+            	$scope.myIgv.goto(($scope.settings.current.chrom),newPos);
+            	
+            }    
+        });            
+        $scope.$watch('settings.current.chromosomeIndexes', function( newValue, oldValue ) {
+			if ( newValue !== oldValue ) {
+				
+				var igvjs_go = [];
+				var resolution = $scope.settings.current.segmentLength*$scope.settings.current.particleSegments;
+				var span_region = $scope.settings.current.particlesCount*resolution;
+				//var offset = 0;
+				igvjs_go.push($scope.settings.current.chromosomeIndexes[0]);
+				if(!$scope.view.settings.leading_chr) igvjs_go[0] = igvjs_go[0].replace('chr','');
+				
+				if($scope.settings.current.chromosomeIndexes.length!=2) { 
+					igvjs_go[0] += ':' + ($scope.settings.current.chromStart[0]) + '-' + ($scope.settings.current.chromStart[0]+span_region);
+					
+			    } else {
+			    	span_region = $scope.settings.current.chromEnd[0]-$scope.settings.current.chromStart[0];
+			    	igvjs_go[0] += ':' + ($scope.settings.current.chromStart[0]) + '-' + ($scope.settings.current.chromStart[0]+span_region);
+					
+					igvjs_go.push($scope.settings.current.chromosomeIndexes[1]);
+					if(!$scope.view.settings.leading_chr) igvjs_go[1] = igvjs_go[1].replace('chr','');
+					igvjs_go[1] += ':' + ($scope.settings.current.chromStart[1]) + '-' + ($scope.settings.current.chromStart[1]+span_region);
+					
+				}
+					
+				$scope.myIgv.parseSearchInput(igvjs_go.join(' '));
+		    	
+		    	var igvExtraDivs;
+		    	var d;
+		    	var txts = [];
+		    	var parents = [];
+		    	igvExtraDivs = document.getElementsByClassName('igv-viewport-content-ruler-div');
+
+		    	for(d = 0; d<igvExtraDivs.length;d++) {
+		    		txts.push(igvExtraDivs[d].innerHTML);
+		    		parents.push(angular.element(igvExtraDivs[d]).parent());
+		    		(igvExtraDivs[d]).style.display = "none";
+		    	
+		    	}
+		    	for(d = 0; d<txts.length;d++) {
+		    		angular.element(igvExtraDivs[d]).remove();
+		    		var newEle = angular.element("<div class='igv-viewport-content-ruler-div'>"+txts[d]+"</div>");
+				    angular.element(parents[d]).append(newEle);
+		    	}
+		    		
+		    	igvExtraDivs = document.getElementsByClassName('igv-viewport-fa-close');
+		    	for(d = 0; d<igvExtraDivs.length;d++) {
+		    		(igvExtraDivs[d]).style.display = "none";
+		    	}
+		    	Track_data.clear();
+		    	$scope.updateFeaturesList();
+		    	//var genomicState = $scope.myIgv.genomicStateList[0];
+	    		//var referenceFrame = genomicState.referenceFrame;
+		    	//$scope.locuschange(referenceFrame, igvjs_go[0]);
+		    	//$scope.synchronizeViewports(newValue);
+		    	
+//		    	var viewportWidth = $scope.myIgv.viewportContainerWidth();
+//		    	var viewport;
+//		    	for(var l = 0; l<$scope.settings.current.chromosomeIndexes.length;l++) {
+//		    		viewport = igv.Viewport.viewportsWithLocusIndex(l);
+//		    		for(var v = 0; v<viewport.length;v++) {
+//			            viewport[v].setWidth(viewportWidth*parts[l]/tot_part);
+//			        }
+//		    	}
+//		    	var genomicState = _.first($scope.myIgv.genomicStateList);    
+//		        var referenceFrame = genomicState.referenceFrame;
+//		        var viewportWidth = Math.floor($scope.myIgv.viewportContainerWidth()/genomicState.locusCount);
+//		    	//referenceFrame.bpPerPixel = span_region/(viewportWidth*parts[0]/tot_part);
+//		    	var px_start = ($scope.settings.current.chromStart[$scope.settings.current.chromIdx]-referenceFrame.start)/referenceFrame.bpPerPixel;
+//				var px_end = ($scope.settings.current.chromEnd[$scope.settings.current.chromIdx]-referenceFrame.start)/referenceFrame.bpPerPixel;
+//				var centerBP = referenceFrame.start + referenceFrame.bpPerPixel * (viewportWidth/2);
+//
+//				
+//				$scope.updatePosition(centerBP, px_start+50 , px_end+50);
+
+            }    
+        });            
+        /*
+         markers_position gets updated when we click on the 2D panel with the genomic positions that are interacting in the
+         clicked position.
+         Listen for left and right markers positions and then move them to the genomic position in the browser.
+         */
+        $scope.$watch('settings.current.markers_position', function( newValue, oldValue ) {
+			if ( newValue !== oldValue) {
+				if ( angular.isUndefined($scope.settings.current.markers_position) || newValue[0] === -1 || newValue[1] === -1) {
+					$scope.hideTadkitMarkers();
+	        	} else {
+	        		if($scope.settings.current.chromosomeIndexes.length===2) $scope.synchronizeViewports();
+	        		//if($scope.settings.current.chromosomeIndexes.length<3) 
+	        		$scope.updateTadkitMarkers(newValue,$scope.settings.current.markers_chr);
+	        		
+	        	}
+			}
+		});
+		$scope.$watch('myIgv.trackViews.length', function( newValue, oldValue ) {
+			if ( newValue !== oldValue) {
+				$scope.updateFeaturesList();  
+			}
+		});
+
+        $scope.hideTadkitMarkers = function() {
+        	dr.css("display","none");
+        	dl.css("display","none");
+        	$scope.settings.current.markers_position = undefined;
+        };
+        $scope.updateTadkitMarkers = function(markerspos,markerschrom) {
+
+        	$scope.updateFeaturesList();
+
+        	var genomicState = _.first($scope.myIgv.genomicStateList);
+        	var referenceFrame = genomicState.referenceFrame;
+        	var viewportWidth = igv.browser.viewportContainerWidth()/genomicState.locusCount;
+        	var resolution = $scope.settings.current.segmentLength*$scope.settings.current.particleSegments;
+        	var offset = 0;
+        	if($scope.settings.current.chromosomeIndexes.length == 2 && markerschrom[1] != $scope.settings.current.chromosomeIndexes[0]) {
+        		offset = referenceFrame.bpPerPixel*Math.floor($scope.myIgv.viewportContainerWidth()/genomicState.locusCount);
+        	}
+    		var leftpx = (markerspos[1]+offset-referenceFrame.start)/referenceFrame.bpPerPixel; 
+        	dl.css("display","block");
+        	dl.css("left",Math.floor(leftpx+50) + "px");
+        	dl.css("position","absolute");
+        	
+        	offset = 0;
+        	if($scope.settings.current.chromosomeIndexes.length == 2 && markerschrom[0] != $scope.settings.current.chromosomeIndexes[0]) {
+        		var nextgenomicState = $scope.myIgv.genomicStateList[1];
+            	var nextreferenceFrame = nextgenomicState.referenceFrame;
+            	
+        		//offset = referenceFrame.bpPerPixel*Math.floor($scope.myIgv.viewportContainerWidth()/genomicState.locusCount);
+        		offset = (referenceFrame.bpPerPixel * viewportWidth) + referenceFrame.start;
+            	offset -= nextreferenceFrame.start -($scope.settings.current.chromStart[1]);
+            	offset = Math.max(0, offset);
+        	}
+        	var rightpx = (markerspos[0]+offset-referenceFrame.start)/referenceFrame.bpPerPixel; 
+        	dr.css("display","block");
+        	dr.css("left",Math.floor(rightpx+50) + "px");
+        	dr.css("position","absolute");
+        };
+
+        $scope.getFeatures = function(track_name, track_i) {
+        	$scope.myIgv.trackViews.forEach(function (tV) {
+		  		if(tV.track.name == track_name) {
+		  			var i = 0;
+		  			tV.browser.genomicStateList.forEach(function (genomicState) {
+		  			//for(var i = 0; i<tV.browser.genomicStateList.length;i++) {
+			  			//var genomicState = _.first(tV.browser.genomicStateList);
+		  				//var genomicState = tV.browser.genomicStateList[i];
+			        	var referenceFrame = genomicState.referenceFrame;
+						// get features and add them in Track_data
+		               	tV.track.getFeatures(referenceFrame.chrName, $scope.settings.current.chromStart[i], $scope.settings.current.chromEnd[i], referenceFrame.bpPerPixel).then(function (features) {
+		                	if (features) {
+		                		Array.prototype.unique = function() {
+								    var a = this.concat();
+								    for(var i=0; i<a.length; ++i) {
+								        for(var j=i+1; j<a.length; ++j) {
+								            if(a[i] === a[j])
+								                a.splice(j--, 1);
+								        }
+								    }
+
+								    return a;
+								};
+		                       	track_data[track_i].feature = track_data[track_i].feature.concat(features).unique();
+		                       	
+		                    }
+		               	}).catch(function (error) {
+		                    if (error instanceof igv.AbortLoad) {
+		                    	console.log("Aborted ---");
+		                    } else {
+		                        igv.presentAlert(error);
+		                    }
+		                });
+		               	i++;
+		  			});
+				}
+        	});
+        };
+
+        $scope.updateFeaturesList = function() {
+        	$scope.myIgv.trackViews.forEach(function (tV) {
+        		if(tV.track.id != 'ruler' && tV.track.id != 'sequence') {
+        			var found = false;
+        			for(var i=0;i<track_data.length;i++) {
+        				if(track_data[i].track_name == tV.track.name) found=true;
+        			}
+        			if(!found) {
+        				var tdata = {
+							track_name: tV.track.name,
+							pos: [],
+							feature: []
+						};
+						track_data.push(tdata);
+        				$scope.getFeatures(tV.track.name,track_data.length-1);
+        			}
+        		}
+        	});
+        };
+        
+        /*
+        igvjs developers expose an event when the browser changes locus.
+        We profit from it to update tadkit position in the 2D and 3D panels
+        */
+        //$scope.myIgv.on('locuschange', function (refFrame, label) {
+        $scope.locuschange = function(refFrame, label) {
+        	
+
+        	$scope.updateFeaturesList();
+
+        	var genomicState = _.first($scope.myIgv.genomicStateList);
+        	var referenceFrame = genomicState.referenceFrame;
+        	var viewportWidth = Math.floor($scope.myIgv.viewportContainerWidth()/genomicState.locusCount);
+//        	var viewport = igv.Viewport.viewportsWithLocusIndex(0);
+//        	var viewportWidth = Math.floor($scope.myIgv.viewportContainerWidth());
+//        	if(viewport.length>0) {
+//        		var parts = [];
+//				var resolution = $scope.settings.current.segmentLength*$scope.settings.current.particleSegments;
+//				var tot_part = 0;
+//				for(var i = 0; i<$scope.settings.current.chromosomeIndexes.length;i++) {
+//					parts.push(Math.round($scope.settings.current.chromEnd[i]/resolution)-Math.round($scope.settings.current.chromStart[i]/resolution)+1);
+//					tot_part += parts[i];
+//				}
+//        		viewportWidth = viewportWidth*parts[0]/tot_part;
+//        	}
+        	
+            // window center (base-pair units)
+            var centerBP = referenceFrame.start + referenceFrame.bpPerPixel * (viewportWidth/2);
+            var ps = (centerBP-referenceFrame.start);
+            var resolution = $scope.settings.current.segmentLength*$scope.settings.current.particleSegments;
+            var span_region = 0;
+			for(var i = 0; i<$scope.settings.current.chromosomeIndexes.length;i++) {
+				span_region += $scope.settings.current.chromEnd[i] - $scope.settings.current.chromStart[i];			
+			}
+			span_region += $scope.settings.current.chromStart[0];
+			
+            /* 
+            We limit the left border of the browser so the center guide cannot go further
+            than the start of our chromatin model*/
+            if($scope.settings.current.chromStart[$scope.settings.current.chromIdx]>centerBP) {
+				if($scope.settings.current.chromStart[$scope.settings.current.chromIdx]-ps<=0) {
+					//referenceFrame.start = 0;
+					referenceFrame.start = $scope.settings.current.chromStart[$scope.settings.current.chromIdx]-ps;
+				} else {
+					referenceFrame.start = $scope.settings.current.chromStart[$scope.settings.current.chromIdx]-ps;
+				}
+			}
+			/* 
+			We limit the right border of the browser so the center guide cannot go further
+            than the end of our chromatin model.
+			I haven't found other way than limiting artificially the length of the whole chromosome.
+            */
+			var igv_chrom = $scope.myIgv.genome.getChromosome(referenceFrame.chrName);
+			//igv_chrom.bpLength = ($scope.settings.current.chromEnd[$scope.settings.current.chromIdx]+($scope.settings.current.chromEnd[$scope.settings.current.chromIdx]-referenceFrame.start));
+			igv_chrom.bpLength = (span_region+(span_region-referenceFrame.start)-resolution);
+			/*
+			Finally inform tadkit about the center genomic position and the position in the screen
+			of the left and right border of our model, so we can synchronize the 2D panel
+			*/
+			var px_start = ($scope.settings.current.chromStart[$scope.settings.current.chromIdx]-referenceFrame.start)/referenceFrame.bpPerPixel;
+			//var px_end = ($scope.settings.current.chromEnd[$scope.settings.current.chromIdx]-referenceFrame.start)/referenceFrame.bpPerPixel;
+			var px_end = (span_region-referenceFrame.start)/referenceFrame.bpPerPixel;
+			
+			$scope.updatePosition(centerBP, px_start+50 , px_end+50);
+					
+			
+			
+		//});
+        };
+        
+        igv.Browser.prototype.updateLocusSearchWithGenomicState = function (genomicState) {
+
+            var self = this,
+                referenceFrame,
+                ss,
+                ee,
+                str,
+                end,
+                chromosome;
+
+            //if (0 === genomicState.locusIndex && 1 === genomicState.locusCount) {
+            if (0 === genomicState.locusIndex) {
+
+                if ('all' === genomicState.locusSearchString.toLowerCase()) {
+
+                    this.$searchInput.val(genomicState.locusSearchString);
+                } else {
+
+                    referenceFrame = genomicState.referenceFrame;
+
+                    if (this.$searchInput) {
+
+                        end = referenceFrame.start + referenceFrame.bpPerPixel * (self.viewportContainerWidth()/genomicState.locusCount);
+
+                        if (this.genome) {
+                            chromosome = this.genome.getChromosome( referenceFrame.chrName );
+                            if (chromosome) {
+                                end = Math.min(end, chromosome.bpLength);
+                            }
+                        }
+
+                        ss = igv.numberFormatter(Math.floor(referenceFrame.start + 1));
+                        ee = igv.numberFormatter(Math.floor(end));
+                        str = referenceFrame.chrName + ":" + ss + "-" + ee;
+                        this.$searchInput.val(str);
+                    }
+                    
+                    this.fireEvent('locuschange', [referenceFrame, str]);
+                    $scope.locuschange(referenceFrame, str);
+                }
+
+            } else {
+                this.$searchInput.val('');
+            }
+
+        };
+        
+        // List to store the status of the overlayed tracks
+        $scope.tracksOverlaid = {};
+        
+        /* 
+        This is a nasty override. Currently there is no way to inject a menu item in track menus.
+        Therefore we override igv.trackMenuItemList to include a new item to overlay the track.
+        It should be updated if it changes in new releases of igvjs.
+        The injected code is properly marked. 
+        */
+        igv.trackMenuItemList = function (popover, trackView) {
+
+            var menuItems = [],
+                all;
+
+            menuItems.push(igv.trackMenuItem(popover, trackView, "Set track name", function () {
+                return "Track Name";
+            }, trackView.track.name, function () {
+
+                var alphanumeric = parseAlphanumeric(igv.dialog.$dialogInput.val());
+
+                if (undefined !== alphanumeric) {
+                    igv.setTrackLabel(trackView.track, alphanumeric);
+                    trackView.update();
+                }
+
+                function parseAlphanumeric(value) {
+
+                    var alphanumeric_re = /(?=.*[a-zA-Z].*)([a-zA-Z0-9 ]+)/,
+                        alphanumeric = alphanumeric_re.exec(value);
+
+                    return (null !== alphanumeric) ? alphanumeric[0] : "untitled";
+                }
+
+            }, undefined));
+
+            menuItems.push(igv.trackMenuItem(popover, trackView, "Set track height", function () {
+                return "Track Height";
+            }, trackView.trackDiv.clientHeight, function () {
+
+                var number = parseFloat(igv.dialog.$dialogInput.val(), 10);
+
+                if (undefined !== number) {
+    // If explicitly setting the height adust min or max, if neccessary.
+                    if (trackView.track.minHeight !== undefined && trackView.track.minHeight > number) {
+                        trackView.track.minHeight = number;
+                    }
+                    if (trackView.track.maxHeight !== undefined && trackView.track.maxHeight < number) {
+                        trackView.track.minHeight = number;
+                    }
+                    trackView.setTrackHeight(number);
+                    trackView.track.autoHeight = false;   // Explicitly setting track height turns off autoHeight
+
+                }
+
+            }, undefined));
+            
+            /*
+            Start of injected code
+            */
+           // Init tracksOverlaid to false
+           if (typeof $scope.tracksOverlaid[trackView.track.id] === "undefined") {
+           	$scope.tracksOverlaid[trackView.track.id] = false;
+           }
+           // Creation of the DOM element of the menu item
+           var apply3D, $e;
+
+           apply3D = '<div class="igv-track-menu-item igv-track-menu-border-top">';
+           if (false === $scope.tracksOverlaid[trackView.track.id]) {
+           	apply3D = apply3D + '<i class="fa fa-check fa-check-shim fa-check-hidden"></i>Apply to 3D</div>';
+           } else {
+           	apply3D = apply3D + '<i class="fa fa-check fa-check-shim"></i>Apply to 3D</div>';
+           }
+           
+           // Handler function when clicking the menu item
+           var clickHandler = function(){
+               if($scope.tracksOverlaid[trackView.track.id]) {
+               	$scope.removeOverlay(trackView.track.id);
+               	$scope.tracksOverlaid[trackView.track.id] = false;
+               } else {
+            	var genomicState = _.first(trackView.browser.genomicStateList);
+               	var referenceFrame = genomicState.referenceFrame;   
+               	// get features and pass them for overlay
+               	trackView.track.getFeatures(referenceFrame.chrName, $scope.settings.current.chromStart[$scope.settings.current.chromIdx], $scope.settings.current.chromEnd[$scope.settings.current.chromIdx], referenceFrame.bpPerPixel).then(function (features) {
+                       if (features) {
+                       	$scope.applyOverlay(trackView.track.id,features);
+                       }
+               	}).catch(function (error) {
+                       if (error instanceof igv.AbortLoad) {
+                           console.log("Aborted ---");
+                       } else {
+                           igv.presentAlert(error);
+                       }
+                   });
+               	$scope.tracksOverlaid[trackView.track.id] = true;
+           	}
+               // Hide menu
+               popover.hide();
+           };
+
+           $e = $(apply3D);
+           $e.click(clickHandler);
+
+           // Add the new menu item to the track menu
+           menuItems = menuItems.concat({ object: $e, init: undefined });
+           /*
+            End of injected code
+            */
+
+           all = [];
+           if (trackView.track.menuItemList) {
+               all = menuItems.concat(igv.trackMenuItemListHelper(trackView.track.menuItemList(popover)));
+           }
+           
+           if (trackView.track.removable !== false) {
+
+               all.push(
+                   igv.trackMenuItem(popover, trackView, "Remove track", function () {
+                       var label = "Remove " + trackView.track.name;
+                       return '<div class="igv-dialog-label-centered">' + label + '</div>';
+                   }, undefined, function () {
+                       popover.hide();
+                       trackView.browser.removeTrack(trackView.track);
+                       // trackView.browser.removeTrackByName(trackView.track.name);
+                   }, true)
+               );
+           }
+
+           return all;
+
+        };     
 	}
 })();
 (function() {
@@ -1726,8 +2665,11 @@
 				scope.update = function(data) {
 					scope.settings.current.particle = Settings.getParticle();
 					scope.settings.current.segment = Settings.getSegment();
-					scope.settings.current.segmentLower = scope.settings.current.position - (scope.settings.current.segment * 5); // * 0.5???
-					scope.settings.current.segmentUpper = scope.settings.current.position + (scope.settings.current.segment * 5); // * 0.5???
+					var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments;
+					//scope.settings.current.segmentLower = scope.settings.current.position - (scope.settings.current.segment * 5); // * 0.5???
+					scope.settings.current.segmentLower = (scope.settings.current.particle)*resolution+scope.settings.current.chromStart[scope.settings.current.chromIdx];
+					//scope.settings.current.segmentUpper = scope.settings.current.position + (scope.settings.current.segment * 5); // * 0.5???
+					scope.settings.current.segmentUpper = (scope.settings.current.particle+1)*resolution+scope.settings.current.chromStart[scope.settings.current.chromIdx];
 					
 				};
 
@@ -1775,7 +2717,7 @@
 		.module('TADkit')
 		.controller('PanelInspectorController', PanelInspectorController);
 
-	function PanelInspectorController($scope, $mdDialog, Settings) {
+	function PanelInspectorController($scope, $mdDialog, Settings, Proximities, Restraints, Overlays, Datasets, Hic_data) {
 
 		$scope.$watch('settings.views.scene_width', function( newValue, oldValue ) {
 			if ( newValue !== oldValue ) {
@@ -1798,23 +2740,57 @@
 
 	      $scope.selectedIndex = 0;
 	      
-		
+	      /*$scope.atPosition = function(feature) {
+				if ($scope.$parent.settings.current.segmentUpper >= feature.start && $scope.$parent.settings.current.segmentLower <= feature.end && feature.chr.replace('chr','')==$scope.settings.current.chrom.replace('chr','')) return true;
+				return false;
+			};
+			$scope.atLeftPosition = function(feature) {
+				if(angular.isUndefined($scope.settings.current.markers_position)) return;
+				var segment_span = ($scope.$parent.settings.current.segmentUpper - $scope.$parent.settings.current.segmentLower)/2;
+			
+				if ($scope.settings.current.markers_position[1]+segment_span >= feature.start && $scope.settings.current.markers_position[1]-segment_span <= feature.end && 
+						feature.chr.replace('chr','') == $scope.settings.current.markers_chr[1].replace('chr','') 
+				) return true;
+				return false;
+			};
+			$scope.atRightPosition = function(feature) {
+				if(angular.isUndefined($scope.settings.current.markers_position)) return;
+				var segment_span = ($scope.$parent.settings.current.segmentUpper - $scope.$parent.settings.current.segmentLower)/2;
+				
+				if ($scope.settings.current.markers_position[0]+segment_span >= feature.start && $scope.settings.current.markers_position[0]-segment_span <= feature.end && 
+						feature.chr.replace('chr','') == $scope.settings.current.markers_chr[0].replace('chr','')		
+				) return true;
+				return false;
+			};*/
+	      
 		$scope.atPosition = function(feature) {
-			if ($scope.$parent.settings.current.segmentUpper >= feature.start && $scope.$parent.settings.current.segmentLower <= feature.end) return true;
+			if ($scope.$parent.settings.current.segmentUpper >= feature.start && $scope.$parent.settings.current.segmentLower <= feature.end && feature.chr.replace('chr','')==$scope.settings.current.chrom.replace('chr','')) return true;
 			return false;
 		};
 		$scope.atLeftPosition = function(feature) {
 			if(angular.isUndefined($scope.settings.current.markers_position)) return;
-			var segment_span = ($scope.$parent.settings.current.segmentUpper - $scope.$parent.settings.current.segmentLower)/2;
-
-			if ($scope.settings.current.markers_position[1]+segment_span >= feature.start && $scope.settings.current.markers_position[1]-segment_span <= feature.end) return true;
+			var resolution = $scope.data.object.resolution;
+			var pos =  $scope.settings.current.markers_position[1];
+			//for( var i = 0;  i < $scope.settings.current.chromosomeIndexes.indexOf($scope.settings.current.markers_chr[1]); i++ ) pos += ($scope.settings.current.chromEnd[i]-$scope.settings.current.chromStart[i]+resolution);
+			var particle = Settings.getParticle(pos);
+			var segmentLower = (particle-1)*resolution+$scope.settings.current.chromStart[$scope.settings.current.chromosomeIndexes.indexOf($scope.settings.current.markers_chr[1])];
+			var segmentUpper = (particle)*resolution+$scope.settings.current.chromStart[$scope.settings.current.chromosomeIndexes.indexOf($scope.settings.current.markers_chr[1])];
+			if (segmentUpper >= feature.start && segmentLower <= feature.end && 
+					feature.chr.replace('chr','') == $scope.settings.current.markers_chr[1].replace('chr','') 
+			) return true;
 			return false;
 		};
 		$scope.atRightPosition = function(feature) {
 			if(angular.isUndefined($scope.settings.current.markers_position)) return;
-			var segment_span = ($scope.$parent.settings.current.segmentUpper - $scope.$parent.settings.current.segmentLower)/2;
-			
-			if ($scope.settings.current.markers_position[0]+segment_span >= feature.start && $scope.settings.current.markers_position[0]-segment_span <= feature.end) return true;
+			var resolution = $scope.data.object.resolution;
+			var pos =  $scope.settings.current.markers_position[0];
+			//for( var i = 0;  i < $scope.settings.current.chromosomeIndexes.indexOf($scope.settings.current.markers_chr[0]); i++ ) pos += ($scope.settings.current.chromEnd[i]-$scope.settings.current.chromStart[i]+resolution);
+			var particle = Settings.getParticle(pos);
+			var segmentLower = (particle-1)*resolution+$scope.settings.current.chromStart[$scope.settings.current.chromosomeIndexes.indexOf($scope.settings.current.markers_chr[0])];
+			var segmentUpper = (particle)*resolution+$scope.settings.current.chromStart[$scope.settings.current.chromosomeIndexes.indexOf($scope.settings.current.markers_chr[0])];
+			if (segmentUpper >= feature.start && segmentLower <= feature.end && 
+					feature.chr.replace('chr','') == $scope.settings.current.markers_chr[0].replace('chr','') 
+			) return true;
 			return false;
 		};
 		$scope.formatRegionName = function(regionName) {
@@ -1831,13 +2807,13 @@
 			if(!angular.isUndefined(feature.value)) return feature.value;
 		};
 		$scope.interactionDistance = function() {
-			if ( !angular.isUndefined($scope.settings.current.markers_position && $scope.data.length>0)) {
+			if ( !angular.isUndefined($scope.settings.current.markers_position && $scope.currentmodel.data.length>0)) {
 				var LeftPart = Settings.getParticle($scope.settings.current.markers_position[1]);
 				var RightPart = Settings.getParticle($scope.settings.current.markers_position[0]);
 
-				var xd = $scope.data.data[(LeftPart-1)*3] - $scope.data.data[(RightPart-1)*3];
-				var yd = $scope.data.data[(LeftPart-1)*3+1] - $scope.data.data[(RightPart-1)*3+1];
-				var zd = $scope.data.data[(LeftPart-1)*3+2] - $scope.data.data[(RightPart-1)*3+2];
+				var xd = $scope.currentmodel.data[(LeftPart-1)*3] - $scope.currentmodel.data[(RightPart-1)*3];
+				var yd = $scope.currentmodel.data[(LeftPart-1)*3+1] - $scope.currentmodel.data[(RightPart-1)*3+1];
+				var zd = $scope.currentmodel.data[(LeftPart-1)*3+2] - $scope.currentmodel.data[(RightPart-1)*3+2];
 				
 				var dist = Math.round(Math.sqrt( xd*xd + yd*yd + zd*zd ));
 				return dist;
@@ -1845,6 +2821,54 @@
 				return -1;
 			}
 		};
+		$scope.toggleSelection = function toggleSelection(chrom) {
+			
+			var chromosomeIndex = $scope.settings.current.chromosomeIndexes.slice();
+			var idx = chromosomeIndex.indexOf(chrom);
+		    // Is currently selected
+		    if (idx > -1) {
+		    	if(chromosomeIndex.length<2) return;
+		    	chromosomeIndex.splice(idx, 1);
+		    }
+
+		    // Is newly selected
+		    else {
+		    	chromosomeIndex.push(chrom);
+		    }
+		    var chromStart = [];
+			var chromEnd = [];
+			var sortedIndex = [];
+			var resolution = $scope.data.object.resolution;
+			var chromIdx;
+			var offset = 0;
+			for (var l = 0 ; l < $scope.data.object.chrom.length; l++) {
+				chromIdx = chromosomeIndex.indexOf($scope.data.object.chrom[l]);
+				if(chromIdx > -1) {
+					sortedIndex.push($scope.data.object.chrom[l]);
+					chromStart.push(Math.round($scope.data.object.chromStart[l]/resolution)+offset);
+					chromEnd.push(Math.round($scope.data.object.chromEnd[l]/resolution)+offset);
+				}
+				offset += Math.round($scope.data.object.chromEnd[l]/resolution)-Math.round($scope.data.object.chromStart[l]/resolution);
+			}
+			var dataset = Datasets.getDataset();
+		    var hic_data = Hic_data.set(dataset.hic_data,chromStart,chromEnd);
+		    var currentModel = Datasets.setModel(Datasets.getCentroid(),chromosomeIndex);
+		    if(chromosomeIndex.indexOf($scope.settings.current.chrom)<0) $scope.settings.current.chrom = chromosomeIndex[0];
+		    Settings.set(dataset,chromosomeIndex,$scope.settings.current.chrom);
+			//$scope.current.overlay = Overlays.getOverlay();
+			
+		    var igvDiv = angular.element(document.querySelector('#igvRootDiv'))[0];
+		    var span_width = parseInt(igvDiv.clientWidth)-100;
+		    $scope.settings.current.leftborder = 50;
+		    if(chromosomeIndex.length==2) {
+		    	var first_right_border = (50 + span_width)/chromosomeIndex.length;
+		    	$scope.settings.current.rightborder = first_right_border * ($scope.settings.current.particlesCount/(chromEnd[0]-chromStart[0]));
+		    } else $scope.settings.current.rightborder = (50 + span_width);
+			
+		    $scope.settings.current.chromosomeIndexes = sortedIndex;
+		    
+		    
+		 };
 		/*
 		$scope.dataset_info = '<div class="component-caption" layout="column" layout-align="left center">'+
 				'<h2>'+$scope.data.object.title+'</h2><table>'+
@@ -1883,7 +2907,7 @@
 			var output = '<div class="component-caption" layout="column" layout-align="left center">'+
 			'<table>';
 			for (var property in item) {
-				if (['name','id','value','score','strand','start','end'].indexOf(property) >= 0) 
+				if (['name','id','chr','value','score','strand','start','end'].indexOf(property) >= 0) 
 					output += '<tr><td><b>'+property+':</b></td><td>'+item[property]+'</td></tr>';
 			}
 			output += '</table>'+
@@ -1907,6 +2931,7 @@
 				state: '=',
 				view: '=',
 				data: '=',
+				currentmodel: '=',
 				settings:'='
 			},
 			templateUrl: 'assets/templates/panel-inspector.html',
@@ -2161,7 +3186,7 @@
 
 	// constructor for chromatin model instances
 	function Chromatin(Paths, PathControls, ColorConvert) {
-		return function(data, colors, settings, resolution_scale) {
+		return function(data, colors, view_settings, resolution_scale, settings) {
 			// console.log(colors);
 
 			var defaults = {
@@ -2182,44 +3207,11 @@
 					"100000" : 5
 				}
 			};		
-			settings = settings || {};
-			angular.extend(this, angular.copy(defaults), settings);
+			view_settings = view_settings || {};
+			angular.extend(this, angular.copy(defaults), view_settings);
 
-			// Convert Data to Vector triplets
-			var geometry = getGeometry(data);
-			for (var g = geometry.vertices.length - 1; g >= 0; g--) {
-				var geometryColor = new THREE.Color(colors[g*20]);
-				geometry.colors.unshift(geometryColor);
-			}
-
-			// Derive path controls from geometry vectors
-			// var pathControls = getPathControls( geometry.vertices );
-			var pathControls = PathControls.cubic(geometry.vertices, this.pathClosed);
-
-//			var controlsGeom = new THREE.Geometry();
-//			for ( var h = 0; h < pathControls.vertices.length; h ++ ) {
-//				controlsGeom.vertices.push( new THREE.Vector3( pathControls.vertices[h].x, pathControls.vertices[h].y, pathControls.vertices[h].z || 0) );
-//				var vertexColor = pathControls.colors[h];
-//				controlsGeom.colors.push(vertexColor);
-//			}
-//			controlsGeom.name = "controlsGeom";
-
-			// Set number of Particles
-			if (this.particles === 0) this.particles = geometry.vertices.length; //pathControls.vertices.length - 1;
-			// Derive chromatin geometry path segments
-			var pathSegments = this.particles * this.particleSegments; // same as segmentsCount...
-			this.pathSegments = pathSegments;
-
-			/*** TODO: Calculate PathSegments based on number of base pairs in the model ***/
-			var cubicPath = Paths.cubicBezier(pathControls.vertices, pathSegments, this.pathClosed);
-			var cubicGeom = cubicPath.createPointsGeometry(pathSegments);
-			//for (var j = cubicGeom.vertices.length - 1; j >= 0; j--) {
-			//	var cubicGeomColor = new THREE.Color(colors[j]);
-			//	cubicGeom.colors.unshift(cubicGeomColor);
-			//}
-			var j;
-			cubicGeom.name = "cubicGeom";
-
+			//var chromBreaks = [];
+			var resolution = settings.segmentLength*settings.particleSegments;
 			// ********************************************
 			// * MODEL SCALE = 1unit : 1nanometer         *
 			// * 1 micrometer (µm) = 1000 nanometers (nm) *
@@ -2229,138 +3221,163 @@
 			// Nucleus diameter == 6 µm (3 - 10 micrometers) = 3000 units radius
 			// var nucelusRadius = 20;
 			// Chromatin diameter == 10nm
-			var pathLength = cubicPath.getLength();
+			//var pathLength = cubicPath.getLength();
 			var chromatinRadius = 5; // 10nm * 0.5
 			// Chromatin density == 1080 BP : 11nm
 			var chromatinLength = this.genomeLength * 11 / 1080;
 			//this.radius = (pathLength * chromatinRadius) / chromatinLength;
 			this.radius = resolution_scale*chromatinRadius;
 			//console.log(this.radius);
+			
+			// Convert Data to Vector triplets
+			var geometry = getGeometry(data);
+			for (var g = geometry.vertices.length - 1; g >= 0; g--) {
+				var geometryColor = new THREE.Color(colors[g*20]);
+				geometry.colors.unshift(geometryColor);
+			}
+			geometry.computeBoundingSphere();
+			geometry.center();
 
+	//			var transparentMaterial = new THREE.MeshLambertMaterial({
+	//			  transparent:true, 
+	//			  opacity:0.0
+	//			});
+			var solidMaterial = new THREE.MeshLambertMaterial({
+			    color: 0xffffff,
+		        //shading: THREE.FlatShading,
+		        //side: THREE.DoubleSide,
+		        wireframe: false,
+		        transparent: false,
+		        vertexColors: THREE.FaceColors, // CHANGED
+		        overdraw: true
+		    });
 
-			// Generate Chromatin model
 			var chromatinFiber = new THREE.Object3D(); // unmerged network
 			var i;
+			var colori = 0;
+			var chr_bins,pathControls,pathSegments,cubicPath,cubicGeom, chromatinGeometry, tubeMesh, newChromatinColor;
+			var j;
+			var offset = 0;
+			for (var l = 0 ; l < settings.chromosomeIndexes.length; l++) {
+				chr_bins = Math.round((settings.chromEnd[l]-settings.chromStart[l])/resolution);
+				//chromBreaks.push(offset);
 			
-			var chromatinGeometry;
-			if(settings.tubed) {
-				chromatinGeometry = new THREE.TubeGeometry(cubicPath, pathSegments, this.radius, 8, this.pathClosed);
-				
-				
-//					
-//				var tubeMesh = THREE.SceneUtils.createMultiMaterialObject( chromatinGeometry, [
-//				new THREE.MeshLambertMaterial({
-//					color: 0xff0000,
-//					vertexColors: THREE.FaceColors
-//				}),
-//				new THREE.MeshBasicMaterial({
-//					color: 0x000000,
-//					opacity: 0.3,
-//					wireframe: true,
-//					transparent: true
-//				})]);
-				
-				chromatinGeometry.dynamic = true;
-				chromatinGeometry.verticesNeedUpdate = true;
-				
-				chromatinGeometry.center();
+				// Derive path controls from geometry vectors
+				// var pathControls = getPathControls( geometry.vertices );
+				pathControls = PathControls.cubic(geometry.vertices.slice(offset,offset+chr_bins), this.pathClosed);
 
-			    var tubeMesh = new THREE.Mesh(chromatinGeometry, new THREE.MeshLambertMaterial({
-			        color: 0xffffff,
-			        //shading: THREE.FlatShading,
-			        //side: THREE.DoubleSide,
-			        wireframe: false,
-			        transparent: false,
-			        vertexColors: THREE.FaceColors, // CHANGED
-			        overdraw: true
-			    }));
-
-			    //for(var k=0;k< chromatinGeometry.faces.length;k++) {
-			    	//if(k%12) chromatinGeometry.faces[k].color.setRGB(1,0,0);
-			    	//else chromatinGeometry.faces[k].color.setRGB(0,0,0);
-			    //	chromatinGeometry.faces[k].color.setRGB(1,0,0);
-				//}
-			    var newChromatinColor;
-			    for (i = 0; i < colors.length; i++) {
-					if(ColorConvert.testIfHex(colors[i]) || colors[i].indexOf('#')===0) {
-						newChromatinColor =  new THREE.Color(colors[i]);	 
-					} else {
-						newChromatinColor =  new THREE.Color(ColorConvert.nameToHex(colors[i]));
-					} 
-					for (j = 0; j < 16; j++) {
-						tubeMesh.geometry.faces[i*16+j].color.set(newChromatinColor);
-					}
-				}
-			 
-			    
-			    tubeMesh.dynamic = true;
-			    tubeMesh.needsUpdate = true;
-			    
-				chromatinFiber.add( tubeMesh );
-				//chromatinFiber.userData = {display:'tube'};
-
-			} else {
-				// Rings
-					chromatinGeometry = new THREE.Geometry(); // to calculate merged bounds
-
-				for ( i = 0 ; i < pathSegments; i++) {
-					// cap if end segment
-					this.endcap = ( i === 0 || i === pathSegments - 1 ) ? false : true ;
-					// color linked to scene scope
+				// Set number of Particles
+				if (this.particles === 0) this.particles += geometry.vertices.length; //pathControls.vertices.length - 1;
+				// Derive chromatin geometry path segments
+				pathSegments = chr_bins * this.particleSegments; // same as segmentsCount...
+				
+				/*** TODO: Calculate PathSegments based on number of base pairs in the model ***/
+				cubicPath = Paths.cubicBezier(pathControls.vertices, pathSegments, this.pathClosed);
+				cubicGeom = new THREE.Geometry().setFromPoints( cubicPath.getPoints() );
+				
+				//cubicGeom.name = "cubicGeom";
+	
+				// Generate Chromatin model
+				
+				if(view_settings.tubed) {
+					chromatinGeometry = new THREE.TubeGeometry(cubicPath, pathSegments, this.radius, 8, this.pathClosed);
+										
+				    tubeMesh = new THREE.Mesh(chromatinGeometry, solidMaterial);
 					
-					var segmentColor = colors[i];
-					var segmentMaterial = new THREE.MeshLambertMaterial({
-						color: segmentColor,
-						emissive: segmentColor,
-						vertexColors: THREE.VertexColors,
-						opacity: 1.0, 
-						transparent: false,
-						wireframe: false
-					});
-					var segment = segmentGeometry(cubicGeom.vertices[i], cubicGeom.vertices[i+1], this );
-					chromatinGeometry.merge(segment);
-					THREE.GeometryUtils.center( chromatinGeometry );
-
-					var chromatinSegment = new THREE.Mesh(segment, segmentMaterial);
-					chromatinSegment.name = "segment-" + (i + 1);
-					chromatinFiber.add(chromatinSegment);
-				}	
+					chromatinGeometry.dynamic = true;
+					chromatinGeometry.verticesNeedUpdate = true;
+					
+					//chromatinGeometry.center();
+					
+				    //for(var k=0;k< chromatinGeometry.faces.length;k++) {
+				    	//if(k%12) chromatinGeometry.faces[k].color.setRGB(1,0,0);
+				    	//else chromatinGeometry.faces[k].color.setRGB(0,0,0);
+				    //	chromatinGeometry.faces[k].color.setRGB(1,0,0);
+					//}
+					
+					
+				    /*for (i = 0; i < colors.length; i++) {
+				    	//if(chromBreaks.indexOf(Math.floor(i/settings.particleSegments))>-1) {
+				    	if(chromBreaks.indexOf(Math.floor(i/this.particleSegments))>-1) {
+				    		for (j = 0; j < 16; j++) {
+				    			if(typeof tubeMesh.geometry.faces[i*16+j] !== 'undefined') tubeMesh.geometry.faces[i*16+j].materialIndex = 1;
+							}
+				    	} else {
+							if(ColorConvert.testIfHex(colors[i]) || colors[i].indexOf('#')===0) {
+								newChromatinColor =  new THREE.Color(colors[i]);	 
+							} else {
+								newChromatinColor =  new THREE.Color(ColorConvert.nameToHex(colors[i]));
+							} 
+							for (j = 0; j < 16; j++) {
+								if(typeof tubeMesh.geometry.faces[i*16+j] !== 'undefined') tubeMesh.geometry.faces[i*16+j].color.set(newChromatinColor);
+							}
+				    	}
+					}*/
+					
+					for (i = 0; i < chromatinGeometry.faces.length; i++) {
+						if(ColorConvert.testIfHex(colors[Math.floor(colori/16)]) || colors[Math.floor(colori/16)].indexOf('#')===0) {
+							newChromatinColor =  new THREE.Color(colors[Math.floor(colori/16)]);	 
+						} else {
+							newChromatinColor =  new THREE.Color(ColorConvert.nameToHex(colors[Math.floor(i/16)]));
+						} 
+						for (j = 0; j < 16; j++) {
+							if(typeof chromatinGeometry.faces[i+j] !== 'undefined') chromatinGeometry.faces[i+j].color.set(newChromatinColor);
+						}
+						colori++;
+					}
+					tubeMesh.geometry.__dirtyColors = true;
+					tubeMesh.geometry.elementsNeedUpdate = true;
+				    tubeMesh.dynamic = true;
+				    tubeMesh.needsUpdate = true;
+				    
+					chromatinFiber.add( tubeMesh );
+					//chromatinFiber.userData = {display:'tube'};
+	
+				} else {
+					// Rings
+						chromatinGeometry = new THREE.Geometry(); // to calculate merged bounds
+	
+					for ( i = 0 ; i < pathSegments; i++) {
+						// cap if end segment
+						this.endcap = ( i === 0 || i === pathSegments - 1 ) ? false : true ;
+						// color linked to scene scope
+						
+						var segmentColor = colors[i];
+						var segmentMaterial = new THREE.MeshLambertMaterial({
+							color: segmentColor,
+							emissive: segmentColor,
+							vertexColors: THREE.VertexColors,
+							opacity: 1.0, 
+							transparent: false,
+							wireframe: false
+						});
+						var segment = segmentGeometry(cubicGeom.vertices[i], cubicGeom.vertices[i+1], this );
+						chromatinGeometry.merge(segment);
+						THREE.GeometryUtils.center( chromatinGeometry );
+	
+						var chromatinSegment = new THREE.Mesh(segment, segmentMaterial);
+						chromatinSegment.name = "segment-" + (i + 1);
+						chromatinFiber.add(chromatinSegment);
+					}	
+				}
+	
+				chromatinGeometry.computeBoundingSphere();
+				//chromatinGeometry.computeBoundingBox();
+				offset += chr_bins;
 			}
 			
+			//tubeMesh.position.x -= objectCenter.x;
+			//tubeMesh.position.y -= objectCenter.y;
+			//tubeMesh.position.z -= objectCenter.z;
 			
-
-			// Visualize Controls
-			// var controlsMaterial = new THREE.LineBasicMaterial({color: "#ff0000",opacity: 0.5});
-			// var controlsOutline = new THREE.Line(controlsGeom, controlsMaterial);
-			// chromatinFiber.add(controlsOutline);
-
-			var cubicMaterial = new THREE.LineBasicMaterial({color: "#0000ff"});
-			var chromatinCubic = new THREE.Line(cubicGeom, cubicMaterial);
-			// chromatinFiber.add(chromatinCubic);
-
-			// Visualize Controls Nodes
-			// var particleMap = null; // render only point
-			// particleMap = THREE.ImageUtils.loadTexture("assets/img/sphere-glossy.png");
-			// var particlesMaterial = new THREE.PointCloudMaterial({
-			// 	// color: "#0000ff",
-   //  			vertexColors: THREE.VertexColors,
-			// 	size: 10,
-			// 	opacity: 1.0,
-			// 	// map: particleMap,
-			// 	// depthTest: true,
-			// 	// alphaTest: true,
-			// 	// transparent: true
-			// });
-			// var chromatinCloud = new THREE.PointCloud(controlsGeom, particlesMaterial);
-			// chromatinFiber.add(chromatinCloud);
-
-			chromatinGeometry.computeBoundingSphere();
-			chromatinFiber.boundingSphere = chromatinGeometry.boundingSphere;
+			//chromatinFiber.boundingSphere = chromatinGeometry.boundingSphere;
+			chromatinFiber.boundingSphere = geometry.boundingSphere;
 			chromatinFiber.name = "Chromatin Fiber";
 			
 			return chromatinFiber;
 		};
 	}
+
 	
 	function getGeometry(data) {
 		var offset = 0, vertex,
@@ -2487,7 +3504,7 @@
 					particles = new Particles( scope.cluster.data[scope.cluster.centroidIndex], scope.view.settings.particles );
 					particles.geometry.center();
 					particles.visible = scope.view.settings.particles.visible;
-					scene.add(particles);
+					//scene.add(particles);
 
 					//GEOMETRY: CLUSTER
 					cluster = new Cluster( scope.cluster.data, scope.cluster.centroidIndex, scope.overlay, scope.view.settings.cluster );
@@ -2583,14 +3600,14 @@
 		.factory('Cluster', Cluster);
 
 	// constructor for cluster models ensemble
-	function Cluster(Color) {
-		return function( data, centroidIndex, overlay, settings ) {
+	function Cluster(Color, Settings) {
+		return function( data, centroidIndex, overlay, cluster_settings ) {
 
 			var defaults = {
 				visible: true,
 			};	
-			settings = settings || {};
-			angular.extend(this, angular.copy(defaults), settings);
+			cluster_settings = cluster_settings || {};
+			angular.extend(this, angular.copy(defaults), cluster_settings);
 
 			// Convert Data (single Model / set of Particles) to Vector triplets
 			var max_radius = 0;
@@ -2598,12 +3615,15 @@
 
 			// Generate Cluster model
 			var clusterEnsemble = new THREE.Object3D(); // unmerged network
-			for ( var i = 0 ; i < data.length; i++) {
-				var modelComponents = data[i];
-				var modelGeometry = getModelGeometry(modelComponents);
-				modelGeometry.colors = overlayColors;
-
-				var modelColor = overlay[i];
+			var chr_bins;
+			var settings = Settings.get();
+			var resolution = settings.current.segmentLength*settings.current.particleSegments;
+			var i;
+			var offset = 0;
+			for ( i = 0 ; i < data.length; i++) {
+				// var geometry = getModelGeometry(data[i]);
+				// geometry.computeBoundingSphere();
+				// geometry.center();
 				var modelMaterial = new THREE.LineBasicMaterial({
 					color: new THREE.Color(parseInt(this.color)),
 					opacity: this.modelOpacity,
@@ -2621,11 +3641,23 @@
 				if (i == centroidIndex) {
 					modelMaterial = centroidMaterial;
 				}
-				var model = new THREE.Line(modelGeometry, modelMaterial);
-				model.name = "model-"+ i;
-				model.geometry.computeBoundingSphere();
-				if(model.geometry.boundingSphere.radius>max_radius) max_radius = model.geometry.boundingSphere.radius;
-				clusterEnsemble.add(model);
+				offset = 0;
+				for (var l = 0 ; l < settings.current.chromosomeIndexes.length; l++) {
+					chr_bins = Math.round((settings.current.chromEnd[l]-settings.current.chromStart[l])/resolution)+1;
+					// Convert Data to Vector triplets
+					var modelComponents = data[i].slice(3*offset,3*(offset+chr_bins));
+					var modelGeometry = getModelGeometry(modelComponents);
+					modelGeometry.colors = overlayColors;
+
+					var model = new THREE.Line(modelGeometry, modelMaterial);
+					model.name = "model-"+settings.current.chromosomeIndexes[l]+"-"+i;
+					model.geometry.computeBoundingSphere();
+					model.geometry.center();
+					if(model.geometry.boundingSphere.radius>max_radius) max_radius = model.geometry.boundingSphere.radius;
+					clusterEnsemble.add(model);
+					offset += chr_bins;
+				}
+				
 			}
 			for ( i = 0 ; i < clusterEnsemble.children.length; i++) {
 				clusterEnsemble.children[i].geometry.center();
@@ -2649,6 +3681,7 @@
 			vertex.z = components[ offset ++ ];
 			modelGeometry.vertices.push( vertex );
 		}
+		modelGeometry.center();
 		return modelGeometry;
 	}
 
@@ -3081,7 +4114,7 @@
 		.module('TADkit')
 		.directive('tkComponentScene', tkComponentScene);
 
-	function tkComponentScene(Particles, Chromatin, Network, Cluster, Datasets, Segments, Settings, Networks, ColorConvert) {
+	function tkComponentScene(Particles, Chromatin, Network, Cluster, Datasets, Overlays, Segments, Settings, Networks, ColorConvert) {
 		return {
 			restrict: 'EA',
 			scope: { 
@@ -3139,7 +4172,7 @@
 							} else {
 								resolution_scale = parseInt(scope.data.object.radius_scale);
 							}
-							chromatin = new Chromatin(scope.currentmodel.data, scope.currentoverlay.colors.chromatin, scope.view.settings.chromatin, resolution_scale);
+							chromatin = new Chromatin(scope.currentmodel.data, scope.currentoverlay.colors.chromatin, scope.view.settings.chromatin, resolution_scale, scope.settings.current);
 							// chromatin = new Chromatin(scope.model.data, scope.overlay.colors.chromatin, scope.view.settings.chromatin);
 							chromatin.visible = scope.view.settings.chromatin.visible;
 							scene.add(chromatin);
@@ -3182,8 +4215,8 @@
 								spheres = new THREE.Object3D();
 								var start_tad, end_tad, radius_cloud, centre_of_mass;
 								for (var i = 0; i < scope.data.tad_data.tads.length; i++) {
-									start_tad = Math.round(((scope.data.tad_data.tads[i][1])-scope.settings.current.chromStart)/resolution);
-			                		end_tad = Math.round((scope.data.tad_data.tads[i][2]-scope.settings.current.chromStart)/resolution);
+									start_tad = Math.round(((scope.data.tad_data.tads[i][1])-scope.settings.current.chromStart[scope.settings.current.chromIdx])/resolution);
+			                		end_tad = Math.round((scope.data.tad_data.tads[i][2]-scope.settings.current.chromStart[scope.settings.current.chromIdx])/resolution);
 			                 		
 			                 		centre_of_mass = new THREE.Vector3();
 									for (var j = start_tad; j <= end_tad; j++) {
@@ -3231,7 +4264,7 @@
 							var models = Datasets.getCluster();
 							var cluster_data = [];
 							for (var k = 0; k < models.length; k++) {
-								var model = Datasets.getModel(models[k]);
+								var model = Datasets.getModel(models[k],scope.settings.current.chromosomeIndexes);
 								var modelData = model.data;
 								if (modelData) {cluster_data.unshift(modelData);}
 									else {console.log("Listed model not found!");}
@@ -3267,7 +4300,7 @@
 						// console.log(element[0].firstChild.children[2].clientWidth);
 
 						if (window.WebGLRenderingContext)
-							renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
+							renderer = new THREE.WebGLRenderer({alpha: true, antialias: false});
 						else
 							renderer = new THREE.CanvasRenderer({alpha: true});					
 						var background = scope.view.settings.background;
@@ -3301,7 +4334,7 @@
 						
 						// AXIS
 						// TODO: Make local axisHelper
-						var axisHelper = new THREE.AxisHelper( scope.view.settings.axis.size );
+						var axisHelper = new THREE.AxesHelper( scope.view.settings.axis.size );
 						axisHelper.visible = scope.view.settings.axis.visible;
 						axisHelper.name = "Axis";
 						scene.add( axisHelper );
@@ -3313,20 +4346,45 @@
 						ambientLight.name = "Scene Ambient Light";
 						scene.add(ambientLight);
 						
-						scope.complete_scene();
-
-						// UPDATE CAMERA TARGET
-						cameraPosition = chromatin.boundingSphere.center;
-						cameraTarget = chromatin.boundingSphere.center;
-						cameraTranslate = chromatin.boundingSphere.radius * scope.view.viewpoint.scale;
-						scope.lookAtTAD(cameraPosition, cameraTarget, cameraTranslate);
-
 						// Point
 						var pointColor = scope.view.settings.lighting.color;
 						var pointIntensity = scope.view.settings.lighting.intensity;
 						pointLight = new THREE.PointLight(pointColor, pointIntensity);
 						pointLight.name = "Scene Light";
 						camera.add(pointLight);
+						
+						if(typeof scope.currentmodel.data !== 'undefined' && scope.currentmodel.data.length>0) {
+							
+							scope.complete_scene();
+						
+							// UPDATE CAMERA TARGET
+							cameraPosition = chromatin.boundingSphere.center;
+							cameraTarget = chromatin.boundingSphere.center;
+							cameraTranslate = chromatin.boundingSphere.radius * scope.view.viewpoint.scale;
+							scope.lookAtTAD(cameraPosition, cameraTarget, cameraTranslate);
+	
+													
+	
+							// EVENT LISTENERS / SCOPE WATCHERS
+							// window.addEventListener( 'resize', scope.onWindowResize, false );
+	
+							/* Watch for changes */
+	
+							// var componentOptions = [
+							// 	 'view.settings.particles.visible',
+							// 	 'view.settings.chromatin.visible',
+							// 	 'view.controls.autoRotate',
+							// 	 'view.settings.axis.visible'
+							// 	 ];
+							// scope.$watchGroup( componentOptions, function( newValues, oldValues ) {
+							// 	angular.forEach( newValues, function(value, index) {
+							// 		if ( newValues[index] !== oldValues[index] ) {
+							// 			console.log( value );
+							// 		}
+							// 	});
+							// });
+						}
+						
 						var lightOffset = cameraTranslate * 1.5; // Up and to the left
 						pointLight.position.set(lightOffset,lightOffset,(lightOffset * -1.0));
 						//pointLight.position.set(lightOffset,lightOffset,(lightOffset * -1.0));
@@ -3339,25 +4397,6 @@
 						var fogNear = cameraTranslate * scope.view.viewpoint.fogNear,
 							fogFar = cameraTranslate * scope.view.viewpoint.fogFar;
 						if (scope.view.viewpoint.fog) scene.fog = new THREE.Fog(background,fogNear,fogFar);
-
-						// EVENT LISTENERS / SCOPE WATCHERS
-						// window.addEventListener( 'resize', scope.onWindowResize, false );
-
-						/* Watch for changes */
-
-						// var componentOptions = [
-						// 	 'view.settings.particles.visible',
-						// 	 'view.settings.chromatin.visible',
-						// 	 'view.controls.autoRotate',
-						// 	 'view.settings.axis.visible'
-						// 	 ];
-						// scope.$watchGroup( componentOptions, function( newValues, oldValues ) {
-						// 	angular.forEach( newValues, function(value, index) {
-						// 		if ( newValues[index] !== oldValues[index] ) {
-						// 			console.log( value );
-						// 		}
-						// 	});
-						// });
 						
 
 					// FIX: NOT REDRAWING SCENE IF THE ONLY VISBLE OBJECT IS TOGGLED OFF
@@ -3387,16 +4426,16 @@
 								cluster.visible = !cluster.visible;
 							}
 						});
-						scope.$watch('view.settings.network.visible', function( newValue, oldValue ) {
-							if ( newValue !== oldValue ) {
-								network.visible = !network.visible;
-							}
-						});
+//						scope.$watch('view.settings.network.visible', function( newValue, oldValue ) {
+//							if ( newValue !== oldValue ) {
+//								network.visible = !network.visible;
+//							}
+//						});
 
 						particlesObj = scene.getObjectByName( "Particles Cloud" );
 						chromatinObj = scene.getObjectByName( "Chromatin Fiber" );
 						clusterObj = scene.getObjectByName( "Cluster View" );
-						networkObj = scene.getObjectByName( "Network Graph" );
+						//networkObj = scene.getObjectByName( "Network Graph" );
 						
 
 						// /* Watch for Particles colors */
@@ -3419,7 +4458,7 @@
 						
 						// /* Watch for Chromatin colors */
 						scope.$watch('currentoverlay.colors.chromatin', function( newColors, oldColors ) { // cant deep watch as change through set on service
-							if ( newColors !== oldColors ) {
+							if ( typeof chromatinObj !== 'undefined' && newColors !== oldColors) {
 //								if(scope.view.settings.chromatin.tubed && scope.currentoverlay.object.state.overlaid) {
 //									scope.toggleTubed(false);
 //								} 
@@ -3429,7 +4468,6 @@
 								var i,j,newChromatinColor;
 								var chromatinCount = chromatinObj.children.length;
 								if(!scope.view.settings.chromatin.tubed) {
-									chromatinCount = chromatinObj.children.length;
 									for (i = 0; i < chromatinCount; i++) {
 										newChromatinColor =  new THREE.Color(newColors[i]);
 										chromatinObj.children[i].material.color = newChromatinColor;
@@ -3437,17 +4475,29 @@
 										chromatinObj.children[i].material.emissive = newChromatinColor;
 									}
 								} else {
-									for (i = 0; i < newColors.length; i++) {
-										if(ColorConvert.testIfHex(newColors[i]) || newColors[i].indexOf('#')===0) {
-											newChromatinColor =  new THREE.Color(newColors[i]);	 
-										} else {
-											newChromatinColor =  new THREE.Color(ColorConvert.nameToHex(newColors[i]));
-										} 
-										for (j = 0; j < 16; j++) {
-											chromatinObj.children[0].geometry.faces[i*16+j].color.set(newChromatinColor);
+									var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments;
+									//var offset = 0;
+									var colori = 0;
+									//var chr_bins;
+									var geom;
+									for (var l = 0 ; l < scope.settings.current.chromosomeIndexes.length; l++) {
+										//chr_bins = Math.round((scope.settings.current.chromEnd[l]-scope.settings.current.chromStart[l])/resolution)+1;
+										geom = chromatinObj.children[l].geometry;
+										for (i = 0; i < geom.faces.length; i++) {
+											if(ColorConvert.testIfHex(newColors[Math.floor(colori/16)]) || newColors[Math.floor(colori/16)].indexOf('#')===0) {
+												newChromatinColor =  new THREE.Color(newColors[Math.floor(colori/16)]);	 
+											} else {
+												newChromatinColor =  new THREE.Color(ColorConvert.nameToHex(newColors[Math.floor(colori/16)]));
+											} 
+											for (j = 0; j < 16; j++) {
+												if(typeof geom.faces[i+j] !== 'undefined') geom.faces[i+j].color.set(newChromatinColor);
+											}
+											colori++;
 										}
-									}
-									chromatinObj.children[0].geometry.colorsNeedUpdate = true;
+										geom.colorsNeedUpdate = true;
+										//offset += chr_bins;
+							    	}
+									
 								}
 							}
 						});
@@ -3462,12 +4512,51 @@
 							particlesObj = scene.getObjectByName( "Particles Cloud" );
 							chromatinObj = scene.getObjectByName( "Chromatin Fiber" );
 							clusterObj = scene.getObjectByName( "Cluster View" );
-							networkObj = scene.getObjectByName( "Network Graph" );
+							//networkObj = scene.getObjectByName( "Network Graph" );
 						};
+						scope.redraw_scene = function() {
+							
+							if(typeof scope.currentmodel.data === 'undefined' || scope.currentmodel.data.length === 0) return;
+						
+							scope.clean_scene();
+							var chrom_colors = scope.currentoverlay.colors.chromatin.slice();
+							scope.currentoverlay.colors.chromatin = chrom_colors;
+						    Overlays.segment();
+							scope.complete_scene();
+							
+						    if(scope.view.settings.chromatin.tubed) {
+						        sphereObj = scene.getObjectByName( "TADs cloud" );
+							}
+							
+							particlesObj = scene.getObjectByName( "Particles Cloud" );
+							chromatinObj = scene.getObjectByName( "Chromatin Fiber" );
+							clusterObj = scene.getObjectByName( "Cluster View" );
+							//networkObj = scene.getObjectByName( "Network Graph" );
+							
+							cameraPosition = chromatin.boundingSphere.center;
+							cameraTarget = chromatin.boundingSphere.center;
+							cameraTranslate = chromatin.boundingSphere.radius * scope.view.viewpoint.scale;
+							scope.lookAtTAD(cameraPosition, cameraTarget, cameraTranslate);
+							
+							var lightOffset = cameraTranslate * 1.5; // Up and to the left
+							pointLight.position.set(lightOffset,lightOffset,(lightOffset * -1.0));
+							// FOG SCENE
+							var fogNear = cameraTranslate * scope.view.viewpoint.fogNear,
+								fogFar = cameraTranslate * scope.view.viewpoint.fogFar;
+							scene.fog.near = fogNear;
+							scene.fog.far = fogFar;
+						
+						};
+						scope.$watch('settings.current.chromosomeIndexes', function( newValue, oldValue ) {
+							if ( newValue !== oldValue) {
+								//scope.currentmodel.data = Datasets.getModel().data;
+								scope.redraw_scene();
+							}
+						});
 						// /* Watch for selected TAD */
 						scope.$watch('settings.current.tad_selected', function( newValue, oldValue ) {
 							//if(scope.view.settings.chromatin.tubed) return;
-							if ( newValue !== oldValue ) {
+							if ( newValue !== oldValue && chromatinObj) {
 								var i;
 								if(scope.view.settings.chromatin.tubed) {
 									var tadCount = sphereObj.children.length;
@@ -3497,8 +4586,8 @@
 									var start_tad, end_tad;
 									var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments; // base pairs
 									if(newValue>-1) {
-										start_tad = (Math.round(((scope.data.tad_data.tads[newValue][1])-scope.settings.current.chromStart)/resolution))*scope.settings.current.particleSegments;
-				                		end_tad = (Math.round((scope.data.tad_data.tads[newValue][2]-scope.settings.current.chromStart)/resolution))*scope.settings.current.particleSegments;
+										start_tad = (Math.round(((scope.data.tad_data.tads[newValue][1])-scope.settings.current.chromStart[scope.settings.current.chromIdx])/resolution))*scope.settings.current.particleSegments;
+				                		end_tad = (Math.round((scope.data.tad_data.tads[newValue][2]-scope.settings.current.chromStart[scope.settings.current.chromIdx])/resolution))*scope.settings.current.particleSegments;
 				                 	}
 									for (i = 0; i < chromatinCount; i++) {
 										if(i>=start_tad && i<=end_tad) {
@@ -3514,12 +4603,12 @@
 						});
 
 						// /* Watch for Network colors */
-						scope.$watch('currentoverlay.colors.network', function( newColors, oldColors ) { // cant deep watch as change through set on service
-							if ( newColors !== oldColors && networkObj.geometry) {
-								networkObj.geometry.addAttribute( 'color', new THREE.BufferAttribute( newColors.RGB, 3 ) );
-								networkObj.geometry.addAttribute( 'alpha', new THREE.BufferAttribute( newColors.alpha, 1 ) );
-							}
-						});
+//						scope.$watch('currentoverlay.colors.network', function( newColors, oldColors ) { // cant deep watch as change through set on service
+//							if ( newColors !== oldColors && networkObj.geometry) {
+//								networkObj.geometry.addAttribute( 'color', new THREE.BufferAttribute( newColors.RGB, 3 ) );
+//								networkObj.geometry.addAttribute( 'alpha', new THREE.BufferAttribute( newColors.alpha, 1 ) );
+//							}
+//						});
 
 						/* Watch for Browser-wide Position updates */
 						scope.$watch('settings.current.particle', function( newParticle, oldParticle ) {
@@ -3532,12 +4621,34 @@
 							}
 						});
 						scope.updateRingPosition = function(ring,newSegment,oldSegment) {
-							if(chromatinObj.children[0].geometry.vertices.length > (newSegment+1)*8+8) {
-								var vec, i;
-								vec = chromatinObj.children[0].geometry.vertices[(newSegment+1)*8];
+							var newChrom=0;
+							var oldChrom=0;
+							var newSeg;
+							var oldSeg;
+							var vec, i;
+							if(newSegment.length>1) {
+								newSeg = newSegment[0];
+								oldSeg = oldSegment[0];
+								newChrom = newSegment[1];
+								oldChrom = oldSegment[1];
+							} else {
+								newSeg = newSegment;
+								oldSeg = oldSegment;
+								while(chromatinObj.children[newChrom].geometry.vertices.length < (newSeg+1)*8) {
+									newSeg -= Math.floor(chromatinObj.children[newChrom].geometry.vertices.length/8-1);
+									newChrom++;
+								}
+								while(chromatinObj.children[oldChrom].geometry.vertices.length < (oldSeg+1)*8) {
+									oldSeg -= Math.floor(chromatinObj.children[oldChrom].geometry.vertices.length/8-1);
+									oldChrom++;
+								}
+							}
+							if(chromatinObj.children[newChrom].geometry.vertices.length > (newSeg+1)*8+8) {
+								
+								vec = chromatinObj.children[newChrom].geometry.vertices[(newSeg+1)*8];
 								
 									for(i=1;i<8;i++){
-										vec.add(chromatinObj.children[0].geometry.vertices[(newSegment+1)*8+i]);
+										vec.add(chromatinObj.children[newChrom].geometry.vertices[(newSeg+1)*8+i]);
 									}
 									vec.divideScalar(8);
 								
@@ -3546,9 +4657,9 @@
 								ring.position.y = vec.y;
 								ring.position.z = vec.z;
 								
-								vec = chromatinObj.children[0].geometry.vertices[oldSegment*8];
+								vec = chromatinObj.children[oldChrom].geometry.vertices[oldSeg*8];
 								for(i=1;i<8;i++){
-									vec.add(chromatinObj.children[0].geometry.vertices[oldSegment*8+i]);
+									vec.add(chromatinObj.children[oldChrom].geometry.vertices[oldSeg*8+i]);
 								}
 								vec.divideScalar(8);
 								ring.lookAt(vec);
@@ -3557,7 +4668,7 @@
 						};
 						/* Watch for Browser-wide Position updates */
 						scope.$watch('settings.current.segment', function( newSegment, oldSegment ) {
-							if ( newSegment !== oldSegment || (ring.position.x === 0 && ring.position.y === 0 && ring.position.z === 0)) {
+							if ( typeof ring !== 'undefined' && (newSegment !== oldSegment || (ring.position.x === 0 && ring.position.y === 0 && ring.position.z === 0))) {
 								//if(scope.view.settings.chromatin.tubed) return;
 								if(scope.view.settings.chromatin.tubed) {
 									scope.updateRingPosition(ring,newSegment,oldSegment);
@@ -3585,7 +4696,7 @@
 
 					};
 					scope.$watch('settings.current.markers_position', function( newValue, oldValue ) {
-						if ( newValue !== oldValue) {
+						if ( newValue !== oldValue && chromatinObj) {
 							if(scope.view.settings.chromatin.tubed) {
 								if ( angular.isUndefined(scope.settings.current.markers_position) || newValue[0] === -1 || newValue[1] === -1) {	
 									leftring.visible = false;
@@ -3594,19 +4705,18 @@
 									scene.remove(linker_label);
 									linker_label = undefined;
 					        	} else {
-					        		//var newLeftPos = Math.floor((scope.settings.current.markers_position[1] - scope.settings.current.chromStart)/scope.settings.current.segmentLength);
-									//var newRightPos = Math.floor((scope.settings.current.markers_position[0] - scope.settings.current.chromStart)/scope.settings.current.segmentLength);
+					        		//var newLeftPos = Math.floor((scope.settings.current.markers_position[1] - scope.settings.current.chromStart[scope.settings.current.chromIdx])/scope.settings.current.segmentLength);
+									//var newRightPos = Math.floor((scope.settings.current.markers_position[0] - scope.settings.current.chromStart[scope.settings.current.chromIdx])/scope.settings.current.segmentLength);
 									var newLeftPos = Settings.getSegment(scope.settings.current.markers_position[1]);
 									var newRightPos = Settings.getSegment(scope.settings.current.markers_position[0]);
 									//var newLeftPos = (Settings.getParticle(scope.settings.current.markers_position[1])-1)*scope.settings.current.particleSegments+Math.round(scope.settings.current.particleSegments/2);
 									//var newRightPos = (Settings.getParticle(scope.settings.current.markers_position[0])-1)*scope.settings.current.particleSegments+Math.round(scope.settings.current.particleSegments/2);
 									
-									
 									var oldLeftPos = newLeftPos>0 ? newLeftPos-1 : 0;
 									var oldRightPos = newRightPos>0 ? newRightPos-1 : 0;
 
-					        		scope.updateRingPosition(leftring,newLeftPos, oldLeftPos);
-									scope.updateRingPosition(rightring,newRightPos, oldRightPos);
+					        		scope.updateRingPosition(leftring,[newLeftPos,scope.settings.current.chromosomeIndexes.indexOf(scope.settings.current.markers_chr[1])], [oldLeftPos,scope.settings.current.chromosomeIndexes.indexOf(scope.settings.current.markers_chr[1])]);
+									scope.updateRingPosition(rightring,[newRightPos,scope.settings.current.chromosomeIndexes.indexOf(scope.settings.current.markers_chr[0])], [oldRightPos,scope.settings.current.chromosomeIndexes.indexOf(scope.settings.current.markers_chr[0])]);
 									leftring.visible = true;
 									rightring.visible = true;
 									linker.visible = true;
@@ -3674,7 +4784,9 @@
 
 					scope.clean_scene = function () {
 						var i;
-
+						
+						if(typeof chromatinObj === 'undefined') return;
+							
 						scene.remove(leftring);
 						scene.remove(rightring);
 						scene.remove(ring);
@@ -3682,11 +4794,11 @@
 						scene.remove(particles);
 				        scene.remove(chromatin);
 				        scene.remove(cluster);
-				        scene.remove(network);
+				        //scene.remove(network);
 				        scene.remove(particlesObj);
 				        scene.remove(chromatinObj);
 				        scene.remove(clusterObj);
-				        scene.remove(networkObj);
+				        //scene.remove(networkObj);
 				        
 				        particles.geometry.dispose();
 				        particles.material.dispose();
@@ -3739,8 +4851,8 @@
 				        chromatin = undefined;
 				        cluster = undefined;
 				        clusterObj = undefined;
-				        network = undefined;
-				        networkObj = undefined;
+				        //network = undefined;
+				        //networkObj = undefined;
 				        
 					};
 				    scope.$on('$destroy', function() {
@@ -5604,6 +6716,320 @@
 	'use strict';
 	angular
 		.module('TADkit')
+		.controller('DataImportController', DataImportController);
+
+	function DataImportController ($state, $scope, $mdDialog, $mdToast, Settings, Datasets, Hic_data, Components, Storyboards, uuid4) {
+		$scope.fileTitle = "No file loaded";
+
+		$scope.$on('$viewContentLoaded', function() {
+			var parentElement = angular.element(document.body);
+			var stateTemplate = "assets/templates/" + $state.current.name + ".html";
+			// Import Datas Dialog
+			$mdDialog.show({
+				parent: parentElement,
+				templateUrl: stateTemplate,
+				controller: DataImportController,
+				locals: {
+					datasets: $scope.$parent.datasets,
+				},
+				onComplete: afterShowAnimation
+			}).then(function(importedDatasCount) {
+				$mdToast.show(
+					$mdToast.simple()
+					.content("Coordinates (" + importedDatasCount + ") added")
+				);
+			}, function() {
+				$mdToast.show(
+					$mdToast.simple()
+					.content('cancelled')
+				);
+	 			$state.go('browser');	
+			});
+			// When the 'enter' animation finishes...
+			function afterShowAnimation(scope, element, options) {
+				// post-show code here: DOM element focus, etc.
+				// console.log(scope);
+				console.log("showing dialog");
+			}
+		});
+
+		$scope.parseFile = function($fileContent) {
+			$scope.fileData = Datasets.parse($fileContent).data;
+			// Selected Columns in File Data
+			// Controlled by checkboxes in Data-import.html
+			$scope.skipRows = 0;
+			$scope.bp_per_nm = 0.01;
+			$scope.selectedCols = [];
+			var cols = $scope.fileData[0].length;
+			while (--cols >= 0) {$scope.selectedCols[cols] = true;} // initially set all to selected
+			console.log("File Opened...");
+		};
+
+		$scope.importData = function(parsedData) {
+			$scope.importedCoords = Datasets.import(parsedData, $scope.skipRows, $scope.bp_per_nm, $scope.selectedCols);
+			$mdDialog.hide($scope.importedCoords); 
+			var settings = Settings.get();
+			var dataset = Datasets.getDataset();
+		    //var hic_data = Hic_data.set(dataset.hic_data,settings.current.chromStart,settings.current.chromEnd);
+		    var currentModel = Datasets.setModel(Datasets.getCentroid(),settings.current.chromosomeIndexes);
+		    //Settings.set(dataset,settings.current.chrom,settings.current.chrom);
+			
+			var chromosomeIndex = settings.current.chromosomeIndexes.slice();
+			//var chromosomeIndex = [dataset.object.chrom[0]];
+			settings.current.chromosomeIndexes = chromosomeIndex;
+			$state.go('browser');
+		};
+
+		$scope.hide = function() {
+			$mdDialog.hide($scope.DatasAcquired);
+		};
+
+		$scope.cancel = function() {
+			$mdDialog.cancel();
+		};
+	}
+})();
+(function() {
+	'use strict';
+	angular
+		.module('TADkit')
+		.directive('tkDataImport', tkDataImport);
+
+	function tkDataImport($parse) {		
+		return {
+			restrict: 'A',
+			scope: {
+				tkDataImport : "&",
+				filetitle : "="
+			},
+			link: function(scope, element, attrs) {
+				element.on('change', function(e) {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						scope.$apply(function() {
+							// console.log("here in apply");
+							scope.tkDataImport({$fileContent:e.target.result});
+						});
+					};
+					reader.readAsText((e.srcElement || e.target).files[0]);
+					scope.filetitle = (e.srcElement || e.target).files[0].name;
+				});
+			}
+		};
+	}
+})();
+(function() {
+	'use strict';
+	angular
+		.module('TADkit')
+		.controller('DataMiningController', DataMiningController);
+
+	function DataMiningController ($stateParams, $state, $scope, $mdDialog, $mdToast, Storyboards, Datasets, Hic_data, Track_data) {
+
+		var track_data = Track_data.get();
+		var hic_data = Hic_data.get();
+		$scope.maxFreq = hic_data.max;
+		$scope.minFreq = hic_data.min;
+		var settings = $scope.$parent.settings.current;
+		var resolution = settings.segmentLength*settings.particleSegments;
+		$scope.resolution = resolution;
+		$scope.TrackList = [];
+		var i;
+		for(i=0;i<track_data.length;i++) {
+        	$scope.TrackList.push(track_data[i].track_name);
+        }
+        $scope.func = $stateParams.func; 
+		$scope.gridOptions = {
+			enableGridMenu: false,
+			enableFiltering: true,
+			enableColumnResizing: true,
+		    exporterCsvFilename: 'tadkit_export.csv',
+			onRegisterApi: function (gridApi) {
+		      $scope.gridApi = gridApi;
+		    }
+		};
+		
+		$scope.intThreshold = Math.round(($scope.maxFreq-$scope.minFreq)/2);
+		$scope.minDistance = resolution;
+		$scope.$on('$viewContentLoaded', function() {
+			var parentElement = angular.element(document.body);
+			var stateTemplate = "assets/templates/" + $state.current.name + ".html";
+			// Import Datas Dialog
+			$mdDialog.show({
+				parent: parentElement,
+				clickOutsideToClose: false,
+				scope: $scope,  
+      			preserveScope: true,  
+				templateUrl: stateTemplate,
+				controller: DataMiningController,
+				onComplete: afterShowAnimation
+			}).then(function() {
+				$mdToast.show(
+					$mdToast.simple()
+					.content('closed')
+				);
+	 			$state.go('browser');	
+			});
+			// When the 'enter' animation finishes...
+			function afterShowAnimation(scope, element, options) {
+				// post-show code here: DOM element focus, etc.
+				// console.log(scope);
+				console.log("showing dialog");
+			}
+		});
+		$scope.refresh = function(func) {
+			var i,j,k,f;
+			$scope.gridOptions.data = [];
+			if(func=='Features by bin') {
+				for(i=0;i<track_data.length;i++) {
+					if(track_data[i].track_name == $scope.selTrack) {
+						for(j=0;j<settings.chromosomeIndexes.length;j++) {
+							for(k=settings.chromStart[j];k<settings.chromEnd[j];k+=resolution) {
+								for(f=0;f<track_data[i].feature.length;f++) {
+									if (k+resolution >= track_data[i].feature[f].start && k<= track_data[i].feature[f].end && 
+										track_data[i].feature[f].chr.replace('chr','') == settings.chromosomeIndexes[j].replace('chr','') 
+									) {
+										$scope.gridOptions.data.push({
+									        "Chromosome": settings.chromosomeIndexes[j],
+									        "Locus": k,
+									        "id": track_data[i].feature[f].id,
+									        "Name": track_data[i].feature[f].name,
+									        "Start": track_data[i].feature[f].start,
+									        "End": track_data[i].feature[f].end,
+									        "Strand": track_data[i].feature[f].strand,
+									        "Value": track_data[i].feature[f].value
+									    });
+									}
+								}
+							}
+
+						}
+					}
+
+		        }
+		        
+		    } else if(func=='Interacting features') {
+		    	var x_mark, y_mark;
+            	var x , y = 0;
+            	var chr1, chr2, chr_bins = 0;
+		    	var l = 0;
+		    	var feats1, feats2, obj;
+		    	
+		    	var feature_in_bin = function (el) { 
+		    		return ((this.locus_pos+resolution >= el.start && this.locus_pos<= el.end && el.chr.replace('chr','') == this.locus_chr.replace('chr','')));
+		    	};
+		    	var concat_vals = function(elem) {
+		    		if ('name' in elem) return elem.name;
+		    		else if ('id' in elem) return elem.id;
+		    		else if ('value' in elem) return elem.value;
+		    		else if ('color' in elem) return elem.color;
+		    	};
+		    	var track1,track2;
+		    	for(j=0;j<track_data.length;j++) {
+					if(track_data[j].track_name == $scope.selTrack) {
+						track1 = track_data[j];
+					}
+				}
+				for(j=0;j<track_data.length;j++) {
+					if(track_data[j].track_name == $scope.selTrack2) {
+						track2 = track_data[j];
+					}
+				}
+
+                for(i=0;i<hic_data.value.length;i++) {
+                	if($scope.intThreshold > hic_data.value[i]) continue;
+                	x = Math.floor(hic_data.pos[i]%hic_data.n);
+					y = Math.floor(hic_data.pos[i]/hic_data.n);
+					if(y>x) continue;
+					
+	            	chr_bins = 0;
+	            	l = 0;
+	            	while(chr_bins<=x) {
+	            		x_mark = (x-chr_bins)*resolution+(settings.chromStart[l]);
+	            		chr_bins += Math.round(settings.chromEnd[l]/resolution)-Math.round(settings.chromStart[l]/resolution); 
+	            		l++;
+	            	}
+	            	chr1 = settings.chromosomeIndexes[l-1];
+	            	chr_bins = 0;
+	    			l = 0;
+	    			while(chr_bins<=y) {
+	            		y_mark = (y-chr_bins)*resolution+(settings.chromStart[l]);
+	            		chr_bins += Math.round(settings.chromEnd[l]/resolution)-Math.round(settings.chromStart[l]/resolution); 
+	            		l++;
+	            	}
+	            	chr2 = settings.chromosomeIndexes[l-1];
+	            	
+	            	if(chr1 == chr2 && Math.abs(x_mark-y_mark) <= $scope.minDistance) continue;
+	            	
+	            	obj = { locus_pos: x_mark, locus_chr: chr1 };
+	            	feats1 = track1.feature.filter(feature_in_bin, obj);
+	            	obj = { locus_pos: y_mark, locus_chr: chr2 };
+	            	feats2 = track2.feature.filter(feature_in_bin, obj);
+	            	
+	            	if(feats1.length == 0 || feats2.length == 0) continue;
+	            	
+	            	$scope.gridOptions.data.push({
+				        "Chromosome 1": chr1,
+				        "Locus 1": x_mark,
+				        "Chromosome 2": chr2,
+				        "Locus 2": y_mark,
+				        "Interaction freq,": hic_data.value[i],
+				        "Features 1": feats1.map(concat_vals).join(","),
+				        "Features 2": feats2.map(concat_vals).join(",")
+				    });
+                	
+                	
+                }
+			
+		    }
+		    $mdToast.show(
+				$mdToast.simple()
+				.content($scope.gridOptions.data.length+' records retrieved')
+			);
+		};
+		$scope.export = function(func){
+			//$scope.gridApi.exporter.csvExport( 'all', 'all');
+			/* generate a worksheet */
+			var filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+			var result = [];
+
+			filteredRows.forEach(function(key) {
+			    result.push(key.entity);
+			});
+			var ws = XLSX.utils.json_to_sheet(result);
+			
+			var wbout = XLSX.utils.sheet_to_csv(ws, {FS:"\t"});
+			/* generate a download */
+
+			saveAs(new Blob([wbout],{type:"attachment/csv;charset=utf-8;"}), func+".tsv");
+		};
+		$scope.cancel = function() {
+			$mdDialog.hide();
+		};
+	}
+})();
+(function() {
+	'use strict';
+	angular
+		.module('TADkit')
+		.directive('tkDataMining', tkDataMining);
+
+	function tkDataMining($parse) {		
+		return {
+			restrict: 'A',
+			scope: {
+				tkDataMining : "&"
+			},
+			link: function(scope, element, attrs) {
+				
+			}
+		};
+	}
+})();
+(function() {
+	'use strict';
+	angular
+		.module('TADkit')
 		.controller('HomeController', HomeController);
 
 	function HomeController ($scope){
@@ -5763,7 +7189,7 @@
 
 		$scope.current.dataset = Datasets.getDataset();
 		if($scope.current.dataset.models.length>0) {
-			$scope.current.model = Datasets.getModel();
+			$scope.current.model = Datasets.getModel(Datasets.getCentroid(),$scope.current.dataset.object.chrom);
 			
 			// Get dataset scene icon component
 			$scope.clusterComponent = Components.getComponentById("datasets-scene-icon");
@@ -5796,7 +7222,8 @@
 				for (var j = cluster.list.length - 1; j >= 0; j--) {
 					var modelData;
 					for (var k = models.length - 1; k >= 0; k--) {
-						var model = models[k];
+						//var model = models[k];
+						var model = Datasets.getModel(models[k].ref,$scope.current.dataset.object.chrom);
 						if (parseInt(model.ref) == cluster.list[j]) {
 							modelData = model.data;
 							// console.log("Model " + model.ref + " in Cluster " + cluster.number);
@@ -5919,8 +7346,8 @@
 	function ProjectLoaderController($q, $http, $state, $scope, Datasets, Overlays, Components, Storyboards, Users, Hic_data) {
 
 		$scope.updateCurrent = function() {
-			$scope.current.dataset = Datasets.getDataset();
 			delete $scope.settings.current.tad_selected;
+			$scope.current.dataset = Datasets.getDataset();
 			$scope.current.model = Datasets.getModel();
 			var overlays = Overlays.get();
 			while (overlays.loaded.length > 1) { // remove all overlays
@@ -5932,7 +7359,7 @@
 			$scope.current.components = Components.load();
 			$scope.current.storyboards = Storyboards.load();
 			$scope.current.storyboard = Storyboards.getStoryboard();
-			console.log("Current dataset, model, overlay and storyboard updated.");			
+			console.log("Current dataset, model, overlay and storyboard updated.");		
 		};
 
 		// On dropzone (load external file)
@@ -5962,7 +7389,7 @@
 //				$state.go('browser', { conf: null });
 //			});
 //		};
-		$scope.cleanDataset = function(event) {
+		$scope.cleanDataset = function(event) {		
 			$state.go('dataset', { conf: 'assets/examples/conf.json' });
 		};
 		
@@ -6090,7 +7517,9 @@
 		angular.element($window).on('resize', function(){ $scope.$apply(); });
 		
 		$scope.current.dataset = Datasets.getDataset();
+		//Settings.set($scope.current.dataset);
 		$scope.current.model = Datasets.getModel();
+		Overlays.segment();
 		$scope.current.overlay = Overlays.getOverlay();
 		$scope.current.storyboard = Storyboards.getStoryboard();
 		
@@ -6107,7 +7536,7 @@
 
 		// Calculating Initial Proximities
 		//NOTE in future if more than 1 currentModel need same number of currentProximities
-		var scene_component;
+//		var scene_component;
 		$scope.allProximities = Proximities.get(); // for Scene
 		if($scope.current.dataset.models.length > 0) { // we have models
 			$scope.currentProximities = Proximities.at($scope.settings.current.particle); // for D3 tracks
@@ -6115,10 +7544,11 @@
 			// Calculating Initial Restraints
 			//NOTE in future if more than 1 currentModel need same number of currentRestraints
 			$scope.currentRestraints = Restraints.at($scope.settings.current.particle); // for D3 tracks
-		} else { // we have only the matrix
-			scene_component = Storyboards.getComponentById('Chromatin');
-			if(typeof scene_component !== 'undefined') Storyboards.removeComponentById("Chromatin");
-		}
+		} 
+//		else { // we have only the matrix
+//			scene_component = Storyboards.getComponentById('Chromatin');
+//			if(typeof scene_component !== 'undefined') Storyboards.removeComponentById("Chromatin");
+//		}
 		// Assign data and overlays for each component by type
 		angular.forEach( $scope.current.storyboard.components, function(component, index) {
 
@@ -6854,7 +8284,7 @@
 		.module('TADkit')
 		.factory('Datasets', Datasets);
 
-	function Datasets($q, $http, uuid4, Settings, Resources, Proximities, Restraints, Overlays, Hic_data) {
+	function Datasets($q, $http, uuid4, Settings, Resources, Proximities, Restraints, Overlays, Hic_data, Track_data) {
 		var datasets = {
 			loaded : [],
 			current : {
@@ -6862,6 +8292,10 @@
 				cluster : 1,
 				centroid : 1
 			}
+		};
+		var model = {
+				"ref":-1, 
+				"data":[]
 		};
 		return {
 			load: function(dataUrl, clear) {
@@ -6925,9 +8359,21 @@
 					Restraints.set(currentModel.data, dataset.restraints);
 					Overlays.update(Proximities.get().distances, dataset.restraints);
 				}
-				if(!angular.isUndefined(dataset.hic_data)) Hic_data.set(dataset.hic_data);
-				else Hic_data.clear();
-				
+				if(!angular.isUndefined(dataset.hic_data)) {
+					var chromosomeIndex = 0;
+					if (dataset.object.chromosomeIndex) {
+						chromosomeIndex = dataset.object.chromosomeIndex;	
+					}
+					var offset=0;
+					var resolution = dataset.object.resolution;
+					for(var i=0;i<chromosomeIndex;i++) offset += Math.round(dataset.object.chromEnd[l]/resolution)-Math.round(dataset.object.chromStart[l]/resolution)+1; 
+					
+					var posStart = (dataset.object.chromStart[chromosomeIndex]/resolution + offset)-dataset.object.chromStart[0]/resolution;
+					var posEnd = (dataset.object.chromEnd[chromosomeIndex]/resolution + offset)-(dataset.object.chromStart[0]/resolution);
+					Hic_data.set(dataset.hic_data,[Math.round(posStart+1)],[Math.round(posEnd)]);
+					
+				} else Hic_data.clear();
+				Track_data.clear();
 				// if (dataset.object.filename) {
 				//	var filetype = "tsv";
 				//	var resetToDefaults = true;
@@ -6983,6 +8429,7 @@
 				var chrom = datasets.loaded[index].object.chrom[chromosomeIndex];
 				var chromStart = datasets.loaded[index].object.chromStart[chromosomeIndex];
 				var chromEnd = datasets.loaded[index].object.chromEnd[chromosomeIndex];
+				
 				var region = chrom + ":" + chromStart + "-" + chromEnd;
 				datasets.loaded[index].object.region = region;
 				return region;
@@ -7007,9 +8454,9 @@
 				var centroid = this.setModel(datasets.current.centroid);
 				return centroid; // array of vertices
 			},
-			setModel: function(ref) { // from model ref
+			setModel: function(ref,chromosomeIndex) { // from model ref
 				ref = ref || this.getCentroid();
-				var model = this.getModel(ref - 1);
+				var model = this.getModel(ref,chromosomeIndex);
 				// Store as current model for dataset in datasets.loaded[datasets.current.index].data
 				datasets.loaded[datasets.current.index].data = model;
 				return model; // array of vertices
@@ -7035,21 +8482,171 @@
 				var centroid = datasets.loaded[datasets.current.index].centroids[ref - 1];
 				return centroid; // single model ref
 			},
-			getModel: function(ref) { // from model ref
+			getModel: function(ref, chromosomeIndex) { // from model ref
+				var self = this;
 				ref = ref || this.getCentroid();
-				var model;
+				var dataset = self.getDataset();
+				var settings = Settings.get();
+				if (chromosomeIndex === undefined || chromosomeIndex === false) chromosomeIndex = [dataset.object.chrom[0]];
+				
+				var chromIdx;
+				var chromStart = [];
+				var chromEnd = [];
+				var resolution = dataset.object.resolution;
+				var offset = 0;
+				for (var l = 0 ; l < dataset.object.chrom.length; l++) {
+					chromIdx = chromosomeIndex.indexOf(dataset.object.chrom[l]);
+					if(chromIdx > -1) {
+						chromStart.push(Math.round((dataset.object.chromStart[l]-dataset.object.chromStart[0])/resolution)+offset);
+						chromEnd.push(Math.round((dataset.object.chromEnd[l]-dataset.object.chromStart[0])/resolution)+offset);
+					}
+					offset += Math.round(dataset.object.chromEnd[l]/resolution)-Math.round(dataset.object.chromStart[l]/resolution);
+				}
+				
 				var models = datasets.loaded[datasets.current.index].models;
+				model.data = [];
 				// console.log(ref);
 				for (var i = models.length - 1; i >= 0; i--) {
-					if (models[i].ref == ref) model = models[i];
+					if (models[i].ref == ref) {
+						for (var k = 0 ; k < chromStart.length; k++) {
+							for (var j = dataset.object.components*(chromStart[k]) ; j < dataset.object.components*(chromEnd[k]); j += 3) {
+								model.data.push(models[i].data[j],models[i].data[j+1],models[i].data[j+2]);
+							}
+						}
+					}
 				}
 				// console.log(model);
+				model.ref = ref;
 				return model; // array of model vertices
 			},
 			loadHic: function() {
 				var dataset = this.getDataset();
 				return Hic_data.loadExternal(dataset);
-			}
+			},
+			parse: function(data) {
+				Papa.DefaultDelimiter = " ";
+				var parsedData = Papa.parse(data,{
+					dynamicTyping: true,
+					skipEmptyLines: true,
+					fastMode: true
+				});
+				return parsedData;
+			},
+			import: function(fileData, skipRows, bp_per_nm, selectedCols) {
+				var self = this;
+				// TODO: if not valid fileData return...
+				skipRows = skipRows || 0;
+				selectedCols = selectedCols || [];
+
+				var parsedData;
+				var dataType = Resources.whatIsIt(fileData);
+				if (dataType == "String") {
+					parsedData = self.parse(fileData).data;
+				} else {
+					parsedData = fileData; // already parsed to JSON object
+				}
+
+				var dataset = datasets.loaded[datasets.current.index];
+				var settings = Settings.get();
+				var chromosomeIndex = settings.current.chromosomeIndexes;
+				var resoData = 1;
+				var importedCoords = 0;
+				var resolution = settings.current.segmentLength*settings.current.particleSegments;
+				var cur_model,offset;
+				var i,j,k;
+				
+				if(dataset.models.length>0) {
+					var ref = this.getCentroid();
+					for (i = dataset.models.length - 1; i >= 0; i--) {
+						if (dataset.models[i].ref == ref) {
+							cur_model = dataset.models[i];
+							break;
+						}
+					}
+					for (j = 0; j < cur_model.data.length; j++) {
+						cur_model.data[j] = 0;
+					}
+				} else {
+					cur_model = {"ref": 1,"data": [] };
+					offset = 0;
+					for (i = 0 ; i < dataset.object.chrom.length; i++) {
+						offset += Math.round(dataset.object.chromEnd[i]/resolution)-Math.round(dataset.object.chromStart[i]/resolution);
+					}
+					for (j = 0; j < offset; j++) {
+						cur_model.data.push(0,0,0);
+					}
+					dataset.models.push(cur_model);
+					dataset.centroids.push(1);
+					dataset.clusters.push([1]);
+					datasets.current.centroid = 1;
+					datasets.current.cluster = 1;
+				}
+				var scale = bp_per_nm / 0.01;
+				var pos,x,y,z,nb,startb,endb,chr_bins;
+				offset = 0;
+				
+				for (i = 0 ; i < dataset.object.chrom.length; i++) {
+					chr_bins = Math.round(dataset.object.chromEnd[i]/resolution)-Math.round(dataset.object.chromStart[i]/resolution);
+					for (j = 0; j < 3*chr_bins; j+=3) {
+						startb = (dataset.object.chromStart[i])+(j/3)*resolution;
+						endb = startb + resolution;
+						k = skipRows;
+						while(true) {
+							if(k>=parsedData.length) break;
+							nb = 0;
+							x = y = z = 0;
+							while ( (dataset.object.chrom[i] == parsedData[k][0].toString() || dataset.object.chrom[i] == parsedData[k][0].toString().replace('chr','')) && 
+									(parsedData[k][1]*resoData>=startb) && 
+						    		(parsedData[k][1]*resoData<endb) 
+						    ) {
+								
+								x += parsedData[k][2];
+						    	y += parsedData[k][3];
+						    	z += parsedData[k][4];
+						    	nb++;
+						    	if(k>=parsedData.length-1) break;
+						    	k++;
+								
+						    }
+							if(nb>0) {
+								cur_model.data[j+3*offset] = scale * Math.round(x/nb);
+						    	cur_model.data[j+3*offset+1] = scale * Math.round(y/nb);
+						    	cur_model.data[j+3*offset+2] = scale * Math.round(z/nb);	
+								importedCoords++;
+								break;
+							}
+							k++;
+							
+						}
+						
+					}
+					offset += chr_bins;
+				}
+				
+				
+				
+
+				return importedCoords;
+			},
+/*			parse: function(indata) {
+				// split content based on new line
+			    var allTextLines = indata.split(/\r\n|\n/);
+			    var headers = allTextLines[0].split(',');
+			    var lines = [];
+
+			    for ( var i = 0; i < allTextLines.length; i++) {
+			        // split content based on comma
+			        var data = allTextLines[i].split(',');
+			        if (data.length == headers.length) {
+			            var tarr = [];
+			            for ( var j = 0; j < headers.length; j++) {
+			                tarr.push(data[j]);
+			            }
+			            lines.push(tarr);
+			        }
+			    }
+			    return lines;
+			},*/
 		};
 	}
 })();
@@ -7138,22 +8735,58 @@
 		};
 		var interaction_freq = 0;
 		return {
-			set: function (datasetHic_data) {
+			set: function (datasetHic_data, starts, ends) {
 				var self = this;
 				self.clear();
 				hic_data.n = parseInt(datasetHic_data.n);
-
+				
+				var x,y,j,k,pos,new_pos;
 				var i = 0;
-				for (var pos in datasetHic_data.data) {
-					//hic_data.x.push(Math.floor(parseInt(pos)%hic_data.n));
-					//hic_data.y.push(Math.floor(parseInt(pos)/hic_data.n));
-					hic_data.pos.push(parseInt(pos));
-					hic_data.value.push(datasetHic_data.data[pos]);
-					if(datasetHic_data.data[pos]<hic_data.min) hic_data.min = datasetHic_data.data[pos];
-					if(datasetHic_data.data[pos]>hic_data.max) hic_data.max = datasetHic_data.data[pos];
-					i++;	
+				var n = 0;
+				var tot_n = 0;
+				var offset = [0];
+				for (j = 0; j < starts.length; j++) {
+					tot_n += ends[j]-starts[j];
+					offset.push(tot_n);
 				}
+				for (j = 0; j < starts.length; j++) {
+					n = ends[j]-starts[j];
+					for (pos in datasetHic_data.data) {
+						//hic_data.x.push(Math.floor(parseInt(pos)%hic_data.n));
+						//hic_data.y.push(Math.floor(parseInt(pos)/hic_data.n));
+						x = Math.floor(parseInt(pos)%hic_data.n);
+						y = Math.floor(parseInt(pos)/hic_data.n);
+						new_pos=-1;
+						if ((x >= (starts[j]) && x <= (ends[j]-1)) && (y >= (starts[j]) && y <= (ends[j]-1))) {
+							new_pos=(x-(starts[j])+offset[j])+(y-(starts[j])+offset[j])*tot_n;
+						} else {
+							for (k = 0; k < j; k++) {
+								if (((x >= (starts[j]) && x <= (ends[j]-1)) && (y >= (starts[k]) && y <= (ends[k]-1)))) {
+									new_pos=(x-(starts[j])+offset[j])+(y-(starts[k])+offset[k])*tot_n;
+									break;
+								}   
+								if (((x >= (starts[k]) && x <= (ends[k]-1)) && (y >= (starts[j]) && y <= (ends[j]-1)))) {
+									new_pos=(x-(starts[k])+offset[k])+(y-(starts[j])+offset[j])*tot_n;
+									break;
+								}
+							}
+						}
+						if(new_pos > -1) {
+							hic_data.pos.push(parseInt(new_pos));
+							hic_data.value.push(datasetHic_data.data[pos]);
+							if(datasetHic_data.data[pos]<hic_data.min) hic_data.min = datasetHic_data.data[pos];
+							if(datasetHic_data.data[pos]>hic_data.max) hic_data.max = datasetHic_data.data[pos];
+							i++;	
+						}
+						if ((x > (ends[j]-1)) && (y > (ends[j]-1))) {
+							break;
+						}
+					}
+				}
+				hic_data.n = tot_n;
+				 
 				if(!angular.isUndefined(datasetHic_data.tads))	self.setTADS(datasetHic_data.tads);
+				else self.setTADS([]);
 				
 				return hic_data;
 			},
@@ -7706,7 +9339,14 @@
 						if (type == "gradient" && format == "hex") {
 							// palette must contain 2 hex values
 							overlay.colors.particles = Segments.gradientHCL(overlay, settings.current.particlesCount);
-							overlay.colors.chromatin = Segments.gradientHCL(overlay, settings.current.segmentsCount);
+							var counts = [];
+							var resolution = settings.current.segmentLength*settings.current.particleSegments;
+							var num_segments = 0;
+							for (var l = 0 ; l < settings.current.chromosomeIndexes.length; l++) {
+								num_segments = Math.round((settings.current.chromEnd[l]-settings.current.chromStart[l])/resolution);
+								counts.push(num_segments*settings.current.particleSegments);
+							}
+							overlay.colors.chromatin = Segments.gradientHCL(overlay, settings.current.segmentsCount, counts);
 							overlay.colors.network.RGB = Networks.linePiecesRGB(overlay, settings.current.edgesCount);
 							overlay.colors.network.alpha = Networks.linePiecesAlpha(overlay, settings.current.edgesCount);
 						} else if (type == "wiggle_0" && format == "fixed") {
@@ -7774,6 +9414,11 @@
 				if (index === undefined || index === false) index = overlays.current.index;
 				var overlay = overlays.loaded[index];
 				return overlay;
+			},
+			replaceOverlay: function(overlay, index) {
+				if (index === undefined || index === false) index = overlays.current.index;
+				overlays.loaded[index] = overlay;
+				return;
 			},
 			getOverlayById: function (id) {
 				var overlay, found;
@@ -8515,22 +10160,26 @@
 
 	function Segments(d3Service, Color) {
 		return {
-			gradientHCL: function(overlay, count) {
+			gradientHCL: function(overlay, count, counts) {
 				// Using D3 HCL for correct perceptual model
 				// Data is an array of 2 hex colors eg. ff0000
 				// Output is RGB hex (000000-ffffff) eg. [rrggbb,rrggbb,rrggbb...]
 				// Note: prefix depends API ie. THREE == 0xrrggbb and D3 == #rrggbb
+				if (counts === undefined || counts === false) counts = [count];
 				var gradient = [];
 				var hexStart = overlay.palette[0];
 				var hexEnd = overlay.palette[1];
 
 				//var hStart = new THREE.Color(hexStart);
 				//var hEnd = new THREE.Color(hexEnd);
-				
-				for (var i = count - 1; i >= 0; i--) {
-					var step = i / count; // This should be between 0 and 1
-					var hex = d3.interpolateHcl(hexStart, hexEnd)(step);
-					gradient.push(hex);
+				var c;
+				for (var j = 0; j < counts.length;j++) {
+					c = counts[j];
+					for (var i = c - 1; i >= 0; i--) {
+						var step = i / c; // This should be between 0 and 1
+						var hex = d3.interpolateHcl(hexStart, hexEnd)(step);
+						gradient.push(hex);
+					}
 				}
 				// for (var i = 0; i < count; i++) {
 				// 	var step = i / count; // This should be between 0 and 1
@@ -8728,13 +10377,33 @@
 				}
 				return deferral.promise;
 			},
-			set: function(dataset) {
+			set: function(dataset, chromosomeIndex, currentChrom) {
 				var self = this;
-				var chromosomeIndex = 0;
-				if (dataset.object.chromosomeIndex) { chromosomeIndex = dataset.object.chromosomeIndex;	}
-				settings.current.chrom = dataset.object.chrom[chromosomeIndex];
-				settings.current.chromStart = dataset.object.chromStart[chromosomeIndex];
-				settings.current.chromEnd = dataset.object.chromEnd[chromosomeIndex];
+				if (currentChrom === undefined || currentChrom === false) currentChrom = dataset.object.chrom[0];
+				if (chromosomeIndex === undefined || chromosomeIndex === false) chromosomeIndex = [currentChrom];
+				//settings.current.chrom = dataset.object.chrom[chromosomeIndex];
+				//settings.current.chromStart = dataset.object.chromStart[chromosomeIndex];
+				//settings.current.chromEnd = dataset.object.chromEnd[chromosomeIndex];
+				settings.current.chrom = currentChrom;
+				settings.current.chromIdx = chromosomeIndex.indexOf(settings.current.chrom);
+				settings.current.chromStart = [];
+				settings.current.chromEnd = [];
+				var chromIdx;
+				//var offset = 0;
+				var resolution = dataset.object.resolution;
+				settings.current.particlesCount = 0;
+				for (var l = 0 ; l < dataset.object.chrom.length; l++) {
+					chromIdx = chromosomeIndex.indexOf(dataset.object.chrom[l]);
+					if(chromIdx > -1) {
+						settings.current.chromStart.push(Math.round(dataset.object.chromStart[l]));
+						settings.current.chromEnd.push(Math.round(dataset.object.chromEnd[l]));
+						settings.current.particlesCount += Math.round(dataset.object.chromEnd[l]/resolution) - Math.round(dataset.object.chromStart[l]/resolution);
+					}
+					//offset += Math.round(dataset.object.chromEnd[l])-Math.round(dataset.object.chromStart[l])+1*resolution;
+				}
+				//settings.current.chromosomeIndexes = [settings.current.chrom];
+				settings.current.chromosomeIndexes = chromosomeIndex;
+				
 				settings.current.species = dataset.object.species;
 				settings.current.speciesUrl = dataset.object.speciesUrl;
 				if(typeof dataset.object.assembly !== 'undefined') 
@@ -8747,7 +10416,8 @@
 				//settings.current.particleSegments = Math.round((dataset.object.chromEnd - dataset.object.chromStart) / (5*dataset.object.resolution));
 				// Max rings in 3d aprox 2000
 				//settings.current.particlesCount = dataset.models[0].data.length / dataset.object.components;
-				settings.current.particlesCount = Math.round((dataset.object.chromEnd-dataset.object.chromStart)/dataset.object.resolution);
+				
+				//settings.current.particlesCount = Math.round((settings.current.chromEnd-settings.current.chromStart)/dataset.object.resolution);
 				settings.current.particleSegments = Math.ceil(2500/settings.current.particlesCount);
 				settings.current.edgesCount = ((settings.current.particlesCount*settings.current.particlesCount)-settings.current.particlesCount)*0.5;
 				settings.current.segmentsCount = settings.current.particlesCount * settings.current.particleSegments;
@@ -8758,7 +10428,9 @@
 				// Also focus on particles and does not address rounding off of sequence length.
 				settings.current.segmentLength = dataset.object.resolution / settings.current.particleSegments; // base pairs
 				// SET INITIAL position at midpoint
-				settings.current.position = settings.current.chromStart + parseInt((settings.current.chromEnd - settings.current.chromStart) * 0.5);
+				
+				//settings.current.position = settings.current.chromStart + parseInt((settings.current.chromEnd - settings.current.chromStart) * 0.5);
+				settings.current.position = settings.current.chromStart[settings.current.chromIdx] + parseInt((settings.current.chromEnd[settings.current.chromIdx] - settings.current.chromStart[settings.current.chromIdx]) * 0.5);
 				settings.current.particle = self.getParticle();
 				settings.current.particleSize = Math.ceil(dataset.object.resolution/20);
 				// AND SEGMENT IT LIES WITHIN
@@ -8792,21 +10464,35 @@
 			getSegment: function (chromPosition) {
 				chromPosition = chromPosition || settings.current.position;
 				var self = this;
+				var resolution = settings.current.segmentLength*settings.current.particleSegments; // base pairs
 				//var chromOffset = self.getRange(settings.current.chromStart, chromPosition);
 				//var chromRange = self.getRange(settings.current.chromStart, settings.current.chromEnd);
-				var chromOffset = chromPosition-settings.current.chromStart;
-				var chromRange = settings.current.chromEnd-settings.current.chromStart;
-				var segment = Math.ceil((chromOffset * (settings.current.segmentsCount+1)) / chromRange);
+				var chromOffset = chromPosition-settings.current.chromStart[settings.current.chromIdx];
+				//var chromRange = settings.current.chromEnd[settings.current.chromIdx]-settings.current.chromStart[settings.current.chromIdx];
+				var chromRange=0;
+				for(var l=0;l<settings.current.chromosomeIndexes.length;l++) chromRange += Math.round(settings.current.chromEnd[l])-Math.round(settings.current.chromStart[l]);
+				//settings.current.markers_chr = [settings.current.chromosomeIndexes[chrid]];
+				//var resolution = settings.current.segmentLength*settings.current.particleSegments; // base pairs
+				//var particlesCount = Math.round(settings.current.chromEnd[settings.current.chromIdx]/resolution) - Math.round(settings.current.chromStart[settings.current.chromIdx]/resolution) + 1;
+				var particlesCount = settings.current.particlesCount;
+				var segmentsCount = particlesCount * settings.current.particleSegments;				
+				var segment = Math.round((chromOffset * (segmentsCount)) / chromRange);
 				return segment;
 			},
 			getParticle: function (chromPosition) {
 				chromPosition = chromPosition || settings.current.position;
 				var self = this;
+				var resolution = settings.current.segmentLength*settings.current.particleSegments; // base pairs
 				//var chromOffset = self.getRange(settings.current.chromStart, chromPosition);
 				//var chromRange = self.getRange(settings.current.chromStart, settings.current.chromEnd);
-				var chromOffset = chromPosition-settings.current.chromStart;
-				var chromRange = settings.current.chromEnd-settings.current.chromStart;
-				var particle = Math.ceil((chromOffset * settings.current.particlesCount) / chromRange);
+				var chromOffset = chromPosition-settings.current.chromStart[settings.current.chromIdx];
+				//var chromRange = settings.current.chromEnd[settings.current.chromIdx]-settings.current.chromStart[settings.current.chromIdx];
+				var chromRange=0;
+				for(var l=0;l<settings.current.chromosomeIndexes.length;l++) chromRange += Math.round(settings.current.chromEnd[l])-Math.round(settings.current.chromStart[l]); 
+				
+				//var particlesCount = Math.round(settings.current.chromEnd[settings.current.chromIdx]/resolution) - Math.round(settings.current.chromStart[settings.current.chromIdx]/resolution) + 1;
+				var particlesCount = settings.current.particlesCount;
+				var particle = Math.round((chromOffset * particlesCount) / chromRange)+1;
 				return particle;
 			},
 			getRange: function (start, end) {
@@ -9108,7 +10794,7 @@
 				return track_data;
 			},
 			clear: function() {
-				track_data = [];
+				track_data.length = 0;
 			},
 		};
 	}

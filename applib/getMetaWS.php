@@ -10,8 +10,8 @@ if($_REQUEST["type"] != 2) {
     $tool = getTool_fromId($mt["tool"],1);
 }else{
     // EXTRACT JOB METADATA FROM USER JOBS
-	$mt = getUserJobPid($_SESSION['User']['_id'],$_REQUEST["id"]);
-
+	$job = getUserJobPid($_SESSION['User']['_id'],$_REQUEST["id"]);
+	$mt = $job[$_REQUEST["id"]];
 }
 
 // check Metadata
@@ -324,8 +324,8 @@ if(isset($mt["arguments"])) {
 }
 
 
-// FIXME   Temporal fix until cloudName is not stored in metadata. Hardcoded here
-if($mt["cloudName"] == "")
+// cloudName
+if(!isset($mt['cloudName']) || strlen($mt["cloudName"]) == 0)
     $mt['cloudName'] = $GLOBALS['cloud'];
 
 if($mt["cloudName"] != "") {
@@ -448,11 +448,20 @@ if($_REQUEST["type"] == 0) {
 
 if($_REQUEST["type"] == 2) {
 ?>
+		<table class="table table-striped table-bordered">
+			<tbody><tr>
+					<th style="background-color: #e7ecf1;"><b>Job identifier</b></th>
+			</tr>
+					<tr>
+								<td><?php echo $_REQUEST['id'];?></td>
+					</tr>
+			</tbody>
+		</table>
 
 		<div id="meta-log">
 
-				<?php if(file_exists($mt[$_REQUEST['id']]['log_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt[$_REQUEST['id']]['log_file']); ?>" class="btn green" target="_blank"><i class="fa fa-file-text-o"></i> VIEW LOG FILE </a>
+				<?php if(file_exists($mt['log_file'])) { ?>
+				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['log_file']); ?>" class="btn green" target="_blank"><i class="fa fa-file-text-o"></i> VIEW LOG FILE </a>
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW LOG FILE </a>
 				<?php } ?>
@@ -460,23 +469,23 @@ if($_REQUEST["type"] == 2) {
 
 				<?php if(($_SESSION['User']['Type'] == 0) || ($_SESSION['User']['Type'] == 1)) { ?>
 
-				<?php if(file_exists($mt[$_REQUEST['id']]['submission_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt[$_REQUEST['id']]['submission_file']); ?>" class="btn green" target="_blank"><i class="fa fa-paper-plane"></i> VIEW SUBMIT FILE </a>
+				<?php if(file_exists($mt['submission_file'])) { ?>
+				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['submission_file']); ?>" class="btn green" target="_blank"><i class="fa fa-paper-plane"></i> VIEW SUBMIT FILE </a>
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW SUBMIT FILE </a>
 				<?php } ?>
-				<?php if(file_exists($mt[$_REQUEST['id']]['config_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt[$_REQUEST['id']]['config_file']); ?>" class="btn green" target="_blank"><i class="fa fa-cog"></i> VIEW CONFIG FILE </a>
+				<?php if(file_exists($mt['config_file'])) { ?>
+				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['config_file']); ?>" class="btn green" target="_blank"><i class="fa fa-cog"></i> VIEW CONFIG FILE </a>
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW CONFIG FILE </a>
 				<?php } ?>
-				<?php if(file_exists($mt[$_REQUEST['id']]['metadata_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt[$_REQUEST['id']]['metadata_file']); ?>" class="btn green" target="_blank"><i class="fa fa-tags"></i> VIEW META FILE </a>
+				<?php if(file_exists($mt['metadata_file'])) { ?>
+				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['metadata_file']); ?>" class="btn green" target="_blank"><i class="fa fa-tags"></i> VIEW META FILE </a>
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW META FILE </a>
 				<?php } ?>
-				<?php if(file_exists($mt[$_REQUEST['id']]['stageout_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt[$_REQUEST['id']]['stageout_file']); ?>" class="btn green" target="_blank"><i class="fa fa-line-chart"></i> VIEW RESULTS FILE </a>
+				<?php if(file_exists($mt['stageout_file'])) { ?>
+				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['stageout_file']); ?>" class="btn green" target="_blank"><i class="fa fa-line-chart"></i> VIEW RESULTS FILE </a>
 				<?php }else{ ?>
 				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW RESULTS FILE </a>
 				<?php } ?>

@@ -43,7 +43,7 @@ var ValidateForm = function() {
 
     var handleForm = function() {
 
-        $('#process-genome').validate({
+        $('#process-chipseq').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
@@ -62,8 +62,8 @@ var ValidateForm = function() {
 
 
             invalidHandler: function(event, validator) { //display error alert on form submit
-                $('.err-nd', $('#process-genome')).show();
-                $('.warn-nd', $('#process-genome')).hide();
+                $('.err-nd', $('#process-chipseq')).show();
+                $('.warn-nd', $('#process-chipseq')).hide();
             },
 
             highlight: function(element) { // hightlight error inputs
@@ -81,13 +81,13 @@ var ValidateForm = function() {
             },
 
             submitHandler: function(form) {
-            		$('button[type="submit"]', $('#process-genome')).prop('disabled', true);
-                $('.warn-nd', $('#process-genome')).hide();
-                $('.err-nd', $('#process-genome')).hide();
-                var data = $('#process-genome').serialize();
+            		$('button[type="submit"]', $('#process-chipseq')).prop('disabled', true);
+                $('.warn-nd', $('#process-chipseq')).hide();
+                $('.err-nd', $('#process-chipseq')).hide();
+                var data = $('#process-chipseq').serialize();
 								data = data.replace(/%5B/g,"[");
                 data = data.replace(/%5D/g,"]");
-		var data = $('#process-genome').serialize();
+								var data = $('#process-chipseq').serialize();
                 //console.log(data);
                 location.href = baseURL + "applib/launchTool.php?" + data;
 
@@ -109,11 +109,10 @@ var ValidateForm = function() {
 					});
         });
 
-
-        $('#process-genome').keypress(function(e) {
+        $('#process-chipseq').keypress(function(e) {
             if (e.which == 13) {
-                if ($('#process-genome').validate().form()) {
-                    $('#process-genome').submit(); //form validation success, call ajax form submit
+                if ($('#process-chipseq').validate().form()) {
+                    $('#process-chipseq').submit(); //form validation success, call ajax form submit
                 }
                 return false;
             }

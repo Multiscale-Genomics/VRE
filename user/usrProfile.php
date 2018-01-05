@@ -8,6 +8,7 @@ $countries = array();
 foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),array('country'=>1))->sort(array('country'=>1)))) as $v)
 	$countries[$v['_id']] = $v['country'];
 
+
 ?>
 
 <?php require "../htmlib/header.inc.php"; ?>
@@ -180,7 +181,7 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
 																								<div class="form-group margin-top-30">
 																									<label class="mt-checkbox mt-checkbox-outline" style="margin-bottom:0;"> Please, accept <a href="javascript:openTermsOfUse();">Mug VRE Terms of use</a>
                                                             <input type="checkbox" value="1" name="terms" id="terms" 
-																														<?php if(checkTermsOfUse()) echo 'checked disabled'; ?>
+																														<?php if(checkTermsOfUse()) echo 'checked readonly'; ?>
 																														/>
                                                             <span></span>
                                                         </label>

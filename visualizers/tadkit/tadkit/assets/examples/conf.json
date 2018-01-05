@@ -2,11 +2,11 @@
 	"dataset" : "assets/examples/models-marco.json",
 	"tracks": [
 		    {
-		      "name": "MArco",
+		      "name": "Transcrip. factors binding sites",
 		      "type": "wig",
-		      "format": "wig",
+		      "format": "bedgraph",
 		      "sourceType": "file",
-		      "url": "assets/examples/BindingSites.wig",
+		      "url": "assets/data/BindingSites.bed",
 		      "indexed": false
 		    }
 		    

@@ -272,7 +272,7 @@ if ($prevs->count() > 0){
                                               <div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Resolution <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Resolution of the binning (should input a number between 10000 (10 kb) and 10000000 (10 Mb)).</p>"></i></label>
-																											<input type="number" min="10000" max="10000000" name="arguments[resolution]" id="resolution" class="form-control" value="100000">
+																											<input type="number" min="0" max="10000000" name="arguments[resolution]" id="resolution" class="form-control" value="100000">
                                                   </div>
 																							</div>
 																							<div class="col-md-6">

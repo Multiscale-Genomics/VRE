@@ -249,8 +249,8 @@
 									"tracks": [
 										{
 											"name": "Genes",
-						                    "url": "//igv.broadinstitute.org/annotations/hg38/genes/Homo_sapiens.GRCh38.80.sorted.gtf.gz",
-						                    "index": "//igv.broadinstitute.org/annotations/hg38/genes/Homo_sapiens.GRCh38.80.sorted.gtf.gz.tbi",
+						                    "url": "assets/data/Homo_sapiens.GRCh38.80.sorted.gtf.gz",
+						                    "index": "assets/data/Homo_sapiens.GRCh38.80.sorted.gtf.gz.tbi",
 						                    "displayMode": "EXPANDED"
 					                	}
 					                ]

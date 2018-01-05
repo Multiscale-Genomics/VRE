@@ -8,7 +8,7 @@
 require "User.php";
 
 
-function checkLoggedIn() {
+function checkLoggedIn(){
 
 	$user = $GLOBALS['usersCol']->findOne(array('_id' => $_SESSION['User']['_id']));
 	
@@ -143,6 +143,52 @@ function createUserFromToken($login,$token,$userinfo=array()){
     }
     return true;
 }
+
+
+// create anonymous user - without being authentified by the Auth Server
+function createUserAnonymous(){
+
+    // create full user oject
+    
+    $f = array(
+        "Email"        => "guest_".substr(md5(rand()),0,25)."",
+        "Type"         => 3,
+        "Name"         => "Guest",
+        "Surname"      => "",
+        "AuthProvider" => "VRE"
+    );
+    $objUser = new User($f, False);
+    if (!$objUser)
+        return false;
+    $aux = (array)$objUser;
+
+    //load user in current session
+    $_SESSION['userId'] = $aux['id']; //OBSOLETE
+	$_SESSION['User']   = $aux;
+
+    // create user directory
+    $dataDirId =  prepUserWorkSpace($aux['id']);
+	if (!$dataDirId){
+        $_SESSION['errorData']['Error'][]="Error creating data dir";
+        echo "Error creating data dir";
+        return false;
+    }
+    $aux['dataDir']= $dataDirId;
+    $aux['terms']  =  "1";
+    $_SESSION['User']['dataDir'] = $dataDirId;
+    $_SESSION['User']['terms'] = "1";
+
+    // register user in mongo. NOT in ldap nor in the oauth2 provider
+  	$r = saveNewUser($aux);
+    if (!$r){
+        $_SESSION['errorData']['Error'][]="User creation failed while registering it into the database. Please, manually clean orphan files for ".$aux['id']. "(".$dataDirId.")";
+        echo 'Error saving new user into Mongo database';
+	    unset($_SESSION['User']);
+        return false;
+    }
+    return true;
+}
+
 
 // create user - from Admin section
 function createUserFromAdmin(&$f) {
@@ -362,9 +408,12 @@ function checkUserLoginExists($login) {
 function loadUser($login, $pass) {
     $user = $GLOBALS['usersCol']->findOne(array('_id' => $login));
     //if (!$user['_id'] || !password_verify($pass, $user['crypPassword']) || ($user['Status'] == 0)) {
-    if (!$user['_id'] || !check_password($pass, $user['crypPassword']) || ($user['Status'] == 0)) {
+    if (!$user['_id'] || $user['Status'] == 0) {
         return False;
 	}
+    if ($user['Type']!=3 && !check_password($pass, $user['crypPassword'])) {
+        return False;
+    }
 	$auxlastlog = $user['lastLogin'];
     $user['lastLogin'] = moment();
     updateUser($user);

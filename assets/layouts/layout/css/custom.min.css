@@ -119,7 +119,8 @@ box-shadow: 1px 1px 8px 0px rgba(204,204,204,1); }
 #info-disk-home { position: absolute;top: 80px;right: 30px;width: 40%;height: 200px;font-size:16px; }
 .toast-success { background-color: #006b8f; }
 #av_tools_list, #visualizers_list { min-height:30px; background:#fff url(../img/loading-spinner-blue.gif) no-repeat center center;   }
-.truncate { float:left; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;  }
+.truncate { float:left; max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;  }
+.truncate2 { float:left; max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;  }
 .disabled { pointer-events: none; cursor: default; }
 .extra_info {font-weight:normal!important; }
 table.dataTable td.sorting_1, table.dataTable td.sorting_2, table.dataTable td.sorting_3 { background: rgba(245, 245, 245, 0.7)!important; }
@@ -127,6 +128,7 @@ table.dataTable td.sorting_1, table.dataTable td.sorting_2, table.dataTable td.s
 #toast-container > .toast:before { position: relative;font-family: FontAwesome;font-size: 30px;line-height: 18px;float: left;margin-left: -1em;color: #FFF;padding-right: 0.2em;margin-right: 0.5em;margin-top:0.6em;margin-bottom:2em; }
 #toast-container > .toast-success:before { content: "\f0ab"; }
 #meta-log { margin-bottom:20px; }
+.badge { border-radius: 0!important; -webkit-border-radius: 0!important; -moz-border-radius: 0!important; padding: 1px 3px 3px; height: auto; }
 /*.highlighted_folder { color: #08375f; }*/
 /* HOME */
 .portfolio-content.portfolio-3 .cbp-l-filters-button .cbp-filter-counter,
