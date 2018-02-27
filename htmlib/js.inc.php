@@ -60,7 +60,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			<script src="assets/global/plugins/ngl.last.js" type="text/javascript"></script>
 			<script src="assets/global/plugins/bootstrap-toastr/toastr.min.js" type="text/javascript"></script>
 			<script src="assets/global/plugins/clipboardjs/clipboard.min.js" type="text/javascript"></script>
-			<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home'){ ?>	
+			<?php } elseif((dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home') || (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'publicsite')){ ?>	
 				<script src="assets/global/plugins/cubeportfolio/js/jquery.cubeportfolio.min.js" type="text/javascript"></script>
 			<?php } else { ?>
 			<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
@@ -81,6 +81,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			<script src="assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
         	<script src="assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
 			<script src="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+			<script src="assets/global/plugins/clipboardjs/clipboard.min.js" type="text/javascript"></script>
 			<?php break; 	
 			case 'restoreLink': ?>
 			<script src="assets/global/plugins/clipboardjs/clipboard.min.js" type="text/javascript"></script>
@@ -333,7 +334,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			<script src="assets/pages/scripts/tadkit-home.js?v=<?php echo rand(); ?>" type="text/javascript"></script>
 			<script src="assets/pages/scripts/actions-home.js?v=<?php echo rand(); ?>" type="text/javascript"></script>
 			<script src="assets/pages/scripts/restore-link.js?v=<?php echo rand(); ?>" type="text/javascript"></script>
-			<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home'){ ?>		
+			<?php } elseif((dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home') || (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'publicsite')){ ?>		
             <script src="assets/pages/scripts/portfolio.js?v=<?php echo rand(); ?>" type="text/javascript"></script>
             <?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'helpdesk'){ ?>
             <script src="assets/pages/scripts/helpdesk.js?v=<?php echo rand(); ?>" type="text/javascript"></script>

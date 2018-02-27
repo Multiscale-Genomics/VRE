@@ -440,6 +440,7 @@ class Tooljob {
 		 	    return 0;
 			}
 			break;
+		    case "hidden":
 		    case "string":
 			if (is_array($arg_value)){
 			    $_SESSION['errorData']['Error'][]="Invalid argument. In '$arg_name' a string was expected, but found an array: ".implode(",",$arg_value);
@@ -1294,7 +1295,7 @@ class Tooljob {
                         'sources'   => array(),
                         'taxon_id'  => 0
                     );
-                if (preg_match('/refGenomes\/(\w+)\//',$input_value,$m)){
+                if (preg_match('/refGenomes\/(.[^\/]+)\//',$input_value,$m)){
                     $refGenome = $m[1];
                     $file['meta_data']['assembly'] = $refGenome;
                     $file['taxon_id'] =(isset($this->refGenome_to_taxon[$refGenome])?$this->refGenome_to_taxon[$refGenome]:0);

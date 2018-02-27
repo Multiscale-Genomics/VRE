@@ -40,7 +40,8 @@ if (file_exists($avatarImg)){
                     </a>
                     <!-- END RESPONSIVE MENU TOGGLER -->
                     <!-- BEGIN TOP NAVIGATION MENU -->
-                    <div class="top-menu">
+										<div class="top-menu">
+												<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
                         <ul class="nav navbar-nav pull-right">
                             <!-- BEGIN USER LOGIN DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
@@ -52,7 +53,7 @@ if (file_exists($avatarImg)){
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-default">
-									<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
+									
                                     <li>
                                         <a href="user/usrProfile.php">
                                             <i class="glyphicon glyphicon-user"></i> My Profile </a>
@@ -64,20 +65,7 @@ if (file_exists($avatarImg)){
 									</li>
 									<?php } ?>
                                     <li class="divider"> </li>
-                                    <!--<li>
-                                        <a href="user/lockScreen.php">
-                                            <i class="fa fa-lock" style="font-size:16px;"></i> Lock Screen </a>
-                                    </li>-->
-									<?php }else{ ?>
-                                    <!--<li>
-                                        <a id="" href="user/restoreLink.php">
-                                            <i class="fa fa-link" style="font-size:16px;"></i> Restore Link </a>
-                                    </li>
-                                    <li>
-                                        <a id="" href="applib/loginToken.php">
-                                            <i class="fa fa-sign-out" style="font-size:16px;"></i> Sign in ¿? </a>
-                                    </li>-->
-									<?php } ?>
+									
                                     <li>
                                         <a id="logout-button" href="javascript:;">
                                             <i class="fa fa-power-off" style="font-size:16px;"></i> Log Out </a>
@@ -85,7 +73,19 @@ if (file_exists($avatarImg)){
                                 </ul>
                             </li>
                             <!-- END USER LOGIN DROPDOWN -->
-                        </ul>
+												</ul>
+												<?php } else { ?>
+
+													<ul class="nav navbar-nav pull-right">
+                            <li class="dropdown dropdown-user">
+														<a href="<?php echo $GLOBALS['URL_KC']; ?>" class="dropdown-toggle" style="padding-right:15px;">
+																	<i class="fa fa-sign-in" style="font-size: 23px;position: relative;top: 3px;"></i>
+                                  <span class="username username-hide-on-mobile">Log In</span>
+																</a>
+														</li>
+													</ul>
+												
+												<?php } ?>
                     </div>
                     <!-- END TOP NAVIGATION MENU -->
                 </div>

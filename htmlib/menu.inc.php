@@ -200,12 +200,12 @@ sort($tools);
                                         <a href="getdata/sampleDataList.php" class="nav-link ">
                                             <span class="title">Import sample data</span>
                                         </a>
-                                    </li>
+                                    <!--</li>
 																		<li class="nav-item <?php if($currentSubSection == 'id') { ?>active open<?php } ?>">
                                         <a href="getdata/dataFromID.php" class="nav-link ">
                                             <span class="title">From ID</span>
                                         </a>
-                                    </li>
+                                    </li> -->
 																		<!--<li class="nav-item <?php if($currentSubSection == 'tx') { ?>active open<?php } ?>">
                                         <a href="getdata/dataFromTxt.php" class="nav-link ">
                                             <span class="title">From Text</span>
