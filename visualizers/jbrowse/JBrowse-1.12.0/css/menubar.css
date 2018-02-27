@@ -4,7 +4,7 @@ div.menuBar {
     height: 25px;
 }
 .tundra .menuBar {
-    background: #396494;
+    background: #006080; /* MuG #396494; */
     text-align: right;
 }
 .tundra .menuBar a {

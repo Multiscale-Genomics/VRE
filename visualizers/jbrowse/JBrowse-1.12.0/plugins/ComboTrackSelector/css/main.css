@@ -13,7 +13,7 @@
 
 #faceted_tracksel {
     position: fixed;
-    top: 0;
+    top: 100px;
     left: 0;
     height: 100%;
 }

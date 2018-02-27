@@ -1,5 +1,5 @@
 .jbrowseHierarchicalTrackSelector {
-    background: #fafafa;
+    background: #006080; /* MuG #fafafa; */
     overflow: auto;
 }
 .jbrowseHierarchicalTrackSelector > .header > h2.title {
