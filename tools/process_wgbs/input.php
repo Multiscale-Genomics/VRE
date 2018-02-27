@@ -277,8 +277,12 @@ $tool   = getTool_fromId($toolId,1);
 																						
 																							
 																					</div>
+<input type="hidden" name="arguments[<?php echo $tool['arguments']['aligner']['name']?>]" id="<?php echo $tool['arguments']['aligner']['name']?>" class="form-control" value="bowtie2">
+<input type="hidden" name="arguments[<?php echo $tool['arguments']['aligner_path']['name']?>]" id="<?php echo $tool['arguments']['aligner_path']['name']?>" class="form-control" value="/usr/local/lib/bowtie2-2.3.2">
+<input type="hidden" name="arguments[<?php echo $tool['arguments']['bss_path']['name']?>]" id="<?php echo $tool['arguments']['bss_path']['name']?>" class="form-control" value="/usr/local/lib/BSseeker2">
 
-																					<h4 class="form-section">Settings</h4>
+<!--
+				<h4 class="form-section">Settings</h4>
                                           <div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
@@ -296,13 +300,14 @@ $tool   = getTool_fromId($toolId,1);
 																					<div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
-                                                      <label class="control-label"><?php echo $tool['arguments']['bss_path']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['bss_path']['help']?></p>"></i></label>
-																											<input type="text" name="arguments[<?php echo $tool['arguments']['bss_path']['name']?>]" id="<?php echo $tool['arguments']['bss_path']['name']?>" class="form-control" value="${HOME}/lib/BSseeker2">
+                                                <label class="control-label"><?php echo $tool['arguments']['bss_path']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['bss_path']['help']?></p>"></i></label>
+						<input type="text" name="arguments[<?php echo $tool['arguments']['bss_path']['name']?>]" id="<?php echo $tool['arguments']['bss_path']['name']?>" class="form-control" value="/usr/local/lib/BSseeker2">
                                                   </div>
 																							</div>
 																					</div>
                                      </div>
                                   </div>
+-->
                               </div>
                               <!-- END PORTLET 2: SECTION 1 -->
 

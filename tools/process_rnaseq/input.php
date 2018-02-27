@@ -228,8 +228,8 @@ $tool   = getTool_fromId($toolId,1);
 
 																							<div class="col-md-6">
             																	<div class="form-group">
-                                                <label class="control-label"><?php echo $tool['input_files']['genome']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['input_files']['genome']['help']?></p>"></i></label>
-                                                <select  name="input_files[<?php echo $tool['input_files']['genome']['name']?>]" class="form-control form-field-enabled  ">
+                                                <label class="control-label"><?php echo $tool['input_files']['cdna']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['input_files']['cdna']['help']?></p>"></i></label>
+                                                <select  name="input_files[<?php echo $tool['input_files']['cdna']['name']?>]" class="form-control form-field-enabled  ">
 																								<?php foreach ($inPaths as $file) {  ?>
 																									<?php if($file['format'] == 'FASTA') { ?>
 																									<?php $p = explode("/", $file['path']); ?>
