@@ -41,7 +41,7 @@ function customfromFormat(op, id){
 	$('#taxonID' + id).prop("disabled", true);
 	$('#taxonID' + id).val('');
 
-	if($('#have_taxon_id').val() != 1) $('input[name="taxon_id"]').val('');
+	//if($('#have_taxon_id').val() != 1) $('input[name="taxon_id"]').val('');
 
 	$('.paired' + id).prop("disabled", true);
 	$('#pairedTR' + id).hide();
@@ -503,6 +503,8 @@ var ValidateForm = function() {
 							}
 
 							//console.log($(".snd-metadata-btn"));
+
+							if($('input[name="taxon_id"]').val() == "") console.log($("#taxonName").val())  
 
              	var data = $('#uploadFiles' + formSelected).serialize();
 							data = data.replace(/%5B/g,"[");

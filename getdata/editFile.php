@@ -301,12 +301,11 @@ redirectOutside();
 								<!--<span class="help-block font-red warn1" style="display:none;">This field is required.</span>-->
 				  </div>
 
-	
 					<div class="form-group display-hide" id="taxonG<?php echo $idx;?>">
           	<label class="control-label" id="label-taxon<?php echo $idx;?>">Taxon * <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Insert the taxon for this file. You can provide it by name, ID, or avoid this step.</p>"></i></label>
 						<div class="input-group">
 							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_1 taxon_name" name="taxon_name_id" id="taxonName" placeholder="Please enter the taxon name" value="<?php echo fromTaxonID2TaxonName($filesMeta[$idx]['taxon_id'])." (".$filesMeta[$idx]['taxon_id'].")"; ?>">
-							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_2 taxon_id" style="display:none;" name="taxon_id_name" id="taxonID" placeholder="Please enter the taxon ID" disabled>
+							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_2 taxon_id" style="display:none;" name="taxon_id_name" id="taxonID" placeholder="Please enter the taxon ID" disabled value="<?php echo $filesMeta[$idx]['taxon_id']; ?>">
 							<input type="text" class="form-control field_dependency<?php echo $idx;?> field_dependency<?php echo $idx;?>_3" style="display:none;" id="" disabled placeholder="No taxon provided">
 							<div class="input-group-btn">
 									<img class="Typeahead-spin" src="assets/layouts/layout/img/loading-spinner-blue.gif" style="display:none;">	
@@ -329,17 +328,17 @@ redirectOutside();
 					</div>
 
 
-
 					<input type="hidden" name="taxon_id" value="<?php echo $filesMeta[$idx]['taxon_id']; ?>" />
 
-		
 					<div class="form-group display-hide" id="refGenomeTR<?php echo $idx;?>">
 				        <label>Assembly * <i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Assembly description"></i></span></label> 
 					<select name="refGenome" id="refGenome<?php echo $idx;?>" class="form-control" disabled>
 						<option value="">Select the assembly</option>
 						<?php
-						$refList  = scanDir($GLOBALS['refGenomes']);
-						foreach ($refList as $ref){
+                        $refList  = scanDir($GLOBALS['refGenomes']);
+                        array_push($refList,"0"); //add Other
+                        var_dump($refList);
+                        foreach ($refList as $ref){
 						    if ( preg_match('/^\./', $ref) || !is_dir($GLOBALS['refGenomes']) )
 							continue;
 						    if (isset($GLOBALS['refGenomes_names'][$ref]))

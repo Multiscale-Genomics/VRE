@@ -341,6 +341,7 @@ redirectOutside();
                                                         print "<option value=\"$ref\">$refName</option>";
                                                     }
                                                 }
+                                                print "<option value=0>Other</option>";
 						?>
 					
 				        </select>

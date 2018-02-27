@@ -79,7 +79,11 @@ if($_REQUEST["type"] == 1) {
     }else{
         $taxon = fromTaxonID2TaxonName($mt['taxon_id'])." (".$mt['taxon_id'].")";
     }
-    if(!isset($mt["refGenome"])){$mt['refGenome'] = "N/A";}
+    if(!isset($mt["refGenome"])){
+        $mt['refGenome'] = "N/A";
+    }elseif($mt['refGenome'] == 0){
+        $mt['refGenome'] = "Other";
+    }
 
     ?>
     <table class="table table-striped table-bordered">

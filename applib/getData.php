@@ -12,13 +12,13 @@ if(! $_REQUEST['uploadType']){
 switch ($_REQUEST['uploadType']){
 	case 'file': getData_fromLocal();
 							 break;
-	case 'url': $source = $_REQUEST['url'];
-							getData_fromURL($source);
+	case 'url': $URL = $_REQUEST['url'];
+							getData_fromURL($URL);
 							break;
 	case 'txt': getData_fromTXT();
 							break;
-	case 'id':  $source = getSourceURL(); 
-							getData_fromURL($source['url'], $source['ext']);
+	case 'id':  $source = getSourceURL();
+							getData_fromURL($source['url'], $source['ext'],"id");
                             break;
     case 'repository': getData_fromRepository($_REQUEST);
                             break;
