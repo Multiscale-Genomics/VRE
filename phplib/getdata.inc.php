@@ -37,7 +37,9 @@ function getData_fromLocal() {
 		$size   = $_FILES['file']['size']; // $_FILES['file'][$i]['size'][$i];
 
 		// check upload errors
-		if ($_FILES['file']['error'] ) { //if ($_FILES['file']['error'][$i] ) {
+        if ($_FILES['file']['error'] ) { //if ($_FILES['file']['error'][$i] ) {
+            $code = $_FILES['file']['error'];
+            var_dump($_FILES['file']);
 		    $errMsg = array(
 									0=>"[UPLOAD_ERR_OK]:  There is no error, the file uploaded with success",
 									1=>"[UPLOAD_ERR_INI_SIZE]: The uploaded file exceeds the upload_max_filesize directive in php.ini",
@@ -266,9 +268,14 @@ function getData_fromURL_DEPRECATED($source, $ext = null) {
 
 }
 
-function getData_fromURL($source, $ext = null) {
-  //getData_wget($source,"uploads","die"); 
-    getData_wget($source,"uploads","/getdata/uploadForm.php#load_from_url");
+function getData_fromURL($url, $meta = null, $uploadType="url") {
+    if ($uploadType == "id"){
+       list($toolArgs,$toolOuts,$output_dir) = prepare_getData_fromURL($url,"uploads","/getdata/dataFromID.php",$meta);
+       getData_wget_syncron($toolArgs,$toolOuts,$output_dir,"uploads","/getdata/dataFromID.php"); 
+    }else{
+       list($toolArgs,$toolOuts,$output_dir) = prepare_getData_fromURL($url,"uploads","/getdata/uploadForm.php#load_from_url",$meta);
+       getData_wget_asyncron($toolArgs,$toolOuts,$output_dir,"/getdata/uploadForm.php#load_from_url"); 
+    }
     echo 1;
 }
 
@@ -288,13 +295,14 @@ function getSourceURL() {
 	switch($input["databank"]) {
 
 		case 'pdb': $source['url'] = "http://mmb.pcb.ub.es/api/pdb/".$input["idcode"];
-								$source['ext'] = "pdb";
-								break;
+                    // TODO: infer metadata from databank -> $source['ext'] = array( "file_type" => "PDB")
+					//$source['ext'] = "pdb";
+					$source['ext'] = NULL;
+					break;
 
 		default: die(0);
 
 	}
-
 	return $source;
 
 }
@@ -649,10 +657,9 @@ function getData_fromRepository($params=array()) { //url, repo, id, taxon
 
 
 
-function getData_wget($url,$outdir,$referer,$meta=array()) {
+function prepare_getData_fromURL($url,$outdir,$referer,$meta=array()) {
 
     //validate URL: get status and size and filename
-
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
@@ -744,13 +751,9 @@ function getData_wget($url,$outdir,$referer,$meta=array()) {
         $_SESSION['errorData']['Error'][]="Resource file ('".$url."') is already available in the workspace: $fnP";
 
         redirect("../getdata/editFile.php?fn[]=$fnId");
-
     }else{
-        //asyncronous download file (internal tool wget)
-        
-        //FIXME START - This is a temporal fix. In future, files should not be downloaded, only registered
 
-        //output_dir will be where fn is expeted to be created: repository
+        //output_dir will be where fn is expected to be created
         $output_dir = $wdP;
     
         // working_dir will be set in user temporal dir. Checking it
@@ -763,12 +766,6 @@ function getData_wget($url,$outdir,$referer,$meta=array()) {
 	    	break;
     	    }
         }
-
-        // choosing interanl tool 
-        $toolId = "wget";	
-
-        // setting tool	inputs
-        $toolInputs= array();
 
         // setting tool	arguments
         $toolArgs  = array(
@@ -795,21 +792,39 @@ function getData_wget($url,$outdir,$referer,$meta=array()) {
                    );
         $toolOuts = Array ("output_files" => Array($fileOut));
         
-        // setting logName
-        $logName = basename($fnP). ".log";
-    
-        //calling internal tool
-        $pid = launchToolInternal($toolId,$toolInputs,$toolArgs,$toolOuts,$output_dir,$logName);
+    }
+    return array($toolArgs,$toolOuts,$output_dir);
+}
 
-        if ($pid == 0){
+
+
+//function getData_wget($url,$outdir,$referer,$meta=array()) {
+function  getData_wget_asyncron($toolArgs,$toolOuts,$output_dir,$referer){
+ 
+   // choosing interanl tool 
+   $toolId = "wget";	
+
+    // setting tool	inputs
+   $toolInputs= array();
+
+   // setting logName
+   $fnP = $toolOuts['output_files'][0]["file_path"];
+   $logName = basename($fnP). ".log";
+
+
+   //asyncronous download file (internal tool wget)
+   //FIXME START - This is a temporal fix. In future, files should not be downloaded, only registered
+   $pid = launchToolInternal($toolId,$toolInputs,$toolArgs,$toolOuts,$output_dir,$logName);
+   
+   $outdir = basename($output_dir);
+
+   if ($pid == 0){
             $msg ="File imported from URL '".basename($fnP)."' cannot be imported. Error occurred while preparing the job 'Get remote file'";
             if($referer == "die"){die($msg);}else{$_SESSION['errorData']['Error'][] =$msg; redirect($referer);}
-				}else{
-
+    }else{
             $_SESSION['errorData']['Info'][] ="File from URL '".basename($fnP)."' is being imported into the '$outdir' folder below. Please, edit its metadata once the import has finished";
-						// redirect($GLOBALS['url']."/workspace");
-						header("Location:".$GLOBALS['url']."/workspace/");
-        }
+			header("Location:".$GLOBALS['url']."/workspace/");
+    }
         //FIXME END
        
     
@@ -834,10 +849,70 @@ function getData_wget($url,$outdir,$referer,$meta=array()) {
         	die("ERROR: Error occurred while registering the repository file.");
         }
         */
-   }
 }   
 
 
+function  getData_wget_syncron($toolArgs,$toolOuts,$output_dir,$referer){
+
+   // choosing tool 
+   $toolId = "wget";
+   $tool = getTool_fromId($toolId,1);
+ 
+   // setting logName
+   $fnP = $toolOuts['output_files'][0]["file_path"];
+   $logName = basename($fnP). ".log";
+
+   // run tool executable interactively
+   if ($tool){
+        $executable = $tool['infrastructure']['executable'];
+        if (!is_file($executable)){
+            $msg ="File from URL '".basename($fnP)."' cannot be imported. Internal error occurred while preparing the job 'Get remote file'";
+            if($referer == "die"){die($msg);}else{$_SESSION['errorData']['Error'][] =$msg; redirect($referer);}
+        }
+        // Add to Cmd: --argument_name value
+        $cmd = "$executable ";
+        foreach ($toolArgs as $k=>$v){
+            $cmd .= " --$k $v";
+        }
+
+        subprocess($cmd,$stdout,$stdErr,$output_dir);
+
+        if (!is_file($fnP) || filesize($fnP) == 0){
+            $msg ="File from URL '".basename($fnP)."' cannot be imported.  URL is not returning a valid file";
+            if($referer == "die"){die($msg);}else{$_SESSION['errorData']['Error'][] =$msg; redirect($referer);}
+        }
+        chmod($fnP, 0666);
+		$fnNew = basename($fnP);
+
+		$insertData=array(
+			'owner' => $_SESSION['User']['id'],
+			'size'  => filesize($fnP),
+			'mtime' => new MongoDate(filemtime($fnP))
+		);
+
+		$metaData=array(
+			'validated' => FALSE
+        );
+        $dataDirPath = getAttr_fromGSFileId($_SESSION['User']['dataDir'],"path");
+        $fn          = str_replace($_SESSION['User']['dataDir'],"",$fnP);
+        $fnP_parsed = explode("/",$fnP);
+        $fn = implode("/",array_slice(explode("/",$fnP),-3,3));
+		$fnId = uploadGSFileBNS($fn, $fnP, $insertData,$metaData,FALSE);
+
+		if ($fnId == "0"){
+			unlink($fnP);
+            $msg ="File from URL '".basename($fnP)."' cannot be imported.  An error occurred while registering the uploaded file";
+            if($referer == "die"){die($msg);}else{$_SESSION['errorData']['Error'][] =$msg; redirect($referer);}
+        }else{
+            echo $fnId;
+        }
+
+   }else{
+        $msg ="File imported from URL '".basename($fnP)."' cannot be imported. Cannot find tool 'Get remote file'";
+        if($referer == "die"){die($msg);}else{$_SESSION['errorData']['Error'][] =$msg; redirect($referer);}
+   }
+
+}
 
 /*********************************/
 /*                               */
