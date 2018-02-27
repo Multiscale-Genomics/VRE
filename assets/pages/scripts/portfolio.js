@@ -56,6 +56,9 @@
 
                     t.updateSinglePageInline(result);
 
+										//console.log("done!");
+										if($("#fake-home").val() == "1") $(".cbp-l-inline-view.btn").hide();
+
                 })
                 .fail(function() {
                     t.updateSinglePageInline('AJAX Error! Please refresh the page!');

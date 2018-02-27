@@ -43,6 +43,9 @@ var SampleData = function() {
 
             submitHandler: function(form) {
 
+							$("#btn-sample").prop('disabled', true);	
+							$("#btn-sample").html('<i class="fa fa-spinner fa-pulse fa-spin"></i> Importing sample data, please don\'t close the tab.');
+
             	form.submit();
 
             }
