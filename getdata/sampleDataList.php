@@ -127,7 +127,7 @@ foreach ($sampleList as $sample){
 																				
                                     </div>
 																		<div class="form-actions">
-                                                <button type="submit" class="btn blue"><i class="fa fa-check"></i> Import</button>
+                                                <button type="submit" class="btn blue" id="btn-sample"><i class="fa fa-check"></i> Import</button>
                                             </div>
                                   </div>
                               </div>
