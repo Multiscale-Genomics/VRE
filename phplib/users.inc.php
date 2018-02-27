@@ -151,7 +151,7 @@ function createUserAnonymous(){
     // create full user oject
     
     $f = array(
-        "Email"        => "guest_".substr(md5(rand()),0,25)."",
+        "Email"        => substr(md5(rand()),0,25)."",
         "Type"         => 3,
         "Name"         => "Guest",
         "Surname"      => "",
