@@ -1038,6 +1038,8 @@ function updatePendingFiles($sessionId,$singleJob=Array()){
 
 
 function processPendingFiles($sessionId,$files){
+
+
 	$SGE_updated = Array(); // jobs to be monitored. Stored in SESSION. Updated by checkPendingJobs.php (called by ajax)
 	$filesPending= Array(); // files to be listed 
 	$debug=0;
@@ -1051,6 +1053,7 @@ function processPendingFiles($sessionId,$files){
     }
 	// get jobs from mongo[users][lastjobs]
 	$lastjobs = getUserJobs($sessionId);
+
 
 	if (!count($lastjobs)){
 		return $filesPending;
@@ -1071,6 +1074,7 @@ function processPendingFiles($sessionId,$files){
 
 	    //get qstat info
         $jobProcess = getRunningJobInfo($pid,$job['launcher'],$job['cloudName']);
+
 
         // TODO: PMES will redirect log info to log_file. Now, info extracted from $jobProcess
         updateLogFromJobInfo($job['log_file'],$pid,$job['launcher']);
