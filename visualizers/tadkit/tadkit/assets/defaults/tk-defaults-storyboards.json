@@ -271,6 +271,39 @@
 										      "displayMode": "EXPANDED"
 	                                                                            }]
 								}
+							},
+							"mus_musculus" : {
+					        	"mm9" : {
+									"id" : "mm9",
+									"fastaURL": "refGenomes/mm9/mm9.fa",
+									"cytobandURL": "refGenomes/mm9/mm9_cytoBand.txt",
+									"tracks": [{
+	                                                                              "name": "Genomic sequence features",
+	                                                                              "type": "annotation",
+	                                                                              "format": "gff3",
+	                                                                              "sourceType": "file",
+	                                                                              "url": "assets/data/Mus_musculus.GRCm38.91.sorted.gff3.gz",
+	                                                                              "index": "assets/data/Mus_musculus.GRCm38.91.sorted.gff3.gz.tbi",
+	                                                                              "indexed": true,
+										      "displayMode": "EXPANDED"
+	                                                                            }]
+	                            }
+							},
+							"schizosaccharomyces_pombe" : {
+					        	"spombe" : {
+									"id" : "spombe",
+									"fastaURL": "refGenomes/spombe/spombe.fa",
+									"cytobandURL": "refGenomes/spombe/spombe_cytoBand.txt",
+									"tracks": [{
+	                                                                              "name": "Genomic sequence features",
+	                                                                              "type": "annotation",
+	                                                                              "format": "gff3",
+	                                                                              "sourceType": "file",
+	                                                                              "url": "assets/data/Schizosaccharomyces_pombe.ASM294v2.38.gff3",
+	                                                                              "indexed": false,
+										      "displayMode": "EXPANDED"
+	                                                                            }]
+	                            }
 							}
 						}
 					}
