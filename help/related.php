@@ -43,12 +43,7 @@ redirectOutside();
 
 												<div id="html-content-help">
 
-													<div class="list-group">
-														<a href="http://www.multiscalegenomics.eu/MuGVRE/modules/BigNASimMuG/" target="_blank" class="list-group-item list-group-item-action">BigNASim</a>
-														<a href="http://mmb.irbbarcelona.org/NucleosomeDynamics/" target="_blank" class="list-group-item list-group-item-action">Nucleosome Dynamics</a>
-														<a href="http://www.multiscalegenomics.eu/MuGVRE/flexibility-browser/" target="_blank" class="list-group-item list-group-item-action">Flexibility Browser</a>
-														<a href="http://www.multiscalegenomics.eu/MuGVRE/modules/ConnectivityBrowser/" target="_blank" class="list-group-item list-group-item-action">MuG Information Network</a>
-													</div>
+													<?php require "../help/inc/related.php"; ?>
 		
 												</div>
 				
