@@ -38,9 +38,20 @@ function getConf($path){
 }
 
 function redirectOutside(){
-	if(!checkLoggedIn()){
-		redirect($GLOBALS['URL']);
+    if(!checkLoggedIn()){
+        //Get access creating an a anonymous guest account
+        $r = createUserAnonymous();
+        if (!$r)
+            exit('Login error: cannot create anonymous VRE user');
+		//redirect($GLOBALS['URL']);
+    }else{
+        $r = loadUser($_SESSION['User']['_id'],false);
+    }
+    /*
 	}else if(!checkTermsOfUse()) {
+		if(pathinfo($_SERVER['PHP_SELF'])['filename'] != 'usrProfile') redirect($GLOBALS['PROFILE']);
+	}*/
+	if(!checkTermsOfUse()) {
 		if(pathinfo($_SERVER['PHP_SELF'])['filename'] != 'usrProfile') redirect($GLOBALS['PROFILE']);
 	}
 }
