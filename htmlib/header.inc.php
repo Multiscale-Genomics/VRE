@@ -30,7 +30,7 @@
         <link href="assets/pages/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/pages/css/treeTable.dataTables.css" rel="stylesheet" type="text/css" />
 				<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />	
-				<link href="assets/global/plugins/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css" />	
+				<link href="assets/global/plugins/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css" />
 			<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home'){ ?>
 				<link href="assets/global/plugins/cubeportfolio/css/cubeportfolio.css" rel="stylesheet" type="text/css" />
 			<?php } else { ?>
@@ -44,7 +44,7 @@
         <link href="assets/pages/css/treeTable.dataTables.css" rel="stylesheet" type="text/css" />
 				<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />	
 				<link href="assets/global/plugins/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css" />	
-			<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home'){ ?>
+			<?php } elseif((dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home') || (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'publicsite')){ ?>
 				<link href="assets/global/plugins/cubeportfolio/css/cubeportfolio.css" rel="stylesheet" type="text/css" />
 			<?php } else { ?>
 				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
@@ -144,7 +144,7 @@
 			case 'resetPassword':
 			case 'index': ?>
 			<?php if(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'workspace'){ ?>	
-			<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home'){ ?>
+			<?php } elseif((dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home') || (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'publicsite')){ ?>
 			<link href="assets/pages/css/portfolio.min.css" rel="stylesheet" type="text/css" />
 			<?php } else { ?>
 			<link href="assets/pages/css/login.min.css" rel="stylesheet" type="text/css" />
