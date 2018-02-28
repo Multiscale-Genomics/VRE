@@ -48,7 +48,7 @@ class User {
     	$this->registrationDate = moment();
     	$this->Surname      = ucfirst($this->Surname);
         $this->Name         = ucfirst($this->Name);
-    	$this->diskQuota    = ($this->diskQuota? $this->diskQuota :$GLOBALS['DISKLIMIT']);
+    	$this->diskQuota    = (!$this->diskQuota && $this->Type!=3? $GLOBALS['DISKLIMIT']:$GLOBALS['DISKLIMIT_ANON']);
     	$this->DataSample   = ($this->DataSample?$this->DataSample:$GLOBALS['sampleData_default']);
 
         return $this;
