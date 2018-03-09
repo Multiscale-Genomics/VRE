@@ -659,6 +659,17 @@ function getData_fromRepository($params=array()) { //url, repo, id, taxon
 
 function prepare_getData_fromURL($url,$outdir,$referer,$meta=array()) {
 
+    //parse out username and password from URL, if any
+    $user=0;
+    $pass=0;
+    $url_withCredentials=0;
+    if (preg_match('/(.*\/\/)(.*):(.*)@(.*)/',$url,$m)){
+        $user = $m[2];
+        $pass = $m[3];
+        $url_withCredentials = $m[1].urlencode($user).":".urlencode($pass)."@".$m[4];
+        $url  = $m[1].$m[4];
+    }
+
     //validate URL: get status and size and filename
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -666,7 +677,11 @@ function prepare_getData_fromURL($url,$outdir,$referer,$meta=array()) {
     curl_setopt($ch, CURLOPT_HEADER, TRUE);
     curl_setopt($ch, CURLOPT_VERBOSE,TRUE);
     curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+    if($user && $pass){
+        curl_setopt($ch, CURLOPT_USERPWD, "$user:$pass");
+    }
     $curl_data = curl_exec($ch);
+
     //status
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     if ($status != 200 && !preg_match('/^3/',$status) ){
@@ -771,7 +786,9 @@ function prepare_getData_fromURL($url,$outdir,$referer,$meta=array()) {
         $toolArgs  = array(
                 "url"    => $url,   
                 "output" => $fnP);           // Tool is responsible to create outputs in the output_dir
-
+        if ($url_withCredentials){
+            $toolArgs["url"] = $url_withCredentials;
+        }
         // setting tool outputs -- metadata to save in DMP during tool output_file registration
         $descrip="File imported from URL '$url'";
         $taxon = (isset($meta['taxon'])?$meta['taxon']:"");

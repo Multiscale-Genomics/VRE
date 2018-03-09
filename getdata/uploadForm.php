@@ -166,7 +166,9 @@ redirectOutside();
 												<div class="input-icon">
 													<i class="fa-li fa fa-cloud-download font-green" style="line-height:10px;"></i>
 													<input type="url" class="form-control" id="dfUrl" name="url"  placeholder="http://public/path/to/file">
-													<input type="hidden" id="dfUploadType" name="uploadType" value="url" />
+                                                    <input type="hidden" id="dfUploadType" name="uploadType" value="url" />
+                                                    <br/>
+                                                    <p style="font-size:0.9em"><i>For password-protected sites, include the credentials in the URL. Format: [protocol]://[username]:[password]@server/path/to/file.<br/>Notice that strange characters should be UTF-8 codified.</i></p>
 												</div>
 											<button class="btn green" type="submit" id="btn-down-remote" style="margin-top:20px;">SEND DATA</button>
 
