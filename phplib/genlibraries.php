@@ -1,6 +1,8 @@
 <?php
 require  __DIR__ .'/../vendor/autoload.php'; 
 
+require "blockHEAD.inc.php";
+
 require "session.inc.php";
 require "globals.inc.php";
 require "funclib.inc.php";

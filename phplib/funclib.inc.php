@@ -38,6 +38,7 @@ function getConf($path){
 }
 
 function redirectOutside(){
+
     if(!checkLoggedIn()){
         //Get access creating an a anonymous guest account
         $r = createUserAnonymous();
