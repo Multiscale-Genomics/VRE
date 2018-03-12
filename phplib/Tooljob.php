@@ -824,11 +824,12 @@ class Tooljob {
 	if (!isset($tool['infrastructure']['wallTime']) )
 		   $tool['infrastructure']['wallTime'] = "1440";// 24h
 	if (!isset($tool['infrastructure']['memory']) )
-		   $tool['infrastructure']['memory']   = "1.0"; // 1Gb per VM
+		   $tool['infrastructure']['memory']   = "1.0"; // 1Gb per VM TODO OBSOLETE
 	if (!isset($tool['infrastructure']['cpus']) )
-		   $tool['infrastructure']['cpus']     = "1";   //1 core per VM
+		   $tool['infrastructure']['cpus']     = "1";   //1 core per VM TODO OBSOLETE
 
-	$cloud   = $tool['infrastructure']['clouds'][$this->cloudName];
+    $cloud   = $tool['infrastructure']['clouds'][$this->cloudName];
+
 	if (!isset($cloud['minimumVMs']) )
 		   $cloud['minimumVMs'] = "1"; // if workflow_type = "Single" -> 1
 	if (!isset($cloud['maximumVMs']) )
@@ -839,6 +840,8 @@ class Tooljob {
 		   $cloud['initialVMs'] = "1"; // if workflow_type = "Single" -> 1
 	if (!isset($cloud['disk']) )
 		   $cloud['disk'] = "1.0";     // TODO OBSOLETE?
+	if (!isset($cloud['imageType']) )
+		   $cloud['imageType'] = "small";
 
 	//Setting PMES execution user (name,uid,gid)
 	exec("stat  -c '%u:%g' ".$this->working_dir,$stat_out);
@@ -888,7 +891,7 @@ class Tooljob {
 				),
 		"img"        => array(
 				"imageName" => $cloud['imageName'], 
-				"imageType" => "small",				// Not used. Formally required for rOCCY petition.
+				"imageType" => $cloud['imageType']
 				),
       	"app"        => array(
 				"name"   => $tool['_id'],
@@ -906,7 +909,7 @@ class Tooljob {
 				),				
 		"compss_flags" =>array( "flag" => " --summary --base_log_dir=".$this->root_dir_virtual."/".$this->project )
 		)
-	);
+    );
 	return $data;
     }
 
