@@ -146,9 +146,9 @@ class ProcessPMES{
     }
 
 
-	public function stop($jobids){
+	public function stop($jobid){
 		$service = "terminateActivity";
-        $r = $this->post($jobids,$service);
+        $r = $this->post(array($jobid),$service);
         print "<br/><br/><br/><br/>TERMINATEACTIVITY RETURNS:";
         var_dump($r);
         return $r;

@@ -40,9 +40,6 @@ function execJobPMES ($cloudName,$data){
     $process->runPMES($data);
     $jobid =  $process->getJobId();
 
-    print "<br>POST DONE. <br>JOBID = $jobid .<br>PMES PROCESS IS:<br>";
-    var_dump($process);
-
     if ($jobid == "0"){
         $_SESSION['errorData']['Error'][]="Job submission failed.<br/>".json_encode($process->lastCall)."<br/>".$process->getErr();
         logger("ERROR: PMES job is not running. MORE_INFO = '".$process->getErr(). "'");
@@ -123,7 +120,12 @@ function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL,$cloudName="local
         $job = $process->getActivityInfo($pid);
 
         if ($job['jobOutputMessage'] || $job['jobErrorMessage'] ){
+         if (is_file($logFile)){    
             $F = fopen($logFile, "w");
+            if ( !$F ) {
+		         $_SESSION['errorData']['Warning'][]="Cannot update LOG file '".basename(dirname($logFile))."' ($cloudName). Recently deleted from workspace or not accessible.";
+                return true;
+            } 
             if ($job['jobOutputMessage']){
                 fwrite($F, "##### STDOUT ###############################\n");
                 fwrite($F, $job['jobOutputMessage']);
@@ -133,6 +135,10 @@ function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL,$cloudName="local
                 fwrite($F, $job['jobErrorMessage']);
             }
             fclose($F);
+         }
+        }else{
+        //     $_SESSION['errorData']['Warning'][]="Cannot update LOG file '".basename(dirname($logFile))."' ($cloudName). Recently deleted from workspace or not accessible";
+        //     return true;
         }
     }
     return true;

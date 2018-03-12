@@ -378,8 +378,8 @@ function getFilesToDisplay($dirSelection,$filter_data_types=array()) {
 		$parentId = $filesPending[$r['_id']]['parentDir'];
 
 		if (!isset($files[$parentId])){
-                	if ($r['pending']){
-	                    $_SESSION['errorData']['Warning'][]="Cannot display '".$filesPending[$r['_id']]['path']."'. Its execution folder '".$r['title']."' does not exist anymore.";
+            if ($r['pending']){
+	                    $_SESSION['errorData']['Warning'][]="Cannot display job '".$filesPending[$r['_id']]['path']."'. The project folder '".$r['title']."' has been recently deleted or is not accessible.";
 			    unset($filesPending[$r['_id']]);
 			}else{
 			    $_SESSION['errorData']['Error'][] ="Cannot display '".$filesPending[$r['_id']]['path']."'. FS inconsistency. Its parent folder ($parentId) does not exist anymore or is unaccessible.";
@@ -627,7 +627,6 @@ function getToolsByDT($data_type, $status = 1) {
 
 
 function formatData($data) {
-	//var_dump($data);
 		//_id id_URL
 		if (!isset($data['_id']))
 			return $data;
@@ -929,7 +928,6 @@ function formatData($data) {
 		//viewResultsLink
 		if (isset($data['tool']) ){
 			$tool = $GLOBALS['toolsCol']->findOne(array('_id' => $data['tool']));
-			//var_dump($tool);
 			$data['toolname'] = $data['tool'];
 			if (!empty($tool)){
 				if (isset($tool['has_custom_viewer']) && $tool['has_custom_viewer'] === false){
@@ -1072,7 +1070,8 @@ function processPendingFiles($sessionId,$files){
 		if ($debug)
 			print "<br/>\nPID = [$pid] TOOL=".$job['toolId']." WORK_DIR=".$job['working_dir']." <br/>\n";			
 
-	    //get qstat info
+        //get qstat info
+
         $jobProcess = getRunningJobInfo($pid,$job['launcher'],$job['cloudName']);
 
 
