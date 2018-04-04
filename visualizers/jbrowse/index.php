@@ -74,7 +74,7 @@ foreach ($arr_tracks as $id) {
 		}
 	}
 
-print "LABEL: " . $label . " " . "FILENAME: " . $filename . " TYPE: " . $type . " FORMAT : " .$format . " PROJECT: " . $project . " REF: " . $ref . "<br/>";
+#print "LABEL: " . $label . " " . "FILENAME: " . $filename . " TYPE: " . $type . " FORMAT : " .$format . " PROJECT: " . $project . " REF: " . $ref . "<br/>";
 
 	if ($refGlobal != $ref){
                 $_SESSION['errorData']['JBrowse'][] ="All selected tracks should have the same Reference Genome.";
@@ -259,12 +259,12 @@ if ($ref == "r5.01"){
 }
 
 
-//$url = $url . $url_tracks;
 $url = $GLOBALS['jbrowseURL'] . $url;
-//print $url;
 
-header('Location: ' . $url);
-exit();
+
+redirect($url);
+//header('Location: ' . $url);
+//exit();
 
 
 ?>
