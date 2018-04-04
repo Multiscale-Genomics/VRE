@@ -317,11 +317,13 @@ sort($tools);
 																					<?php } ?>
 																				</ul>
 																		</li>
+																		<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
 																		<li class="nav-item  <?php if($currentSubSection == 'h7') { ?>active open<?php } ?>">
                                         <a href="help/hdesk.php" class="nav-link ">
                                             <span class="title">Helpdesk</span>
                                         </a>
 																		</li>
+																		<?php } ?>
 																		<li class="nav-item  <?php if($currentSubSection == 'h8') { ?>active open<?php } ?>">
                                         <a href="help/related.php" class="nav-link ">
                                             <span class="title">Related Links</span>
@@ -344,7 +346,8 @@ sort($tools);
                                     <i class="icon-users"></i>
                                     <span class="title">Forum</span>
                                 </a>
-                            </li>-->
+														</li>-->
+														<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
                             <li>
                                 <li class="nav-item <?php if($currentSection == 'hd') { ?>active open<?php } ?>">
                                 <a href="/helpdesk/" class="nav-link nav-toggle">
@@ -352,7 +355,7 @@ sort($tools);
                                     <span class="title">Helpdesk</span>
                                 </a>
                             </li>
-														
+														<?php } ?>
 							<!--<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
                             <li class="nav-item  <?php if($currentSection == 'up') { ?>active open<?php } ?>">
                                 <a href="javascript:;" class="nav-link nav-toggle">
