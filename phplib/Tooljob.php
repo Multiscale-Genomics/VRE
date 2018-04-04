@@ -856,8 +856,10 @@ class Tooljob {
 	//Building PMES json data
 	$data = array(
 		   array(
-		"jobName"    => $this->project, 
-		"wallTime"   => $tool['infrastructure']['wallTime'], 
+		"jobName"          => $this->project, 
+        "compssWorkingDir" => $this->root_dir_virtual."/".$this->project,
+
+        "wallTime"   => $tool['infrastructure']['wallTime'], 
 		"memory"     => $tool['infrastructure']['memory'],
 		"cores"      => $tool['infrastructure']['cpus'],
 		"minimumVMs" => $cloud['minimumVMs'], 
@@ -907,7 +909,7 @@ class Tooljob {
 						),
         			"type" => $cloud['workflowType']    // COMPSs || Single
 				),				
-		"compss_flags" =>array( "flag" => " --summary --base_log_dir=".$this->root_dir_virtual."/".$this->project )
+		"compss_flags" =>array( "flag" => " --summary --base_log_dir=".$this->root_dir_virtual."/".$this->project)
 		)
     );
 	return $data;
