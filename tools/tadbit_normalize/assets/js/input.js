@@ -68,6 +68,10 @@ var ValidateForm = function() {
 					required:true
 				});
 
+				$("#normalization").rules("add", {
+					required:true
+				});
+
 
         $('#tadbit_normalize-form input').keypress(function(e) {
             if (e.which == 13) {

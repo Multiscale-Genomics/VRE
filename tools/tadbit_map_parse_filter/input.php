@@ -90,7 +90,9 @@ if ($prevs->count() > 0){
     $dirName="run".rand(100, 999);
 }
 
-
+// get tool details
+$toolId = "tadbit_map_parse_filter";
+$tool   = getTool_fromId($toolId,1);
 
 ?>
 
@@ -123,13 +125,13 @@ if ($prevs->count() > 0){
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>TADbit map, parse and filter</span>
+                                  <span><?=$tool['name']?></span>
                               </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> TADbit map, parse and filter </h1>
+                        <h1 class="page-title"><?=$tool['title']?></h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
                         <div class="row">
@@ -193,7 +195,7 @@ if ($prevs->count() > 0){
                               <!-- END PORTLET 0: INPUTS -->
 
 			 <form action="#" class="horizontal-form" id="tadbit_map_parse_filter-form">
-				  <input type="hidden" name="tool" value="tadbit_map_parse_filter" />
+				  <input type="hidden" name="tool" value="<?=$toolId;?>" />
 					<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
 
 				 
@@ -272,15 +274,17 @@ if ($prevs->count() > 0){
 																						<div class="row">
                                               <div class="col-md-6">
 																								<div class="form-group " id="">
-																										<?php if(!(in_array("GEM", $formats))) { ?>
+																										<?php if(!(in_array("GEM", $formats))) {  ?>
 																										<label>Indexed reference genome</label>
 																										<span class="tooltip-mt-radio"><i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome, indexed with gem-indexer, on which reads will be mapped.</p>"></i></span>
 																										<select name="input_files_public_dir[mapping:refGenome]" id="map_refgenome" class="form-control">
 																											<option value="">Select the reference genome</option>
-																											<option value="refGenomes/hg38/GEM/hg38.gem">Homo Sapiens (hg38)</option>
-																											<option value="refGenomes/R64-1-1/GEM/R64-1-1.gem">Saccharomyces Cerevisiae (R64.1.1)</option>
-																											<option value="refGenomes/r5.01/GEM/r5.01.gem">Drosophila Melanogaster (r5.01)</option>
-																										</select>
+				<?php
+				$tool_options = $tool['input_files_public_dir']['mapping:refGenome']['enum_items'];
+				for ($i=0; $i<count($tool_options['name']); $i++){ ?>
+					<option value="<?=$tool_options['name'][$i]?>"><?=$tool_options['description'][$i]?></option>
+			        <?php } ?>
+			</select>
 																										<?php } else { ?>
                                                       <label class="control-label">Reference genome index <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome</p>"></i></label>
                                                       <select  name="input_files[mapping:ref_genome_gem]" id="ref_genome_gem1" class="form-control">
@@ -372,10 +376,12 @@ if ($prevs->count() > 0){
 																								<div class="form-group " id="">
 																									<label>Indexed reference genome <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome, indexed with gem-indexer, on which reads will be mapped.</p>"></i></label>
 																									<select name="input_files_public_dir[parsing:refGenome]" id="ref_genome" class="form-control">
-																										<option value="">Select the reference genome</option>
-																										<option value="refGenomes/hg38/hg38.fa">Homo Sapiens (hg38)</option>
-																										<option value="refGenomes/R64-1-1/R64-1-1.fa">Saccharomyces Cerevisiae (R64.1.1)</option>
-																										<option value="refGenomes/r5.01/r5.01.fa">Drosophila Melanogaster (r5.01)</option>
+			<option value="">Select the reference genome</option>
+		       	<?php
+			$tool_options = $tool['input_files_public_dir']['parsing:refGenome']['enum_items'];
+			for ($i=0; $i<count($tool_options['name']); $i++){ ?>
+				<option value="<?=$tool_options['name'][$i]?>"><?=$tool_options['description'][$i]?></option>
+			<?php } ?>
 																									</select>
 																								</div>
 																							</div>

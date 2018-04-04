@@ -199,7 +199,8 @@ if ($prevs->count() > 0){
 
 			 <form action="#" class="horizontal-form" id="tadbit_normalize-form">
 				  <input type="hidden" name="tool" value="tadbit_normalize" />
-					<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+                    <input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+                    <input type="hidden" name="input_files_public_dir[refGenomes_folder]" value="refGenomes/" />
 
 				 
                               <!-- BEGIN PORTLET 1: ANALYZES -->
@@ -264,27 +265,34 @@ if ($prevs->count() > 0){
                                           <div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
-                                                      <label class="control-label">Resolution <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Resolution of the normalization (should input a number between 10000 (10 kb) and 10000000 (10 Mb)).</p>"></i></label>
+																											<label class="control-label">Normalization method <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Normalization method to apply.</p>"></i></label>
+																											<select  name="arguments[normalization]" class="form-control" id="normalization">
+																												<option></option>
+																												<option value="Vanilla" selected>Vanilla</option>
+																												<option value="oneD">oneD</option>
+																											</select>
+                                                  </div>
+																							</div>
+																							<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label">Resolution of the normalization <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Resolution of the normalization (should input a number between 10000 (10 kb) and 10000000 (10 Mb)).</p>"></i></label>
 																											<input type="number" min="10000" max="10000000" name="arguments[resolution]" id="resolution" class="form-control" value="100000">
                                                   </div>
 																							</div>
+																					</div>
+																					<div class="row">
 																							<div class="col-md-6">
 																									<div class="form-group">
                                                       <label class="control-label">Minimum percentage <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Lower percentile from which consider bins as good.</p>"></i></label>
 																											<input type="number" min="0" max="100" step="0.1" name="arguments[min_perc]" id="min_perc" class="form-control" value="7">
                                                   </div>
 																							</div>
-																					</div>
-																					<div class="row">
                                               <div class="col-md-6">
                                                   <div class="form-group">
                                                       <label class="control-label">Maximum percentage <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Upper percentile until which consider bins as good.</p>"></i></label>
 																											<input type="number" min="0" max="100" step="0.1" name="arguments[max_perc]" id="max_perc" class="form-control" value="99.8">
                                                   </div>
                                               </div>
-																							<div class="col-md-6">
-																									
-																							</div>
                                           </div>
                                       </div>
                                   </div>

@@ -19,7 +19,7 @@ $absURL = $GLOBALS['URL']."/visualizers/tadkit/tadkit/index.html";
 
 $user_data = "user_data/";
 $uid = uniqid();
-$url = "#/project/dataset";
+$url = "#!/project/dataset";
 $url = $url . "?conf=". $user_data . urlencode($user) . "/.tadkit/conf_".$uid.".json";
 $file = $GLOBALS['dataDir']."/". $user . "/.tadkit/conf_".$uid.".json";
 //print $file;
@@ -36,7 +36,7 @@ $first = true;
 $refGlobal;
 
 $conf_json = array(
-    "dataset" => "",
+    "dataset" => array(),
     "tracks" => array()
 );
 if(sizeof($arr_datasets)>0) {
@@ -77,7 +77,8 @@ if(sizeof($arr_datasets)>0) {
 	}
 	if ($data_type == 'chromatin_3dmodel_ensemble' || $data_type == 'tadbit_models') {
 	//if(strpos($filename, '.json') !== false)  { #Until we fix data type
-		$conf_json["dataset"] = $user_data.$filepath;
+		//$conf_json["dataset"] = $user_data.$filepath;
+		array_push($conf_json["dataset"],$user_data.$filepath);
 	} else {
 		if ($type == "FALSE"){
 			$_SESSION['errorData']['tadkit'][] ="$filename cannot be visualized, file has no track type";
