@@ -7,14 +7,14 @@ redirectAdminOutside();
 
 // total users
 $users = array();
-foreach (array_values(iterator_to_array($GLOBALS['usersCol']->find(array(),array('Surname'=>1, 'Name'=>1, 'Inst'=>1, 'diskQuota'=>1,  'Type'=>1, 'Status'=>1, 'registrationDate'=>1))->sort(array('Surname'=>1)))) as $v)
+foreach (array_values(iterator_to_array($GLOBALS['usersCol']->find(array("Type" => array('$ne' => "3")),array('Surname'=>1, 'Name'=>1, 'Inst'=>1, 'diskQuota'=>1,  'Type'=>1, 'Status'=>1, 'registrationDate'=>1))->sort(array('Surname'=>1)))) as $v)
 	$users[$v['_id']] = array($v['Surname'], $v['Name'], $v['Inst'], $v['diskQuota'], $v['Type'], $v['Status'], $v['registrationDate']);
 
 unset($users['guest@guest']);
 
 // users requesting premium user account 
 $users2 = array();
-foreach (array_values(iterator_to_array($GLOBALS['usersCol']->find(array(),array('Surname'=>1, 'Name'=>1, 'Inst'=>1, 'Type'=>1, 'Status'=>1, 'lastLogin'=>1, 'id'=>1))->sort(array('lastLogin'=>-1)))) as $v){
+foreach (array_values(iterator_to_array($GLOBALS['usersCol']->find(array("Type" => "100"),array('Surname'=>1, 'Name'=>1, 'Inst'=>1, 'Type'=>1, 'Status'=>1, 'lastLogin'=>1, 'id'=>1))->sort(array('lastLogin'=>-1)))) as $v){
 	if(($v['Type'] == 100) && ($v['Status'] == 1)) $users2[$v['_id']] = array($v['Surname'], $v['Name'], $v['Inst'],  $v['Type'], $v['Status'], $v['lastLogin'], $v['id']);
 }
 
