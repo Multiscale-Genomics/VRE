@@ -15,9 +15,10 @@
         <div class="cbp-l-inline-desc">
 					<p>Pipeline to calculate the level of gene expression for an RNA-seq experiment. This uses Kallisto for the quantification of the experiment. The FASTQ reads are aligned to transcripts, from which the level of expression is called.</p>
 				</div>
-				<!--<a href="javascript:;"  class="cbp-l-inline-view btn blue btn-outline">IN PROGRESS</a>-->
-				<a href="workspace/?tool=process_rnaseq" class="cbp-l-inline-view btn blue btn-outline">LAUNCH TOOL</a>
-				<a href="tools/process_rnaseq/help/help.php" class="cbp-l-inline-view btn blue btn-outline" style="margin-left:10px;">VIEW HELP</a>
+					<div id="btns-exc-tool"></div>
+				<a href="tools/process_rnaseq/help/help.php" class="cbp-l-inline-view btn blue btn-outline">VIEW HELP</a>
 
     </div>
 </div>
+
+<script>loadToolButtons("process_rnaseq");</script>

@@ -3,17 +3,17 @@
 require "../../phplib/genlibraries.php";
 redirectOutside();
 
-$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['execution'];
 $indexFile = $wd.'/index';
 
 $results = file($indexFile);
 
-$dir = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dir = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
 //processing results files
 
-$tmp_dir  = $GLOBALS['dataDir'].'/'.$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
-$pathTemp = 'files/'               .$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$tmp_dir  = $GLOBALS['dataDir'].'/'.$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['execution'];
+$pathTemp = 'files/'               .$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['execution'];
 
 $PNGs = glob("$tmp_dir/*.png");
 $PNGs = array_map('basename',$PNGs);
@@ -43,7 +43,7 @@ var_dump($comparts_sum);
 $pathTGZ = 'files/'.$_SESSION['User']['id']."/".$dir;
 
 //project folder ID
-$dirName = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dirName = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
 ?>
 

@@ -21,17 +21,17 @@ function listFolderFiles($dir) {
 	return $list;
 }
 
-$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir']."/outputs_".$_REQUEST['execution'];
 $indexFile = $wd.'/index';
 
 $results = file($indexFile);
 
-$dir = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dir = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
 //processing results files
 
-$tmp_dir  = $GLOBALS['dataDir'].'/'.$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
-$pathTemp = 'files/'               .$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$tmp_dir  = $GLOBALS['dataDir'].'/'.$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/.tmp/outputs_".$_REQUEST['execution'];
+$pathTemp = 'files/'               .$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/.tmp/outputs_".$_REQUEST['execution'];
 
 
 $PNGs = listFolderFiles($tmp_dir);
@@ -69,7 +69,7 @@ var_dump($comparts_sum);
 $pathTGZ = 'files/'.$_SESSION['User']['id']."/".$dir;
 
 //project folder ID
-$dirName = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dirName = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
 ?>
 
@@ -133,7 +133,10 @@ $dirName = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
 				$c = 0;
 				foreach($PNGs as $p) { ?>
 				<?php if(($c % 2) == 0) { ?> <div class="row"> <?php } ?>
-				<div class="col-md-6"><img src="<?php echo $pathTemp."/".$p; ?>" style="width:100%;" /></div>
+				<div class="col-md-6">
+					<h4><?php echo $p; ?></h4><br>
+					<img src="<?php echo $pathTemp."/".$p; ?>" style="width:100%;" />
+				</div>
 				<?php if(($c % 2) == 1) { ?> </div><div class="row">&nbsp;</div> <?php } ?>
 				<?php 
 				$c ++;

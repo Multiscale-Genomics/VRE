@@ -3,81 +3,20 @@
 require "../../phplib/genlibraries.php";
 redirectOutside();
 
-// check inputs
-if (!isset($_REQUEST['fn']) && !isset($_REQUEST['rerunDir'])){
-	$_SESSION['errorData']['Error'][]="Please, select a TSV and a PDB files as inputs for running this tool.";
-	redirect('/workspace/');
-}
+InputTool_checkRequest($_REQUEST);
 
-if(count($_REQUEST['fn']) != 2) {
-	$_SESSION['errorData']['Error'][] = "Please, select a TSV and a PDB files as inputs for running this tool.";
-	redirect('/workspace/');
-}
+$from = InputTool_getOrigin($_REQUEST);
 
-$rerunParams  = Array();
-$inPaths = Array();
-$formats = Array();
+list($rerunParams,$inPaths) = InputTool_getPathsAndRerun($_REQUEST);
 
-if ($_REQUEST['rerunDir']){
-	$dirMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['rerunDir'])); 
-	if (!is_array($dirMeta['inPaths']) && !isset($dirMeta['raw_params'])){
-		$_SESSION['errorData']['Error'][]="Cannot rerun job ".$_REQUEST['rerunDir'].". Some folder metadata is missing.";
-		redirect('/workspace/');
-	}
-	if (is_array($dirMeta['inPaths'][0])){
-		$_SESSION['errorData']['Internal'][]="Cannot rerun job ".$_REQUEST['rerunDir'].". New directory metadata not implemeted yet.";
-		redirect('/workspace/');
-	}
-	foreach ($dirMeta['inPaths'] as $inPath){
-		$file['path'] = $inPath;
-		$file['fn'] = getGSFileId_fromPath($inPath);
-		$file['format'] = getAttr_fromGSFileId($file['fn'],'format');
-		array_push($formats,$file['format']);
-		array_push($inPaths,$file);
-	}
-	$rerunParams = $dirMeta['raw_params'];
-	//$inPaths=$dirMeta['inPaths']
-	//$_REQUEST['fn']= array_map("getGSFileId_fromPath",$dirMeta['inPaths']);
-}else{
-	if (!is_array($_REQUEST['fn']))
-		$_REQUEST['fn'][]=$_REQUEST['fn'];
+$dirName = InputTool_getDefExName();
 
-	foreach($_REQUEST['fn'] as $fn){
-		$file['path'] = getAttr_fromGSFileId($fn,'path');
-		$file['fn'] = $fn;
-		$file['format'] = getAttr_fromGSFileId($fn,'format');
-		array_push($formats,$file['format']);
-		array_push($inPaths,$file);
-	}
-	//array_push($inPaths,getAttr_fromGSFileId($fn,'path'));
-}
+// get tool details
+$toolId = "pdiview";
+$tool   = getTool_fromId($toolId,1);
 
-$formats = array_unique($formats);
-
-if(!in_array("TSV", $formats) || !in_array("PDB", $formats)) {
-	$_SESSION['errorData']['Error'][] = "Please, select a TSV and a PDB files as inputs for running this tool.";
-	redirect('/workspace/');
-}
-
-// default project dir
-$dirNum="000";
-$reObj = new MongoRegex("/^".$_SESSION['User']['id']."\\/run\d\d\d$/i");
-$prevs  = $GLOBALS['filesCol']->find(array('path' => $reObj, 'owner' => $_SESSION['User']['id']));
-if ($prevs->count() > 0){
-        $prevs->sort(array('_id' => -1));
-        $prevs->next();
-        $previous = $prevs->current();
-        if (preg_match('/(\d+)$/',$previous["path"],$m) ){
-            $dirNum= sprintf("%03d",$m[1]+1);
-        }
-}
-$dirName="run".$dirNum;
-$prevs  = $GLOBALS['filesCol']->find(array('path' => $GLOBALS['dataDir']."/".$_SESSION['User']['dataDir']."/$dirName", 'owner' => $_SESSION['User']['id']));
-if ($prevs->count() > 0){
-    $dirName="run".rand(100, 999);
-}
-
-
+// PROCESS CHIPSEQ TOOL OPERATIONS:
+// op = 0 || count(fn) = 2 -> PDB + TSV
 
 ?>
 
@@ -110,81 +49,59 @@ if ($prevs->count() > 0){
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>Protein-DNA Interaction viewer</span>
+                                  <span><?php echo $tool['name']; ?></span>
                               </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> Protein-DNA Interaction viewer </h1>
+                        <h1 class="page-title"> <?php echo $tool['title']; ?> </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
                         <div class="row">
-				<div class="col-md-12">
-				<?php if(isset($_SESSION['errorData'])) { ?>
-					<div class="alert alert-warning">
-					<?php foreach($_SESSION['errorData'] as $subTitle=>$txts){
-						print "$subTitle<br/>";
-						foreach($txts as $txt){
-							print "<div style=\"margin-left:20px;\">$txt</div>";
-						}
-					}
-					unset($_SESSION['errorData']);
-					?>
-					</div>
-				<?php } ?>
-															<!-- BEGIN PORTLET 0: INPUTS -->
-                              <div class="portlet box blue-oleo">
-                                  <div class="portlet-title">
-                                      <div class="caption">
-                                        <div style="float:left;margin-right:20px;"> <i class="fa fa-sign-in" ></i> Inputs</div>
-                                      </div>
-                                  </div>
-                                  <div class="portlet-body">
-																		<ul class="feeds" id="list-files-run-tools">
-																		<?php foreach ($inPaths as $file) {
-																			$path= $file['path'];
-																			$p = explode("/", $path); 
-																			?>
-																			<li class="tool-122 tool-list-item">
-																			<div class="col1">
-																				<div class="cont">
-																					<div class="cont-col1">
-																						<div class="label label-sm label-info">
-																							<i class="fa fa-file"></i>
-																						</div>
-																					</div>
-																					<div class="cont-col2">
-																					<div class="desc">
-																					<span class="text-info" style="font-weight:bold;"><?php echo $p[1]; ?>  /</span> <?php echo $p[2]; ?> 
-																						
-																						<?php if($file['format'] == 'PDB') { ?>
-																
-																							<a href="javascript:openNGL('<?php echo $file['fn']; ?>', '<?php echo $p[2]; ?>', 'pdb');" style="margin-left:5px;">
-																								<div class="label label-sm label-info tooltips" style="padding:4px 5px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to preview this file with NGL.</p>">
-																									<i class="fa fa-window-maximize font-white"></i>
-																								</div>
-																							</a>
-																						
-																						<?php } ?>								
-																						
-																					</div>
-																					</div>
-																				</div>
-																			</div>
-																			</li>
-																		<?php } ?>
-                                </ul>
-                                  </div>
-                              </div>
-                              <!-- END PORTLET 0: INPUTS -->
+													<div class="col-md-12">
+													<?php if(isset($_SESSION['errorData'])) { ?>
+														<div class="alert alert-warning">
+														<?php foreach($_SESSION['errorData'] as $subTitle=>$txts){
+															print "$subTitle<br/>";
+															foreach($txts as $txt){
+																print "<div style=\"margin-left:20px;\">$txt</div>";
+															}
+														}
+														unset($_SESSION['errorData']);
+														?>
+														</div>
+													<?php } ?>
+														
+														<?php if($from == "tool") { ?>			
 
-														<form action="#" class="horizontal-form" id="pdiview-form">
-																<input type="hidden" name="tool" value="pdiview" />
-																<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+														<div class="row">
+															<div class="col-md-12">
+																		
+																<div class="mt-element-step">
+																	<div class="row step-line">
+																			<div class="col-md-6 mt-step-col first active">
+																					<div class="mt-step-number bg-white">1</div>
+																					<div class="mt-step-title uppercase font-grey-cascade">Select tool</div>
+																			</div>
+																			<div class="col-md-6 mt-step-col last active">
+																					<div class="mt-step-number bg-white">2</div>
+																					<div class="mt-step-title uppercase font-grey-cascade">Configure tool</div>
+																			</div>
+																	</div>
+																</div>
+
+															</div>
+														</div>
+
+														<?php } ?>	
+
+														<form action="#" class="horizontal-form" id="tool-input-form">
+																<input type="hidden" name="tool" value="<?php echo $toolId;?>" />
+																<input type="hidden" id="base-url" value="<?php echo $GLOBALS['BASEURL']; ?>"/>
 
 				 
-                              <!-- BEGIN PORTLET 1: ANALYZES -->
+                              <!-- BEGIN PORTLET 1: PROJECT -->
                               <div class="portlet box blue-oleo">
                                   <div class="portlet-title">
                                       <div class="caption">
@@ -194,10 +111,16 @@ if ($prevs->count() > 0){
                                   <div class="portlet-body form">
                                     <div class="form-body">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Name</label>
-                                                    <input type="text" name="project" id="dirName" class="form-control" value="<?php echo $dirName;?>">
+                                                    <label class="control-label">Select Project</label>
+																										<?php InputTool_getSelectProjects(); ?>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Execution Name</label>
+                                                    <input type="text" name="execution" id="dirName" class="form-control" value="<?php echo $dirName;?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -212,7 +135,9 @@ if ($prevs->count() > 0){
                                     </div>
                                   </div>
                               </div>
-															<!-- END PORTLET 1: ANALYZES -->
+                              <!-- END PORTLET 1: PROJECT -->
+
+
 															<!-- BEGIN PORTLET 2: OPTIONS -->
                               <div class="portlet box blue form-block-header" id="form-block-header1">
                                   <div class="portlet-title">
@@ -226,7 +151,7 @@ if ($prevs->count() > 0){
 																					<div class="row">
 
                                               <div class="col-md-6">
-                                                  <div class="form-group">
+                                                  <!--<div class="form-group">
                                                       <label class="control-label">Structure <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>The 3D structure of a protein-DNA complex in PDB format will be used to analyse the molecular determinants of specific binding.</p>"></i></label>
                                                       <select  name="input_files[structure]" class="form-control">
 																												<?php foreach ($inPaths as $file) {  ?>
@@ -236,11 +161,13 @@ if ($prevs->count() > 0){
 																												<?php } ?>
 																												<?php } ?>
 																											</select>		
-                                                  </div>
+                                                  </div>-->
+																									<?php $ff = matchFormat_File($tool['input_files']['structure']['file_type'], $inPaths);?>
+																									<?php InputTool_printSelectFile($tool['input_files']['structure'], $rerunParams['structure'], $ff[0], false, true); ?>
 																							</div>
 
 																							<div class="col-md-6">
-                                                  <div class="form-group">
+                                                  <!--<div class="form-group">
                                                       <label class="control-label">Binding data <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>The tab-separated plain-text file must contain on each line a sequence and the corresponding (relative) binding affinity score.</p>"></i></label>
                                                       <select  name="input_files[binding_data]" class="form-control">
 																												<?php foreach ($inPaths as $file) {  ?>
@@ -250,7 +177,9 @@ if ($prevs->count() > 0){
 																												<?php } ?>
 																												<?php } ?>
 																											</select>		
-                                                  </div>
+                                                  </div>-->
+																									<?php $ff = matchFormat_File($tool['input_files']['binding_data']['file_type'], $inPaths); ?>
+																									<?php InputTool_printSelectFile($tool['input_files']['binding_data'], $rerunParams['binding_data'], $ff[0], false, true); ?>
                                               </div>
 
 
@@ -261,10 +190,11 @@ if ($prevs->count() > 0){
 																						
 																					<div class="row">
 																							<div class="col-md-6">
-												  											<div class="form-group ">
+												  											<!--<div class="form-group ">
                                                       <label class="control-label">Chains <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>The specified number of top-scoring results will be included in the output.</p>"></i></label>
 																											<input type="text" name="arguments[chains]" id="chains" class="form-control" value="A,B,C">
-                                                  </div>
+                                                  </div>-->
+																								<?php echo InputTool_printField($tool['arguments']['chains'], $rerunParams['chains']); ?>
 																							</div>
 
                                               
@@ -276,11 +206,11 @@ if ($prevs->count() > 0){
                               <!-- END PORTLET 2: OPTIONS -->
 
                              
-                              <div class="alert alert-danger err-nd display-hide">
+                              <div class="alert alert-danger err-tools display-hide">
                                   <strong>Error!</strong> You forgot to fill out some mandatory fields, please check them before submit the form.
                               </div>
 
-                              <div class="alert alert-warning warn-nd display-hide">
+                              <div class="alert alert-warning warn-tools display-hide">
                                   <strong>Warning!</strong> At least one analysis should be selected.
                               </div>
 
@@ -296,23 +226,23 @@ if ($prevs->count() > 0){
                 </div>
                 <!-- END CONTENT -->
     
-									<div class="modal fade bs-modal" id="modalNGL" tabindex="-1" role="basic" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                                <h4 class="modal-title"></h4>
-                            </div>
-                            <div class="modal-body">
-                              <div id="viewport" style="width:100%; height:500px;background:#ddd;"></div>
-                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-				</div>
-
+									<div class="modal fade bs-modal-lg" id="modalDTStep2" tabindex="-1" role="basic" aria-hidden="true">
+      	<div class="modal-dialog modal-lg">
+    			<div class="modal-content">
+        		<div class="modal-header">
+      				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+     	 				<h4 class="modal-title">Select file(s)</h4>
+        		</div>
+        		<div class="modal-body"><div id="loading-datatable"><div id="loading-spinner">LOADING</div></div></div>
+        		<div class="modal-footer">
+      				<button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+      				<button type="button" class="btn green btn-modal-dts2-ok" disabled>Accept</button>
+        		</div>
+    			</div>
+    			<!-- /.modal-content -->
+      	</div>
+      	<!-- /.modal-dialog -->
+  		</div>
  
 <?php 
 

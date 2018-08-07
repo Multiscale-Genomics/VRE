@@ -3,97 +3,20 @@
 require "../../phplib/genlibraries.php";
 redirectOutside();
 
-// check inputs
-if (!isset($_REQUEST['fn']) && !isset($_REQUEST['rerunDir'])){
-	$_SESSION['errorData']['Error'][]="Please, before running TADbit, please select the input files for running this tool.";
-	redirect('/workspace/');
-}
+InputTool_checkRequest($_REQUEST);
 
-if(count($_REQUEST['fn']) > 1) {
-	$_SESSION['errorData']['Error'][] = "Please, select just one BAM file.";
-	redirect('/workspace/');
-}
+$from = InputTool_getOrigin($_REQUEST);
 
+list($rerunParams,$inPaths) = InputTool_getPathsAndRerun($_REQUEST);
 
-$rerunParams  = Array();
-$inPaths = Array();
-$formats = Array();
+$dirName = InputTool_getDefExName();
 
-if ($_REQUEST['rerunDir']){
-	$dirMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['rerunDir'])); 
-	if (!is_array($dirMeta['inPaths']) && !isset($dirMeta['raw_params'])){
-		$_SESSION['errorData']['Error'][]="Cannot rerun job ".$_REQUEST['rerunDir'].". Some folder metadata is missing.";
-		redirect('/workspace/');
-	}
-	if (is_array($dirMeta['inPaths'][0])){
-		$_SESSION['errorData']['Internal'][]="Cannot rerun job ".$_REQUEST['rerunDir'].". New directory metadata not implemeted yet.";
-		redirect('/workspace/');
-	}
-	foreach ($dirMeta['inPaths'] as $inPath){
-		$file['path'] = $inPath;
-		$file['fn'] = getGSFileId_fromPath($inPath);
-		$file['format'] = getAttr_fromGSFileId($file['fn'],'format');
-		array_push($formats,$file['format']);
-		array_push($inPaths,$file);
-	}
-	$rerunParams = $dirMeta['raw_params'];
-	//$inPaths=$dirMeta['inPaths']
-	//$_REQUEST['fn']= array_map("getGSFileId_fromPath",$dirMeta['inPaths']);
-}else{
-	if (!is_array($_REQUEST['fn']))
-		$_REQUEST['fn'][]=$_REQUEST['fn'];
+// get tool details
+$toolId = "tadbit_normalize";
+$tool   = getTool_fromId($toolId,1);
 
-	foreach($_REQUEST['fn'] as $fn){
-		$file['path'] = getAttr_fromGSFileId($fn,'path');
-		$file['fn'] = $fn;
-		$file['format'] = getAttr_fromGSFileId($fn,'format');
-		array_push($formats,$file['format']);
-		array_push($inPaths,$file);
-	}
-	//array_push($inPaths,getAttr_fromGSFileId($fn,'path'));
-}
-
-//var_dump($formats);
-
-/*$count_val = array_count_values($formats);
-
-if(!(in_array("FASTQ", $formats))) {
-	$_SESSION['errorData']['Error'][] = "Please, select at least two FASTQ files.";
-	redirect('/workspace/');
-} elseif($count_val['FASTQ'] != 2) {
-	$_SESSION['errorData']['Error'][] = "Please, select at least two FASTQ files.";
-	redirect('/workspace/');
-}
-
-if(in_array("FASTA", $formats) && !in_array("GEM", $formats)) {
-	$_SESSION['errorData']['Error'][] = "If you provide a FASTA file, you must provide a GEM file too.";
-	redirect('/workspace/');
-}*/
-
-$formats = array_unique($formats);
-
-if($formats[0] != "BAM"){
-	$_SESSION['errorData']['Error'][] = "Please, select one BAM file for running this tool";
-	redirect('/workspace/');
-}
-
-// default project dir
-$dirNum="000";
-$reObj = new MongoRegex("/^".$_SESSION['User']['id']."\\/run\d\d\d$/i");
-$prevs  = $GLOBALS['filesCol']->find(array('path' => $reObj, 'owner' => $_SESSION['User']['id']));
-if ($prevs->count() > 0){
-        $prevs->sort(array('_id' => -1));
-        $prevs->next();
-        $previous = $prevs->current();
-        if (preg_match('/(\d+)$/',$previous["path"],$m) ){
-            $dirNum= sprintf("%03d",$m[1]+1);
-        }
-}
-$dirName="run".$dirNum;
-$prevs  = $GLOBALS['filesCol']->find(array('path' => $GLOBALS['dataDir']."/".$_SESSION['User']['dataDir']."/$dirName", 'owner' => $_SESSION['User']['id']));
-if ($prevs->count() > 0){
-    $dirName="run".rand(100, 999);
-}
+// TADBIT MODEL TOOL OPERATIONS:
+// op = 0 || count(fn) = 1  -> BAM
 
 
 
@@ -128,82 +51,59 @@ if ($prevs->count() > 0){
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>TADbit Normalize</span>
+                                  <span><?php echo $tool['name']; ?></span>
                               </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"> TADbit Normalize</h1>
+                        <h1 class="page-title"> <?php echo $tool['title']; ?></h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
                         <div class="row">
-				<div class="col-md-12">
-				<?php if(isset($_SESSION['errorData'])) { ?>
-					<div class="alert alert-warning">
-					<?php foreach($_SESSION['errorData'] as $subTitle=>$txts){
-						print "$subTitle<br/>";
-						foreach($txts as $txt){
-							print "<div style=\"margin-left:20px;\">$txt</div>";
-						}
-					}
-					unset($_SESSION['errorData']);
-					?>
-					</div>
-				<?php } ?>
-															<!-- BEGIN PORTLET 0: INPUTS -->
-                              <div class="portlet box blue-oleo">
-                                  <div class="portlet-title">
-                                      <div class="caption">
-                                        <div style="float:left;margin-right:20px;"> <i class="fa fa-sign-in" ></i> Inputs</div>
-                                      </div>
-                                  </div>
-                                  <div class="portlet-body">
-																		<ul class="feeds" id="list-files-run-tools">
-																		<?php foreach ($inPaths as $file) {
-																			$path= $file['path'];
-																			$p = explode("/", $path); 
-																			?>
-																			<li class="tool-122 tool-list-item">
-																			<div class="col1">
-																				<div class="cont">
-																					<div class="cont-col1">
-																						<div class="label label-sm label-info">
-																							<i class="fa fa-file"></i>
-																						</div>
-																					</div>
-																					<div class="cont-col2">
-																					<div class="desc">
-																					<span class="text-info" style="font-weight:bold;"><?php echo $p[1]; ?>  /</span> <?php echo $p[2]; ?> 
+													<div class="col-md-12">
+													<?php if(isset($_SESSION['errorData'])) { ?>
+														<div class="alert alert-warning">
+														<?php foreach($_SESSION['errorData'] as $subTitle=>$txts){
+															print "$subTitle<br/>";
+															foreach($txts as $txt){
+																print "<div style=\"margin-left:20px;\">$txt</div>";
+															}
+														}
+														unset($_SESSION['errorData']);
+														?>
+														</div>
+													<?php } ?>
 
-																					<?php if($file['format'] == 'BAM') { ?>
-							
-																						<a target="_blank" href="visualizers/jbrowse/index.php/?user=<?php echo $_SESSION['User']['id']; ?>&fn[]=<?php echo $file['fn']; ?>">
-																							<div class="label label-sm label-info tooltips" style="padding:4px 5px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to preview this file with JBrowse.</p>">
-																								<i class="fa fa-align-right font-white"></i>
-																							</div>
-																						</a>
-																					
-																					<?php } ?>
+															<?php if($from == "tool") { ?>			
 
-																					</div>
-																					</div>
-																				</div>
+														<div class="row">
+															<div class="col-md-12">
+																		
+																<div class="mt-element-step">
+																	<div class="row step-line">
+																			<div class="col-md-6 mt-step-col first active">
+																					<div class="mt-step-number bg-white">1</div>
+																					<div class="mt-step-title uppercase font-grey-cascade">Select tool</div>
 																			</div>
-																			</li>
-																		<?php } ?>
-                                </ul>
-                                  </div>
-                              </div>
-                              <!-- END PORTLET 0: INPUTS -->
+																			<div class="col-md-6 mt-step-col last active">
+																					<div class="mt-step-number bg-white">2</div>
+																					<div class="mt-step-title uppercase font-grey-cascade">Configure tool</div>
+																			</div>
+																	</div>
+																</div>
 
-			 <form action="#" class="horizontal-form" id="tadbit_normalize-form">
-				  <input type="hidden" name="tool" value="tadbit_normalize" />
-                    <input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
-                    <input type="hidden" name="input_files_public_dir[refGenomes_folder]" value="refGenomes/" />
+															</div>
+														</div>
 
-				 
-                              <!-- BEGIN PORTLET 1: ANALYZES -->
+														<?php } ?>
+
+													<form action="#" class="horizontal-form" id="tool-input-form">
+															<input type="hidden" name="tool" value="<?php echo $toolId;?>" />
+																				<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+																				<input type="hidden" name="input_files_public_dir[refGenomes_folder]" value="refGenomes/" />
+
+                              <!-- BEGIN PORTLET 1: PROJECT -->
                               <div class="portlet box blue-oleo">
                                   <div class="portlet-title">
                                       <div class="caption">
@@ -213,10 +113,16 @@ if ($prevs->count() > 0){
                                   <div class="portlet-body form">
                                     <div class="form-body">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Name</label>
-                                                    <input type="text" name="project" id="dirName" class="form-control" value="<?php echo $dirName;?>">
+                                                    <label class="control-label">Select Project</label>
+																										<?php InputTool_getSelectProjects(); ?>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Execution Name</label>
+                                                    <input type="text" name="execution" id="dirName" class="form-control" value="<?php echo $dirName;?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -231,12 +137,12 @@ if ($prevs->count() > 0){
                                     </div>
                                   </div>
                               </div>
-                              <!-- END PORTLET 1: ANALYZES -->
+															<!-- END PORTLET 1: PROJECT -->
                               <!-- BEGIN PORTLET 5: Normalization by ICE -->
                               <div class="portlet box blue" id="form-block-header4">
                                   <div class="portlet-title">
                                       <div class="caption">
-																				 Normalization by ICE
+																				 Normalization
 		                                  </div>
                                   </div>
                                   <div class="portlet-body form" id="form-block4">
@@ -246,7 +152,7 @@ if ($prevs->count() > 0){
 																					<div class="row">
 
                                               <div class="col-md-6">
-                                                  <div class="form-group">
+                                                  <!--<div class="form-group">
                                                       <label class="control-label">TADbit-generated BAM file <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Path to a TADbit-generated BAM file with filtered reads</p>"></i></label>
                                                       <select  name="input_files[bamin]" class="form-control">
 																												<?php foreach ($inPaths as $file) {  ?>
@@ -256,13 +162,16 @@ if ($prevs->count() > 0){
 																												<?php } ?>
 																												<?php } ?>
 																											</select>		
-                                                  </div>
+																									</div>-->
+																									<?php $ff = matchFormat_File($tool['input_files']['bamin']['file_type'], $inPaths); ?>
+																									<?php InputTool_printSelectFile($tool['input_files']['bamin'], $rerunParams['bamin'], $ff[0], false, true); ?>
 																							</div>
 
                                           </div>
 
-                                        <h4 class="form-section">Settings</h4>
-                                          <div class="row">
+																				<h4 class="form-section">Settings</h4>
+																					<?php InputTool_printSettings($tool['arguments'], $rerunParams); ?>
+                                          <!--<div class="row">
                                               <div class="col-md-6">
 																									<div class="form-group">
 																											<label class="control-label">Normalization method <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Normalization method to apply.</p>"></i></label>
@@ -293,7 +202,7 @@ if ($prevs->count() > 0){
 																											<input type="number" min="0" max="100" step="0.1" name="arguments[max_perc]" id="max_perc" class="form-control" value="99.8">
                                                   </div>
                                               </div>
-                                          </div>
+                                          </div>-->
                                       </div>
                                   </div>
                               </div>
@@ -301,11 +210,11 @@ if ($prevs->count() > 0){
 
 
 
-                              <div class="alert alert-danger err-nd display-hide">
+                              <div class="alert alert-danger err-tool display-hide">
                                   <strong>Error!</strong> You forgot to fill out some mandatory fields, please check them before submit the form.
                               </div>
 
-                              <div class="alert alert-warning warn-nd display-hide">
+                              <div class="alert alert-warning warn-tool display-hide">
                                   <strong>Warning!</strong> At least one analysis should be selected.
                               </div>
 
@@ -321,23 +230,23 @@ if ($prevs->count() > 0){
                 </div>
                 <!-- END CONTENT -->
     
-									<div class="modal fade bs-modal" id="modalNGL" tabindex="-1" role="basic" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                                <h4 class="modal-title"></h4>
-                            </div>
-                            <div class="modal-body">
-                              <div id="viewport" style="width:100%; height:500px;background:#ddd;"></div>
-                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-				</div>
-
+									<div class="modal fade bs-modal-lg" id="modalDTStep2" tabindex="-1" role="basic" aria-hidden="true">
+      	<div class="modal-dialog modal-lg">
+    			<div class="modal-content">
+        		<div class="modal-header">
+      				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+     	 				<h4 class="modal-title">Select file(s)</h4>
+        		</div>
+        		<div class="modal-body"><div id="loading-datatable"><div id="loading-spinner">LOADING</div></div></div>
+        		<div class="modal-footer">
+      				<button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+      				<button type="button" class="btn green btn-modal-dts2-ok" disabled>Accept</button>
+        		</div>
+    			</div>
+    			<!-- /.modal-content -->
+      	</div>
+      	<!-- /.modal-dialog -->
+  		</div>
  
 <?php 
 

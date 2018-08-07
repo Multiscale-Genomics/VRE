@@ -3,17 +3,17 @@
 require "../../phplib/genlibraries.php";
 redirectOutside();
 
-$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir']."/outputs_".$_REQUEST['execution'];
 $indexFile = $wd.'/index';
 
 $results = file($indexFile);
 
-$dir = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dir = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
 //processing results files
 
-$tmp_dir  = $GLOBALS['dataDir'].'/'.$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
-$pathTemp = 'files/'               .$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$tmp_dir  = $GLOBALS['dataDir'].'/'.$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/.tmp/outputs_".$_REQUEST['execution'];
+$pathTemp = 'files/'               .$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/.tmp/outputs_".$_REQUEST['execution'];
 
 $PNGs = glob("$tmp_dir/*.png");
 $PNGs = array_map('basename',$PNGs);
@@ -35,7 +35,7 @@ var_dump($comparts_sum);
 $pathTGZ = 'files/'.$_SESSION['User']['id']."/".$dir;
 
 //project folder ID
-$dirName = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dirName = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
 ?>
 
@@ -100,13 +100,19 @@ $dirName = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
 			<?php if ($ints_vs_coord || $map_raw){  ?>
 			<div class="row">
 				<?php if ($ints_vs_coord){ ?>
-				<div class="col-md-6"><img src="<?php echo $pathTemp."/".$ints_vs_coord[0]; ?>" style="width:100%;" /></div>
+				<div class="col-md-6">
+					<h4><?php echo $ints_vs_coord[0]; ?></h4><br>
+					<img src="<?php echo $pathTemp."/".$ints_vs_coord[0]; ?>" style="width:100%;" />
+				</div>
 				<?php }else{ ?>
 				<div class="col-md-6">&nbsp;</div>
 				<?php }
 
 				if ($map_raw){ ?>
-				<div class="col-md-6"><img src="<?php echo $pathTemp."/".$map_raw[0]; ?>" style="width:100%;" /></div>
+				<div class="col-md-6">
+					<h4><?php echo $map_raw[0]; ?></h4><br>
+					<img src="<?php echo $pathTemp."/".$map_raw[0]; ?>" style="width:100%;" />
+				</div>
 				<?php }else{ ?>
 				<div class="col-md-6">&nbsp;</div>
 				<?php }?>

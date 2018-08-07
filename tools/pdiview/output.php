@@ -3,14 +3,15 @@
 require "../../phplib/genlibraries.php";
 redirectOutside();
 
-$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+//$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['execution'];
+$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir']."/outputs_".$_REQUEST['execution'];
 $indexFile = $wd.'/index';
 
 $results = file($indexFile);
 
-$dir = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dir = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
-$pathTemp = 'files/'.$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$pathTemp = 'files/'.$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/.tmp/outputs_".$_REQUEST['execution'];
 //$pathPDB = $GLOBALS['dataDir'].$_SESSION['User']['id']."/".$dir;
 //$pathPDB = 'files/'.$_SESSION['User']['id']."/".$dir;
 

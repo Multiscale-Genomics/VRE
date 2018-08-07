@@ -3,9 +3,9 @@
 require "../../phplib/genlibraries.php";
 redirectOutside();
 
-if(!isset($_REQUEST['project'])){
+if(!isset($_REQUEST['execution'])){
 
-	$_SESSION['errorData']['Error'][]="You should select a project to view results";
+	$_SESSION['errorData']['Error'][]="You should select an execution to view results";
 	redirect('/workspace/');
 
 }
@@ -13,7 +13,7 @@ if(!isset($_REQUEST['project'])){
 // setting custom visualizer working_dir
 //
 
-/*$wd  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+/*$wd  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['execution'];
 $indexFile = $wd.'/index';
 
 $results =Array();
@@ -43,7 +43,7 @@ if(is_dir($wd)) {
 
 if(!count($results)) {
 
-	$files = $GLOBALS['filesCol']->findOne(array('_id' => $_REQUEST['project']), array('files' => 1, '_id' => 0));
+	$files = $GLOBALS['filesCol']->findOne(array('_id' => $_REQUEST['execution']), array('files' => 1, '_id' => 0));
 
 	foreach($files["files"] as $id) {
 
@@ -70,15 +70,15 @@ if(!count($results)) {
 }*/
 
 
-$wd  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir']."/outputs_".$_REQUEST['execution'];
 $indexFile = $wd.'/index';
 
 $results = file($indexFile);
 
-$dir = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dir = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
-$pathTemp = 'files/'.$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
-$pathGff = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$dir;
+$pathTemp = 'files/'.$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/.tmp/outputs_".$_REQUEST['execution'];
+$pathGff = $GLOBALS['dataDir'].$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$dir;
 
 $gffFiles = glob("$pathGff/*gff");
 
@@ -127,7 +127,7 @@ $gffFiles = glob("$pathGff/*gff");
                         <div class="row">
                   			    <div class="col-md-12">
                         				<p style="margin-top:0;">
-																General Statistics for <strong><?php echo basename($pathGff); ?></strong> project.
+																General Statistics for <strong><?php echo basename($pathGff); ?></strong> execution.
                                 </p>
 														</div>
 														<div class="col-md-12">
@@ -135,9 +135,50 @@ $gffFiles = glob("$pathGff/*gff");
 																<h4><a href="workspace/workspace.php?op=downloadFile&fn=<?php echo $results[0]; ?>" style="text-decoration:none;"><i class="fa fa-download"></i> Download all in a compressed tar.gz file </a></h4>
 															</div>
 														</div>
-							          </div>
+												</div>
+
+												<div class="portlet light bordered">
+
+												<input type="hidden" id="tmpf" value="<?php echo $_REQUEST['execution']; ?>" />
+
+													<div class="portlet-title">
+															<div class="caption">
+																<i class="icon-share font-dark hide"></i>
+																<span class="caption-subject font-dark bold uppercase">Statistics per gene</span>
+																<small style="font-size:75%;"></small>
+															</div>
+														</div>
+
+														<div class="portlet-body">
+
+															<div class="row display-hide" id="nd-toggle-table"></div>
+
+															<div class="row display-hide" id="nd-filters-table"></div>
+
+															<div class="row">
+															<div class="col-md-12 col-sm-12" id="ndtable-portlet">
+																	<div id="loading-datatable"><div id="loading-spinner">LOADING</div></div>
+															</div>
+															</div>
+
+
+														</div>
+													</div>
+
                         <div class="row">
 												<div class="col-md-12">
+
+													<div class="portlet light bordered">
+
+													<div class="portlet-title">
+															<div class="caption">
+																<i class="icon-share font-dark hide"></i>
+																<span class="caption-subject font-dark bold uppercase">Genome-wide Statistics</span>
+																<small style="font-size:75%;"></small>
+															</div>
+														</div>
+
+														<div class="portlet-body">
 
 													<div class="panel-group accordion">
 														
@@ -297,6 +338,10 @@ $gffFiles = glob("$pathGff/*gff");
 														?>
 														
 												</div>
+
+												</div>
+												</div>	
+
 												</div>
                     </div>
                     <!-- END CONTENT BODY -->

@@ -47,7 +47,7 @@ var ValidateForm = function() {
 
     var handleForm = function() {
 
-        $('#dnashape-form').validate({
+        $('#tool-input-form').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
@@ -56,18 +56,25 @@ var ValidateForm = function() {
                 project: {
                     required: true,
                     nowhitespace: true
+                },
+								execution: {
+                    required: true,
+                    nowhitespace: true
                 }
             },
 						messages: {
 							project: {
-								required: "The project name is mandatory."
+								required: "Please select in which project you will execute this tool."
+							},
+							execution: {
+								required: "The execution name is mandatory."
 							}
 						},
 
 
             invalidHandler: function(event, validator) { //display error alert on form submit
-                $('.err-nd', $('#dnashape-form')).show();
-                $('.warn-nd', $('#dnashape-form')).hide();
+                $('.err-tool', $('#dnashape-form')).show();
+                $('.warn-tool', $('#dnashape-form')).hide();
             },
 
             highlight: function(element) { // hightlight error inputs
@@ -82,14 +89,20 @@ var ValidateForm = function() {
             },
 
             errorPlacement: function(error, element) {
-               error.insertAfter(element);
-            },
+            	if($(element).hasClass("select2-hidden-accessible")) {
+            		console.log($(element).parent());
+            		error.insertAfter($(element).parent().find("span.select2"));
+							} else {
+								error.insertAfter(element);
+							}
+						},
+
 
             submitHandler: function(form) {
 							$('button[type="submit"]', $('#dnashape-form')).prop('disabled', true);
-							$('.warn-nd', $('#dnashape-form')).hide();
-							$('.err-nd', $('#dnashape-form')).hide();
-							var data = $('#dnashape-form').serialize();
+							$('.warn-nd', $('#tool-input-form')).hide();
+							$('.err-nd', $('#tool-input-form')).hide();
+							var data = $('#tool-input-form').serialize();
 							data = data.replace(/%5B/g,"[");
 							data = data.replace(/%5D/g,"]");
 							data = data.replace(/%3A/g,":");
@@ -100,11 +113,19 @@ var ValidateForm = function() {
         });
 
         // rules by ID instead of NAME
-				$("#max_results").rules("add", { required:true });
+        $(".field_required").each(function() {
+        	$(this).rules("add", { 
+						required:true, 
+						/*messages: {
+							required: "You must select all the file types.",
+						}*/
+					});
+        });
+				/*$("#max_results").rules("add", { required:true });
 
 				$("#dimer_orientation").rules("add", { required:true });
 
-				$("#dimer_spacing").rules("add", { required:true });
+				$("#dimer_spacing").rules("add", { required:true });*/
 
 
 

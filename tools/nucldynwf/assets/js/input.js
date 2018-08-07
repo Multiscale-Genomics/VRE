@@ -1,6 +1,6 @@
 var activeBlocks = [];
 var mainBlock = 1;
-var subordinateBlocks = [3,4,5,6];
+var subordinateBlocks = [2,3,4,5,6];
 var autoMainBlock = false;
 
 var ComponentsBootstrapSwitch = function () {
@@ -34,7 +34,7 @@ var ComponentsBootstrapSwitch = function () {
 
     function enableBlock (id){
       activeBlocks.push(id);
-      $('.warn-nd', $('#nucleosome-dynamics')).hide();
+      $('.warn-tool', $('#tool-input-form')).hide();
       $('#form-block-header' + id + ' .tools').show();
       $('#form-block-header' + id + ' .tools').html('<a href="javascript:;" class="collapse"></a>');
       if($('#form-block' + id).css('display') == 'block') {
@@ -149,7 +149,7 @@ var ComponentsBootstrapSwitch = function () {
 
 var ValidateForm = function() {
 
-		$('.params_nucdyn_inputs').change(function() {
+		/*$('.params_nucdyn_inputs').change(function() {
 				
 			var selected = new Array();
         
@@ -171,12 +171,12 @@ var ValidateForm = function() {
             }
         });
 
-		});
+		});*/
 
 
     var handleForm = function() {
 
-        $('#nucleosome-dynamics').validate({
+        $('#tool-input-form').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
@@ -185,12 +185,25 @@ var ValidateForm = function() {
                 project: {
                     required: true,
                     nowhitespace: true
+                },
+								execution: {
+                    required: true,
+                    nowhitespace: true
                 }
             },
+						messages: {
+							project: {
+								required: "Please select in which project you will execute this tool."
+							},
+							execution: {
+								required: "The execution name is mandatory."
+							}
+						},
 
             invalidHandler: function(event, validator) { //display error alert on form submit
-                $('.err-nd', $('#nucleosome-dynamics')).show();
-                $('.warn-nd', $('#nucleosome-dynamics')).hide();
+                $('.err-tool', $('#tool-input-form')).show();
+                $('.err-blocks', $('#tool-input-form')).hide();
+                $('.warn-tool', $('#tool-input-form')).hide();
             },
 
             highlight: function(element) { // hightlight error inputs
@@ -204,87 +217,104 @@ var ValidateForm = function() {
             },
 
             errorPlacement: function(error, element) {
-                //return true;
-							error.insertAfter(element);
+              if($(element).hasClass("select2-hidden-accessible")) {
+            		//console.log($(element).parent());
+            		error.insertAfter($(element).parent().find("span.select2"));
+							} else {
+								error.insertAfter(element);
+							}
             },
             submitHandler: function(form) {
+
                 if(activeBlocks.length == 0) {
-                  $('.warn-nd', $('#nucleosome-dynamics')).show();
-                  $('.err-nd', $('#nucleosome-dynamics')).hide();
+                  $('.warn-tool', $('#tool-input-form')).show();
+                  $('.err-tool', $('#tool-input-form')).hide();
+                  $('.err-blocks', $('#tool-input-form')).hide();
                 }else{
-                	$('button[type="submit"]', $('#nucleosome-dynamics')).prop('disabled', true);
-                  $('.warn-nd', $('#nucleosome-dynamics')).hide();
-                  $('.err-nd', $('#nucleosome-dynamics')).hide();
-                  var data = $('#nucleosome-dynamics').serialize();
-                  data = data.replace(/%5B/g,"[");
-                  data = data.replace(/%5D/g,"]");
-		  //console.log($("#params_nuclr_width").val());
-                  //console.log(data);
-                  location.href = "/applib/launchTool.php?" + data;
+
+									if(activeBlocks.indexOf(mainBlock) != -1) {
+
+										$('button[type="submit"]', $('#tool-input-form')).prop('disabled', true);
+										$('button[type="submit"]', $('#tool-input-form')).html('<i class="fa fa-spinner fa-pulse fa-spin"></i> Launching tool, please don\'t close the tab.');
+										$('.warn-tool', $('#tool-input-form')).hide();
+										$('.err-tool', $('#tool-input-form')).hide();
+										$('.err-blocks', $('#tool-input-form')).hide();
+										var data = $('#tool-input-form').serialize();
+										data = data.replace(/%5B/g,"[");
+										data = data.replace(/%5D/g,"]");
+										//console.log(data);
+										location.href = "/applib/launchTool.php?" + data;
+
+									} else {
+
+										$('.err-blocks', $('#tool-input-form')).show();
+
+									}
+
                 }
             }
         });
 
         // rules by ID instead of NAME
+				$(".field_required").each(function() {
+        	$(this).rules("add", { 
+						required:true 
+					});
+        });
+	
         // nucleR
-				$(".params_nuclr_inputs").each(function() {
+				/*$(".params_nuclr_inputs").each(function() {
         	$(this).rules("add", { 
 						required:true, 
 						messages: {
 							required: "You must select all the file types.",
 						}
 					});
-        });
-
-        $("#params_nuclr_width").rules("add", {required:true, range: [1, 150]});
-        $("#params_nuclr_minoverlap").rules("add", {required:true, range: [1, $("#params_nuclr_width").val()]});
-        $("#params_nuclr_dyad_len").rules("add", {required:true});
-        $("#params_nuclr_thperc").rules("add", {required:true});
-        $("#params_nuclr_thval").rules("add", {required:true});
-        $("#params_nuclr_hthresh").rules("add", {required:true});
-        $("#params_nuclr_wthresh").rules("add", {required:true});
-        $("#params_nuclr_pcKeepComp").rules("add", {required:true});
-        // nucleosome Dynamics
-        /*$(".params_nucdyn_inputs").each(function() {
-        	$(this).rules("add", {required:true});
         });*/
-				$(".params_nucdyn_inputs").each(function() {
+
+        //$("#nucleR_width").rules("add", {required:true, range: [1, 150]});
+        $("#nucleR_minoverlap").rules("add", {required:true, range: [1, $("#nucleR_width").val()]});
+        /*$("#nucleR_dyad_length").rules("add", {required:true});
+        $("#nucleR_thresholdPercentage").rules("add", {required:true});
+        $("#nucleR_thresholdValue").rules("add", {required:true});
+        $("#nucleR_hthresh").rules("add", {required:true});
+        $("#nucleR_wthresh").rules("add", {required:true});
+        $("#nucleR_pcKeepComp").rules("add", {required:true});*/
+        // nucleosome Dynamics
+				/*$(".params_input").each(function() {
         	$(this).rules("add", { 
 						required:true, 
-						messages: {
-							required: "You must select all the file types.",
-						}
 					});
-        });
+        });*/
 
-				if($('#numInputs').val() > 1) {
-					$("#params_nucdyn_range").rules("add", {required:true});
-					$("#params_nucdyn_maxdiff").rules("add", {required:true});
-					$("#params_nucdyn_maxlen").rules("add", {required:true});
-					//$("#params_nucdyn_rpow").rules("add", {required:true});
-					$("#params_nucdyn_rsize").rules("add", {required:true});
-					//$("#params_nucdyn_smag").rules("add", {required:true});
-					$("#params_nucdyn_shiftmn").rules("add", {required:true});
-					$("#params_nucdyn_shiftth").rules("add", {required:true});
-					$("#params_nucdyn_indelmn").rules("add", {required:true});
-					$("#params_nucdyn_indeth").rules("add", {required:true});
-				}
+				//if($('#numInputs').val() > 1) {
+				/*$("#nucDyn_range").rules("add", {required:true});
+				$("#nucDyn_maxDiff").rules("add", {required:true});
+				$("#nucDyn_maxLen").rules("add", {required:true});*/
+				//$("#params_nucdyn_rpow").rules("add", {required:true});
+				//$("#nucDyn_readSize").rules("add", {required:true});
+				//$("#params_nucdyn_smag").rules("add", {required:true});
+				/*$("#nucDyn_shift_min_nreads").rules("add", {required:true});
+				$("#nucDyn_shift_threshold").rules("add", {required:true});
+				$("#nucDyn_indel_min_nreads").rules("add", {required:true});
+				$("#nucDyn_indel_threshold").rules("add", {required:true});*/
+				//}
         // Nucleosome-free regions
-        $("#params_nfr_minw").rules("add", {required:true});
-        $("#params_nfr_threshold").rules("add", {required:true});
+        /*$("#NFR_minwidth").rules("add", {required:true});
+        $("#NFR_threshold").rules("add", {required:true});*/
         // Nucleosome phasing
-        $("#params_perio_perio").rules("add", {required:true});
+        //$("#periodicity_periodicity").rules("add", {required:true});
         // TSS classification
-        $("#params_txstart_win").rules("add", {required:true});
-        $("#params_txstart_opent").rules("add", {required:true});
+        /*$("#txstart_window").rules("add", {required:true});
+        $("#txstart_open_thresh").rules("add", {required:true});*/
         // Stiffness
-        $("#params_gausfit_range").rules("add", {required:true});
+        //$("#gausfitting_range").rules("add", {required:true});
 
 
-        $('#nucleosome-dynamics input').keypress(function(e) {
+        $('#tool-input-form input').keypress(function(e) {
             if (e.which == 13) {
-                if ($('#nucleosome-dynamics').validate().form()) {
-                    $('#nucleosome-dynamics').submit(); //form validation success, call ajax form submit
+                if ($('#tool-input-form').validate().form()) {
+                    $('#tool-input-form').submit(); //form validation success, call ajax form submit
                 }
                 return false;
             }
@@ -310,9 +340,9 @@ var InitForm = function() {
       $('.form-block .form-field-enabled').prop('disabled', true);
       $('.form-block .form-field-disabled').prop('disabled', true);
 
-			$("#params_nuclr_width").bind('keyup mouseup', function() { 
-				$("#params_nuclr_width").val($(this).val()); 
-				$("#params_nuclr_minoverlap").rules("add", { range: [1, $(this).val()] });
+			$("#nucleR_width").bind('keyup mouseup', function() { 
+				$("#nucleR_width").val($(this).val()); 
+				$("#nucleR_minoverlap").rules("add", { range: [1, $(this).val()] });
 			});
 
 			//$("#params_nuclr_width").val(147);

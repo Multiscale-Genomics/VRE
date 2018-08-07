@@ -2,7 +2,7 @@ var baseURL = $("#base-url").val();
 
 var ValidateForm = function() {
 
-		$('.params_wgbs_inputs').change(function() {
+		/*$('.params_wgbs_inputs').change(function() {
 
 			var selected = new Array();
         
@@ -24,11 +24,11 @@ var ValidateForm = function() {
             }
         });
 
-		});
+		});*/
 
     var handleForm = function() {
 
-        $('#process-wgbs').validate({
+        $('#tool-input-form').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
@@ -37,18 +37,25 @@ var ValidateForm = function() {
                 project: {
                     required: true,
                     nowhitespace: true
+                },
+								execution: {
+                    required: true,
+                    nowhitespace: true
                 }
             },
 						messages: {
 							project: {
-								required: "The project name is mandatory."
+								required: "Please select in which project you will execute this tool."
+							},
+							execution: {
+								required: "The execution name is mandatory."
 							}
 						},
 
 
             invalidHandler: function(event, validator) { //display error alert on form submit
-                $('.err-nd', $('#process-wgbs')).show();
-                $('.warn-nd', $('#process-wgbs')).hide();
+                $('.err-tool', $('#tool-input-form')).show();
+                $('.warn-tool', $('#tool-input-form')).hide();
             },
 
             highlight: function(element) { // hightlight error inputs
@@ -62,17 +69,21 @@ var ValidateForm = function() {
             },
 
             errorPlacement: function(error, element) {
-               error.insertAfter(element);
+               if($(element).hasClass("select2-hidden-accessible")) {
+            		error.insertAfter($(element).parent().find("span.select2"));
+							} else {
+								error.insertAfter(element);
+							}
             },
 
             submitHandler: function(form) {
-            		$('button[type="submit"]', $('#process-wgbs')).prop('disabled', true);
-                $('.warn-nd', $('#process-wgbs')).hide();
-                $('.err-nd', $('#process-wgbs')).hide();
-                var data = $('#process-wgbs').serialize();
+            		$('button[type="submit"]', $('#tool-input-form')).prop('disabled', true);
+            		$('button[type="submit"]', $('#tool-input-form')).html('<i class="fa fa-spinner fa-pulse fa-spin"></i> Launching tool, please don\'t close the tab.');              
+            		$('.warn-tool', $('#tool-input-form')).hide();
+               $('.err-tool', $('#tool-input-form')).hide();
+                var data = $('#tool-input-form').serialize();
 								data = data.replace(/%5B/g,"[");
                 data = data.replace(/%5D/g,"]");
-								var data = $('#process-wgbs').serialize();
                 //console.log(data);
                 location.href = baseURL + "applib/launchTool.php?" + data;
 
@@ -80,7 +91,13 @@ var ValidateForm = function() {
         });
 
         // rules by ID instead of NAME
-        $("#aligner").rules("add", {required:true});
+        $(".field_required").each(function() {
+        	$(this).rules("add", { 
+						required:true 
+					});
+        });
+
+        /*$("#aligner").rules("add", {required:true});
         $("#aligner_path").rules("add", {required:true});
         $("#bss_path").rules("add", {required:true});
 
@@ -91,12 +108,12 @@ var ValidateForm = function() {
 							required: "You must select all the file types.",
 						}
 					});
-        });
+        });*/
 
-        $('#process-wgbs').keypress(function(e) {
+        $('#tool-input-form').keypress(function(e) {
             if (e.which == 13) {
-                if ($('#process-wgbs').validate().form()) {
-                    $('#process-wgbs').submit(); //form validation success, call ajax form submit
+                if ($('#tool-input-form').validate().form()) {
+                    $('#tool-input-form').submit(); //form validation success, call ajax form submit
                 }
                 return false;
             }

@@ -9,7 +9,7 @@ var ValidateForm = function() {
 
     var handleForm = function() {
 
-        $('#pdiview-form').validate({
+        $('#tool-input-form').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
@@ -18,18 +18,24 @@ var ValidateForm = function() {
                 project: {
                     required: true,
                     nowhitespace: true
+                },
+								execution: {
+                    required: true,
+                    nowhitespace: true
                 }
             },
 						messages: {
 							project: {
-								required: "The project name is mandatory."
+								required: "Please select in which project you will execute this tool."
+							},
+							execution: {
+								required: "The execution name is mandatory."
 							}
 						},
 
-
             invalidHandler: function(event, validator) { //display error alert on form submit
-                $('.err-nd', $('#pdiview-form')).show();
-                $('.warn-nd', $('#pdiview-form')).hide();
+                $('.err-tool', $('#tool-input-form')).show();
+                $('.warn-tool', $('#tool-input-form')).hide();
             },
 
             highlight: function(element) { // hightlight error inputs
@@ -44,14 +50,20 @@ var ValidateForm = function() {
             },
 
             errorPlacement: function(error, element) {
-               error.insertAfter(element);
+               if($(element).hasClass("select2-hidden-accessible")) {
+            		console.log($(element).parent());
+            		error.insertAfter($(element).parent().find("span.select2"));
+							} else {
+								error.insertAfter(element);
+							}
             },
 
             submitHandler: function(form) {
-							$('button[type="submit"]', $('#pdiview-form')).prop('disabled', true);
-							$('.warn-nd', $('#pdiview-form')).hide();
-							$('.err-nd', $('#pdiview-form')).hide();
-							var data = $('#pdiview-form').serialize();
+							$('button[type="submit"]', $('#tool-input-form')).prop('disabled', true);
+            	$('button[type="submit"]', $('#tool-input-form')).html('<i class="fa fa-spinner fa-pulse fa-spin"></i> Launching tool, please don\'t close the tab.');
+							$('.warn-tool', $('#tool-input-form')).hide();
+							$('.err-tool', $('#tool-input-form')).hide();
+							var data = $('#tool-input-form').serialize();
 							data = data.replace(/%5B/g,"[");
 							data = data.replace(/%5D/g,"]");
 							data = data.replace(/%3A/g,":");
@@ -62,7 +74,11 @@ var ValidateForm = function() {
         });
 
         // rules by ID instead of NAME
-				//$("#chains").rules("add", { required:true });
+				$(".field_required").each(function() {
+        	$(this).rules("add", { 
+						required:true 
+					});
+        });
 
 
 				$("#chains").rules("add", {

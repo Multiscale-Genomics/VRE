@@ -1,23 +1,8 @@
 var baseURL = $("#base-url").val();
 
-/*var arr_exclusive = [];
-
-$.validator.addMethod("exclusive", function(value, element, params) {
-	var index = arr_exclusive.indexOf(value);
-	if(index == -1) {
-		arr_exclusive.push(value);
-	} else { 
-		arr_exclusive.splice(index, 1);	
-		//var i = arr_exclusive.indexOf(value);
-    //if (i > -1) arr_exclusive.splice(i, 1);	
-		console.log(index);
-	}
-	return arr_exclusive.length === params;
-});*/
-
 var ValidateForm = function() {
 
-		$('.params_pydock_inputs').change(function() {
+		/*$('.params_pydock_inputs').change(function() {
 				
 			var selected = new Array();
         
@@ -39,11 +24,11 @@ var ValidateForm = function() {
             }
         });
 
-		});
+		});*/
 
     var handleForm = function() {
 
-        $('#pdna-docking').validate({
+        $('#tool-input-form').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
@@ -52,18 +37,25 @@ var ValidateForm = function() {
                 project: {
                     required: true,
                     nowhitespace: true
+                },
+								execution: {
+                    required: true,
+                    nowhitespace: true
                 }
             },
 						messages: {
 							project: {
-								required: "The project name is mandatory."
+								required: "Please select in which project you will execute this tool."
+							},
+							execution: {
+								required: "The execution name is mandatory."
 							}
 						},
 
 
             invalidHandler: function(event, validator) { //display error alert on form submit
-                $('.err-nd', $('#pdna-docking')).show();
-                $('.warn-nd', $('#pdna-docking')).hide();
+                $('.err-tool', $('#tool-input-form')).show();
+                $('.warn-tool', $('#tool-input-form')).hide();
             },
 
             highlight: function(element) { // hightlight error inputs
@@ -76,18 +68,21 @@ var ValidateForm = function() {
                 $(e).parent().parent().parent().removeClass('has-error');
             },
 
-            errorPlacement: function(error, element) {
-               error.insertAfter(element);
+           errorPlacement: function(error, element) {
+               if($(element).hasClass("select2-hidden-accessible")) {
+            		error.insertAfter($(element).parent().find("span.select2"));
+							} else {
+								error.insertAfter(element);
+							}
             },
-
             submitHandler: function(form) {
-            		$('button[type="submit"]', $('#pdna-docking')).prop('disabled', true);
-                $('.warn-nd', $('#pdna-docking')).hide();
-                $('.err-nd', $('#pdna-docking')).hide();
-                var data = $('#pdna-docking').serialize();
+            		$('button[type="submit"]', $('#tool-input-form')).prop('disabled', true);
+            		$('button[type="submit"]', $('#tool-input-form')).html('<i class="fa fa-spinner fa-pulse fa-spin"></i> Launching tool, please don\'t close the tab.');              
+            		$('.warn-tool', $('#tool-input-form')).hide();
+               $('.err-tool', $('#tool-input-form')).hide();
+                var data = $('#tool-input-form').serialize();
 								data = data.replace(/%5B/g,"[");
                 data = data.replace(/%5D/g,"]");
-		var data = $('#pdna-docking').serialize();
                 //console.log(data);
                 location.href = baseURL + "applib/launchTool.php?" + data;
 
@@ -95,10 +90,15 @@ var ValidateForm = function() {
         });
 
         // rules by ID instead of NAME
+        $(".field_required").each(function() {
+        	$(this).rules("add", { 
+						required:true 
+					});
+        });
         /*$("#params_nuclr_width").rules("add", {required:true});
         $("#params_nuclr_minoverlap").rules("add", {required:true});*/
 
-				$(".params_pydock_inputs").each(function() {
+				/*$(".params_pydock_inputs").each(function() {
         	$(this).rules("add", { 
 						required:true, 
 						//exclusive:$(".params_pydock_inputs").length,
@@ -107,13 +107,13 @@ var ValidateForm = function() {
 							//exclusive: "All the files must have a different file type."
 						}
 					});
-        });
+        });*/
 
 
-        $('#pdna-docking input').keypress(function(e) {
+        $('#tool-input-form input').keypress(function(e) {
             if (e.which == 13) {
-                if ($('#pdna-docking').validate().form()) {
-                    $('#pdna-docking').submit(); //form validation success, call ajax form submit
+                if ($('#tool-input-form').validate().form()) {
+                    $('#tool-input-form').submit(); //form validation success, call ajax form submit
                 }
                 return false;
             }

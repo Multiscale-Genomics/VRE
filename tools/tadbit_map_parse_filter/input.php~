@@ -3,22 +3,96 @@
 require "../../phplib/genlibraries.php";
 redirectOutside();
 
-InputTool_checkRequest($_REQUEST);
+// check inputs
+if (!isset($_REQUEST['fn']) && !isset($_REQUEST['rerunDir'])){
+	$_SESSION['errorData']['Error'][]="Please, before running TADit, please select the input files for running this tool.";
+	redirect('/workspace/');
+}
 
-$from = InputTool_getOrigin($_REQUEST);
+if(count($_REQUEST['fn']) < 2) {
+	$_SESSION['errorData']['Error'][] = "Please, select at least two FASTQ files.";
+	redirect('/workspace/');
+}
 
-list($rerunParams,$inPaths) = InputTool_getPathsAndRerun($_REQUEST);
 
+$rerunParams  = Array();
+$inPaths = Array();
+$formats = Array();
 
-$dirName = InputTool_getDefExName();
+if ($_REQUEST['rerunDir']){
+	$dirMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['rerunDir'])); 
+	if (!is_array($dirMeta['inPaths']) && !isset($dirMeta['raw_params'])){
+		$_SESSION['errorData']['Error'][]="Cannot rerun job ".$_REQUEST['rerunDir'].". Some folder metadata is missing.";
+		redirect('/workspace/');
+	}
+	if (is_array($dirMeta['inPaths'][0])){
+		$_SESSION['errorData']['Internal'][]="Cannot rerun job ".$_REQUEST['rerunDir'].". New directory metadata not implemeted yet.";
+		redirect('/workspace/');
+	}
+	foreach ($dirMeta['inPaths'] as $inPath){
+		$file['path'] = $inPath;
+		$file['fn'] = getGSFileId_fromPath($inPath);
+		$file['format'] = getAttr_fromGSFileId($file['fn'],'format');
+		array_push($formats,$file['format']);
+		array_push($inPaths,$file);
+	}
+	$rerunParams = $dirMeta['raw_params'];
+	//$inPaths=$dirMeta['inPaths']
+	//$_REQUEST['fn']= array_map("getGSFileId_fromPath",$dirMeta['inPaths']);
+}else{
+	if (!is_array($_REQUEST['fn']))
+		$_REQUEST['fn'][]=$_REQUEST['fn'];
+
+	foreach($_REQUEST['fn'] as $fn){
+		$file['path'] = getAttr_fromGSFileId($fn,'path');
+		$file['fn'] = $fn;
+		$file['format'] = getAttr_fromGSFileId($fn,'format');
+		array_push($formats,$file['format']);
+		array_push($inPaths,$file);
+	}
+	//array_push($inPaths,getAttr_fromGSFileId($fn,'path'));
+}
+
+//var_dump($formats);
+
+$count_val = array_count_values($formats);
+
+if(!(in_array("FASTQ", $formats))) {
+	$_SESSION['errorData']['Error'][] = "Please, select at least two FASTQ files.";
+	redirect('/workspace/');
+} elseif($count_val['FASTQ'] != 2) {
+	$_SESSION['errorData']['Error'][] = "Please, select at least two FASTQ files.";
+	redirect('/workspace/');
+}
+
+if(in_array("FASTA", $formats) && !in_array("GEM", $formats)) {
+	$_SESSION['errorData']['Error'][] = "If you provide a FASTA file, you must provide a GEM file too.";
+	redirect('/workspace/');
+}
+
+$formats = array_unique($formats);
+
+// default project dir
+$dirNum="000";
+$reObj = new MongoRegex("/^".$_SESSION['User']['id']."\\/run\d\d\d$/i");
+$prevs  = $GLOBALS['filesCol']->find(array('path' => $reObj, 'owner' => $_SESSION['User']['id']));
+if ($prevs->count() > 0){
+        $prevs->sort(array('_id' => -1));
+        $prevs->next();
+        $previous = $prevs->current();
+        if (preg_match('/(\d+)$/',$previous["path"],$m) ){
+            $dirNum= sprintf("%03d",$m[1]+1);
+        }
+}
+$dirName="run".$dirNum;
+$prevs  = $GLOBALS['filesCol']->find(array('path' => $GLOBALS['dataDir']."/".$_SESSION['User']['dataDir']."/$dirName", 'owner' => $_SESSION['User']['id']));
+if ($prevs->count() > 0){
+    $dirName="run".rand(100, 999);
+}
 
 // get tool details
 $toolId = "tadbit_map_parse_filter";
 $tool   = getTool_fromId($toolId,1);
-
-// TADBIT MAP, PARSE & FILTER TOOL OPERATIONS:
-// op = 0 || count(fn) = 3 / 4 -> FASTQ* + FASTQ* + FASTA + GEM
-// op = 1 || count(fn) = 2 -> FASTQ* + FASTQ*
 
 ?>
 
@@ -51,59 +125,81 @@ $tool   = getTool_fromId($toolId,1);
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span><?php echo $tool['name']; ?></span>
+                                  <span><?=$tool['name']?></span>
                               </li>
                             </ul>
-												</div>
+                        </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title"><?php echo $tool['title']; ?></h1>
+                        <h1 class="page-title"><?=$tool['title']?></h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->
-													<div class="row">
-														<div class="col-md-12">
-														<?php if(isset($_SESSION['errorData'])) { ?>
-															<div class="alert alert-warning">
-															<?php foreach($_SESSION['errorData'] as $subTitle=>$txts){
-																print "$subTitle<br/>";
-																foreach($txts as $txt){
-																	print "<div style=\"margin-left:20px;\">$txt</div>";
-																}
-															}
-															unset($_SESSION['errorData']);
-															?>
-															</div>
-														<?php } ?>
-
-															<?php if($from == "tool") { ?>			
-
-															<div class="row">
-																<div class="col-md-12">
-																			
-																	<div class="mt-element-step">
-																		<div class="row step-line">
-																				<div class="col-md-6 mt-step-col first active">
-																						<div class="mt-step-number bg-white">1</div>
-																						<div class="mt-step-title uppercase font-grey-cascade">Select tool</div>
+                        <div class="row">
+				<div class="col-md-12">
+				<?php if(isset($_SESSION['errorData'])) { ?>
+					<div class="alert alert-warning">
+					<?php foreach($_SESSION['errorData'] as $subTitle=>$txts){
+						print "$subTitle<br/>";
+						foreach($txts as $txt){
+							print "<div style=\"margin-left:20px;\">$txt</div>";
+						}
+					}
+					unset($_SESSION['errorData']);
+					?>
+					</div>
+				<?php } ?>
+															<!-- BEGIN PORTLET 0: INPUTS -->
+                              <div class="portlet box blue-oleo">
+                                  <div class="portlet-title">
+                                      <div class="caption">
+                                        <div style="float:left;margin-right:20px;"> <i class="fa fa-sign-in" ></i> Inputs</div>
+                                      </div>
+                                  </div>
+                                  <div class="portlet-body">
+																		<ul class="feeds" id="list-files-run-tools">
+																		<?php foreach ($inPaths as $file) {
+																			$path= $file['path'];
+																			$p = explode("/", $path); 
+																			?>
+																			<li class="tool-122 tool-list-item">
+																			<div class="col1">
+																				<div class="cont">
+																					<div class="cont-col1">
+																						<div class="label label-sm label-info">
+																							<i class="fa fa-file"></i>
+																						</div>
+																					</div>
+																					<div class="cont-col2">
+																					<div class="desc">
+																					<span class="text-info" style="font-weight:bold;"><?php echo $p[1]; ?>  /</span> <?php echo $p[2]; ?> 
+																						<!--
+																						<?php if($file['format'] == 'PDB') { ?>
+																
+																							<a href="javascript:openNGL('<?php echo $file['fn']; ?>', '<?php echo $p[2]; ?> ');" style="margin-left:5px;">
+																								<div class="label label-sm label-info tooltips" style="padding:4px 5px;" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Click here to preview this file with NGL.</p>">
+																									<i class="fa fa-window-maximize font-white"></i>
+																								</div>
+																							</a>
+																						
+																						<?php } ?>								
+																						-->
+																					</div>
+																					</div>
 																				</div>
-																				<div class="col-md-6 mt-step-col last active">
-																						<div class="mt-step-number bg-white">2</div>
-																						<div class="mt-step-title uppercase font-grey-cascade">Configure tool</div>
-																				</div>
-																		</div>
-																	</div>
+																			</div>
+																			</li>
+																		<?php } ?>
+                                </ul>
+                                  </div>
+                              </div>
+                              <!-- END PORTLET 0: INPUTS -->
 
-																</div>
-															</div>
-
-															<?php } ?>
-
-															<form action="#" class="horizontal-form" id="tool-input-form">
-																	<input type="hidden" name="tool" value="<?php echo $toolId; ?>" />
-																	<input type="hidden" id="base-url" value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+			 <form action="#" class="horizontal-form" id="tadbit_map_parse_filter-form">
+				  <input type="hidden" name="tool" value="<?=$toolId;?>" />
+					<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
 
 				 
-                              <!-- BEGIN PORTLET 1: PROJECT -->
+                              <!-- BEGIN PORTLET 1: ANALYZES -->
                               <div class="portlet box blue-oleo">
                                   <div class="portlet-title">
                                       <div class="caption">
@@ -113,16 +209,10 @@ $tool   = getTool_fromId($toolId,1);
                                   <div class="portlet-body form">
                                     <div class="form-body">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="control-label">Select Project</label>
-																										<?php InputTool_getSelectProjects(); ?>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="control-label">Execution Name</label>
-                                                    <input type="text" name="execution" id="dirName" class="form-control" value="<?php echo $dirName;?>">
+                                                    <label class="control-label">Name</label>
+                                                    <input type="text" name="project" id="dirName" class="form-control" value="<?php echo $dirName;?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -137,8 +227,7 @@ $tool   = getTool_fromId($toolId,1);
                                     </div>
                                   </div>
                               </div>
-															<!-- END PORTLET 1: PROJECT -->
-
+                              <!-- END PORTLET 1: ANALYZES -->
                               <!-- BEGIN PORTLET 2: Hi-C Mapping -->
                               <div class="portlet box blue " id="form-block-header1">
                                   <div class="portlet-title">
@@ -151,7 +240,7 @@ $tool   = getTool_fromId($toolId,1);
                                           <h4 class="form-section">File inputs</h4>
 																					<div class="row">
                                               <div class="col-md-6">
-                                                  <!--<div class="form-group">
+                                                  <div class="form-group">
                                                       <label class="control-label">READ1 <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>From paired-end sequencing. This FASTQ should contain only one of the ends.</p>"></i></label>
                                                       <select  name="input_files[read1]" class="form-control params_tadbit_inputs_mapping">
 																												<option selected value> -- select a file -- </option>
@@ -162,13 +251,11 @@ $tool   = getTool_fromId($toolId,1);
 																												<?php } ?>
 																												<?php } ?>
 																											</select>		
-																									</div>-->
-																									<?php $ff = matchFormat_File($tool['input_files']['read1']['file_type'], $inPaths); ?>
-																									<?php InputTool_printSelectFile($tool['input_files']['read1'], $rerunParams['read1'], $ff[0], false, true); ?>
+                                                  </div>
                                               </div>
 
                                               <div class="col-md-6">
-																									<!--<div class="form-group">
+																									<div class="form-group">
                                                       <label class="control-label">READ2 <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>From paired-end sequencing. This FASTQ should contain only the other end.</p>"></i></label>
                                                       <select  name="input_files[read2]" class="form-control params_tadbit_inputs_mapping">
 																												<option selected value> -- select a file -- </option>
@@ -179,32 +266,37 @@ $tool   = getTool_fromId($toolId,1);
 																												<?php } ?>
 																												<?php } ?>
 																											</select>		
-																									</div>-->
-																									<?php $ff = matchFormat_File($tool['input_files']['read2']['file_type'], $inPaths); ?>
-																									<?php InputTool_printSelectFile($tool['input_files']['read2'], $rerunParams['read2'], $ff[1], false, true); ?>
+                                                  </div>
                                               </div>
 																							
 																						</div>
 
 																						<div class="row">
-																							<div class="col-md-6">
-																								<?php if(($_REQUEST["op"] == 0) || (count($_REQUEST['fn']) == 3 && !isset($_REQUEST["op"])) || (count($_REQUEST['fn']) == 4 && !isset($_REQUEST["op"]))) { ?>
-
-																								<?php $ff = matchFormat_File($tool['input_files']['ref_genome_gem']['file_type'], $inPaths); ?> 
-																								<?php  
-																									if(empty($ff) && !isset($_REQUEST["op"])) {
-																										InputTool_printListOfFiles($tool['input_files_public_dir']['mapping:refGenome'], $rerunParams['mapping:refGenome'], true);
-																									} else {
-																										InputTool_printSelectFile($tool['input_files']['ref_genome_gem'], $rerunParams['ref_genome_gem'], $ff[0], false, true);
-																									}
-																								?>
-
-																								<?php } else { ?>
-
-																								<?php InputTool_printListOfFiles($tool['input_files_public_dir']['mapping:refGenome'], $rerunParams['mapping:refGenome'], true); ?>
-
-																								<?php } ?>
-																								
+                                              <div class="col-md-6">
+																								<div class="form-group " id="">
+																										<?php if(!(in_array("GEM", $formats))) {  ?>
+																										<label>Indexed reference genome</label>
+																										<span class="tooltip-mt-radio"><i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome, indexed with gem-indexer, on which reads will be mapped.</p>"></i></span>
+																										<select name="input_files_public_dir[mapping:refGenome]" id="map_refgenome" class="form-control">
+																											<option value="">Select the reference genome</option>
+				<?php
+				$tool_options = $tool['input_files_public_dir']['mapping:refGenome']['enum_items'];
+				for ($i=0; $i<count($tool_options['name']); $i++){ ?>
+					<option value="<?=$tool_options['name'][$i]?>"><?=$tool_options['description'][$i]?></option>
+			        <?php } ?>
+			</select>
+																										<?php } else { ?>
+                                                      <label class="control-label">Reference genome index <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome</p>"></i></label>
+                                                      <select  name="input_files[mapping:ref_genome_gem]" id="ref_genome_gem1" class="form-control">
+																												<?php foreach ($inPaths as $file) {  ?>
+																												<?php if($file['format'] == 'GEM') { ?>
+																												<?php $p = explode("/", $file['path']); ?>
+																												<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
+																												<?php } ?>
+																												<?php } ?>
+																											</select>		
+																										<?php } ?>
+																								</div>
 																						</div>
 																					</div>
 
@@ -212,30 +304,27 @@ $tool   = getTool_fromId($toolId,1);
                                           <div class="row">
 																							<div class="col-md-6">
 												  												<div class="form-group">
-                                                      <label class="control-label"><?php echo $tool["arguments"]["mapping:rest_enzyme"]["description"]; ?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool["arguments"]["mapping:rest_enzyme"]["help"]; ?></p>"></i></label>
-																											<input type="text" name="arguments[<?php echo $tool["arguments"]["mapping:rest_enzyme"]["name"]; ?>]" id="mapping_rest_enzyme" class="form-control" >
-																											<img class="Typeahead-spinner" src="assets/layouts/layout/img/loading-spinner-blue.gif" style="display: none;">
-																											<input type="hidden" id="enum_mapping_rest_enzyme" value="<?php echo implode(",", $tool["arguments"]["mapping:rest_enzyme"]["enum_items"]["name"]); ?>">	
-																									</div>
+                                                      <label class="control-label">Restriction Enzyme <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>For fragment-based mapping. Name of the restriction enzyme used to do the Hi-C experiment.</p>"></i></label>
+																											<input type="text" name="arguments[mapping:rest_enzyme]" id="rest_enzyme" class="form-control tadbit-map-group" >
+																											<img class="Typeahead-spinner" src="assets/layouts/layout/img/loading-spinner-blue.gif" style="display: none;">	
+                                                  </div>
                                               </div>
                                           </div>
 																					<div class="row">
                                               <div class="col-md-6">
-																									<!--<div class="form-group">
+																									<div class="form-group">
                                                     <label class="control-label">Iterative mapping <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Use iterative mapping instead of fragment-based mapping.</p>"></i></label>
 																										<select  name="arguments[mapping:iterative_mapping]" id="iterative_mapping" class="form-control">
 																												<option selected value="0"> False </option>
 																												<option value="1"> True </option>
 																											</select>		
-                                                  </div>-->
-																									<?php echo InputTool_printField($tool['arguments']['mapping:iterative_mapping'], $rerunParams['mapping:iterative_mapping']); ?>
+                                                  </div>
 																							</div>
 																							<div class="col-md-6">
-																									<!--<div class="form-group">
+																									<div class="form-group">
                                                       <label class="control-label">Windows <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>For iterative mapping, or to refine fragment-based mapping. Should be like &quot;1:20 1:25 1:30 1:35 1:40 1:45 1:50&quot;</p>"></i></label>
 																											<input type="text" name="arguments[mapping:windows]" id="windows" class="form-control tadbit-map-group" >
-																									</div>-->
-																									<?php echo InputTool_printField($tool['arguments']['mapping:windows'], $rerunParams['mapping:windows']); ?>
+                                                  </div>
 																							</div>
                                           </div>
                                       </div>
@@ -252,37 +341,59 @@ $tool   = getTool_fromId($toolId,1);
                                   <div class="portlet-body form" id="form-block2">
                                       <div class="form-body">
 																					<h4 class="form-section">File inputs</h4>
+																					<?php if((in_array("FASTA", $formats) && in_array("GEM", $formats))) { ?>
 																					<div class="row">
                                               <div class="col-md-6">
-	
-																							<?php if(($_REQUEST["op"] == 0) || (count($_REQUEST['fn'] && !isset($_REQUEST["op"])) == 3) || (count($_REQUEST['fn']) == 4 && !isset($_REQUEST["op"]))) { ?>
-
-																							<?php $ff = matchFormat_File($tool['input_files']['ref_genome']['file_type'], $inPaths); ?> 
-																							<?php  
-																									if(empty($ff) && !isset($_REQUEST["op"])) {
-																										InputTool_printListOfFiles($tool['input_files_public_dir']['parsing:refGenome'], $rerunParams['mapping:refGenome'], true);
-																									} else {
-																										InputTool_printSelectFile($tool['input_files']['ref_genome'], $rerunParams['ref_genome'], $ff[0], false, true);
-																									}
-																								?>
-
-																							<?php } else { ?>
-
-																							<?php InputTool_printListOfFiles($tool['input_files_public_dir']['parsing:refGenome'], $rerunParams['parsing:refGenome'], true); ?>
-
-																							<?php } ?>
+																									<div class="form-group">
+                                                      <label class="control-label">Reference genome sequence <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome</p>"></i></label>
+                                                      <select  name="input_files[parsing:ref_genome_fasta]" id="ref_genome_fasta" class="form-control">
+																												<?php foreach ($inPaths as $file) {  ?>
+																												<?php if($file['format'] == 'FASTA') { ?>
+																												<?php $p = explode("/", $file['path']); ?>
+																												<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
+																												<?php } ?>
+																												<?php } ?>
+																											</select>		
+                                                  </div>
+                                              </div>
+																							<!--<div class="col-md-6">
+																									<div class="form-group">
+                                                      <label class="control-label">Reference genome index <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome</p>"></i></label>
+                                                      <select  name="input_files[parsing:ref_genome_gem]" id="ref_genome_gem2" class="form-control">
+																												<?php foreach ($inPaths as $file) {  ?>
+																												<?php if($file['format'] == 'GEM') { ?>
+																												<?php $p = explode("/", $file['path']); ?>
+																												<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
+																												<?php } ?>
+																												<?php } ?>
+																											</select>		
+                                                  </div>
+																							</div>-->
+																						</div>
+																					<?php } else { ?>
+																					<div class="row">
+                                              <div class="col-md-6">
+																								<div class="form-group " id="">
+																									<label>Indexed reference genome <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Reference genome, indexed with gem-indexer, on which reads will be mapped.</p>"></i></label>
+																									<select name="input_files_public_dir[parsing:refGenome]" id="ref_genome" class="form-control">
+			<option value="">Select the reference genome</option>
+		       	<?php
+			$tool_options = $tool['input_files_public_dir']['parsing:refGenome']['enum_items'];
+			for ($i=0; $i<count($tool_options['name']); $i++){ ?>
+				<option value="<?=$tool_options['name'][$i]?>"><?=$tool_options['description'][$i]?></option>
+			<?php } ?>
+																									</select>
+																								</div>
 																							</div>
 																						</div>
-	
-																					
+																					<?php } ?>
                                           <h4 class="form-section">Settings</h4>
                                           <div class="row">
                                               <div class="col-md-6">
-																									<!--<div class="form-group">
+																									<div class="form-group">
                                                       <label class="control-label">Filter chromosomes <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Only chromosome names passing. Ex: chrX, 1, 2B, chrMito, Mito, chrXIV.</p>"></i></label>
 																											<input type="text" name="arguments[parsing:chromosomes]" id="chromosomes" class="form-control" >
-                                                  </div>-->
-																									<?php echo InputTool_printField($tool['arguments']['parsing:chromosomes'], $rerunParams['parsing:chromosomes']); ?>
+                                                  </div>
 																							</div>
 																							<div class="col-md-6">
 																							</div>
@@ -303,7 +414,7 @@ $tool   = getTool_fromId($toolId,1);
                                           <h4 class="form-section">Settings</h4>
 																					<div class="row">
                                               <div class="col-md-6">
-                                                  <!--<div class="form-group">
+                                                  <div class="form-group">
                                                       <label class="control-label">Which filters to apply <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0;'>In order to remove interactions between reads that are experimental artifacts, or just uninformative, a series of adjustable filters can be applied:<br>
             	<ol style='text-align:left;'><li> self-circle: reads are coming from a single RE fragment and point to the outside (—-<===—===>—)</li>
             	<li> dangling-end: reads are coming from a single RE fragment and point to the inside (—-===>—<===—)</li>
@@ -328,27 +439,26 @@ $tool   = getTool_fromId($toolId,1);
                                                           <option value="9" selected>duplicated</option>
 																													<option value="10" selected>random breaks</option>
                                                       </select>
-                                                  </div>-->
-																									<?php echo InputTool_printField($tool['arguments']['filtering:filters'], $rerunParams['filtering:filters']); ?>
+                                                  </div>
                                               </div>
 																							<div class="col-md-6">
 																									<div class="form-group display-hide" id="fg_min_dist_RE">
-                                                      <label class="control-label"><?php echo $tool['arguments']['filtering:min_dist_RE']['description']; ?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['filtering:min_dist_RE']['help']; ?></p>"></i></label>
-																											<input type="number" name="arguments[<?php echo $tool['arguments']['filtering:min_dist_RE']['name']; ?>]" id="filtering_min_dist_RE" class="form-control" value="<?php echo $tool['arguments']['filtering:min_dist_RE']['default']; ?>" min="0" disabled>
+                                                      <label class="control-label">Minimum distance to RE site <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Used to exclude reads starting too close from a RE site. Such reads are called pseudo-dangling-ends.</p>"></i></label>
+																											<input type="number" name="arguments[filtering:min_dist_RE]" id="min_dist_RE" class="form-control" value="5" min="0" disabled>
                                                   </div>
 																							</div>
 																						</div>
                                           <div class="row">
 																							<div class="col-md-6">
 																									<div class="form-group display-hide" id="fg_min_fragment_size">
-																											<label class="control-label"><?php echo $tool['arguments']['filtering:min_fragment_size']['description']; ?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['filtering:min_fragment_size']['help']; ?></p>"></i></label>
-																											<input type="number" name="arguments[<?php echo $tool['arguments']['filtering:min_fragment_size']['name']; ?>]" id="filtering_min_fragment_size" class="form-control" value="<?php echo $tool['arguments']['filtering:min_fragment_size']['default']; ?>" min="0" disabled>
-																									</div>
+                                                      <label class="control-label">Minimum fragment size <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>To exclude small genomic RE fragments (smaller than sequenced reads)</p>"></i></label>
+																											<input type="number" name="arguments[filtering:min_fragment_size]" id="min_fragment_size" class="form-control" value="50" min="0" disabled>
+                                                  </div>
 																							</div>
                                               <div class="col-md-6">
 																									<div class="form-group display-hide" id="fg_max_fragment_size">
-                                                      <label class="control-label"><?php echo $tool['arguments']['filtering:max_fragment_size']['description']; ?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['filtering:max_fragment_size']['help']; ?></p>"></i></label>
-																											<input type="number" name="arguments[<?php echo $tool['arguments']['filtering:max_fragment_size']['name']; ?>]" id="filtering_max_fragment_size" class="form-control" value="<?php echo $tool['arguments']['filtering:max_fragment_size']['default']; ?>" min="0" disabled>
+                                                      <label class="control-label">Maximum fragment size <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>to exclude large genomic RE fragments (probably resulting from gaps in the reference genome).</p>"></i></label>
+																											<input type="number" name="arguments[filtering:max_fragment_size]" id="max_fragment_size" class="form-control" value="100000" min="0" disabled>
                                                   </div>
 																							</div>
 																					</div>
@@ -359,11 +469,11 @@ $tool   = getTool_fromId($toolId,1);
 
 
 
-                              <div class="alert alert-danger err-tool display-hide">
+                              <div class="alert alert-danger err-nd display-hide">
                                   <strong>Error!</strong> You forgot to fill out some mandatory fields, please check them before submit the form.
                               </div>
 
-                              <div class="alert alert-warning warn-tool display-hide">
+                              <div class="alert alert-warning warn-nd display-hide">
                                   <strong>Warning!</strong> At least one analysis should be selected.
                               </div>
 
@@ -379,23 +489,22 @@ $tool   = getTool_fromId($toolId,1);
                 </div>
                 <!-- END CONTENT -->
     
-									<div class="modal fade bs-modal-lg" id="modalDTStep2" tabindex="-1" role="basic" aria-hidden="true">
-      	<div class="modal-dialog modal-lg">
-    			<div class="modal-content">
-        		<div class="modal-header">
-      				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-     	 				<h4 class="modal-title">Select file(s)</h4>
-        		</div>
-        		<div class="modal-body"><div id="loading-datatable"><div id="loading-spinner">LOADING</div></div></div>
-        		<div class="modal-footer">
-      				<button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
-      				<button type="button" class="btn green btn-modal-dts2-ok" disabled>Accept</button>
-        		</div>
-    			</div>
-    			<!-- /.modal-content -->
-      	</div>
-      	<!-- /.modal-dialog -->
-  		</div>
+									<div class="modal fade bs-modal" id="modalNGL" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title"></h4>
+                            </div>
+                            <div class="modal-body">
+                              <div id="viewport" style="width:100%; height:500px;background:#ddd;"></div>
+                             </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+				</div>
 
  
 <?php 

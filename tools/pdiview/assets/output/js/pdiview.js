@@ -93,14 +93,14 @@ $(document).ready(function(e){
         .append(
             $("<a/>",
               {"data-toggle": "tooltip",
-               "title": "<img src='http://vre.multiscalegenomics.eu/test/marco/img/plot_legend.png' />"})
+               "title": "<img src='tools/pdiview/assets/output/img/plot_legend.png' />"})
                 .css("html","true")
                 .append("Plot Legend"))
         .append($("<br/>"))
         .append(
             $("<a/>",
               {"data-toggle": "tooltip",
-               "title": "<img src='http://vre.multiscalegenomics.eu/test/marco/img/dna_helical_parameters.png' />"})
+               "title": "<img src='tools/pdiview/assets/output/img/dna_helical_parameters.png' />"})
                 .css("html","true")
                 .append("Help with DNA helical parameters"));
     $('a[data-toggle="tooltip"]').tooltip({

@@ -1,8 +1,9 @@
 var baseURL = $("#base-url").val();
+var tool = $("#tool").val();
 
 var ValidateForm = function() {
 
-		$('.params_naflex_inputs').change(function() {
+		/*$('.params_naflex_inputs').change(function() {
 				
 			var selected = new Array();
         
@@ -24,12 +25,12 @@ var ValidateForm = function() {
             }
         });
 
-		});
+		});*/
 
 
     var handleForm = function() {
 
-        $('#naflex-form').validate({
+        $('#tool-input-form').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
@@ -38,17 +39,24 @@ var ValidateForm = function() {
                 project: {
                     required: true,
                     nowhitespace: true
+                },
+								execution: {
+                    required: true,
+                    nowhitespace: true
                 }
             },
 						messages: {
 							project: {
-								required: "The project name is mandatory."
+								required: "Please select in which project you will execute this tool."
+							},
+							execution: {
+								required: "The execution name is mandatory."
 							}
 						},
 
             invalidHandler: function(event, validator) { //display error alert on form submit
-                $('.err-nd', $('#naflex-form')).show();
-                $('.warn-nd', $('#naflex-form')).hide();
+                $('.err-tool', $('#tool-input-form')).show();
+                $('.warn-tool', $('#tool-input-form')).hide();
             },
 
             highlight: function(element) { // hightlight error inputs
@@ -62,20 +70,26 @@ var ValidateForm = function() {
             },
 
             errorPlacement: function(error, element) {
-							error.insertAfter(element);
+            	if($(element).hasClass("select2-hidden-accessible")) {
+            		console.log($(element).parent());
+            		error.insertAfter($(element).parent().find("span.select2"));
+							} else {
+								error.insertAfter(element);
+							}
 						},
 
 						
             submitHandler: function(form) {
-            		$('button[type="submit"]', $('#naflex-form')).prop('disabled', true);
-                /*$('.warn-nd', $('#naflex-form')).hide();
-                $('.err-nd', $('#naflex-form')).hide();
-                var data = $('#naflex-form').serialize();
+            		$('button[type="submit"]', $('#tool-input-form')).prop('disabled', true);
+            		$('button[type="submit"]', $('#tool-input-form')).html('<i class="fa fa-spinner fa-pulse fa-spin"></i> Launching tool, please don\'t close the tab.');
+                /*$('.warn-tool', $('#tool-input-form')).hide();
+                $('.err-tool', $('#tool-input-form')).hide();
+                var data = $('#tool-input-form').serialize();
 								data = data.replace(/%5B/g,"[");
                 data = data.replace(/%5D/g,"]");
                 //console.log(data);
                 location.href = baseURL + "tools/compute.php?" + data;*/
-              	var data = $('#naflex-form').serialize();
+              	var data = $('#tool-input-form').serialize();
               	data = data.replace(/%5B/g,"[");
                 data = data.replace(/%5D/g,"]");
 								location.href = baseURL + "applib/launchTool.php?" + data;
@@ -94,19 +108,19 @@ var ValidateForm = function() {
 					}
 				});
 
-				$(".params_naflex_inputs").each(function() {
+				$(".field_required").each(function() {
         	$(this).rules("add", { 
 						required:true, 
-						messages: {
+						/*messages: {
 							required: "You must select all the file types.",
-						}
+						}*/
 					});
         });
 
-        $('#naflex-form input').keypress(function(e) {
+        $('#tool-input-form input').keypress(function(e) {
             if (e.which == 13) {
-                if ($('#naflex-form').validate().form()) {
-                    $('#naflex-form').submit(); //form validation success, call ajax form submit
+                if ($('#tool-input-form').validate().form()) {
+                    $('#tool-input-form').submit(); //form validation success, call ajax form submit
                 }
                 return false;
             }
@@ -125,13 +139,13 @@ var ValidateForm = function() {
 
 jQuery(document).ready(function() {
 
-	$(".select2naf").select2({
+	$("#operations").select2({
 	  placeholder: "Select one or more operations clicking here",
 		width: '100%'
 	});
 
 
-	$('.select2naf').on('change', function() {
+	$('#operations').on('change', function() {
 		if($(this).find('option:selected').length > 0) {
 			$(this).parent().removeClass('has-error');
 			$(this).parent().find('.help-block').hide();

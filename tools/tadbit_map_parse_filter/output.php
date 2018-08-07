@@ -3,17 +3,18 @@
 require "../../phplib/genlibraries.php";
 redirectOutside();
 
-$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$wd  = $GLOBALS['dataDir'].$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir']."/outputs_".$_REQUEST['execution'];
 $indexFile = $wd.'/index';
 
 $results = file($indexFile);
 
-$dir = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dir = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
 //processing results files
 
-$tmp_dir  = $GLOBALS['dataDir'].'/'.$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
-$pathTemp = 'files/'               .$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+$tmp_dir  = $GLOBALS['dataDir'].'/'.$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/.tmp/outputs_".$_REQUEST['execution'];
+$pathTemp = 'files/'               .$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/.tmp/outputs_".$_REQUEST['execution'];
+
 
 $PNGs = glob("$tmp_dir/*.png");
 $PNGs = array_map('basename',$PNGs);
@@ -40,10 +41,10 @@ var_dump($comparts);
 var_dump($comparts_sum);
 */
 
-$pathTGZ = 'files/'.$_SESSION['User']['id']."/".$dir;
+$pathTGZ = 'files/'.$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$dir;
 
 //project folder ID
-$dirName = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+$dirName = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
 ?>
 
@@ -104,11 +105,20 @@ $dirName = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
 			    <?php if ($QC_plots){
 			     for ($i=0;$i<count($QC_plots)-1; $i=$i+2){
 				if (isset($QC_plots[$i+1])){?>
-				    <div class="col-md-6"><img src="<?php echo $pathTemp."/".$QC_plots[$i]; ?>" style="width:100%;"/></div>
-				    <div class="col-md-6"><img src="<?php echo $pathTemp."/".$QC_plots[$i+1]; ?>" style="width:100%;"/></div>
+						<div class="col-md-6">
+							<h4><?php echo $QC_plots[$i]; ?></h4><br>
+							<img src="<?php echo $pathTemp."/".$QC_plots[$i]; ?>" style="width:100%;"/>
+						</div>
+						<div class="col-md-6">
+							<h4><?php echo $QC_plots[$i + 1]; ?></h4><br>
+							<img src="<?php echo $pathTemp."/".$QC_plots[$i+1]; ?>" style="width:100%;"/>
+						</div>
 
 				<?php }else{ ?>
-				    <div class="col-md-6"><img src="<?php echo $pathTemp."/".$QC_plots[$i]; ?>" style="width:100%;"/></div>
+						<div class="col-md-6">
+							<h4><?php echo $QC_plots[$i]; ?></h4><br>
+							<img src="<?php echo $pathTemp."/".$QC_plots[$i]; ?>" style="width:100%;"/>
+						</div>
 				    <div class="col-md-6">&nbsp;</div>
 				<?php }
 	
@@ -120,16 +130,22 @@ $dirName = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
 			<!-- Histogram fragments -->
 			<?php if ($hist_frag){ ?>
 			<div class="row">
-				<div class="col-md-12"><img src="<?php echo $pathTemp."/".$hist_frag[0]; ?>" /></div>
-                       </div>
+				<div class="col-md-12">
+					<h4><?php echo $hist_frag[0]; ?></h4><br>
+					<img src="<?php echo $pathTemp."/".$hist_frag[0]; ?>" />
+				</div>
+      </div>
 			<div class="row">&nbsp;</div>
 			<?php } ?>
 
 			<!-- Chr compartments summary -->
 			<?php if ($comparts_sum){ ?>
 			<div class="row">
-				<div class="col-md-12"><img src="<?php echo $pathTemp."/".$comparts_sum[0]; ?>" style="width:100%;" /></div>
-                        </div>
+				<div class="col-md-12">
+					<h4><?php echo $comparts_sum[0]; ?></h4><br>
+					<img src="<?php echo $pathTemp."/".$comparts_sum[0]; ?>" style="width:100%;" />
+				</div>
+      </div>
 			<div class="row">&nbsp;</div>
 			<?php } ?>
 

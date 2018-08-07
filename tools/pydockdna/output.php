@@ -3,10 +3,10 @@
 require "../../phplib/genlibraries.php";
 redirectOutside();
 
-//$dirName = $_REQUEST['project'];
-$dir = basename(getAttr_fromGSFileId($_REQUEST['project'],'path'));
+//$dirName = $_REQUEST['execution'];
+$dir = basename(getAttr_fromGSFileId($_REQUEST['execution'],'path'));
 
-$path = '/files/'.$_SESSION['User']['id'].'/'.$dir;
+$path ='/files/'.$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$dir;
 
 ?>
 
