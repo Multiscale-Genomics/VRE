@@ -12,9 +12,14 @@ if($user['Type'] == 0) {
 	redirect($GLOBALS['URL'].'admin/adminUsers.php');
 }
 
-$tools = $GLOBALS['toolsCol']->find();
+/*$tls = $GLOBALS['toolsCol']->find();
+$tls = $GLOBALS['visualizersCol']->find();*/
 
+$tls = getTools_List();
+$vlzrs = getVisualizers_List();
 
+$tlsvlzrs = array_merge($tls, $vlzrs);
+sort($tlsvlzrs);
 
 ?>
 
@@ -139,7 +144,7 @@ $tools = $GLOBALS['toolsCol']->find();
                                                 <div class="form-group">
                                                     <label class="control-label">Disk Quota</label>
 																										<div class="input-group">
-																										<input type="number" name="diskQuota" id="diskQuota" class="form-control" min="1" max="50" step="1" value="<?php echo ((($user["diskQuota"]/1024)/1024)/1024); ?>" placeholder="">
+																										<input type="number" name="diskQuota" id="diskQuota" class="form-control" min="1" max="100" step="1" value="<?php echo ((($user["diskQuota"]/1024)/1024)/1024); ?>" placeholder="">
 																												<span class="input-group-addon">GB</span>
 																										</div>
                                                 </div>
@@ -183,7 +188,7 @@ $tools = $GLOBALS['toolsCol']->find();
 																								<select class="form-control form-field-enabled valid select2tools" name="tools[]" id="tools" aria-invalid="false" multiple="multiple" <?php echo $stTools; ?>>
 																									<option value=""></option>
 																									<?php
-																									foreach ( $tools as $id => $value ) {
+																									foreach ( $tlsvlzrs as $id => $value ) {
 																											$selected="";
                                                     	if (in_array($value['_id'], $user['ToolsDev'])) $selected = "selected";
 
