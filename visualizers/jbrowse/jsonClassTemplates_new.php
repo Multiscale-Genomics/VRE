@@ -109,6 +109,22 @@ class BW_P extends Base {
 }
 
 
+class BW_ND extends Base {
+
+        public $storeClass = "JBrowse/Store/SeqFeature/BigWig";
+        public $type = "JBrowse/View/Track/Wiggle/XYPlot";
+        public $autoscale = "local";
+        public $metadata = array("category" => "Your Data / Uploads / Other");
+
+        public $style = array("height" => "60","pos_color" => "#D8D8D8","neg_color" => "#D8D8D8");
+
+        public function __construct($label,$path,$file){
+                parent::__construct("BigWig",$label,$path,$file);
+                $this->metadata = array("category" => "Your Data / Projects / $path", "description" => "The bigWig file contains the -log10 of the p-value of how significant is the difference between both experiments (<a href=\"https://vre.multiscalegenomics.eu/tools/nucldynwf/help/method.php#nd\" target='_blank'>see methods</a>).");
+        }
+
+}
+
 class GFF extends Base {
 
         public $storeClass = "JBrowse/Store/SeqFeature/GFF3";
