@@ -61,7 +61,6 @@ function loadingAjax(div_id,user)
 
 </script>
 
-<!--body onload="loadingAjax('myDiv','<?php echo $_SESSION['userId']; ?>')"-->
 <body onload="loadingAjax('myDiv','<?php echo $_SESSION['User']['id']; ?>')">
 
 

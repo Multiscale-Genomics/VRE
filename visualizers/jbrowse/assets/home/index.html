@@ -11,7 +11,7 @@
     </div>
     <div class="cbp-l-inline-right">
         <div class="cbp-l-inline-title">JBrowse</div>
-        <div class="cbp-l-inline-subtitle">adapted by Romina Royo</div>
+        <div class="cbp-l-inline-subtitle">adapted by Romina Royo (BSC)</div>
         <div class="cbp-l-inline-desc">
 					<p>JBrowse is a fast, embeddable genome browser built completely with JavaScript and HTML5, with optional run-once data formatting tools written in Perl.
 
@@ -31,8 +31,12 @@
 					<p>Additional tracks list can be seen <a href="assets/pages/media/pages/jbrowsetracks2.pdf" target="_blank">here</a>.</p>
 
 				</div>
-        <a href="workspace/"  class="cbp-l-inline-view btn blue btn-outline">GO TO WORKSPACE</a>
+				<label>Launch JBrowse with reference genome:</label>
+				<select  name="" id="ref-genome-jbrowse" class="form-control" onchange="changeGenome(this)"></select>
+        <a href="visualizers/jbrowse/input.php"  class="cbp-l-inline-view btn blue btn-outline">LAUNCH JBROWSE</a>
 				<a href="visualizers/jbrowse/assets/help/" target="_blank" class="cbp-l-inline-view btn blue btn-outline" style="margin-left:10px;">VIEW HELP</a>
 
     </div>
 </div>
+
+<script>loadReferenceGenome();</script>

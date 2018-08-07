@@ -8,18 +8,39 @@ redirectOutside();
 include "jsonClassTemplates_new.php";
 
 $user = $_SESSION['User']['id'];
+$proj = $_SESSION['User']['activeProject'];
+
+
+// direct link to Jbrowse without tracks
+
+if (isset($_REQUEST['direct_refGenome'])){ 
+	$ref= $_REQUEST['direct_refGenome'];
+	if ($ref == "r5.01"){
+        	$url = "JBrowse-1.12.0/index.html?data=user_jbrowse%2F$ref%2Fjbrowse";
+#	        $url = $url . "data=" . urlencode("user_data/$user/$proj/.jbrowse");
+#        	$url = $url . "&loc=" . urlencode("chrI:30000..50000");
+#	        $url = $url . "&tracks=";
+	}else{
+        	$url = "JBrowse-1.12.0/index.html?data=user_jbrowse%2F$ref%2Fjbrowse";
+	}
+	#https://vre.multiscalegenomics.eu/visualizers/jbrowse/JBrowse-1.12.1-yeast/index.html?data=user_jbrowse%2Fdm6%2Fjbrowse
+	$url = $GLOBALS['jbrowseURL'] . $url;
+	redirect($url);
+}
+
+
+// link to Jbrowse with tracks
 
 # JBrowse url
-#$url = "JBrowse-1.11.6/index.html?";
-$url = "JBrowse-1.12.1-yeast/index.html?";
-$url = $url . "data=" . urlencode("user_data/$user/.jbrowse");
+$url = "JBrowse-1.12.1/index.html?";
+$url = $url . "data=" . urlencode("user_data/$user/$proj/.jbrowse");
 $url = $url . "&loc=" . urlencode("chrII:30000..50000");
 $url = $url . "&tracks=";
 $url_tracks = "";
 
 
 # user track file trackList.json
-$file = $GLOBALS['dataDir']."/". $user . "/.jbrowse/trackList.json";
+$file = $GLOBALS['dataDir']."/$user/$proj/.jbrowse/trackList.json";
 //print $file;
 $trackf = fopen($file, "w");
 $tracks = "";
@@ -53,7 +74,7 @@ foreach ($arr_tracks as $id) {
         $project = array_pop($a_project);
 
 	if ($first) {
-                if ($ref  == "hg38"){
+#                if ($ref  == "hg38" || $ref == "hg19"){
                         # head of trackList.json, having all common tracks 
                         //print "HUMAN";
                         $trackHead = file_get_contents("JBrowse-1.12.1/data/$ref/jbrowse/tracks/trackList_head.json", FILE_USE_INCLUDE_PATH);
@@ -62,16 +83,16 @@ foreach ($arr_tracks as $id) {
                         fwrite($trackf, $trackHead);
                         $refGlobal=$ref;
 
-                } else {
+#                } else {
 			# head of trackList.json, having all common tracks 
-			$trackHead = file_get_contents("JBrowse-1.11.6/data/$ref/jbrowse/tracks/trackList_head.json", FILE_USE_INCLUDE_PATH);
-			$trackTail = file_get_contents("JBrowse-1.11.6/data/$ref/jbrowse/tracks/trackList_tail.json", FILE_USE_INCLUDE_PATH);
+#			$trackHead = file_get_contents("JBrowse-1.11.6/data/$ref/jbrowse/tracks/trackList_head.json", FILE_USE_INCLUDE_PATH);
+#			$trackTail = file_get_contents("JBrowse-1.11.6/data/$ref/jbrowse/tracks/trackList_tail.json", FILE_USE_INCLUDE_PATH);
 			# Common tracks (reference sequence, genes, GC, etc.)
-			fwrite($trackf, $trackHead);
-			$refGlobal=$ref;
+#			fwrite($trackf, $trackHead);
+#			$refGlobal=$ref;
 #print "HEAD: $trackHead";
 #print "TAIL: $trackTail";
-		}
+#		}
 	}
 
 #print "LABEL: " . $label . " " . "FILENAME: " . $filename . " TYPE: " . $type . " FORMAT : " .$format . " PROJECT: " . $project . " REF: " . $ref . "<br/>";
@@ -111,7 +132,7 @@ foreach ($arr_tracks as $id) {
         } elseif ($type == "nucleosome_dynamics" && ( $format=="GFF3" || $format=="GFF" ) ){
                 $e = new GFF_ND($label,"$project",$filename);
         } elseif ($type == "nucleosome_dynamics" && $format=="BW"){
-                $e = new BW_P($label,"$project",$filename);
+                $e = new BW_ND($label,"$project",$filename);
         } elseif ($type == "tss_classification_by_nucleosomes"){
                 $e = new GFF_TX($label,"$project",$filename);
         } elseif ($type == "nucleosome_free_regions"){
@@ -172,11 +193,11 @@ foreach ($arr_tracks as $id) {
 
 # If we got here, trackType's and refGenome's are OK
 
-$seqfrom = $GLOBALS['dataDir']."/". $user . "/.jbrowse/seq";
+$seqfrom = $GLOBALS['dataDir']."/$user/$proj/.jbrowse/seq";
 $seqto = $GLOBALS['refGenomes']."$ref/jbrowse/seq/";
-$tracksfrom = $GLOBALS['dataDir']."/". $user . "/.jbrowse/tracks";
+$tracksfrom = $GLOBALS['dataDir']."/$user/$proj/.jbrowse/tracks";
 $tracksto = $GLOBALS['refGenomes']."$ref/jbrowse/tracks/";
-$namesfrom = $GLOBALS['dataDir']."/". $user . "/.jbrowse/names";
+$namesfrom = $GLOBALS['dataDir']."/$user/$proj/.jbrowse/names";
 $namesto = $GLOBALS['refGenomes']."$ref/jbrowse/names/";
 		//symlink($GLOBALS['jbrowseData']."/names/","$dataDirP/.jbrowse/names"); // OJ // OJOO
 
@@ -248,15 +269,15 @@ fclose($trackf);
 
 if ($ref == "r5.01"){
 	$url = "JBrowse-1.12.0/index.html?";
-	$url = $url . "data=" . urlencode("user_data/$user/.jbrowse");
+	$url = $url . "data=" . urlencode("user_data/$user/$proj/.jbrowse");
 	$url = $url . "&loc=" . urlencode("chrI:30000..50000");
 	$url = $url . "&tracks=";
-} else if ($ref == "hg38"){
+}/* else if ($ref == "hg38" || $ref=="hg19"){
         $url = "JBrowse-1.12.1/index.html?";
-        $url = $url . "data=" . urlencode("user_data/$user/.jbrowse");
+        $url = $url . "data=" . urlencode("user_data/$user/$proj/.jbrowse");
         $url = $url . "&loc=" . urlencode("chr1:30000..50000");
         $url = $url . "&tracks=";
-}
+}*/
 
 
 $url = $GLOBALS['jbrowseURL'] . $url;
