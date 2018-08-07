@@ -11,7 +11,7 @@ foreach (array_values(iterator_to_array($GLOBALS['countriesCol']->find(array(),a
 
 
 $users = array();
-foreach (array_values(iterator_to_array($GLOBALS['usersCol']->find(array(),array('Surname'=>1, 'Name'=>1, 'Inst'=>1, 'Country'=>1, 'diskQuota'=>1, 'lastLogin'=>1, 'Type'=>1, 'Status'=>1, 'id'=>1 ))->sort(array('Surname'=>1)))) as $v)
+foreach (array_values(iterator_to_array($GLOBALS['usersCol']->find(array("Type" => array('$ne' => "3")),array('Surname'=>1, 'Name'=>1, 'Inst'=>1, 'Country'=>1, 'diskQuota'=>1, 'lastLogin'=>1, 'Type'=>1, 'Status'=>1, 'id'=>1 ))->sort(array('Surname'=>1)))) as $v)
 	$users[$v['_id']] = array($v['Surname'], $v['Name'], $v['Inst'], $v['Country'], $v['diskQuota'], $v['lastLogin'], $v['Type'], $v['Status'],$v['id']);
 
 unset($users['guest@guest']);
@@ -176,6 +176,10 @@ unset($users['guest@guest']);
                                                             <li>
                                                                 <a class="" href="admin/editUser.php?id=<?php echo $value[8]; ?>">
                                                                     <i class="fa fa-pencil"></i> Edit user</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="" href="applib/loginImpersonate.php?id=<?php echo $key; ?>">
+                                                                    <i class="fa fa-user"></i> Impersonate user</a>
                                                             </li>
                                                               <li>
                                                                   <a class="enable" href="javascript:;">
