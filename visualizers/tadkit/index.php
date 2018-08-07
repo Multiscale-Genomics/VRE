@@ -5,9 +5,10 @@ require "../../phplib/genlibraries.php";
 redirectOutside();
 
 $user = $_REQUEST["user"];
+$proj = $_SESSION['User']['activeProject'];
 
 // Clean files older than 1 day
-$files = glob($GLOBALS['dataDir']."/". $user . "/.tadkit/conf_*");
+$files = glob($GLOBALS['dataDir']."/". $user . "/" . $proj  . "/.tadkit/conf_*");
 $now   = time();
 foreach ($files as $file)
 	if (is_file($file))
@@ -20,8 +21,8 @@ $absURL = $GLOBALS['URL']."/visualizers/tadkit/tadkit/index.html";
 $user_data = "user_data/";
 $uid = uniqid();
 $url = "#!/project/dataset";
-$url = $url . "?conf=". $user_data . urlencode($user) . "/.tadkit/conf_".$uid.".json";
-$file = $GLOBALS['dataDir']."/". $user . "/.tadkit/conf_".$uid.".json";
+$url = $url . "?conf=". $user_data . urlencode($user) ."/". urlencode($proj). "/.tadkit/conf_".$uid.".json";
+$file = $GLOBALS['dataDir']."/". $user . "/". $proj. "/.tadkit/conf_".$uid.".json";
 //print $file;
 $conf_file = fopen($file, "w");
 
