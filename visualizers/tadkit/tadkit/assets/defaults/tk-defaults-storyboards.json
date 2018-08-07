@@ -92,9 +92,9 @@
 							"tubed" : true,
 							"resolution_scales" : {
 								"2000" : 1,
-								"10000" : 10,
-								"50000" : 20,
-								"100000" : 50
+								"10000" : 1,
+								"50000" : 5,
+								"100000" : 5
 							}
 						},
 						"cluster" : {
@@ -249,13 +249,25 @@
 									"tracks": [
 										{
 											"name": "Genes",
-						                    "url": "assets/data/refGene.hg19.bed.gz",
-						                    "index": "assets/data/refGene.hg19.bed.gz.tbi",
+						                    "url": "assets/data/refGene.hg38.bed.gz",
                                                                     "height": 1000,
 						                    "displayMode": "EXPANDED"
 					                	}
 					                ]
-					            }
+					            },"hg19" : {
+                                                                        "id" : "hg19",
+                                                                        "fastaURL": "refGenomes/hg19/hg19.fa",
+                                                                        "cytobandURL": "refGenomes/hg19/hg19_cytoBand.txt",
+                                                                        "tracks": [
+                                                                                {
+                                                                                        "name": "Genes",
+                                                                    "url": "assets/data/refGene.hg19.bed.gz",
+                                                                    "index": "assets/data/refGene.hg19.bed.gz.tbi",
+                                                                    "height": 1000,
+                                                                    "displayMode": "EXPANDED"
+                                                                }
+                                                        ]
+                                                    }
 							},
 							"saccharomyces_cerevisiae" : {
 								"R64-1-1" : {

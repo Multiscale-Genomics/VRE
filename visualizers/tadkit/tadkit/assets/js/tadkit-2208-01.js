@@ -55,9 +55,9 @@
 		.module('TADkit')
 		.config(config);
 
-	function config($stateProvider, $urlRouterProvider) {
+	function config($stateProvider, $urlRouterProvider, $httpProvider) {
 		$urlRouterProvider.otherwise("/project/loader");
-		
+		$httpProvider.interceptors.push('myHttpInterceptor');
 		$stateProvider
 		// .state('home', {
 		// 	url: '/',
@@ -895,11 +895,11 @@
 						            		.text(value_text)
 						            		.attr('display', 'block');
 						            	
-						            	if(scope.settings.current.chromosomeIndexes.length<=2) {
+						            	//if(scope.settings.current.chromosomeIndexes.length<=2) {
 						            		markers_position = scope.transformCoords(transformCoords);
 							            	scope.settings.current.markers_position = markers_position;
 							            	scope.$apply(scope.settings.current.markers_position);
-							            }
+							            //}
 						            }
 						            
 						    	}
@@ -2110,7 +2110,7 @@
 					$scope.hideTadkitMarkers();
 	        	} else {
 	        		if($scope.settings.current.chromosomeIndexes.length===2) $scope.synchronizeViewports();
-	        		//if($scope.settings.current.chromosomeIndexes.length<3) 
+	        		if($scope.settings.current.chromosomeIndexes.length > 2) return; 
 	        		$scope.updateTadkitMarkers(newValue,$scope.settings.current.markers_chr);
 	        		
 	        	}
@@ -3696,7 +3696,7 @@
 		.factory('Chromatin', Chromatin);
 
 	// constructor for chromatin model instances
-	function Chromatin(Paths, PathControls, ColorConvert) {
+	function Chromatin(Paths, PathControls, ColorConvert, Proximities) {
 		return function(data, colors, view_settings, resolution_scale, settings) {
 			// console.log(colors);
 
@@ -3763,19 +3763,25 @@
 		        overdraw: true
 		    });
 
+			var simple_chrom_colors = ['#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF','#C0C0C0','#808080','#800000','#808000','#008000','#800080','#008080','#000080','#A52A2A','#E9967A','#B8860B','#FFFF00','#006400','#98FB98','#2F4F4F','#40E0D0','#4682B4','#87CEFA','#DC143C','#FFD700','#F0E68C','#7CFC00','#00FF00','#00FF7F','#3CB371','#00FFFF','#AFEEEE','#6495ED','#87CEEB'];
 			var chromatinFiber = new THREE.Object3D(); // unmerged network
 			var i;
 			var colori = 0;
 			var chr_bins,pathControls,pathSegments,cubicPath,cubicGeom, chromatinGeometry, tubeMesh, newChromatinColor;
 			var j;
 			var offset = 0;
+			var fpart = 0;
+			var proximities = Proximities.get();
+			settings.facesParticle = [];
 			for (var l = 0 ; l < settings.chromosomeIndexes.length; l++) {
 				chr_bins = Math.round((settings.chromEnd[l]-settings.chromStart[l])/resolution);
 				//chromBreaks.push(offset);
 			
 				// Derive path controls from geometry vectors
 				// var pathControls = getPathControls( geometry.vertices );
-				pathControls = PathControls.cubic(geometry.vertices.slice(offset,offset+chr_bins), this.pathClosed);
+				var model_points = geometry.vertices.slice(offset,offset+chr_bins);
+				pathControls = PathControls.cubic(model_points, this.pathClosed);
+				//pathControls = PathControls.simple(geometry.vertices.slice(offset,offset+chr_bins));
 
 				// Set number of Particles
 				if (this.particles === 0) this.particles += geometry.vertices.length; //pathControls.vertices.length - 1;
@@ -3792,8 +3798,33 @@
 				
 				if(view_settings.tubed) {
 					chromatinGeometry = new THREE.TubeGeometry(cubicPath, pathSegments, this.radius, 8, this.pathClosed);
-										
+					
 				    tubeMesh = new THREE.Mesh(chromatinGeometry, solidMaterial);
+					
+				    //var faces = chromatinGeometry.vertices.length;
+				    var faces = chromatinGeometry.faces.length;
+					var segment_lengths = [];
+					for (i = 0; i < model_points.length-1; i++) segment_lengths.push(distance(model_points[i+1],model_points[i]));
+					var total_length = 0;
+					for (i = 0; i < segment_lengths.length; i++) total_length += segment_lengths[i];
+					var facesParticle = [];
+					for (i = 0; i < chr_bins; i++) facesParticle.push([0,0]);
+					for (i = chr_bins-1; i >= 0; i--) {
+						// we add right part of curve if not  last particle
+						if(i < chr_bins - 1 ) fpart = Math.round(((chromatinGeometry.faces.length)/16)*((segment_lengths[i]/2)/total_length));
+						//if(i < chr_bins - 1 ) fpart = Math.round(((chromatinGeometry.vertices.length-8)/8)*((segment_lengths[i]/2)/total_length));
+						// we add left part of curve if not first particle
+						if(i > 0 ) fpart += Math.round(((chromatinGeometry.faces.length)/16)*((segment_lengths[i-1]/2)/total_length));
+						//if(i > 0 ) fpart += Math.round(((chromatinGeometry.vertices.length-8)/8)*((segment_lengths[i-1]/2)/total_length)); 
+						faces--;
+						if(faces > 1) facesParticle[i][1]=faces;
+						else facesParticle[i][1]=1;
+						faces -= Math.ceil(fpart*16); // segments have 8 faces
+						if(faces > 0) facesParticle[i][0]=faces;
+						else facesParticle[i][0]=0;
+						
+					}
+					settings.facesParticle.push(facesParticle);
 					
 					chromatinGeometry.dynamic = true;
 					chromatinGeometry.verticesNeedUpdate = true;
@@ -3824,8 +3855,8 @@
 							}
 				    	}
 					}*/
-					
 					for (i = 0; i < chromatinGeometry.faces.length; i++) {
+						if(settings.chromosomeIndexes.length > 1) colors[Math.floor(colori/16)] = simple_chrom_colors[l];
 						if(ColorConvert.testIfHex(colors[Math.floor(colori/16)]) || colors[Math.floor(colori/16)].indexOf('#')===0) {
 							newChromatinColor =  new THREE.Color(colors[Math.floor(colori/16)]);	 
 						} else {
@@ -3889,6 +3920,13 @@
 		};
 	}
 
+	function distance(p1,p2) {
+		var dx = p2.x - p1.x;
+		var dy = p2.y - p1.y;
+		var dz = p2.z - p1.z;
+		var dist = Math.sqrt( dx * dx + dy * dy + dz * dz );
+		return dist;
+	}
 	
 	function getGeometry(data) {
 		var offset = 0, vertex,
@@ -4730,12 +4768,12 @@
 			                		end_tad = Math.round((scope.data.tad_data.tads[i][2]-scope.settings.current.chromStart[scope.settings.current.chromIdx])/resolution);
 			                 		
 			                 		centre_of_mass = new THREE.Vector3();
-									for (var j = start_tad; j <= end_tad; j++) {
+									for (var j = start_tad; j < end_tad; j++) {
 										centre_of_mass.add(particles.geometry.vertices[j]);
 									}
 									centre_of_mass.divideScalar(end_tad - start_tad + 1);
 									radius_cloud = 0;
-									for (j = start_tad; j <= end_tad; j++) {
+									for (j = start_tad; j < end_tad; j++) {
 										if(centre_of_mass.distanceTo(particles.geometry.vertices[j])>radius_cloud) 
 											radius_cloud = centre_of_mass.distanceTo(particles.geometry.vertices[j]);
 									}
@@ -4977,7 +5015,7 @@
 //								if(!scope.view.settings.chromatin.tubed && !scope.currentoverlay.object.state.overlaid) {
 //									scope.toggleTubed(true);
 //								}
-								var i,j,newChromatinColor;
+								var i,j,k,newChromatinColor;
 								var chromatinCount = chromatinObj.children.length;
 								if(!scope.view.settings.chromatin.tubed) {
 									for (i = 0; i < chromatinCount; i++) {
@@ -4991,21 +5029,28 @@
 									//var offset = 0;
 									var colori = 0;
 									//var chr_bins;
+									var simple_chrom_colors = ['#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF','#C0C0C0','#808080','#800000','#808000','#008000','#800080','#008080','#000080','#A52A2A','#E9967A','#B8860B','#FFFF00','#006400','#98FB98','#2F4F4F','#40E0D0','#4682B4','#87CEFA','#DC143C','#FFD700','#F0E68C','#7CFC00','#00FF00','#00FF7F','#3CB371','#00FFFF','#AFEEEE','#6495ED','#87CEEB'];
 									var geom;
+									var partFaces, segFaces;
 									for (var l = 0 ; l < scope.settings.current.chromosomeIndexes.length; l++) {
 										//chr_bins = Math.round((scope.settings.current.chromEnd[l]-scope.settings.current.chromStart[l])/resolution)+1;
 										geom = chromatinObj.children[l].geometry;
-										for (i = 0; i < geom.faces.length; i++) {
-											if(ColorConvert.testIfHex(newColors[Math.floor(colori/16)]) || newColors[Math.floor(colori/16)].indexOf('#')===0) {
-												newChromatinColor =  new THREE.Color(newColors[Math.floor(colori/16)]);	 
-											} else {
-												newChromatinColor =  new THREE.Color(ColorConvert.nameToHex(newColors[Math.floor(colori/16)]));
-											} 
-											for (j = 0; j < 16; j++) {
-												if(typeof geom.faces[i+j] !== 'undefined') geom.faces[i+j].color.set(newChromatinColor);
+										partFaces = scope.settings.current.facesParticle[l];
+										for (i = 0; i < partFaces.length; i++) {
+											for (j = 0; j < scope.settings.current.particleSegments; j++) {
+												colori = i*scope.settings.current.particleSegments+j;
+												if(scope.settings.current.chromosomeIndexes.length > 1) newColors[colori] = simple_chrom_colors[l];
+												if(ColorConvert.testIfHex(newColors[colori]) || newColors[colori].indexOf('#')===0) {
+													newChromatinColor =  new THREE.Color(newColors[colori]);	 
+												} else {
+													newChromatinColor =  new THREE.Color(ColorConvert.nameToHex(newColors[colori]));
+												}
+												for (k = partFaces[i][0]; k <= partFaces[i][1]; k++) {	 
+													if(typeof geom.faces[k] !== 'undefined') geom.faces[k].color.set(newChromatinColor);
+												}
 											}
-											colori++;
 										}
+										
 										geom.colorsNeedUpdate = true;
 										//offset += chr_bins;
 							    	}
@@ -5102,7 +5147,7 @@
 				                		end_tad = (Math.round((scope.data.tad_data.tads[newValue][2]-scope.settings.current.chromStart[scope.settings.current.chromIdx])/resolution))*scope.settings.current.particleSegments;
 				                 	}
 									for (i = 0; i < chromatinCount; i++) {
-										if(i>=start_tad && i<=end_tad) {
+										if(i>=start_tad && i<end_tad) {
 											chromatinObj.children[i].material.opacity = 1;
 										} else {
 											if(newValue == -1) chromatinObj.children[i].material.opacity = 1;
@@ -5124,12 +5169,14 @@
 
 						/* Watch for Browser-wide Position updates */
 						scope.$watch('settings.current.particle', function( newParticle, oldParticle ) {
-							if ( newParticle !== oldParticle && particlesObj) {
-								// SET PARTICLE CURSOR COLOR
-								if (particleOriginalColor) particlesObj.geometry.colors[(oldParticle - 1)] = particleOriginalColor;
-								particleOriginalColor = particlesObj.geometry.colors[(newParticle - 1)];
-								particlesObj.geometry.colors[(newParticle - 1)] = highlightColor;
-								particlesObj.geometry.colorsNeedUpdate = true;
+							if ( newParticle !== oldParticle) {
+								if(particlesObj) {
+									// SET PARTICLE CURSOR COLOR
+									if (particleOriginalColor) particlesObj.geometry.colors[(oldParticle - 1)] = particleOriginalColor;
+									particleOriginalColor = particlesObj.geometry.colors[(newParticle - 1)];
+									particlesObj.geometry.colors[(newParticle - 1)] = highlightColor;
+									particlesObj.geometry.colorsNeedUpdate = true;
+								}
 							}
 						});
 						scope.updateRingPosition = function(ring,newSegment,oldSegment) {
@@ -5138,24 +5185,37 @@
 							var newSeg;
 							var oldSeg;
 							var vec, i;
+							var chr_bins;
+							var resolution = scope.settings.current.segmentLength*scope.settings.current.particleSegments;
+							var newPart, oldPart;
 							if(newSegment.length>1) {
 								newSeg = newSegment[0];
 								oldSeg = oldSegment[0];
 								newChrom = newSegment[1];
 								oldChrom = oldSegment[1];
+								newPart = Math.floor(newSeg/scope.settings.current.particleSegments);
+								oldPart = Math.floor(oldSeg/scope.settings.current.particleSegments);
 							} else {
 								newSeg = newSegment;
 								oldSeg = oldSegment;
-								while(chromatinObj.children[newChrom].geometry.vertices.length < (newSeg+1)*8) {
-									newSeg -= Math.floor(chromatinObj.children[newChrom].geometry.vertices.length/8-1);
-									newChrom++;
-								}
-								while(chromatinObj.children[oldChrom].geometry.vertices.length < (oldSeg+1)*8) {
-									oldSeg -= Math.floor(chromatinObj.children[oldChrom].geometry.vertices.length/8-1);
-									oldChrom++;
-								}
+								newPart = Math.floor(newSeg/scope.settings.current.particleSegments);
+								oldPart = Math.floor(oldSeg/scope.settings.current.particleSegments);
+								chr_bins = Math.round(scope.settings.current.chromEnd[newChrom]/resolution)-Math.round(scope.settings.current.chromStart[newChrom]/resolution);
+				            	while(chr_bins-1<newPart) {
+				            		newPart -= chr_bins;
+				            		newSeg -= chr_bins*scope.settings.current.particleSegments;
+				            		newChrom++;
+				            		chr_bins = Math.round(scope.settings.current.chromEnd[newChrom]/resolution)-Math.round(scope.settings.current.chromStart[newChrom]/resolution);
+				            	}
+				            	chr_bins = Math.round(scope.settings.current.chromEnd[oldChrom]/resolution)-Math.round(scope.settings.current.chromStart[oldChrom]/resolution);
+				            	while(chr_bins-1<oldPart) {
+				            		oldPart -= chr_bins;
+				            		oldSeg -= chr_bins*scope.settings.current.particleSegments;
+				            		oldChrom++;
+				            		chr_bins = Math.round(scope.settings.current.chromEnd[oldChrom]/resolution)-Math.round(scope.settings.current.chromStart[oldChrom]/resolution);
+				            	}
 							}
-							if(chromatinObj.children[newChrom].geometry.vertices.length > (newSeg+1)*8+8) {
+							/*if(chromatinObj.children[newChrom].geometry.vertices.length > (newSeg+1)*8+8) {
 								
 								vec = chromatinObj.children[newChrom].geometry.vertices[(newSeg+1)*8];
 								
@@ -5175,38 +5235,71 @@
 								}
 								vec.divideScalar(8);
 								ring.lookAt(vec);
+							}*/
+							vec = new THREE.Vector3(0,0,0);
+							if(scope.settings.current.facesParticle.length <= newChrom ||
+									scope.settings.current.facesParticle[newChrom].length <= newPart) return;
+							var partFaces = scope.settings.current.facesParticle[newChrom][newPart];
+							var segPos = ((newSeg-newPart*scope.settings.current.particleSegments))/scope.settings.current.particleSegments;
+							var vertice = Math.round(((partFaces[1]-partFaces[0])*segPos+partFaces[0])/2);
+							if(vertice < 1) return;
+							for(i=0;i<8;i++){
+								if(chromatinObj.children[newChrom].geometry.vertices.length > vertice+i) vec.add(chromatinObj.children[newChrom].geometry.vertices[vertice+i]);
 							}
+							vec.divideScalar(8);
+							
+							ring.position.x = vec.x;
+							ring.position.y = vec.y;
+							ring.position.z = vec.z;
+							
+							vec = new THREE.Vector3(0,0,0);
+							if(scope.settings.current.facesParticle.length <= oldChrom) return;
+							partFaces = scope.settings.current.facesParticle[oldChrom][oldPart];
+							segPos = ((oldSeg-oldPart*scope.settings.current.particleSegments))/scope.settings.current.particleSegments;
+							vertice = Math.round(((partFaces[1]-partFaces[0])*segPos+partFaces[0])/2);
+							
+							/*if(middleSegment+8 < chromatinObj.children[newChrom].geometry.vertices.length) {
+								middleSegment += 8;
+							} else {
+								middleSegment -= 8;
+							}*/
+							for(i=0;i<8;i++){
+								if(chromatinObj.children[oldChrom].geometry.vertices.length > vertice+i) vec.add(chromatinObj.children[oldChrom].geometry.vertices[vertice+i]);
+							}
+							vec.divideScalar(8);
+							
+							ring.lookAt(vec);
+							
 							return;
 						};
-						/* Watch for Browser-wide Position updates */
-						scope.$watch('settings.current.segment', function( newSegment, oldSegment ) {
-							if ( typeof ring !== 'undefined' && (newSegment !== oldSegment || (ring.position.x === 0 && ring.position.y === 0 && ring.position.z === 0))) {
-								//if(scope.view.settings.chromatin.tubed) return;
-								if(scope.view.settings.chromatin.tubed) {
-									scope.updateRingPosition(ring,newSegment,oldSegment);
-									
-								}
-								// SET CHROMATIN CURSOR COLOR
-
-								var segmentPrevious = chromatinObj.getObjectByName( "segment-" + oldSegment );
-								if (positionOriginalColor && segmentPrevious) {
-									segmentPrevious.material.color = positionOriginalColor;
-									segmentPrevious.material.ambient = positionOriginalColor;
-									segmentPrevious.material.emissive = positionOriginalColor;
-								}
-
-								var segmentCurrent = chromatinObj.getObjectByName( "segment-" + newSegment );
-								if(segmentCurrent) {
-									positionOriginalColor = segmentCurrent.material.color;
-
-									segmentCurrent.material.color = highlightColor;
-									segmentCurrent.material.ambient = highlightColor;
-									segmentCurrent.material.emissive = highlightColor;
-								}
-							}
-						});
-
 					};
+					/* Watch for Browser-wide Position updates */
+					scope.$watch('settings.current.segment', function( newSegment, oldSegment ) {
+						if ( typeof ring !== 'undefined' && (newSegment !== oldSegment || (ring.position.x === 0 && ring.position.y === 0 && ring.position.z === 0))) {
+							//if(scope.view.settings.chromatin.tubed) return;
+							if(scope.view.settings.chromatin.tubed) {
+								scope.updateRingPosition(ring,newSegment,oldSegment);
+								
+							}
+							// SET CHROMATIN CURSOR COLOR
+
+							var segmentPrevious = chromatinObj.getObjectByName( "segment-" + oldSegment );
+							if (positionOriginalColor && segmentPrevious) {
+								segmentPrevious.material.color = positionOriginalColor;
+								segmentPrevious.material.ambient = positionOriginalColor;
+								segmentPrevious.material.emissive = positionOriginalColor;
+							}
+
+							var segmentCurrent = chromatinObj.getObjectByName( "segment-" + newSegment );
+							if(segmentCurrent) {
+								positionOriginalColor = segmentCurrent.material.color;
+
+								segmentCurrent.material.color = highlightColor;
+								segmentCurrent.material.ambient = highlightColor;
+								segmentCurrent.material.emissive = highlightColor;
+							}
+						}
+					});
 					scope.$watch('settings.current.markers_position', function( newValue, oldValue ) {
 						if ( newValue !== oldValue && chromatinObj) {
 							if(scope.view.settings.chromatin.tubed) {
@@ -5217,12 +5310,8 @@
 									scene.remove(linker_label);
 									linker_label = undefined;
 					        	} else {
-					        		//var newLeftPos = Math.floor((scope.settings.current.markers_position[1] - scope.settings.current.chromStart[scope.settings.current.chromIdx])/scope.settings.current.segmentLength);
-									//var newRightPos = Math.floor((scope.settings.current.markers_position[0] - scope.settings.current.chromStart[scope.settings.current.chromIdx])/scope.settings.current.segmentLength);
-									var newLeftPos = Settings.getSegment(scope.settings.current.markers_position[1]);
+					        		var newLeftPos = Settings.getSegment(scope.settings.current.markers_position[1]);
 									var newRightPos = Settings.getSegment(scope.settings.current.markers_position[0]);
-									//var newLeftPos = (Settings.getParticle(scope.settings.current.markers_position[1])-1)*scope.settings.current.particleSegments+Math.round(scope.settings.current.particleSegments/2);
-									//var newRightPos = (Settings.getParticle(scope.settings.current.markers_position[0])-1)*scope.settings.current.particleSegments+Math.round(scope.settings.current.particleSegments/2);
 									
 									var oldLeftPos = newLeftPos>0 ? newLeftPos-1 : 0;
 									var oldRightPos = newRightPos>0 ? newRightPos-1 : 0;
@@ -7756,7 +7845,10 @@
 
 	function ProjectDatasetController ($state, $scope, $stateParams, Datasets, Overlays, Components, Segments){
 		// console.log($scope);
-
+		var el = angular.element(document.querySelector('#spinnerdiv'))[0];
+    	if(!angular.isUndefined(el))
+    		el.style.display = "block";
+    	
 		$scope.datasets = Datasets.get();
 		$scope.selDataset = $scope.datasets.current.index; 
 			
@@ -7844,6 +7936,8 @@
 		});
 		
 		$scope.renderClusters();
+		if(!angular.isUndefined(el))
+    		el.style.display = "none";
 
 	}
 })();
@@ -9223,6 +9317,7 @@
 				var model = this.getModel(ref,chromosomeIndex);
 				// Store as current model for dataset in datasets.loaded[datasets.current.index].data
 				datasets.loaded[datasets.current.index].data = model;
+				Proximities.set(model.data);
 				return model; // array of vertices
 			},
 			get: function() {
@@ -10548,7 +10643,7 @@
 						var p23 = new THREE.Vector3(0,0,0);
 						p23.addVectors(p3,p2).divideScalar(2);
 
-						var splineCurve = new THREE.SplineCurve3([p1,p23,p4]);
+						var splineCurve = new THREE.CatmullRomCurve3([p1,p23,p4]);
 						curvePath.add(splineCurve);
 					}
 				}
@@ -11341,38 +11436,30 @@
 				return online;
 			},
 			getSegment: function (chromPosition) {
-				chromPosition = chromPosition || settings.current.position;
 				var self = this;
+				//var particle = self.getParticle(chromPosition);
+				chromPosition = chromPosition || settings.current.position;
 				var resolution = settings.current.segmentLength*settings.current.particleSegments; // base pairs
-				//var chromOffset = self.getRange(settings.current.chromStart, chromPosition);
-				//var chromRange = self.getRange(settings.current.chromStart, settings.current.chromEnd);
 				var chromOffset = chromPosition-settings.current.chromStart[settings.current.chromIdx];
-				//var chromRange = settings.current.chromEnd[settings.current.chromIdx]-settings.current.chromStart[settings.current.chromIdx];
 				var chromRange=0;
 				for(var l=0;l<settings.current.chromosomeIndexes.length;l++) chromRange += Math.round(settings.current.chromEnd[l])-Math.round(settings.current.chromStart[l]);
-				//settings.current.markers_chr = [settings.current.chromosomeIndexes[chrid]];
-				//var resolution = settings.current.segmentLength*settings.current.particleSegments; // base pairs
-				//var particlesCount = Math.round(settings.current.chromEnd[settings.current.chromIdx]/resolution) - Math.round(settings.current.chromStart[settings.current.chromIdx]/resolution) + 1;
 				var particlesCount = settings.current.particlesCount;
 				var segmentsCount = particlesCount * settings.current.particleSegments;				
 				var segment = Math.round((chromOffset * (segmentsCount)) / chromRange);
+				//var segment = Math.round((particle-1)*settings.current.particleSegments+settings.current.particleSegments/2);
 				return segment;
 			},
 			getParticle: function (chromPosition) {
 				chromPosition = chromPosition || settings.current.position;
 				var self = this;
 				var resolution = settings.current.segmentLength*settings.current.particleSegments; // base pairs
-				//var chromOffset = self.getRange(settings.current.chromStart, chromPosition);
-				//var chromRange = self.getRange(settings.current.chromStart, settings.current.chromEnd);
 				var chromOffset = chromPosition-settings.current.chromStart[settings.current.chromIdx];
-				//var chromRange = settings.current.chromEnd[settings.current.chromIdx]-settings.current.chromStart[settings.current.chromIdx];
 				var chromRange=0;
 				for(var l=0;l<settings.current.chromosomeIndexes.length;l++) chromRange += Math.round(settings.current.chromEnd[l])-Math.round(settings.current.chromStart[l]); 
 				
-				//var particlesCount = Math.round(settings.current.chromEnd[settings.current.chromIdx]/resolution) - Math.round(settings.current.chromStart[settings.current.chromIdx]/resolution) + 1;
 				var particlesCount = settings.current.particlesCount;
 				var particle = Math.round((chromOffset * particlesCount) / chromRange)+1;
-				return particle;
+				return Math.min(particle,settings.current.particlesCount);
 			},
 			getRange: function (start, end) {
 				var range = 0;
@@ -11392,6 +11479,28 @@
 			}
 		};
 	}
+})();
+(function() {
+	'use strict';
+	angular
+		.module('TADkit')
+		.factory('myHttpInterceptor', function($q) {
+		  return {
+		    'request': function(config) {
+		    	var el = angular.element(document.querySelector('#spinnerdiv'))[0];
+		    	if(!angular.isUndefined(el))
+		    		el.style.display = "block";
+		      return config;
+		    },
+		
+		    'response': function(response) {
+		    	var el = angular.element(document.querySelector('#spinnerdiv'))[0];
+		    	if(!angular.isUndefined(el))
+		    		el.style.display = "none";
+		      return response;
+		    }
+	  };
+	});
 })();
 (function() {
 	'use strict';
