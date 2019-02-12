@@ -1,7 +1,7 @@
 <?php
 
 require "../phplib/genlibraries.php";
-require "../phplib/tools.inc.php";
+#require "../phplib/tools.inc.php";
 redirectOutside();
 
 print "<h2>Tool configuration file</h2>";

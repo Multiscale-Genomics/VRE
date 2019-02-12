@@ -23,10 +23,12 @@ var ComponentsCodeEditors = function () {
 				myCodeMirror.on("change", function() {
 					console.log("change");
 					if(getErrorLine(myCodeMirror.getValue()) != 0) {
-						jumpToLine(getErrorLine(myCodeMirror.getValue()), myCodeMirror);
-						$("#json-val-but").prop("disabled", true); 
+						//jumpToLine(getErrorLine(myCodeMirror.getValue()), myCodeMirror);
+						$("#json-val-but").prop("disabled", true);
+						$("#json-val-subm").prop("disabled", true); 
 					} else { 
 						$("#json-val-but").prop("disabled", false); 
+						$("#json-val-subm").prop("disabled", false);
 					}
 				});
 
@@ -42,12 +44,14 @@ var ComponentsCodeEditors = function () {
 
 				function jumpToLine(i, editor) {
 
-					var numLines = Math.round(editor.getWrapperElement().offsetHeight / 20);
+					/*var numLines = Math.round(editor.getWrapperElement().offsetHeight / 20);
 
 					var gap = Math.round(numLines / 2);
 
 					if(i < (editor.lineCount() - (numLines / 2))) var finalLine = i - gap;
-					else var finalLine = editor.lineCount();
+					else var finalLine = editor.lineCount();*/
+
+					finalLine = i;
 
 					editor.setCursor(finalLine);
 				}
@@ -73,13 +77,17 @@ jQuery(document).ready(function() {
 
 		$.ajax({
       type: "POST",
-      url: baseURL + "applib/JSONSchemaValidator.php",
+      url: baseURL + "applib/JSONSchemaSpecValidator.php",
 			data: "json=" + myCodeMirror.getValue(),
 			processData: false,
       success: function(data) {
-					
-				$('#modalJSONSchema .modal-body').html(data);
+				
+				var obj = JSON.parse(data);
+
+				$('#modalJSONSchema .modal-body').html(obj.msg);
   			$('#modalJSONSchema').modal({ show: 'true' });
+
+  			//if(obj.status == 1) $("#json-val-subm").prop("disabled", false);
 
 			}
 	
