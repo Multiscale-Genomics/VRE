@@ -8,6 +8,12 @@ switch($_REQUEST["Request"]) {
 									break;
 	case 'tools': $req = "Issue related with tools";
 								break;
+	case 'space': $req = "Request to increase disk quota";
+								break;
+	case 'tooldev': $req = "Request for becoming a tool developer";
+								break;
+
+
 }
 
 $tool_name = '';

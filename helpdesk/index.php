@@ -98,8 +98,10 @@ $tools = getTools_List();
                                                     <label class="control-label">Type of request</label>
                                                     <select name="Request" id="Request" class="form-control">
 																											<option value="">Select a request</option>
-																											<option value="general">I have a technical question</option>
-																											<option value="tools">I have an issue related with some tool</option>
+																											<option value="general" <?php if($_REQUEST["sel"] == "general") { ?>selected<?php } ?>>I have a technical question</option>
+																											<option value="tools" <?php if($_REQUEST["sel"] == "tools") { ?>selected<?php } ?>>I have an issue related with some tool</option>
+																											<option value="space" <?php if($_REQUEST["sel"] == "space") { ?>selected<?php } ?>>I need more disk space</option>
+																											<option value="tooldev" <?php if($_REQUEST["sel"] == "tooldev") { ?>selected<?php } ?>>I want to become a tool developer</option>
 																										</select>
                                                 </div>
                                             </div>
@@ -127,8 +129,12 @@ $tools = getTools_List();
 																				</div>
 																				<div class="row">
                                             <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Message details</label>
+																								<div class="form-group">
+																										<?php if($_REQUEST["sel"] != "tooldev") { ?>
+																										<label class="control-label" id="label-msg">Message details</label>
+																										<?php } else { ?>
+																										<label class="control-label" id="label-msg">Please tell us which kind of tool(s) you want to integrate in the VRE</label>
+																										<?php } ?>
                                                     <textarea class="form-control" name="Message" id="Message" rows="6"></textarea> 
                                                 </div>
 																						</div>
