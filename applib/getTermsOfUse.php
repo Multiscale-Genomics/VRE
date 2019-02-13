@@ -6,7 +6,7 @@ header('Access-Control-Allow-Origin: *');
 p { font-family: 'Open Sans', sans-serif; }
 </style>
 
-<p><strong>Last updated: 27th Feb 2018</strong></p>
+<p><strong>Last updated: 25th May 2018</strong></p>
 
 <p>Please read these Terms of Use ("Terms", "Terms of Use") carefully before using the <a href="https://vre.multiscalegenomics.eu" target="_blank">https://vre.multiscalegenomics.eu</a> website ("MuGVRE") operated by the MuG project consortium.</p>
 <p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service.</p>
