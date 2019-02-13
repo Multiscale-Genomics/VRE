@@ -3,7 +3,27 @@ var mainBlock = 1;
 var subordinateBlocks = [2,3,4,5,6];
 var autoMainBlock = false;
 
+function enableBlock (id){
+      activeBlocks.push(id);
+      $('.warn-tool', $('#tool-input-form')).hide();
+      $('#form-block-header' + id + ' .tools').show();
+      $('#form-block-header' + id + ' .tools').html('<a href="javascript:;" class="collapse"></a>');
+      if($('#form-block' + id).css('display') == 'block') {
+        $('#form-block-header' + id + ' .tools a').removeClass('collapse');
+        $('#form-block-header' + id + ' .tools a').addClass('expand');
+      }else{
+        $('#form-block-header' + id + ' .tools a').addClass('collapse');
+        $('#form-block-header' + id + ' .tools a').removeClass('expand');
+      }
+      $('#form-block' + id).slideDown();
+      $('#form-block' + id + ' .form-field-enabled').prop('disabled', false);
+      if($('#form-block' + id + ' .form-field-disabled').parent().css('display') == 'block')
+        $('#form-block' + id + ' .form-field-disabled').prop('disabled', false);
+    }
+
 var ComponentsBootstrapSwitch = function () {
+
+	
 
    function removeItemFromArray(arr) {
       var what, a = arguments, L = a.length, ax;
@@ -32,23 +52,7 @@ var ComponentsBootstrapSwitch = function () {
       }
     }
 
-    function enableBlock (id){
-      activeBlocks.push(id);
-      $('.warn-tool', $('#tool-input-form')).hide();
-      $('#form-block-header' + id + ' .tools').show();
-      $('#form-block-header' + id + ' .tools').html('<a href="javascript:;" class="collapse"></a>');
-      if($('#form-block' + id).css('display') == 'block') {
-        $('#form-block-header' + id + ' .tools a').removeClass('collapse');
-        $('#form-block-header' + id + ' .tools a').addClass('expand');
-      }else{
-        $('#form-block-header' + id + ' .tools a').addClass('collapse');
-        $('#form-block-header' + id + ' .tools a').removeClass('expand');
-      }
-      $('#form-block' + id).slideDown();
-      $('#form-block' + id + ' .form-field-enabled').prop('disabled', false);
-      if($('#form-block' + id + ' .form-field-disabled').parent().css('display') == 'block')
-        $('#form-block' + id + ' .form-field-disabled').prop('disabled', false);
-    }
+    
 
     function disableBlock (id){
       removeItemFromArray(activeBlocks, id);
@@ -345,7 +349,16 @@ var InitForm = function() {
 				$("#nucleR_minoverlap").rules("add", { range: [1, $(this).val()] });
 			});
 
-			//$("#params_nuclr_width").val(147);
+			$('.default-block').each(function() {
+
+				if($(this).val() == 1) {
+					var id = $(this).attr("id").substr(13, 15);
+					enableBlock (id);
+					$('#switch-block' + id).bootstrapSwitch('state', true, true);
+				}
+
+			});
+
     }
 
     return {

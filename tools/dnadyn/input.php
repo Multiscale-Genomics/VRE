@@ -182,9 +182,20 @@ $tool   = getTool_fromId($toolId,1);
 																									<?php echo InputTool_printField($tool['arguments']['operations'], $rerunParams['operations']); ?>
 																							</div>
 																							<div class="col-md-6">
-																									<div class="form-group display-hide" id="fg_numStruct">
+																									<?php if(isset($rerunParams["createTrajectory:numStruct"])) {
+																									$hide = "";
+																									$disabled = "";
+																							} else {
+																								$hide = "display-hide";
+																								$disabled = "disabled";
+																							}?>
+																							<div class="form-group <?php echo $hide; ?>" id="fg_numStruct">
 																									<label class="control-label"><?php echo $tool['arguments']['createTrajectory:numStruct']['description']; ?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['createTrajectory:numStruct']['help']; ?></p>"></i></label>
-																											<input type="number" name="arguments[<?php echo $tool['arguments']['createTrajectory:numStruct']['name']; ?>]" id="numStruct" class="form-control" min="<?php echo $tool['arguments']['createTrajectory:numStruct']['minimum']; ?>" max="<?php echo $tool['arguments']['createTrajectory:numStruct']['maximum']; ?>" value="<?php echo $tool['arguments']['createTrajectory:numStruct']['default']; ?>" disabled>
+																									<?php if(isset($rerunParams["createTrajectory:numStruct"])) { ?>
+																										<input type="number" name="arguments[<?php echo $tool['arguments']['createTrajectory:numStruct']['name']; ?>]" id="numStruct" class="form-control" min="<?php echo $tool['arguments']['createTrajectory:numStruct']['minimum']; ?>" max="<?php echo $tool['arguments']['createTrajectory:numStruct']['maximum']; ?>" value="<?php echo $rerunParams["createTrajectory:numStruct"]; ?>" <?php echo $disabled; ?>>
+																									<?php } else { ?>
+																										<input type="number" name="arguments[<?php echo $tool['arguments']['createTrajectory:numStruct']['name']; ?>]" id="numStruct" class="form-control" min="<?php echo $tool['arguments']['createTrajectory:numStruct']['minimum']; ?>" max="<?php echo $tool['arguments']['createTrajectory:numStruct']['maximum']; ?>" value="<?php echo $tool['arguments']['createTrajectory:numStruct']['default']; ?>" <?php echo $disabled; ?>>
+																									<?php } ?>
 																									</div>
 																							</div>
 

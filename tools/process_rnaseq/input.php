@@ -148,21 +148,51 @@ $tool   = getTool_fromId($toolId,1);
                                   </div>
                                   <div class="portlet-body form form-block" id="form-block1">
                                       <div class="form-body">
-                                          <h4 class="form-section">File inputs</h4>
+																					<h4 class="form-section">File inputs</h4>
+
+																						<div class="row">
+																							<div class="col-md-6">
+																							<?php $ff = matchFormat_File($tool['input_files']['fastq1']['file_type'], $inPaths); ?>
+																							<?php InputTool_printSelectFile($tool['input_files']['fastq1'], $rerunParams['fastq1'], $ff[0], false, true); ?>
+																							</div>
+																							<div class="col-md-6">
+																							<?php $ff = matchFormat_File($tool['input_files']['fastq2']['file_type'], $inPaths); ?> 
+																							<?php InputTool_printSelectFile($tool['input_files']['fastq2'], $rerunParams['fastq2'], $ff[1], false, false); ?>
+																							</div>
+                                          	</div>
+
+																						<div class="row">
+																							<?php if(($_REQUEST["op"] == 1) || (count($_REQUEST['fn']) == 3 && !isset($_REQUEST["op"])) || (count($_REQUEST['fn']) == 4 && !isset($_REQUEST["op"]))) { ?>
+
+																							<div class="col-md-6">
+																							<?php $ff = matchFormat_File($tool['input_files']['cdna']['file_type'], $inPaths); ?> 
+																							<?php InputTool_printSelectFile($tool['input_files']['cdna'], $rerunParams['cdna'], $ff[0], false, true); ?>
+																							</div>
+
+																							<div class="col-md-6">
+																							<?php $ff = matchFormat_File($tool['input_files']['gff']['file_type'], $inPaths); ?> 
+																							<?php InputTool_printSelectFile($tool['input_files']['gff'], $rerunParams['gff'], $ff[0], false, true); ?>
+																							</div>
+
+																							<?php } else { ?>
+
+																							<div class="col-md-6">
+																								<?php InputTool_printListOfFiles($tool['input_files_public_dir']['cdna_public'], $rerunParams['cdna_public'], true); ?>
+																							</div>
+
+																							<div class="col-md-6">
+																								<?php InputTool_printListOfFiles($tool['input_files_public_dir']['gff_public'], $rerunParams['gff_public'], true); ?>
+																							</div>
+
+																							<?php } ?>
+
+																						</div>
+
+																						<!--
+
                                             <div class="row">
 
 																							<div class="col-md-6">
-            																	<!--<div class="form-group">
-                                                <label class="control-label"><?php echo $tool['input_files']['cdna']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['input_files']['cdna']['help']?></p>"></i></label>
-                                                <select  name="input_files[<?php echo $tool['input_files']['cdna']['name']?>]" class="form-control form-field-enabled  ">
-																								<?php foreach ($inPaths as $file) {  ?>
-																									<?php if($file['format'] == 'FASTA') { ?>
-																									<?php $p = explode("/", $file['path']); ?>
-																									<option value="<?php echo $file['fn']; ?>"><?php echo $p[1]; ?> / <?php echo $p[2]; ?></option>
-																									<?php } ?>
-																								<?php } ?>
-																								</select>	
-																								 </div>-->
 																									<?php $ff = matchFormat_File($tool['input_files']['cdna']['file_type'], $inPaths); ?>
 																									<?php InputTool_printSelectFile($tool['input_files']['cdna'], $rerunParams['cdna'], $ff[0], false, true); ?>
 																						 </div>
@@ -184,6 +214,8 @@ $tool   = getTool_fromId($toolId,1);
 																						 </div>
 
 																						</div>
+
+																						-->
 
                                       </div>
                                   </div>

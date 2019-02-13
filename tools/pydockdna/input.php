@@ -9,6 +9,13 @@ $from = InputTool_getOrigin($_REQUEST);
 
 list($rerunParams,$inPaths) = InputTool_getPathsAndRerun($_REQUEST);
 
+/*print "<br/>################ RERUN ################<br/>";
+var_dump($rerunParams);
+print "<br/>################  ################<br/>";
+var_dump($inPaths);
+print "<br/>################  ################<br/>";*/
+
+
 $dirName = InputTool_getDefExName();
 
 // get tool details

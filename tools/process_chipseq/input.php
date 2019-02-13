@@ -154,13 +154,28 @@ $tool   = getTool_fromId($toolId,1);
 																							<?php InputTool_printSelectFile($tool['input_files']['loc'], $rerunParams['loc'], $ff[0], false, true); ?>
 																							</div>
 																							<div class="col-md-6">
+																							<?php $ff = matchFormat_File($tool['input_files']['fastq2']['file_type'], $inPaths); ?> 
+																							<?php InputTool_printSelectFile($tool['input_files']['fastq2'], $rerunParams['fastq2'], $ff[1], false, false); ?>
+																							</div>
+																						</div>
+																						<div class="row">
+																							<div class="col-md-6">
 																							<?php $ff = matchFormat_File($tool['input_files']['bg_loc']['file_type'], $inPaths); ?> 
-																							<?php InputTool_printSelectFile($tool['input_files']['bg_loc'], $rerunParams['bg_loc'], $ff[1], false, false); ?>
+																							<?php InputTool_printSelectFile($tool['input_files']['bg_loc'], $rerunParams['bg_loc'], $ff[2], false, false); ?>
+																							</div>
+																							<div class="col-md-6">
+																							<?php $ff = matchFormat_File($tool['input_files']['fastq2_bg']['file_type'], $inPaths); ?>
+																							<?php InputTool_printSelectFile($tool['input_files']['fastq2_bg'], $rerunParams['fastq2_bg'], $ff[3], false, false); ?>
 																							</div>
                                           	</div>
 
 																						<div class="row">
-																							<?php if(($_REQUEST["op"] == 1) || (count($_REQUEST['fn']) == 3 && !isset($_REQUEST["op"])) || (count($_REQUEST['fn']) == 4 && !isset($_REQUEST["op"]))) { ?>
+																							<?php if(($_REQUEST["op"] == 1) 
+																							|| (count($_REQUEST['fn']) == 3 && !isset($_REQUEST["op"])) 
+																							|| (count($_REQUEST['fn']) == 4 && !isset($_REQUEST["op"]))
+																							|| (count($_REQUEST['fn']) == 5 && !isset($_REQUEST["op"])) 
+																							|| (count($_REQUEST['fn']) == 6 && !isset($_REQUEST["op"]))
+																							) { ?>
 
 																							<div class="col-md-6">
 																							<?php $ff = matchFormat_File($tool['input_files']['genome']['file_type'], $inPaths); ?> 
@@ -169,12 +184,13 @@ $tool   = getTool_fromId($toolId,1);
 
 																							<div class="col-md-6">
 																							<?php $ff = matchFormat_File($tool['input_files']['index']['file_type'], $inPaths); ?> 
-																							<?php InputTool_printSelectFile($tool['input_files']['index'], $rerunParams['index'], $ff[0], false, true); ?>
+																							<?php InputTool_printSelectFile($tool['input_files']['index'], $rerunParams['index'], $ff[1], false, true); ?>
 																							</div>
 
 																							<?php } else { ?>
 
 																							<div class="col-md-6">
+																								<?php //var_dump($rerunParams["loc"]); ?>
 																								<?php InputTool_printListOfFiles($tool['input_files_public_dir']['genome_public'], $rerunParams['genome_public'], true); ?>
 																							</div>
 

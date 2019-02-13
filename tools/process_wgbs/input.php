@@ -181,13 +181,17 @@ $tool   = getTool_fromId($toolId,1);
 																								</select>		
 																								 </div>-->
 																								<?php $ff = matchFormat_File($tool['input_files']['fastq2']['file_type'], $inPaths); ?>
-																									<?php InputTool_printSelectFile($tool['input_files']['fastq2'], $rerunParams['fastq2'], $ff[1], false, true); ?>
+																									<?php InputTool_printSelectFile($tool['input_files']['fastq2'], $rerunParams['fastq2'], $ff[1], false, false); ?>
 
                                              </div>
 																							
                                           </div>
 
 																					<div class="row">
+
+																						<?php if(($_REQUEST["op"] == 1) 
+																						|| (count($_REQUEST['fn']) == 3 && !isset($_REQUEST["op"]))
+																						|| (count($_REQUEST['fn']) == 2 && !isset($_REQUEST["op"]))) { ?>
 
 																						<!-- input_file: genome -->
                                              <div class="col-md-6">
@@ -204,7 +208,16 @@ $tool   = getTool_fromId($toolId,1);
 																								 </div>-->
 																								<?php $ff = matchFormat_File($tool['input_files']['genome']['file_type'], $inPaths); ?>
 																									<?php InputTool_printSelectFile($tool['input_files']['genome'], $rerunParams['fastq2'], $ff[0], false, true); ?>
-                                             </div>
+																						 </div>
+
+																							<?php } else { ?>
+
+																							<div class="col-md-6">
+																								<?php InputTool_printListOfFiles($tool['input_files_public_dir']['genome_public'], $rerunParams['genome_public'], true); ?>
+																							</div>
+
+																							<?php } ?>
+
 																						
 																							
 																					</div>

@@ -212,13 +212,18 @@ $tool   = getTool_fromId($toolId,1);
                                           <div class="row">
 																							<div class="col-md-6">
 												  												<div class="form-group">
-                                                      <label class="control-label"><?php echo $tool["arguments"]["mapping:rest_enzyme"]["description"]; ?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool["arguments"]["mapping:rest_enzyme"]["help"]; ?></p>"></i></label>
-																											<input type="text" name="arguments[<?php echo $tool["arguments"]["mapping:rest_enzyme"]["name"]; ?>]" id="mapping_rest_enzyme" class="form-control" >
+																											<label class="control-label"><?php echo $tool["arguments"]["mapping:rest_enzyme"]["description"]; ?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool["arguments"]["mapping:rest_enzyme"]["help"]; ?></p>"></i></label>
+																											<?php if(isset($rerunParams["mapping:rest_enzyme"])) { ?>
+																												<input type="text" name="arguments[<?php echo $tool["arguments"]["mapping:rest_enzyme"]["name"]; ?>]" id="mapping_rest_enzyme" class="form-control" value="<?php echo $rerunParams["mapping:rest_enzyme"]; ?>">
+																											<?php } else { ?>
+																												<input type="text" name="arguments[<?php echo $tool["arguments"]["mapping:rest_enzyme"]["name"]; ?>]" id="mapping_rest_enzyme" class="form-control" >
+																											<?php } ?>
 																											<img class="Typeahead-spinner" src="assets/layouts/layout/img/loading-spinner-blue.gif" style="display: none;">
-																											<input type="hidden" id="enum_mapping_rest_enzyme" value="<?php echo implode(",", $tool["arguments"]["mapping:rest_enzyme"]["enum_items"]["name"]); ?>">	
+																												<input type="hidden" id="enum_mapping_rest_enzyme" value="<?php echo implode(",", $tool["arguments"]["mapping:rest_enzyme"]["enum_items"]["name"]); ?>">	
 																									</div>
                                               </div>
-                                          </div>
+																					</div>
+
 																					<div class="row">
                                               <div class="col-md-6">
 																									<!--<div class="form-group">
@@ -260,7 +265,7 @@ $tool   = getTool_fromId($toolId,1);
 																							<?php $ff = matchFormat_File($tool['input_files']['ref_genome']['file_type'], $inPaths); ?> 
 																							<?php  
 																									if(empty($ff) && !isset($_REQUEST["op"])) {
-																										InputTool_printListOfFiles($tool['input_files_public_dir']['parsing:refGenome'], $rerunParams['mapping:refGenome'], true);
+																										InputTool_printListOfFiles($tool['input_files_public_dir']['parsing:refGenome'], $rerunParams['parsing:refGenome'], true);
 																									} else {
 																										InputTool_printSelectFile($tool['input_files']['ref_genome'], $rerunParams['ref_genome'], $ff[0], false, true);
 																									}

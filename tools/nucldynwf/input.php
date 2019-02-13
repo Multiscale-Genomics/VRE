@@ -205,6 +205,8 @@ $tool   = getTool_fromId($toolId,1);
                               </div>
                               <!-- END PORTLET 1: PROJECT -->
 
+															<?php if(isset($rerunParams['nucleR'])) echo '<input type="hidden" class="default-block" id="default-block1" value="'.$rerunParams['nucleR'].'" />'; ?>
+
 															<!-- BEGIN PORTLET 2: NUCLER -->
                               <div class="portlet box blue form-block-header" id="form-block-header1">
                                   <div class="portlet-title">
@@ -261,7 +263,7 @@ $tool   = getTool_fromId($toolId,1);
 																												</div>
                                                         <span class="input-group-btn input-tool">
 																														<button class="btn green" type="button" 
-																														onclick="toolModal('visible_MNaseSeq', 'input_files[MNaseSeq][]', <?php echo getArrayJS($tool['input_files']['condition1']['data_type']); ?>, true);"><i class="fa fa-check-square-o"></i> Select</button>
+																														onclick="toolModal('visible_MNaseSeq', 'input_files[MNaseSeq][]', <?php echo getArrayJS($tool['input_files']['condition1']['data_type']); ?>, <?php echo getArrayJS($tool['input_files']['condition1']['file_type']); ?>, true);"><i class="fa fa-check-square-o"></i> Select</button>
                                                         </span>
                                                     </div>
                                                 	</div>
@@ -300,11 +302,19 @@ $tool   = getTool_fromId($toolId,1);
                                                 <label class="control-label"><?php echo $tool['arguments']['nucleR:threshold']['description']?> <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'><?php echo $tool['arguments']['nucleR:threshold']['help']?></p>"></i></label>
                                                 <div class="input-group">
                                                   <div class="input-icon right" id="nucr-perc">
-                                                      <i class="fa fa-percent"></i>
-                                                      <input type="number" step="1" min="0" max="100" class="form-control form-field-enabled" name="arguments[<?php echo $tool['arguments']['nucleR:thresholdPercentage']['name']?>]" id="nucleR_thresholdPercentage" value="<?php echo $tool['arguments']['nucleR:thresholdPercentage']['default']?>" >
+																											<i class="fa fa-percent"></i>
+																											<?php  
+																											if(isset($rerunParams['nucleR:thresholdPercentage'])) $val1 = $rerunParams['nucleR:thresholdPercentage']; 
+																											else $val1 = $tool['arguments']['nucleR:thresholdPercentage']['default'];
+																											?>
+                                                      <input type="number" step="1" min="0" max="100" class="form-control form-field-enabled" name="arguments[<?php echo $tool['arguments']['nucleR:thresholdPercentage']['name']?>]" id="nucleR_thresholdPercentage" value="<?php echo $val1; ?>" >
                                                   </div>
-                                                  <div id="nucr-absval" class="display-hide">
-                                                      <input type="number" step="any" class="form-control form-field-disabled" name="arguments[<?php echo $tool['arguments']['nucleR:thresholdValue']['name']?>]" id="nucleR_thresholdValue" value="">
+																									<div id="nucr-absval" class="display-hide">
+																											<?php  
+																											if(isset($rerunParams['nucleR:thresholdValue'])) $val2 = $rerunParams['nucleR:thresholdValue']; 
+																											else $val2 = $tool['arguments']['nucleR:thresholdValue']['default'];
+																											?>
+                                                      <input type="number" step="any" class="form-control form-field-disabled" name="arguments[<?php echo $tool['arguments']['nucleR:thresholdValue']['name']?>]" id="nucleR_thresholdValue" value="<?php echo $val2; ?>">
                                                   </div>
                                                   <div class="input-group-btn" id="swbglev">
                                                       <input type="checkbox" class="make-switch" id="switch-bglevel" data-size="normal" data-on-text="Abs. Value" data-off-text="Percentage" data-on-color="info" data-off-color="info" data-label-text="Abs. Value">
@@ -345,8 +355,11 @@ $tool   = getTool_fromId($toolId,1);
                                   </div>
                               </div>
                               <!-- END PORTLET 2: NUCLER -->
+				
+															<?php if(isset($rerunParams['nucDyn'])) echo '<input type="hidden" class="default-block" id="default-block2" value="'.$rerunParams['nucDyn'].'" />'; ?>
+
 															<!-- BEGIN PORTLET 3: NUCLEOSOME DYNAMICS -->
-															<?php if(count($_REQUEST['fn']) > 1 || isset($_REQUEST["op"])){ ?>
+															<?php if(count($_REQUEST['fn']) > 1 || isset($_REQUEST["op"]) || (isset($_REQUEST['rerunDir']))){ ?>
                               <div class="portlet box blue form-block-header" id="form-block-header2">
                                   <div class="portlet-title">
                                       <div class="caption">
@@ -505,7 +518,11 @@ $tool   = getTool_fromId($toolId,1);
                                                   <!--<input type="number" step="any" class="form-control form-field-enabled" id="params_nucdyn_rpow" name="arguments[nucDyn:roundPow]" value="5" >-->
                                                 </div>
 																								<div id="nucd-reads" class="display-hide">
-                                                    <input type="number" step="any" class="form-control" id="nucDyn_readSize" name="arguments[<?php echo $tool['arguments']['nucDyn:readSize']['name']?>]" value="<?php echo $tool['arguments']['nucDyn:readSize']['default']?>" disabled>
+																										<?php  
+																											if(isset($rerunParams['nucDyn:readSize'])) $val3 = $rerunParams['nucDyn:readSize']; 
+																											else $val3 = $tool['arguments']['nucDyn:readSize']['default'];
+																											?>
+                                                    <input type="number" step="any" class="form-control" id="nucDyn_readSize" name="arguments[<?php echo $tool['arguments']['nucDyn:readSize']['name']?>]" value="<?php echo $val3; ?>" disabled>
                                                 </div>
 																								<div class="input-group-btn">
                                                     <input type="checkbox" class="make-switch" id="switch-eqsize" data-size="normal" data-on-text="TRUE" data-off-text="FALSE" data-on-color="info" data-off-color="default">
@@ -522,6 +539,9 @@ $tool   = getTool_fromId($toolId,1);
 															</div>
 															<?php } ?>
                               <!-- END PORTLET 3: NUCLEOSOME DYNAMICS -->
+
+															<?php if(isset($rerunParams['NFR'])) echo '<input type="hidden" class="default-block" id="default-block3" value="'.$rerunParams['NFR'].'" />'; ?>
+
                               <!-- BEGIN PORTLET 4: NUCLEOSOME FREE REGIONS -->
                               <div class="portlet box blue form-block-header" id="form-block-header3">
                                   <div class="portlet-title">
@@ -561,6 +581,9 @@ $tool   = getTool_fromId($toolId,1);
                                   </div>
                               </div>
                               <!-- END PORTLET 4: NUCLEOSOME FREE REGIONS -->
+
+															<?php if(isset($rerunParams['periodicity'])) echo '<input type="hidden" class="default-block" id="default-block4" value="'.$rerunParams['periodicity'].'" />'; ?>
+
                               <!-- BEGIN PORTLET 5: NUCLEOSOME PHASING -->
                               <div class="portlet box blue form-block-header" id="form-block-header4">
                                   <div class="portlet-title">
@@ -593,6 +616,9 @@ $tool   = getTool_fromId($toolId,1);
                                   </div>
                               </div>
                               <!-- END PORTLET 5: NUCLEOSOME PHASING -->
+
+															<?php if(isset($rerunParams['txstart'])) echo '<input type="hidden" class="default-block" id="default-block5" value="'.$rerunParams['txstart'].'" />'; ?>
+
                               <!-- BEGIN PORTLET 6: TSS CLASSIFICATION -->
                               <div class="portlet box blue form-block-header" id="form-block-header5">
                                   <div class="portlet-title">
@@ -632,6 +658,9 @@ $tool   = getTool_fromId($toolId,1);
                                   </div>
                               </div>
                               <!-- END PORTLET 6: TSS CLASSIFICATION -->
+
+															<?php if(isset($rerunParams['gausfitting'])) echo '<input type="hidden" class="default-block" id="default-block6" value="'.$rerunParams['gausfitting'].'" />'; ?>
+
                               <!-- BEGIN PORTLET 7: STIFFNESS -->
                               <div class="portlet box blue form-block-header" id="form-block-header6">
                                   <div class="portlet-title">
@@ -705,7 +734,7 @@ $tool   = getTool_fromId($toolId,1);
 								<!-- /.modal-content -->
 									</div>
 									<!-- /.modal-dialog -->
-							</div>
+									</div>
 
                 <div class="modal fade bs-modal" id="myModal1" tabindex="-1" role="basic" aria-hidden="true">
                     <div class="modal-dialog">
@@ -714,14 +743,16 @@ $tool   = getTool_fromId($toolId,1);
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                                 <h4 class="modal-title">Warning!</h4>
                             </div>
-                            <div class="modal-body"> This analysis uses nucleosome calls as input. 'Nucler' has been automatically selected to compute them. </div>
+                            <div class="modal-body"> This analysis uses nucleosome calls as input. 'NucleR' has been automatically selected to compute them. </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn dark btn-outline" data-dismiss="modal">Accept</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->
                     </div>
-                    <!-- /.modal-dialog -->
+										<!-- /.modal-dialog -->
+							</div>
+
 
 <?php 
 
