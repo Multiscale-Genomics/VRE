@@ -7,15 +7,44 @@ function openTermsOfUse() {
 		url: "/applib/getTermsOfUse.php",
 		data:"id=1",
 		success: function(data) {
+
 			$('#modalTerms .modal-body .container-terms').html(data);
 		}
 	});
 }
 
 
+function checkSessionState() {
+
+	$.ajax({
+		type: "POST",
+		url: "/applib/checkSession.php",
+		data:"id=1",
+		success: function(data) {
+			var obj = JSON.parse(data);
+
+			if(parseInt(obj.remaining) < 60) {
+				$('#session-expire-top').show();
+				$('#session-expire-top span').html(obj.remaining);
+			}
+
+			if(!obj.hasSession) {
+				$('#session-expire-top').hide();
+				$('#modalSessionExpired').modal({ show: 'true', backdrop: 'static', keyboard: false});
+				$('#modalSessionExpired .modal-body #session-text').html('Your session has expired after ' + obj.duration + ' of inactivity, please log in again or keep using the MuG VRE as a non-registered user.');
+
+			}
+			
+		}
+	});
+
+}
+
 jQuery(document).ready(function() {
 	// Optimalisation: Store the references outside the event handler:
     var $window = $(window);
+
+	setInterval(checkSessionState, 1000);
 	
 	var menu_toggler = false;
 
