@@ -1,0 +1,14 @@
+{
+  "input_files": [
+    {
+     "name":"MNaseSeq",
+     "value":"/path/abs"
+	}
+  ],
+  "arguments":[
+    {
+     "name":"scoring function",
+     "value": "pyDock_sc"
+    }
+  ]
+}

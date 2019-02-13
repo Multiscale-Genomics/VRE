@@ -1,0 +1,60 @@
+{
+    "id": "http://multiscalegenomics.eu/tool-schema#",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Tool Description",
+	"type": "object",
+	"properties": {
+		"Name": {
+			"type": "string"
+		},
+		"Description": {
+			"type": "string"
+		},
+		"URL": {
+			"type": "string"
+		},
+
+        "input_files": {
+			"type": "array",
+            "minItems": 0,
+            "uniqueItems": true,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": { "type": "string" },
+                    "description": { "type": "string" },
+                    "file_type": { "type": "string" },
+                    "data_type": { "type": "string" },
+                    "required": { "type": "boolean" },
+                    "position": {"type":"integer"},
+                    "prefix":{"type":"string"},
+                    "allow_multiple": { "type": "boolean" }
+                }
+            }
+        },
+
+        "arguments": {
+			"type": "array",
+            "minItems": 0,
+            "uniqueItems": true,
+            "items": {
+                "type": "object",
+                "additionalProperties" : false,
+                "properties": {
+                    "name": { "type": "string" },
+                    "type": {
+            			"enum": [ "integer", "string", "boolean", "enum", "float", "number" ]
+                    },
+                    "description": { "type": "string" },
+                    "required": { "type": "boolean" },
+                    "allow_multiple": { "type": "boolean" },
+                    "default":{ "type": "string" },
+                    "options":{"type":"array"},
+                    "minimum": {"type": "integer"},
+                    "maximum": {"type": "integer"}
+                }
+            }
+        }
+    },
+	"required": ["Name", "Description", "URL"]
+}
