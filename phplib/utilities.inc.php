@@ -25,6 +25,14 @@ function randomSalt( $length ) {
 }
  */
 
+function mkpath($path){
+    if (@mkdir($path) or file_exists($path)) {
+        return true;
+    }
+    return mkpath(dirname($path)) and mkdir($path,0777);
+}
+
+
 // define JBrowse tracktype from file format
 function format2trackType($format,$fn=NULL){
         if (!isset ($format) ){
@@ -89,24 +97,86 @@ function createLink ($source, $target){
 //return html from
 //SESSION['errorData'] = Array( 'seccionA' => Array( 'error msg A1', 'error msg A2'))
 function printErrorData($targetSeccion=0){
-   $txt="";
+   $txt='';
     foreach ($_SESSION['errorData'] as $seccion =>$lines) {
-	if ($targetSeccion && $targetSeccion != $seccion )
-		continue;
-        $txt .="<b>$seccion</b></br>";
+	    if ($targetSeccion && $targetSeccion != $seccion )
+    		continue;
+        $txt .='<b>'.$seccion.'</b></br>';
         if (!is_array($lines))
-		$lines[0] = $lines;
-	$txt .= "<span style=\"margin-left:45px;\"></span>";
-	$txt .= join("<br/><span style=\"margin-left:45px;\"></span>",$lines);
-	$txt .= "<br/>";
-
+            $lines[0] = $lines;
+    	$txt .= '<span style=\"margin-left:45px;\"></span>';
+    	$txt .= join('<br/><span style=\"margin-left:45px;\"></span>',$lines);
+    	$txt .= '<br/>';
     }
     unset($_SESSION['errorData']);
     return $txt;
 }
 
 
+function printFilePath_fromPath($path,$asRoot=0){
 
+    $path = str_replace(array("\\\\","\\/", "//", "\\/","/\\"), "/", $path);
+
+    // parse file path
+    
+    $p = explode("/", $path);
+
+    $filePath = "";
+    $projDir  = "";
+    $userDir  = "";
+    $proj=array();
+
+    // first path element - userId
+    if (preg_match('/^'.$GLOBALS['AppPrefix'].'/',$p[0]) ){
+        $userDir = array_shift($p);
+    }else{
+        $_SESSION['errorData']['Warning'][]=" Cannot show file '$path'. It has an invalid path.";
+    }
+    // if path has project Dir 
+    if (preg_match('/__PROJ/',$p[0]) ){
+        $projDir  = array_shift($p);
+        $filePath = $p;
+        if (isProject($projDir,$asRoot,$userDir))
+            $proj = getProject($projDir,$asRoot,$userDir);
+        if (count($proj)==0){
+            $_SESSION['errorData']['Warning'][]=" Cannot show file '$path'. The assigned project '$projDir' does not exists or is unaccessible";
+            $proj = array("name" => $projDir);
+        }
+
+    // if path has NO project Dir 
+    }else{
+        $_SESSION['errorData']['Internal'][]="Error: incorrect file. Path contains no project ($path)";
+        $proj = array("name" => "Foo Project");
+        $filePath = $p;
+    }
+    $html = '
+			<ul class="feeds" id="list-files-run-tools">
+            <li class="tool-122 tool-list-item">
+			<div class="col1">
+              <div class="cont">
+				   <div class="cont-col1">
+					  <div class="label label-sm label-info"><i class="fa fa-file"></i></div>
+				   </div>
+				   <div class="cont-col2">
+                      <div class="desc">
+                        <span class="text-info" style="font-weight:bold;"> '.$proj['name'].'<i class="fa fa-caret-right"></i></span>
+                        <span style="color:#495a6d;font-weight:bold"> '.$filePath[0].' </span>
+                ';
+    for ($i=1;$i<count($filePath);$i++){
+        $html .= " / ".$filePath[$i];
+    }
+    $html .= '      </div>
+                  </div>
+               </div>
+            </div>
+            </li>
+            </ul> ';
+    return $html;
+}
+
+
+    
+   
 function fromPrefix2Program($prefix){
 
         $tools   = $GLOBALS['toolsCol']->find(array('prefix' => array('$exists'=> true)));
@@ -250,6 +320,105 @@ function prepMetadataUpload($request,$validationState=0){
         return  $insertMeta;
 }
 
+function setVREfile_fromScratch($file_data=array()){
+	$file     = Array();
+	$metadata = Array();
+
+    //set file
+    if (!isset($file_data['_id'])){
+        $file['_id']= uniqid("unique_file_id_",TRUE);
+    }else{
+        $file['_id']= $file_data['_id'];
+    }
+    if (!isset($file_data['type'])){
+        $file['type']= "file";
+    }else{
+        $file['type']= $file_data['type'];
+        unset($file_data['type']);
+    }
+    if (!isset($file_data['owner'])){
+        $file['owner']= "user_id";
+    }else{
+        $file['owner']= $file_data['owner'];
+        unset($file_data['owner']);
+    }
+    if (!isset($file_data['size'])){
+        $file['size']= 0;
+    }else{
+        $file['size']= $file_data['size'];
+        unset($file_data['size']);
+    }
+    if (!isset($file_data['project'])){
+        $file['project']= "my_project_id";
+    }else{
+        $file['project']= $file_data['project'];
+        unset($file_data['project']);
+    }
+    if (!isset($file_data['path'])){
+        $file['path']= $file['owner']."/".$file['project']."/uploads/myinfile.txt";
+    }else{
+        $file['path']= $file_data['path'];
+        unset($file_data['path']);
+    }
+    if (!isset($file_data['mtime'])){
+        $file['mtime']= new MongoDate(strtotime("now"));
+    }else{
+        $file['mtime']= $file_data['mtime'];
+        unset($file_data['mtime']);
+    }
+    if (!isset($file_data['atime'])){
+        $file['atime']= new MongoDate(strtotime("now"));
+    }else{
+        $file['atime']= $file_data['atime'];
+        unset($file_data['atime']);
+    }
+    if (!isset($file_data['parentDir'])){
+        $file['parentDir']= uniqid("unique_file_id_",TRUE);
+    }else{
+        $file['parentDir']= $file_data['parentDir'];
+        unset($file_data['parentDir']);
+    }
+    if (!isset($file_data['lastAccess'])){
+        $file['lastAccess']= new MongoDate(strtotime("now"));
+    }else{
+        $file['lastAccess']= $file_data['lastAccess'];
+        unset($file_data['lastAccess']);
+    }
+
+	//set metadata
+    if (!isset($file_data['_id'])){
+        $metadata['_id']= $file['_id'];
+    }else{
+        $metadata['_id']= $file_data['_id'];
+		unset($file_data['_id']);
+    }
+	if (isset($file_data['meta_data'])){
+		foreach ($file_data['meta_data'] as $k => $v){
+			$metadata[$k]=$v;
+		}
+		unset($file_data['meta_data']);
+	}
+    if (!isset($file_data['file_type']) && !isset($file_data['format'])){
+		$metadata['format'] = "TXT";
+    }elseif (isset($file_data['file_type'])){
+		$metadata['format'] = $file_data['file_type'];
+        unset($file_data['file_type']);
+    }elseif (isset($file_data['format'])){
+		$metadata['format'] = $file_data['format'];
+        unset($file_data['format']);
+    }
+    if (!isset($file_data['data_type'])){
+		$metadata['data_type'] = "other";
+    }else{
+		$metadata['data_type'] = $file_data['data_type'];
+        unset($file_data['data_type']);
+    }
+	foreach ($file_data as $k=>$v){
+		$metadata[$k]=$v;
+    }
+
+    return array($file,$metadata);
+}
 
 function getVREfile_fromFile($mugfile){
 	$file     = Array();
@@ -579,6 +748,7 @@ function post($data,$url,$headers=array(),$auth_basic=array()){
 		curl_setopt($c, CURLOPT_URL, $url);
 		curl_setopt($c, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
 		curl_setopt($c, CURLOPT_POST, 1);
+		#curl_setopt($c, CURLOPT_TIMEOUT, 7);
 		curl_setopt($c, CURLOPT_CUSTOMREQUEST, "POST");
 		curl_setopt($c, CURLOPT_POSTFIELDS, $data);
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
@@ -588,7 +758,7 @@ function post($data,$url,$headers=array(),$auth_basic=array()){
             curl_setopt($c, CURLOPT_USERPWD, $auth_basic['user'].":".$auth_basic['pass']);
             
 		$r = curl_exec ($c);
-		$info = curl_getinfo($c);
+        $info = curl_getinfo($c);
 
 		if ($r === false){
 			$errno = curl_errno($c);
@@ -626,7 +796,6 @@ function get($url,$headers=array(),$auth_basic=array()){
 
 		return array($r,$info);
 }
-
 
 // HTTP put
 function put($data,$url,$headers=array(),$auth_basic=array()){
@@ -733,5 +902,92 @@ function indexFiles_zip($zip_rfn){
         }
     }
     return array($files,$zip_out);
+}
+
+function create_png_from_text($text="My Text",$png_file=FALSE){
+
+    // setting image properties
+    $img = array();
+    $img['background'] = '008080';
+    $img['color']      = 'FFF';
+    $img['width']      = 252;
+    $img['height']     = 252;
+
+    $background = explode(",",hex2rgb($img['background']));
+    $color = explode(",",hex2rgb($img['color']));
+    $width = empty($img['width']) ? 100 : $img['width'];
+    $height = empty($img['height']) ? 100 : $img['height'];
+    $string = (string) isset($text) ? $text : $width ."x". $height;
+
+    // set GD image object
+    $image = @imagecreate($width, $height) or die("Cannot Initialize new GD image stream");
+    $background_color = imagecolorallocate($image, $background[0], $background[1], $background[2]);
+    $text_color = imagecolorallocate($image, $color[0], $color[1], $color[2]);
+    // center text
+    /*$text_box    = imagettfbbox(20, 45, "./arial.ttf", $string);
+    $text_width  = $text_box[2]-$text_box[0];
+    $text_height = $text_box[7]-$text_box[1];
+    $x = ($width/2) - ($text_width/2);
+    $y = ($height/2) - ($text_height/2);
+    imagettftext($image, 20, 0, $x, $y, $text_color, "./arial.ttf", $string);*/
+
+    imagestring($image, 5, $width/4, $height/2.5, $string, $text_color);
+
+    // save image into file
+    if ($png_file){
+        imagepng($image,$png_file);
+     }else{
+        imagepng($image);
+     }
+    // del image object
+    imagedestroy($image);
+}
+
+function hex2rgb($hex) {
+    // Copied
+   $hex = str_replace("#", "", $hex);
+
+   switch (strlen($hex)) {
+       case 1:
+           $hex = $hex.$hex;
+       case 2:
+          $r = hexdec($hex);
+          $g = hexdec($hex);
+          $b = hexdec($hex);
+           break;
+
+       case 3:
+          $r = hexdec(substr($hex,0,1).substr($hex,0,1));
+          $g = hexdec(substr($hex,1,1).substr($hex,1,1));
+          $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+           break;
+
+       default:
+          $r = hexdec(substr($hex,0,2));
+          $g = hexdec(substr($hex,2,2));
+          $b = hexdec(substr($hex,4,2));
+           break;
+   }
+
+   $rgb = array($r, $g, $b);
+   return implode(",", $rgb); 
+}
+
+function file_get_contents_chunked($file,$chunk_size,$callback){
+	try	{
+		$handle = fopen($file, "r");
+		$i = 0;
+		while (!feof($handle))
+		{
+			call_user_func_array($callback,array(fread($handle,$chunk_size),&$handle,$i));
+			$i++;
+		}
+		fclose($handle);
+	}
+	catch(Exception $e) {
+		 trigger_error("file_get_contents_chunked::" . $e->getMessage(),E_USER_NOTICE);
+		 return false;
+	}
+	return true;
 }
         

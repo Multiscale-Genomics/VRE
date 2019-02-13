@@ -7,15 +7,10 @@ redirectOutside();
 <?php
   require "../htmlib/header.inc.php";
 
-//$GLOBALS['time_start'] = microtime(true);
-
 // Merge pending files and retrieved data
 // compute data disk space
 
 $usedDisk             = getUsedDiskSpace();
-//$time_end= microtime(true);
-//$time = $time_end - $GLOBALS['time_start'];
-//echo " ---------------------> Time returning from getUsedDiskSpace() $time segundos<br/>\n";
 $diskLimit            = $_SESSION['User']['diskQuota']; // getDiskLimit();
 $usedDiskPerc         = sprintf('%f', ($usedDisk / $diskLimit) * 100);
 $usedDiskPerc         = number_format($usedDiskPerc, 1, '.', '');
@@ -27,25 +22,20 @@ if ($usedDisk < $diskLimit) {
 	$usedDiskPerc=100;
 }
 
-//update workspace content (job and files)
-
+// tools list
 if(isset($_REQUEST["tool"]) && $_REQUEST["tool"] != "") $dtlist = getAvailableDTbyTool($_REQUEST["tool"]);
-//var_dump($dtlist["list"]);
 
-//$files = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir'], 'data_type' => array('$in' => $dtlist["list"])));
+// project list
+$projects = getProjects_byOwner();
+
+//update files workspace content (job and files)
+
 $allFiles = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir']), null);
-$files = getFilesToDisplay(array('_id'=> $_SESSION['User']['dataDir']),$dtlist["list"]);
 
-//$fn_filtered = $GLOBALS['filesMetaCol']->findOne(array('_id' => $fn, "data_type" => array('$in' => array("na_structure","na_traj_top", "na_traj_coords", "na_traj"))) );
-
+$files = filterFiles_by_dataType($allFiles,$dtlist["list"]);
 $files = addTreeTableNodesToFiles($files);
 
-// tools list
-/*$tools = getTools_List();
-$visualizers = getVisualizers_List();
-
-sort($tools);
-sort($visualizers);*/
+$proj_name_active   = getAttr_fromGSFileId($_SESSION['User']['dataDir'],"name");
 
 ?>
 
@@ -72,17 +62,71 @@ sort($visualizers);*/
 				  <i class="fa fa-circle"></i>
 			      </li>
 			      <li>
-				  <span>User Workspace</span>
+				  <span><?php echo getProject($_SESSION['User']['dataDir'])["name"]; ?> Workspace</span>
 			      </li>
 			    </ul>
 			</div>
 			<!-- END PAGE BAR -->
 			<!-- BEGIN PAGE TITLE-->
-			<h1 class="page-title"> User Workspace
-			    <!--<small>manage data through the data table</small>-->
+			<h1 class="page-title"> <?php echo getProject($_SESSION['User']['dataDir'])["name"]; ?> Workspace
+
+						<!--<a href="applib/manageProjects.php?op=delete&pr_id=<?php echo $_SESSION['User']['dataDir']; ?>" class="btn green tooltips" style="float:right; margin-left:10px;" aria-hidden="true"  data-container="body" data-html="true" data-placement="left" data-original-title="<p align='left' style='margin:0'>Click here to delete the current project.</p>"><i class="fa fa-trash-o"></i></a>
+            <a href="workspace/editProject.php?id=<?php echo $_SESSION['User']['dataDir']; ?>" class="btn green tooltips" style="float:right;" aria-hidden="true"  data-container="body" data-html="true" data-placement="left" data-original-title="<p align='left' style='margin:0'>Click here to edit the current project.</p>"><i class="fa fa-pencil-square-o"></i></a>
+			 <a href="workspace/newProject.php" class="btn green tooltips" style="float:right; margin-right:10px;" aria-hidden="true"  data-container="body" data-html="true" data-placement="left" data-original-title="<p align='left' style='margin:0'>Click here to create a new project.</p>"><i class="fa fa-plus"></i></a>-->
+
+					<div class="btn-group" style="float:right;">
+						<a class="btn green" href="javascript:;" data-toggle="dropdown">
+								<i class="fa fa-cogs"></i> Project actions
+								<i class="fa fa-angle-down"></i>
+						</a>
+						<ul class="dropdown-menu pull-right">
+								<li>
+										<a href="workspace/editProject.php?id=<?php echo $_SESSION['User']['dataDir']; ?>">
+											<i class="fa fa-pencil-square-o"></i> Edit current project
+										</a>
+								</li>
+								<li>
+										<!--<a href="applib/manageProjects.php?op=delete&pr_id=<?php echo $_SESSION['User']['dataDir']; ?>">-->
+										<a href="javascript:deleteProject('<?php echo $_SESSION['User']['dataDir']; ?>', '<?php echo getProject($_SESSION['User']['dataDir'])["name"]; ?>')">
+											<i class="fa fa-trash-o"></i> Delete current project
+										</a>
+								</li>
+								<li class="divider"> </li>
+								<li>
+										<a href="workspace/newProject.php">
+											<i class="fa fa-plus"></i> Create new project
+										</a>
+								</li>
+								<li>
+										<a href="workspace/listOfProjects.php">
+											<i class="fa fa-list"></i> View all my projects
+										</a>
+								</li>
+						</ul>
+				</div>
+					
+          <div class="input-group" style="float:right; width:200px; margin-right:10px;">
+            <span class="input-group-addon" style="background:#5e738b;"><i class="fa fa-sitemap font-white"></i></span>
+            <select class="form-control" id="select_project" onchange="loadProjectWS(this);">
+            <?php foreach ($projects as $p_id => $p){
+                $selected = (($_SESSION['User']['dataDir'] == $p_id)? "selected":""); ?>
+              <option value="<?php echo $p_id;?>" <?php echo $selected; ?>><?php echo $p['name']; ?></option>
+            <?php } ?>
+            </select>
+          </div> 
 			</h1>
 			<!-- END PAGE TITLE-->
 			<!-- END PAGE HEADER-->
+
+			<?php if($_REQUEST["from"]) { ?>
+
+			<div class="row">
+			  <div class="col-md-12" style="margin-bottom:30px;">
+					<?php require "../tools/".$_REQUEST["from"]."/assets/ws/btn-modal.php"; ?>
+				</div>
+			</div>
+
+			<?php	} ?>
 
 			<div class="row">
 			    <div class="col-md-12">
@@ -158,15 +202,17 @@ sort($visualizers);*/
 					?>
 					</div>
 
-				<?php } ?>
+				<?php }
 
-	
-			<?php
+
+
+
 					$toolsList = getTools_List();
 					sort($toolsList);
 			?>
 			
-				<!-- BEGIN EXAMPLE TABLE PORTLET -->
+                <!-- BEGIN EXAMPLE TABLE PORTLET -->
+
 				<div class="row">
 			  <div class="col-md-12 col-sm-12">
 
@@ -201,6 +247,7 @@ sort($visualizers);*/
 					    <input type="hidden" name="userId" value="<?php echo $_SESSION['userId'];?>"/>
 							<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
 							<input type="hidden" id="toolSelected"     value="<?php echo $_REQUEST['tool']; ?>"/>
+							<input type="hidden" id="from"     value="<?php echo $_REQUEST["from"]; ?>"/>
 
 					    <?php
 					    //print showFolder( array('_id'=> $_SESSION['User']['dataDir']) );
@@ -238,6 +285,7 @@ sort($visualizers);*/
 										<li><a href="javascript:downloadAllFiles();"><i class="fa fa-download"></i> Download selected files </a></li>
 										<li><a href="javascript:editAllFiles();"><i class="fa fa-pencil"></i> Edit selected files metadata </a></li>
 										<li><a href="javascript:deleteAllFiles();"><i class="fa fa-trash-o"></i> Delete selected files </a></li>
+										<li><a href="javascript:moveAllFiles();"><i class="fa fa-exchange"></i> Move selected files </a></li>
 									</ul>
 					    	</div>
 								<div class="btn-group">
@@ -293,6 +341,7 @@ sort($visualizers);*/
 			<?php 
 				$toolsHelp = getTools_Help(); 
 				$toolsList = getTools_List();
+				//var_dump($toolsHelp);
 				sort($toolsList);
 			?>
 
@@ -357,25 +406,45 @@ sort($visualizers);*/
 											</div>
 											<div id="collapse_<?php echo $c; ?>" class="panel-collapse in">
 													<div class="panel-body">
-															<ul class="list-group">
+															<table class="table">
+														<thead>
+															<tr>
+																<th>Operations</th>
+																<th>File(s) required</th>
+																<th>File format</th>
+																<th>File type</th>
+															</tr>
+														</thead>
+														<tbody>
 															<?php
+															$count = 0;
 															foreach($toolsHelp as $th) {
-
-																if($th["id"] == $tl["_id"]) {
-																	?>
-																	<li class="list-group-item">
-																		<?php 
-																			foreach($th["datatypes"] as $dt) {
-																				echo $dt."<br>";
-																			}	 
-																		?>
-																	</li>
+																
+																if($th["id"] == $tl["_id"]) { ?>
+																	<?php 
+																	$cc = 1;
+																	foreach($th["content"] as $content) { ?>
+																	<?php if($cc == 1) { $trclass = "first-tr"; }else{ $trclass = ""; } ?>
+																	<tr class="<?php echo $trclass; ?>">
+																		<?php if($cc == 1) { ?>
+																		<td rowspan="<?php echo sizeof($th["content"]); ?>"><?php echo $th["operation"]; ?></td>
+																		<?php } ?>
+																		<td><?php echo $content["description"]; ?></td>
+																		<td><?php echo implode("<br>", $content["format"]); ?></td>
+																		<td><?php echo implode("<br>", $content["data_type"]); ?></td>
+																	</tr>
+																	<?php 
+																	$cc ++;
+																	} ?>
+																	
 																	<?php
 																}
-										
+																										
 															}
+
 															?>
-															</ul>
+														</tbody>
+													</table>
 													</div>
 											</div>
 									</div>
@@ -400,27 +469,48 @@ sort($visualizers);*/
 													</h4>
 											</div>
 											<div id="collapse_<?php echo $c; ?>" class="panel-collapse collapse">
-													<div class="panel-body">
-															<ul class="list-group">
-															<?php
-															foreach($toolsHelp as $th) {
 
-																if($th["id"] == $tl["_id"]) {
-																	?>
-																	<li class="list-group-item">
-																		<?php 
-																			foreach($th["datatypes"] as $dt) {
-																				echo $dt."<br>";
-																			}	 
-																		?>
-																	</li>
+												<div class="panel-body">
+													<table class="table ws-help-tools">
+														<thead>
+															<tr>
+																<th>Operations</th>
+																<th>File(s) required</th>
+																<th>File format</th>
+																<th>File type</th>
+															</tr>
+														</thead>
+														<tbody>
+															<?php
+															$count = 0;
+															foreach($toolsHelp as $th) {
+																
+																if($th["id"] == $tl["_id"]) { ?>
+																	<?php 
+																	$cc = 1;
+																	foreach($th["content"] as $content) { ?>
+																	<?php if($cc == 1) { $trclass = "first-tr"; }else{ $trclass = ""; } ?>
+																	<tr class="<?php echo $trclass; ?>">
+																		<?php if($cc == 1) { ?>
+																		<td rowspan="<?php echo sizeof($th["content"]); ?>"><?php echo $th["operation"]; ?></td>
+																		<?php } ?>
+																		<td><?php echo $content["description"]; ?></td>
+																		<td><?php echo implode("<br>", $content["format"]); ?></td>
+																		<td><?php echo implode("<br>", $content["data_type"]); ?></td>
+																	</tr>
+																	<?php 
+																	$cc ++;
+																	} ?>
+																	
 																	<?php
 																}
-										
+																										
 															}
+
 															?>
-															</ul>
-													</div>
+														</tbody>
+													</table>
+												</div>
 											</div>
 									</div>
 									<?php 
@@ -474,6 +564,18 @@ sort($visualizers);*/
 
 				       	<div id="info-disk-home">
 					 		You are using <strong><?php echo formatSize($usedDisk);?></strong> from your <strong><?php echo formatSize($diskLimit);?></strong> of disk quota.
+							</div>
+
+								<div id="extra-space-home">
+								<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
+							Do you need extra disk space? Click the button below to contact us!
+							<br><br>
+							<a href="<?php echo $GLOBALS['BASEURL']; ?>helpdesk/?sel=space" class="btn green">I need more disk space</a>
+							<?php } else { ?>
+							Do you want extra disk space? Click the button below to register!
+							<br><br>
+							<a href="<?php echo $GLOBALS['URL_KC']; ?>" class="btn green">Register to VRE</a>
+							<?php } ?>
 					  	</div>
 					</div>
 
@@ -580,7 +682,26 @@ If you want to <strong>re-use your session</strong>, make sure you save the <str
                             </div>
                         </div>
                     </div>
-				</div>
+                </div>
+
+		<div class="modal fade bs-modal" id="modalDeleteProject" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title">Warning!</h4>
+                            </div>
+                            <div class="modal-body">Are you sure you want to delete the project <strong><?php echo getProject($_SESSION['User']['dataDir'])["name"]; ?></strong>
+															and <strong>ALL</strong> its executions and files? This action cannot be undone. 
+                             </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+								<button type="button" class="btn red btn-modal-del">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 		<div class="modal fade bs-modal" id="modalAnalysis" tabindex="-1" role="basic" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
@@ -597,6 +718,107 @@ If you want to <strong>re-use your session</strong>, make sure you save the <str
                     </div>
 								</div>
 
+			<div class="modal fade bs-modal" id="modalRename" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title">Rename</h4>
+                            </div>
+														<div class="modal-body table-responsive">
+															<div id="loading-rename">Retriving data <i class="fa fa-spinner fa-spin"></i></div>
+															<div id="form-rename" class="display-hide">
+																<form action="">
+																	<div class="form-group" id="">
+          													<label class="control-label">Change name</label>
+																		<div class="input-group">
+																			<input type="text" class="form-control " name="" id="new-name" placeholder="Please enter the file name" value="">
+																			<div class="input-group-btn">
+																				<button type="button" class="btn green" data-toggle="dropdown" id="submit-rename">Submit	<i class="fa fa-check"></i></button>
+																			</div>
+																		</div>
+																	</div>
+																</form>
+																<div class="alert alert-danger display-hide"> </div>
+															</div>
+														</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+								</div>
+
+			<div class="modal fade bs-modal" id="modalMove" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title">Move</h4>
+                            </div>
+														<div class="modal-body table-responsive">
+															<div id="loading-move">Retriving data <i class="fa fa-spinner fa-spin"></i></div>
+															<p>File X currently located at Y</p>
+															<div class="row display-hide" id="move-file">
+																<div class="col-md-3" id="col-1-move">
+																	<div class="form-group">
+																		<label class="control-label">Select project</label>
+																			<select  name="" id="project-name" class="form-control"></select>
+																	</div>
+																</div>
+																<div class="col-md-3" id="col-2-move">
+																	<div class="form-group">
+																		<label class="control-label">Select execution</label>
+																			<select  name="" id="execution-name" class="form-control"></select>
+																	</div>
+																</div>
+																<div class="col-md-3" id="col-3-move">
+																	<div class="form-group">
+																		<label class="control-label">File name</label>
+																			<input type="text" class="form-control " name="" id="new-name-move-file" placeholder="Please enter the file name" value="">
+																	</div>
+																</div>
+																<div class="col-md-3" id="col-4-move">
+																	<div class="form-group">
+																		<label class="control-label"> &nbsp;</label>
+																		<button type="button" class="btn green form-control" data-toggle="dropdown" id="submit-move">Submit	<i class="fa fa-check"></i></button>
+																	</div>
+																</div>
+															</div>
+															<div class="alert alert-danger display-hide"> </div>
+															<!-- TODO: MOVE DIR!!! -->
+														</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+								</div>
+
+
+				<div class="modal fade bs-modal" id="modalProgress" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title">Progress for execution</h4>
+                            </div>
+							<div class="modal-body table-responsive">
+									<div style="max-height: calc(100vh - 255px);padding-left:20px;">						
+								<div id="meta-progress" style="padding: 0 0 0px 0; color:#949494"></div>
+								<div id="meta-log" class="display-hide" style="padding: 0 0 20px 0; color:#949494"></div>
+								</div>
+							</div>
+														<div class="modal-footer" style="text-align:left;">
+																<button type="button" class="btn default" id="btn-modal-progress">View Progress</button>
+																<button type="button" class="btn green" id="btn-modal-log">View Raw Log</button>
+																<button type="button" class="btn dark btn-outline" data-dismiss="modal" style="right: 15px;position: absolute;">Close</button>
+                            </div>
+                        </div>
+                    </div>
+								</div>
+
+
 				<div class="modal fade bs-modal" id="modalMeta" tabindex="-1" role="basic" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
@@ -605,7 +827,7 @@ If you want to <strong>re-use your session</strong>, make sure you save the <str
 								<h4 class="modal-title">Project info</h4>
 							</div>
 							<div class="modal-body table-responsive">
-								<div id="meta-container" style="max-height: calc(100vh - 255px);">						
+								<div id="meta-container" style="max-height: calc(100vh - 255px); ">						
 								<div id="meta-summary">
 									
 								</div>
@@ -619,11 +841,20 @@ If you want to <strong>re-use your session</strong>, make sure you save the <str
 					</div>
 				</div>
 
-											
+				<?php 
+
+					if($_REQUEST["from"]) {
+
+						require "../tools/".$_REQUEST["from"]."/assets/ws/modal.php";
+
+                    }
+                                        
+
+
+				?>
 
 
 <?php 
-
 require "../htmlib/footer.inc.php"; 
 require "../htmlib/js.inc.php";
 
