@@ -17,33 +17,31 @@ class Base {
         public $label  = "";
         public $track = "";
         public $urlTemplate = "";
+	    public $metadata = "";
 
         public function __construct($type,$label,$path,$file){
-	        $this->key= "<span title='Track from project: ".$path."'>" . $file . "</span>";
-		if (($type == "Alignment") || ($type == "BAM_Coverage")){
-//			$this->key= $type . " " . $file;
-			$this->key= $file;
-		}
+	        $this->key= "<span title='Track from run: ".$path."'>" . $file . "</span>";
 	        $this->label= $label;
         	$this->track= $type . "_" . $file;
         	$this->urlTemplate= "../" . $path . "/" . $file;
+            $this->metadata = array("category" => "Your Data / Projects / $path");
 	}
 }
 
 
 class Alignment extends Base{
 
-      	public $style= array("className" => "bam");
-     	public $storeClass = "JBrowse/Store/SeqFeature/BAM";
-	public $description = "1";
+   	public $style= array("className" => "bam");
+  	public $storeClass = "JBrowse/Store/SeqFeature/BAM";
+	public $description = "Alignment Reads";
 	public $feature = array("bamf");
-	public $metadata = array("category" => "Your Data / Uploads / Reads");
-        public $type = "JBrowse/View/Track/Alignments2";
+    public $type = "JBrowse/View/Track/Alignments2";
 
 	public function __construct($label,$path,$file){
 		parent::__construct("Alignment",$label."_bam",$path,$file);
 ###PROVA!!!
-		$this->chunkSizeLimit = "10000000"; 
+        $this->chunkSizeLimit = "10000000"; 
+        $this->key = $this->key . " (Reads)";
 	}
 }
 
@@ -52,11 +50,11 @@ class AlignmentCoverage extends Base{
 
 	public $storeClass = "JBrowse/Store/SeqFeature/BAM";
 	public $type = "JBrowse/View/Track/SNPCoverage";
-        public $metadata = array("category" => "Your Data / Uploads / Coverage");
+	public $description = "Alignment Coverage";
 	
-        public function __construct($label,$path,$file){
-                parent::__construct("BAM_Coverage",$label,$path,$file);
-        
+    public function __construct($label,$path,$file){
+        parent::__construct("BAM_Coverage",$label,$path,$file);
+        $this->key= $this->key . " (Coverage)";
         }
 }
 
@@ -64,12 +62,12 @@ class AlignmentCoverage extends Base{
 class Coverage extends Base{
 
 	public $storeClass = "JBrowse/Store/SeqFeature/BigWig";
-        public $type = "JBrowse/View/Track/Wiggle/XYPlot";
+    public $type = "JBrowse/View/Track/Wiggle/XYPlot";
 	public $max_score = 400;
-        public $style= array("pos_color" => "purple","neg_color" => "green");
-	public $metadata = array("category" => "Your Data / Uploads / Coverage","Description" => "Coverage from bigwig");
+    public $style= array("pos_color" => "purple","neg_color" => "green");
 
         public function __construct($label,$path,$file){
+                $this->metadata = array("category" => "Your Data / Projects / $path", "Description" => "Coverage from bigwig");
                 parent::__construct("Coverage",$label,$path,$file);
         
         }
@@ -80,7 +78,6 @@ class BW extends Base {
         public $storeClass = "JBrowse/Store/SeqFeature/BigWig";
         public $type = "JBrowse/View/Track/Wiggle/XYPlot";
  	public $autoscale = "local";
-        public $metadata = array("category" => "Your Data / Uploads / Other");
 	public $style = array("height" => "60");
 
         public function __construct($label,$path,$file){
@@ -97,7 +94,6 @@ class BW_P extends Base {
         public $storeClass = "JBrowse/Store/SeqFeature/BigWig";
         public $type = "JBrowse/View/Track/Wiggle/XYPlot";
         public $autoscale = "local";
-        public $metadata = array("category" => "Your Data / Uploads / Other");
 
         public $style = array("height" => "60","pos_color" => "#D8D8D8","neg_color" => "#D8D8D8");
 
@@ -114,7 +110,6 @@ class BW_ND extends Base {
         public $storeClass = "JBrowse/Store/SeqFeature/BigWig";
         public $type = "JBrowse/View/Track/Wiggle/XYPlot";
         public $autoscale = "local";
-        public $metadata = array("category" => "Your Data / Uploads / Other");
 
         public $style = array("height" => "60","pos_color" => "#D8D8D8","neg_color" => "#D8D8D8");
 
@@ -129,13 +124,24 @@ class GFF extends Base {
 
         public $storeClass = "JBrowse/Store/SeqFeature/GFF3";
         public $type = "JBrowse/View/Track/CanvasFeatures";
-        public $metadata = "";
         public $style = array("className" => "feature");
 
         public function __construct($label,$path,$file){
                 parent::__construct("GFF",$label,$path,$file);
-		$this->metadata = array("category" => "Your Data / Uploads / Other");
 	}
+
+}
+
+
+class BED extends Base {
+
+        public $storeClass = "JBrowse/Store/SeqFeature/BED";
+        public $type = "JBrowse/View/Track/CanvasFeatures";
+        public $style = array("className" => "feature");
+
+        public function __construct($label,$path,$file){
+                parent::__construct("BED",$label,$path,$file);
+        }
 
 }
 
@@ -145,7 +151,6 @@ class GFF_TX extends Base {
 
         public $storeClass = "JBrowse/Store/SeqFeature/GFF3";
         public $type = "JBrowse/View/Track/CanvasFeatures";
-        public $metadata = "";
         public $style = array("className" => "feature", "color" => "function( feature, variableName, glyphObject, track ) {switch (feature.get('classification')) { case '+1_missing': return '#A9F5E1'; case '+1_too_fuzzy': return '#F6CEF5'; case '-1_missing': return '#CEECF5'; case 'F-close-F': return '#F5F6CE'; case 'F-close-W': return '#F6D8CE'; case 'F-open-F': return '#FAAC58'; case 'F-open-W': return '#F4FA58'; case 'F-overlap-F': return '#ACFA58'; case 'F-overlap-W': return '#58FA58'; case 'NA': return '#58FAAC'; case 'W-close-F': return '#58FAF4'; case 'W-close-W': return '#58ACFA'; case 'W-open-F': return '#5858FA'; case 'W-open-W': return '#AC58FA'; case 'W-overlap-F': return '#FA58F4'; case 'W-overlap-W': return '#FA5882';}}");
 
         public $fmtDetailField_seq_id = "function(seq_id) { return null; }";
@@ -153,8 +158,8 @@ class GFF_TX extends Base {
         public $fmtDetailField_Length = "function(Length) { return null; }";
 
 
-        public $fmtDetailValue_Name = "function(name) { var patt=/_/; if (!patt.test(name)) { return '<a href=\"http://www.yeastgenome.org/cgi-bin/locus.fpl?locus='+name+'\" target=\"_blank\">'+name+'</a>';} else {return name;}}";
-//        public $fmtDetailValue_gene_id = "function(name) { var patt=/_/; if (!patt.test(name)) { return '<a href=\"http://www.yeastgenome.org/cgi-bin/locus.fpl?locus='+name+'\"  target=\"_blank\">'+name+'</a>';} else {return name;}}";
+        public $fmtDetailValue_Name = "function(name) { var patt=/_/; if (!patt.test(name)) {var str=name.split(\" \"); return '<a href=\"http://www.yeastgenome.org/locus/'+str[0]+'\" target=\"_blank\">'+name+'</a>';} else {return name;}}";
+//        public $fmtDetailValue_gene_id = "function(name) { var patt=/_/; if (!patt.test(name)) { return '<a href=\"http://www.yeastgenome.org/locus'+name+'\"  target=\"_blank\">'+name+'</a>';} else {return name;}}";
 
 
         public function __construct($label,$path,$file){
@@ -193,7 +198,6 @@ class GFF_P extends Base {
 
         public $storeClass = "JBrowse/Store/SeqFeature/GFF3";
         public $type = "JBrowse/View/Track/CanvasFeatures";
-        public $metadata = "";
         public $style = array("className" => "feature", "color" => "function( feature, variableName, glyphObject, track ) { if (feature.get('score_phase') <= 25 ) { return 'green';} else if (feature.get('score_phase') <= 55) {return 'orange';} else {return 'red';}}");
 
 #       public $style = array("className" => "feature", "color" => "function( feature, variableName, glyphObject, track ) { if (feature.get('score') < 20 ) { return '#CEF6CE';} else if (feature.get('score') < 40) {return '#81F781'} else if (feature.get('score') < 60) {return '#04B404'} else {return '#0B6121'}}");
@@ -202,7 +206,7 @@ class GFF_P extends Base {
         public $fmtDetailField_seq_id = "function(seq_id) { return null; }";
         public $fmtDetailField_id = "function(id) { return null; }";
 
-        public $fmtDetailValue_Name = "function(name) { var patt=/_/; if (!patt.test(name)) { return '<a href=\"http://www.yeastgenome.org/cgi-bin/locus.fpl?locus='+name+'\" target=\"_blank\">'+name+'</a>';} else {return name;}}";
+        public $fmtDetailValue_Name = "function(name) { var patt=/_/; if (!patt.test(name)) {var str=name.split(\" \");return '<a href=\"http://www.yeastgenome.org/locus/'+str[0]+'\" target=\"_blank\">'+name+'</a>';} else {return name;}}";
 
 
         public function __construct($label,$path,$file){
@@ -233,7 +237,7 @@ class GFF_P extends Base {
 	public $fmtDetailField_seq_id = "function(seq_id) { return null; }";
         public $fmtDetailField_id = "function(id) { return null; }";
 
-        public $fmtDetailValue_Name = "function(name) { var patt=/_/; if (!patt.test(name)) { return '<a href=\"http://www.yeastgenome.org/cgi-bin/locus.fpl?locus='+name+'\" target=\"_blank\">'+name+'</a>';} else {return name;}}";
+        public $fmtDetailValue_Name = "function(name) { var patt=/_/; if (!patt.test(name)) { return '<a href=\"http://www.yeastgenome.org/locus/'+name+'\" target=\"_blank\">'+name+'</a>';} else {return name;}}";
 
 	public $displayMode = "compact";
 
@@ -254,7 +258,6 @@ class GFF_NFR extends Base {
 
         public $storeClass = "JBrowse/Store/SeqFeature/GFF3";
         public $type = "JBrowse/View/Track/CanvasFeatures";
-        public $metadata = "";
         public $style = array("className" => "feature", "color" => "orange");
         public $displayMode = "collapsed";
 
@@ -273,7 +276,6 @@ class GFF_GAU extends Base {
 
         public $storeClass = "JBrowse/Store/SeqFeature/GFF3";
         public $type = "JBrowse/View/Track/CanvasFeatures";
-        public $metadata = "";
 
 		public $style = array("className" => "feature", "color" => "function( feature, variableName, glyphObject, track ) { if (feature.get('score') < 0.1 ) { return '#CEF6F5';} else if (feature.get('score') < 0.2) {return '#81F7F3';} else if (feature.get('score') < 0.3) {return '#2EFEF7';} else if (feature.get('score') < 0.4) {return '#01DFD7';} else {return '#04B4AE';}}");
 
@@ -302,7 +304,6 @@ class GFF_NR extends Base {
 
         public $storeClass = "JBrowse/Store/SeqFeature/GFF3";
         public $type = "JBrowse/View/Track/CanvasFeatures";
-        public $metadata = "";
         public $style = array("className" => "feature", "color" => "function( feature, variableName, glyphObject, track ) { if (feature.get('class') == 'W') { return 'blue'; } else if (feature.get('class') == 'F' ) {return '#819FF7'} else { return 'grey'; }}");
 	public $displayMode = "compact";
 

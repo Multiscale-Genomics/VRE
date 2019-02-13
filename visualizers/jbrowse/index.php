@@ -16,12 +16,16 @@ $proj = $_SESSION['User']['activeProject'];
 if (isset($_REQUEST['direct_refGenome'])){ 
 	$ref= $_REQUEST['direct_refGenome'];
 	if ($ref == "r5.01"){
-        	$url = "JBrowse-1.12.0/index.html?data=user_jbrowse%2F$ref%2Fjbrowse";
+		# changing url: JBrowse update to support BED files (v1.12.3)
+        	#$url = "JBrowse-1.12.0/index.html?data=user_jbrowse%2F$ref%2Fjbrowse";
+                $url = "JBrowse-1.12.3_ct/index.html?data=user_jbrowse%2F$ref%2Fjbrowse";
 #	        $url = $url . "data=" . urlencode("user_data/$user/$proj/.jbrowse");
 #        	$url = $url . "&loc=" . urlencode("chrI:30000..50000");
 #	        $url = $url . "&tracks=";
 	}else{
-        	$url = "JBrowse-1.12.0/index.html?data=user_jbrowse%2F$ref%2Fjbrowse";
+                # changing url: JBrowse update to support BED files (v1.12.3)
+        	#$url = "JBrowse-1.12.1/index.html?data=user_jbrowse%2F$ref%2Fjbrowse";
+                $url = "JBrowse-1.12.3/index.html?data=user_jbrowse%2F$ref%2Fjbrowse";
 	}
 	#https://vre.multiscalegenomics.eu/visualizers/jbrowse/JBrowse-1.12.1-yeast/index.html?data=user_jbrowse%2Fdm6%2Fjbrowse
 	$url = $GLOBALS['jbrowseURL'] . $url;
@@ -32,7 +36,9 @@ if (isset($_REQUEST['direct_refGenome'])){
 // link to Jbrowse with tracks
 
 # JBrowse url
-$url = "JBrowse-1.12.1/index.html?";
+# changing url: JBrowse update to support BED files (v1.12.3)
+#$url = "JBrowse-1.12.1/index.html?";
+$url = "JBrowse-1.12.3/index.html?";
 $url = $url . "data=" . urlencode("user_data/$user/$proj/.jbrowse");
 $url = $url . "&loc=" . urlencode("chrII:30000..50000");
 $url = $url . "&tracks=";
@@ -77,8 +83,11 @@ foreach ($arr_tracks as $id) {
 #                if ($ref  == "hg38" || $ref == "hg19"){
                         # head of trackList.json, having all common tracks 
                         //print "HUMAN";
-                        $trackHead = file_get_contents("JBrowse-1.12.1/data/$ref/jbrowse/tracks/trackList_head.json", FILE_USE_INCLUDE_PATH);
-                        $trackTail = file_get_contents("JBrowse-1.12.1/data/$ref/jbrowse/tracks/trackList_tail.json", FILE_USE_INCLUDE_PATH);
+			# changing url: JBrowse update to support BED files (v1.12.3)
+                        #$trackHead = file_get_contents("JBrowse-1.12.1/data/$ref/jbrowse/tracks/trackList_head.json", FILE_USE_INCLUDE_PATH);
+                        #$trackTail = file_get_contents("JBrowse-1.12.1/data/$ref/jbrowse/tracks/trackList_tail.json", FILE_USE_INCLUDE_PATH);
+                        $trackHead = file_get_contents("JBrowse-1.12.3/data/$ref/jbrowse/tracks/trackList_head.json", FILE_USE_INCLUDE_PATH);
+                        $trackTail = file_get_contents("JBrowse-1.12.3/data/$ref/jbrowse/tracks/trackList_tail.json", FILE_USE_INCLUDE_PATH);
                         # Common tracks (reference sequence, genes, GC, etc.)
                         fwrite($trackf, $trackHead);
                         $refGlobal=$ref;
@@ -145,6 +154,8 @@ foreach ($arr_tracks as $id) {
                 $e = new BW_P($label,"$project",$filename);
 	} elseif ($format == "GFF" || $format=="GFF3"){
                 $e = new GFF($label,"$project",$filename);
+        } elseif ($format == "BED"){
+                $e = new BED($label,"$project",$filename);
         } elseif ($format == "BW"){
                 $e = new BW($label,"$project",$filename);
         } elseif ($format == "BAM"){
@@ -268,7 +279,10 @@ fwrite($trackf, $trackTail);
 fclose($trackf);
 
 if ($ref == "r5.01"){
-	$url = "JBrowse-1.12.0/index.html?";
+	# changing url: JBrowse update to support BED files (v1.12.3)
+	#$url = "JBrowse-1.12.0/index.html?";
+        $url = "JBrowse-1.12.3_ct/index.html?";
+
 	$url = $url . "data=" . urlencode("user_data/$user/$proj/.jbrowse");
 	$url = $url . "&loc=" . urlencode("chrI:30000..50000");
 	$url = $url . "&tracks=";

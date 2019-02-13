@@ -1,0 +1,17 @@
+../../JBrowse-1.12.1/src/
+
+drwxr-xr-x  4 lcodo2 mug 4096 Nov 10  2017 dgrid/
+drwxr-xr-x  8 lcodo2 mug 4096 Nov 10  2017 dijit/
+drwxr-xr-x  4 lcodo2 mug 4096 Feb 26  2018 dojo/
+drwxr-xr-x  9 lcodo2 mug 4096 Nov 10  2017 dojox/
+drwxr-xr-x  8 lcodo2 mug 4096 Nov 10  2017 JBrowse/
+drwxr-xr-x 33 lcodo2 mug 4096 Nov 10  2017 nls/
+drwxr-xr-x  4 lcodo2 mug 4096 Nov 10  2017 perl5/
+drwxr-xr-x  3 lcodo2 mug 4096 Nov 10  2017 wig2png/
+
+
+cp -r ../../JBrowse-1.12.1/src/dgrid src 
+cp -r ../../JBrowse-1.12.1/src/dijit src
+cp -r ../../JBrowse-1.12.1/src/dojo src
+cp -r ../../JBrowse-1.12.1/src/dojox src
+cp -r ../../JBrowse-1.12.1/src/nls src
