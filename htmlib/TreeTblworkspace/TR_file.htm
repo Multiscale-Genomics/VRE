@@ -27,7 +27,7 @@
 </td>
 <td>##format##</td>
 <td title="##file_data_type##"><span class="truncate">##file_data_type##</span></td>
-<td title="##longprojectname##"><span class="truncate">##project##</span></td>
+<td title="##longexecutionname##"><span class="truncate">##execution##</span></td>
 <td title="##mtime##"><span class="truncate2" title="##mtime##">##mtime##</span></td>
 <td>##size##</td>
 
@@ -39,6 +39,9 @@
 		</button>
 	  <ul class="dropdown-menu pull-right" role="menu">
 			##metadataLink##
+			##renameLink##
+			##moveLink##
+			
 			<li><a href="workspace/workspace.php?op=downloadFile&fn=##_id_URL##"><i class="fa fa-download"></i> Download file </a></li>
 			<li><a href="javascript:deleteFile('##_id_URL##');"><i class="fa fa-trash-o"></i> Delete file </a></li>
 			##compressionLink##

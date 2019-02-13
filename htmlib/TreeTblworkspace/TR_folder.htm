@@ -7,7 +7,7 @@
 </td>
 <td>
 	<span class="truncate" title="##longfilename##">##longfilename## </span>     
-	<!--  span style="font-weight:bold;" search="yes"   type="project" -->
+	<!--  span style="font-weight:bold;" search="yes"   type="execution" -->
 	<!--<span class="expand_info" onclick="expandInfo(this)"></span>-->
 	<div class="extra_info">
 		<table style="border:none;border-left:dashed 1px gray;margin:10px 22px;padding:0 3px;">
@@ -33,6 +33,8 @@
 			<i class="fa fa-angle-down"></i>
 		</button>
 		<ul class="dropdown-menu pull-right" role="menu">
+			##renameLink##
+			##moveLink##
 			<li><a href="javascript:deleteFolder('##_id_URL##');"><i class="fa fa-trash-o"></i> Delete Folder</a></li>
 			<li><a href="workspace/workspace.php?op=downloadtgz&fn=##_id_URL##"><i class="fa fa-download"></i> Download Folder</a></li>
 			##rerunLink##
