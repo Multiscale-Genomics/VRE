@@ -57,8 +57,10 @@ for ($i = 0; $i <= 11; $i++) {
 }
 
 foreach($users as $k => $v){
-	$monthyear = substr($v[6], 0, 7);
-	if(array_key_exists($monthyear, $months_list)) $months_list[$monthyear] ++;
+	if(isset($v[6])) {
+		$monthyear = substr($v[6], 0, 7);
+		if(array_key_exists($monthyear, $months_list)) $months_list[$monthyear] ++;
+	}
 }
 $months_list = array_reverse($months_list);
 
@@ -111,6 +113,31 @@ foreach($users as $k => $v){
 
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <a class="dashboard-stat dashboard-stat-v2 blue-hoki" href="admin/adminUsers.php">
+                                    <div class="visual">
+                                        <i class="fa fa-users"></i>
+                                    </div>
+                                    <div class="details">
+                                        <div class="number">
+                                            <span data-counter="counterup" data-value="<?php echo sizeof($users); ?>">0</span>
+                                        </div>
+                                        <div class="desc"> Total registered users </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <a class="dashboard-stat dashboard-stat-v2 green" href="#tableDisk">
+                                    <div class="visual">
+                                        <i class="fa fa-database"></i>
+                                    </div>
+                                    <div class="details">
+                                        <div class="number">
+                                            <span data-counter="counterup" data-value="5"></span> </div>
+                                        <div class="desc"> Users with +50%<br>disk used </div>
+                                    </div>
+                                </a>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                 <a class="dashboard-stat dashboard-stat-v2 blue" href="javascript:;">
                                     <div class="visual">
                                         <i class="fa fa-envelope"></i>
@@ -135,36 +162,47 @@ foreach($users as $k => $v){
                                     </div>
                                 </a>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <a class="dashboard-stat dashboard-stat-v2 blue-hoki" href="admin/adminUsers.php">
-                                    <div class="visual">
-                                        <i class="fa fa-users"></i>
-                                    </div>
-                                    <div class="details">
-                                        <div class="number">
-                                            <span data-counter="counterup" data-value="<?php echo sizeof($users); ?>">0</span>
-                                        </div>
-                                        <div class="desc"> Total users </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                <a class="dashboard-stat dashboard-stat-v2 green" href="#tableDisk">
-                                    <div class="visual">
-                                        <i class="fa fa-database"></i>
-                                    </div>
-                                    <div class="details">
-                                        <div class="number">
-                                            <span data-counter="counterup" data-value="89"></span> </div>
-                                        <div class="desc"> Users with +50%<br>disk used </div>
-                                    </div>
-                                </a>
-                            </div>
                         </div>
                         <div class="clearfix"></div>
                         <!-- END DASHBOARD STATS 1-->
                         <div class="row">
-                            <div class="col-md-6 col-sm-6">
+                            <div class="col-md-3 col-sm-3">
+                                <!-- BEGIN PORTLET-->
+                                <div class="portlet light bordered" style="height:395px;">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="icon-share font-red-sunglo hide"></i>
+                                            <span class="caption-subject font-dark bold uppercase">Total Used Disk</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="portlet-body" style="text-align:center;padding-top:30px;">
+                                        <!--<input class="knob" data-fgColor="#f3c200" data-bgColor="#eeeeee" readonly value="<?php //echo $percent_total_disk; ?>">
+                                        <p style="font-size:20px; margin-top:30px;"><?php //echo $space_used_disk; ?>GB of <?php //echo $space_total_disk; ?>GB</p>-->
+                                        <input class="knob" data-fgColor="#f3c200" data-bgColor="#eeeeee" readonly value="37.2">
+                                        <p style="font-size:20px; margin-top:30px;">192GB of 516GB</p>
+                                    </div>
+                                </div>
+                                <!-- END PORTLET-->
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <!-- BEGIN PORTLET-->
+                                <div class="portlet light bordered" style="height:395px;">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="icon-share font-red-sunglo hide"></i>
+                                            <span class="caption-subject font-dark bold uppercase">Average Used Disk</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="portlet-body" style="text-align:center;padding-top:30px;">
+                                        <input class="knob" data-fgColor="#006b8f" data-bgColor="#eeeeee" readonly value="6.5">
+                                        <p style="font-size:20px; margin-top:30px;">1.3GB of 20GB</p>
+                                    </div>
+                                </div>
+                                <!-- END PORTLET-->
+														</div>
+														<div class="col-md-6 col-sm-6">
                                 <!-- BEGIN PORTLET-->
                                 <div class="portlet light bordered">
                                     <div class="portlet-title">
@@ -184,45 +222,10 @@ foreach($users as $k => $v){
                                 </div>
                                 <!-- END PORTLET-->
                             </div>
-                            <div class="col-md-3 col-sm-3">
-                                <!-- BEGIN PORTLET-->
-                                <div class="portlet light bordered" style="height:395px;">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <i class="icon-share font-red-sunglo hide"></i>
-                                            <span class="caption-subject font-dark bold uppercase">Total Used Disk</span>
-                                        </div>
-
-                                    </div>
-                                    <div class="portlet-body" style="text-align:center;padding-top:30px;">
-                                        <input class="knob" data-fgColor="#f3c200" data-bgColor="#eeeeee" readonly value="<?php echo $percent_total_disk; ?>">
-                                        <p style="font-size:20px; margin-top:30px;"><?php echo $space_used_disk; ?>GB of <?php echo $space_total_disk; ?>GB</p>
-                                    </div>
-                                </div>
-                                <!-- END PORTLET-->
-                            </div>
-                            <div class="col-md-3 col-sm-3">
-                                <!-- BEGIN PORTLET-->
-                                <div class="portlet light bordered" style="height:395px;">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <i class="icon-share font-red-sunglo hide"></i>
-                                            <span class="caption-subject font-dark bold uppercase">Average Used Disk</span>
-                                        </div>
-
-                                    </div>
-                                    <div class="portlet-body" style="text-align:center;padding-top:30px;">
-                                        <input class="knob" data-fgColor="#006b8f" data-bgColor="#eeeeee" readonly value="47">
-                                        <p style="font-size:20px; margin-top:30px;">9.4GB of 20GB</p>
-                                    </div>
-                                </div>
-                                <!-- END PORTLET-->
-                            </div>
                         </div>
-						<div class="row">
+						<!--<div class="row">
 							<a name="tableDisk"></a>
                             <div class="col-md-12">
-                                <!-- BEGIN EXAMPLE TABLE PORTLET-->
                                 <div class="portlet light portlet-fit bordered">
                                   <div class="portlet-title">
                                       <div class="caption">
@@ -298,39 +301,11 @@ foreach($users as $k => $v){
                                         </table>
                                     </div>
                                 </div>
-                                <!-- END EXAMPLE TABLE PORTLET-->
                             </div>
-                        </div>
+                        </div>-->
 
 						<div class="row">
-                            <div class="col-lg-6 col-xs-12 col-sm-12">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <i class="icon-cursor font-dark hide"></i>
-                                            <span class="caption-subject font-dark bold uppercase">CPU Stats</span>
-                                        </div>
-                                        <!--<div class="actions">
-                                            <a href="javascript:;" class="btn btn-sm green easy-pie-chart-reload">
-                                                <i class="fa fa-repeat"></i> Reload </a>
-                                        </div>-->
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="row">
-											<?php foreach($cpu_data as $k=>$v){ ?>
-											<div class="col-md-<?php echo 12/$number_of_cpus;  ?>">
-                                                <div class="easy-pie-chart">
-                                                    <div class="number cpu_info <?php echo $k; ?>" data-percent="<?php echo ($v['user'] + $v['nice'] + $v['sys']); ?>">
-                                                        <span><?php echo round($v['user'] + $v['nice'] + $v['sys']); ?></span>% </div>
-														<p style="margin-top:15px;"><?php echo $k; ?></p>
-                                                </div>
-                                            </div>
-											<?php } ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-xs-12 col-sm-12">
+                            <div class="col-lg-12 col-xs-12 col-sm-12">
                                 <div class="portlet light bordered">
                                     <div class="portlet-title">
                                         <div class="caption">
@@ -346,7 +321,7 @@ foreach($users as $k => $v){
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="sparkline-chart">
-													<span id="spark_registers"><?php $i = 1; foreach($months_list as $k => $v){  if($i < sizeof($months_list)) { echo $v.','; }else{ echo $v; } $i++; } ?></span>
+                                                    <span id="spark_registers"><?php $i = 1; foreach($months_list as $k => $v){  if($i < sizeof($months_list)) { echo $v.','; }else{ echo $v; } $i++; } ?></span>
 													<p style="margin-top:15px;">Monthly new users</p>
                                                 </div>
                                             </div>
@@ -368,15 +343,46 @@ foreach($users as $k => $v){
                                     </div>
                                 </div>
                             </div>
-                        </div>	
-						
+                        </div>
+
 						<div class="row">
+                            <div class="col-lg-12 col-xs-12 col-sm-12">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="icon-cursor font-dark hide"></i>
+                                            <span class="caption-subject font-dark bold uppercase">vre server CPU Stats</span>
+                                        </div>
+                                        <!--<div class="actions">
+                                            <a href="javascript:;" class="btn btn-sm green easy-pie-chart-reload">
+                                                <i class="fa fa-repeat"></i> Reload </a>
+                                        </div>-->
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="row">
+											<?php foreach($cpu_data as $k=>$v){ ?>
+											<div class="col-md-<?php echo 12/$number_of_cpus;  ?>">
+                                                <div class="easy-pie-chart">
+                                                    <div class="number cpu_info <?php echo $k; ?>" data-percent="<?php echo ($v['user'] + $v['nice'] + $v['sys']); ?>">
+                                                        <span><?php echo round($v['user'] + $v['nice'] + $v['sys']); ?></span>% </div>
+														<p style="margin-top:15px;"><?php echo $k; ?></p>
+                                                </div>
+                                            </div>
+											<?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+														</div>
+												</div>
+													
+						
+													<div class="row">
                             <div class="col-lg-6 col-xs-12 col-sm-12">
-								<!-- BEGIN DYNAMIC CHART PORTLET-->
+															<!-- BEGIN DYNAMIC CHART PORTLET-->
                                 <div class="portlet light portlet-fit bordered">
                                     <div class="portlet-title">
                                         <div class="caption">
-                                            <span class="caption-subject font-dark bold uppercase">Memory Usage</span>
+                                            <span class="caption-subject font-dark bold uppercase">vre server Memory Usage</span>
                                         </div>
                                     </div>
                                     <div class="portlet-body">
@@ -384,22 +390,27 @@ foreach($users as $k => $v){
                                     </div>
                                 </div>
                                 <!-- END DYNAMIC CHART PORTLET-->
-								<!-- BEGIN DYNAMIC CHART PORTLET-->
+																
+														</div>
+
+														<div class="col-lg-6 col-xs-12 col-sm-12">
+															
+																<!-- BEGIN DYNAMIC CHART PORTLET-->
                                 <div class="portlet light portlet-fit bordered">
                                     <div class="portlet-title">
                                         <div class="caption">
-                                            <span class="caption-subject font-dark bold uppercase">CPU Usage</span>
+                                            <span class="caption-subject font-dark bold uppercase">vre server CPU Usage</span>
                                         </div>
                                     </div>
                                     <div class="portlet-body">
                                         <div id="chart_5" class="chart"> </div>
                                     </div>
                                 </div>
-                                <!-- END DYNAMIC CHART PORTLET-->
-							</div>
+                              <!-- END DYNAMIC CHART PORTLET-->
+														</div>
 
-							<div class="col-lg-6 col-xs-12 col-sm-12">
-								<div class="portlet light bordered" style="height:839px">
+														<!--<div class="col-lg-6 col-xs-12 col-sm-12">
+															<div class="portlet light bordered" style="height:839px">
                                     <div class="portlet-title tabbable-line">
                                         <div class="caption">
                                             <span class="caption-subject font-dark bold uppercase">premium USERS REQUEST</span>
@@ -407,13 +418,13 @@ foreach($users as $k => $v){
                                     </div>
                                     <div class="portlet-body">
                                         <div class="scroller" style="height:739px;">
-											<div class="tab-pane active" id="tab_actions_pending">
-												<div class="mt-actions" id="container-actions">
-												<?php
-												if(sizeof($users2) > 0) {
-												foreach($users2 as $key => $value):
-												?>
-												<div class="mt-action" id="<?php echo $value[6]; ?>">
+																					<div class="tab-pane active" id="tab_actions_pending">
+																						<div class="mt-actions" id="container-actions">
+																						<?php
+																						if(sizeof($users2) > 0) {
+																						foreach($users2 as $key => $value):
+																						?>
+																						<div class="mt-action" id="<?php echo $value[6]; ?>">
                                                         <div class="mt-action-body">
                                                             <div class="mt-action-row">
                                                                 <div class="mt-action-info ">
@@ -422,31 +433,30 @@ foreach($users as $k => $v){
                                                                         <p class="mt-action-desc"><?php echo $value[2]; ?></p>
                                                                     </div>
                                                                 </div>
-																<div class="mt-action-datetime ">
-																	<?php echo returnHumanDateDashboard($value[5]); ?>
+																																<div class="mt-action-datetime ">
+																																	<?php echo returnHumanDateDashboard($value[5]); ?>
                                                                 </div>
                                                                 <div class="mt-action-buttons ">
                                                                     <div class="btn-group">
-																		<button type="button" class="btn btn-outline green btn-sm btn-action-user1" onclick="userRequest('<?php echo $key; ?>', '<?php echo $value[6]; ?>', 1)">Approve</button>
+																																				<button type="button" class="btn btn-outline green btn-sm btn-action-user1" onclick="userRequest('<?php echo $key; ?>', '<?php echo $value[6]; ?>', 1)">Approve</button>
                                                                         <button type="button" class="btn btn-outline red btn-sm btn-action-user101" onclick="userRequest('<?php echo $key; ?>', '<?php echo $value[6]; ?>', 101)">Reject</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-												<?php
-												endforeach;
-												}else{ 
-												?>
-													<div class="mt-action">No pending requests</div>	
-												<?php } ?>
-                                                </div>
-                                                <!-- END: Actions -->
+																						<?php
+																						endforeach;
+																						}else{ 
+																						?>
+																						<div class="mt-action">No pending requests</div>	
+																						<?php } ?>
                                             </div>
+                                          </div>
                                     	</div>
-                                    </div>
-								</div>
-							</div>
+                                  </div>
+													</div>
+												</div>-->
 
 						</div>
 						
