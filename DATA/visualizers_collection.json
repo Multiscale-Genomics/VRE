@@ -1,0 +1,156 @@
+{
+   "_id":"tadkit",
+   "title":"MuG 3D genome browser and TADbit front-end.",
+   "name":"TADkit",
+   "short_description":"3D genome browser and TADbit front-end",
+   "long_description":"TADkit creates interactive 3D representations of chromatin conformations modeled from 3C-based interaction matrices. The user can overlay 1D and 2D tracks of genomic data to these 3D views to directly evaluate the relationship between the 3D structure of the genome and its biological function.",
+   "owner":{
+      "contact":"david.castillo@cnag.crg.eu",
+      "author":"CNAG"
+   },
+   "visualizer":true,
+   "status":1,
+   "url":"http://sgt.cnag.cat/3dg/tadkit/",
+   "external":true,
+   "keywords":[
+      "visualization",
+      "chromatin",
+      "modeling",
+      "structure"
+   ],
+   "keywords_tool":[
+      "3D",
+      "browser",
+      "structural models"
+   ],
+   "input_files_combinations":[
+      {
+         "description":"3D genome browser and TADbit front-end"
+      }
+   ],
+   "accepted_file_types":[
+      "BED",
+      "BW",
+      "BAM",
+      "JSON",
+      "GFF",
+      "GFF3",
+      "WIG",
+      "BEDGRAPH",
+      "VCF"
+   ],
+   "preview":[
+      "JSON"
+   ]
+}{
+   "_id":"ngl",
+   "title":"MuG VRE NGL Viewer",
+   "name":"NGL",
+   "short_description":"NGL Viewer is a web application for molecular visualization. WebGL is employed to display molecules like proteins and DNA/RNA with a variety of representations.",
+   "long_description":"NGL Viewer is a web application for molecular visualization. WebGL is employed to display molecules like proteins and DNA/RNA with a variety of representations. Supports molecular structures (mmCIF, PDB, PQR, GRO, SDF, MOL2, MMTF) and density volumes (MRC/MAP/CCP4, DX/DXBIN, CUBE).",
+   "owner":{
+      "contact":"alexander.rose@weirdbyte.de",
+      "author":"Alexander Rose"
+   },
+   "visualizer":true,
+   "status":1,
+   "url":"https://github.com/arose/ngl",
+   "external":true,
+   "keywords":[
+      "visualization",
+      "rna",
+      "dna",
+      "protein",
+      "structure"
+   ],
+   "keywords_tool":[
+      "3D structure",
+      "protein",
+      "3D",
+      "browser"
+   ],
+   "input_files_combinations":[
+      {
+         "description":"3D molecular visualization"
+      }
+   ],
+   "accepted_file_types":[
+      "PDB",
+      "GRO",
+      "DCD"
+   ],
+   "preview":[
+      "PDB",
+      "GRO"
+   ]
+}{
+   "_id":"jbrowse",
+   "title":"MuG VRE Jbrowse",
+   "name":"Jbrowse",
+   "short_description":"A next-generation genome browser built with JavaScript and HTML5.",
+   "long_description":"JBrowse is a fast, embeddable genome browser built completely with JavaScript and HTML5. Supports GFF3, BED, FASTA, Wiggle, BigWig, BAM, VCF (with tabix), REST, and more. BAM, BigWig, and VCF data are displayed directly from chunks of the compressed binary files, no conversion needed.",
+   "owner":{
+      "contact":"rroyo@bsc.es",
+      "author":"MMB IRB"
+   },
+   "visualizer":true,
+   "status":1,
+   "url":"http://jbrowse.org/",
+   "external":true,
+   "keywords":[
+      "visualization",
+      "epigenetics",
+      "rna",
+      "dna",
+      "sequence"
+   ],
+   "keywords_tool":[
+      "sequence browser",
+      "genome browser",
+      "browser"
+   ],
+   "input_files_combinations":[
+      {
+         "description":"Genome browser "
+      }
+   ],
+   "accepted_file_types":[
+      "GFF",
+      "GFF3",
+      "BW",
+      "BED",
+      "BAM"
+   ],
+   "preview":[
+
+   ]
+}{
+   "_id":"cytoscape",
+   "title":"COMING SOON",
+   "title_":"Cytoscape. Network visualization and analysis",
+   "name":"Cytoscape",
+   "short_description":"Interactive browser for analyse and visualise networks",
+   "long_description":"",
+   "owner":{
+      "contact":"miguel.madrid-mencia@inserm.fr",
+      "author":"Miguel Madrid (CRCT)"
+   },
+   "visualizer":true,
+   "status":0,
+   "url":"js.cytoscape.org",
+   "external":true,
+   "keywords":[
+      "visualization"
+   ],
+   "keywords_tool":[
+
+   ],
+   "input_files_combinations":[
+      {
+         "description":"View interactions"
+      }
+   ],
+   "accepted_file_types":[
+      "TSV"
+   ]
+}

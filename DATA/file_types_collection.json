@@ -1,0 +1,47 @@
+{ "_id" : "BAM", "extension" : [ "BAM" ] }
+{ "_id" : "PARMTOP", "extension" : [ "PARMTOP", "PRMTOP", "TOP" ] }
+{ "_id" : "GEM", "extension" : [ "GEM" ] }
+{ "_id" : "CPT", "extension" : [ "CPT" ] }
+{ "_id" : "BW", "extension" : [ "BW", "BIGWIG" ] }
+{ "_id" : "BEDGRAPH", "extension" : [ "BEDGRAPH" ] }
+{ "_id" : "GFF3", "extension" : [ "GFF3", "GFF" ] }
+{ "_id" : "BB", "extension" : [ "BB", "BIGBED" ] }
+{ "_id" : "RDATA", "extension" : [ "RDATA" ] }
+{ "_id" : "PNG", "extension" : [ "PNG" ] }
+{ "_id" : "GFF", "extension" : [ "GFF" ] }
+{ "_id" : "FASTA", "extension" : [ "FASTA", "FA", "FN" ] }
+{ "_id" : "VCF", "extension" : [ "VCF" ] }
+{ "_id" : "RST", "extension" : [ "RST", "RST7" ] }
+{ "_id" : "HDF5", "extension" : [ "HDF5" ] }
+{ "_id" : "TOP", "extension" : [ "TOP" ] }
+{ "_id" : "FASTQ", "extension" : [ "FASTQ", "FQ" ] }
+{ "_id" : "BAI", "extension" : [ "BAI" ] }
+{ "_id" : "BT2", "extension" : [ "BT2", "BT2L" ] }
+{ "_id" : "GTF", "extension" : [ "GTF" ] }
+{ "_id" : "TBI", "extension" : [ "TBI" ] }
+{ "_id" : "MDCRD", "extension" : [ "MDCRD", "CRD", "TRJ" ] }
+{ "_id" : "GZ", "extension" : [ "GZ" ] }
+{ "_id" : "DCD", "extension" : [ "DCD" ] }
+{ "_id" : "PICKLE", "extension" : [ "PICKLE" ] }
+{ "_id" : "AMB", "extension" : [ "AMB" ] }
+{ "_id" : "TXT", "extension" : [ "TXT", "LOG" ] }
+{ "_id" : "IDX", "extension" : [ "IDX" ] }
+{ "_id" : "PDF", "extension" : [ "PDF" ] }
+{ "_id" : "PAC", "extension" : [ "PAC" ] }
+{ "_id" : "ANN", "extension" : [ "ANN" ] }
+{ "_id" : "CSV", "extension" : [ "CSV" ] }
+{ "_id" : "PDB", "extension" : [ "PDB" ] }
+{ "_id" : "SA", "extension" : [ "SA" ] }
+{ "_id" : "WIG", "extension" : [ "WIG" ] }
+{ "_id" : "JSON", "extension" : [ "JSON" ] }
+{ "_id" : "BED", "extension" : [ "BED" ] }
+{ "_id" : "BWT", "extension" : [ "BWT", "AMB", "ANN", "PAC", "SA" ] }
+{ "_id" : "TAR", "extension" : [ "TAR", "TGZ", "TBZ", "TBZ2" ] }
+{ "_id" : "LIF", "extension" : [ "LIF" ] }
+{ "_id" : "TSV", "extension" : [ "TSV" ] }
+{ "_id" : "TIFF", "extension" : [ "TIF", "TIFF" ] }
+{ "_id" : "XTC", "extension" : [ "XTC" ] }
+{ "_id" : "LOG", "extension" : [ "LOG", "ERR", "OUT" ] }
+{ "_id" : "NETCDF", "extension" : [ "NETCDF", "NC" ] }
+{ "_id" : "TPR", "extension" : [ "TPR" ] }
+{ "_id" : "HTML", "extension" : [ "HTML" ] }
