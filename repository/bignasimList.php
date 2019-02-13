@@ -111,7 +111,7 @@ $studies = json_decode($json)->BNSSimulation;
 													<td><?php echo $value->SubType; ?></td>
 													<td><?php echo $value->forceField; ?></td>
 													<td><?php echo $value->Water; ?></td>
-													<td><?php echo $value->description; ?></td>
+													<td><?php echo $value->description.' '.$value->Format; ?></td>
 													<td><?php echo $value->time; ?></td>
 													<td>
 														<?php if(file_exists($GLOBALS['htmlPath'].$NAFpath.$str)) { ?>
