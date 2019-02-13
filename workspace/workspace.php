@@ -17,13 +17,16 @@ if (!isset($_REQUEST['fn']) && !isset($_REQUEST['fnPath']) && !preg_match('/canc
 	$_SESSION['errorData']['Error'][] = "Selected operation ('".$_REQUEST['op']."') requires at least one file. Any file name received.";
 	header("location:../workspace/");
 }
-if (is_array($_REQUEST['fn']))
+if (is_array($_REQUEST['fn']) && $_REQUEST['op'] != 'moveFiles')
 	$_REQUEST['fn']=$_REQUEST['fn'][0];
     	
 $fileData = $GLOBALS['filesCol']->findOne(array('_id' => $_REQUEST['fn'], 'owner' => $_SESSION['User']['id']));
 $fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $_REQUEST['fn']));
 $filePath = getAttr_fromGSFileId($_REQUEST['fn'],'path'); 
 $rfn      = $GLOBALS['dataDir']."/$filePath";
+
+// user project directory
+$userPath = getAttr_fromGSFileId($_SESSION['User']['dataDir'],"path");
 
 //
 // Process operation
@@ -54,14 +57,13 @@ if (isset($_REQUEST['op'])){
 	case 'downloadAll':
 
 		$newName= "files.tar.gz";
-		$tmpZip = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp/".basename($newName); 
+		$tmpZip = $GLOBALS['dataDir']."/".$userPath."/".$GLOBALS['tmpUser_dir']."/".basename($newName); 
 
 		$fls = "";
 
 		foreach( $_GET['fn'] as $v ) {
 			if($v !== 'undefined'){
 				$filePath2 = getAttr_fromGSFileId($v,'path'); 
-				//$rfn2      = $GLOBALS['dataDir']."/$filePath2";
 				$relpath = implode("/", array_slice(split('/',$filePath2), 0, -1));
 				$filnam = end(split('/',$filePath2));
 				$rfn2      = $GLOBALS['dataDir']."/$relpath";
@@ -90,7 +92,7 @@ if (isset($_REQUEST['op'])){
 			break;
 		}
 		$newName= $_REQUEST['fn'].".tar.gz";
-		$tmpZip = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp".basename($newName); 
+		$tmpZip = $GLOBALS['dataDir']."/".$userPath."/".$GLOBALS['tmpUser_dir']."/".basename($newName); 
 
 		$cmd = "/bin/tar -czf $tmpZip -C $rfn .  2>&1";
 		exec($cmd,$output);
@@ -176,52 +178,6 @@ if (isset($_REQUEST['op'])){
 		print passthru("/bin/cat \"$rfn\"");
 		exit;
 
-	case 'deleteAll_obsolete':
-		foreach( $_GET['fn'] as $v ) {
-			$fileData2 = $GLOBALS['filesCol']->findOne(array('_id' => $v, 'owner' => $_SESSION['User']['id']));
-			$fileMeta2 = $GLOBALS['filesMetaCol']->findOne(array('_id' => $v));
-			$filePath2 = getAttr_fromGSFileId($v,'path'); 
-			$rfn2      = $GLOBALS['dataDir']."/$filePath2";
-            
-			$r = deleteGSFileBNS($v);
-			if ($r == 0){
-				$_SESSION['errorData']['error'][]="Cannot delete '$filePath' file from repository";
-				//break;
-			}
-			unlink($rfn2);
-			if (error_get_last()){
-				$_SESSION['errorData']['error'][]=error_get_last()["message"];
-				//break;
-			}
-
-			if ($fileMeta2['format'] == "BAM"){
-				$bai  = $GLOBALS['dataDir']."/$filePath2.bai";
-				$_SESSION['errorData']['info'][]="Associated file BAI=$bai to be deleted. TODO";
-				if (is_file($bai)){
-					//TODO delete associated files
-					$_SESSION['errorData']['info'][]="TODO .. delete associated files";
-					//unlink ($bai);
-				}
-			}
-			$GLOBALS['filesMetaCol']->remove(array('_id'=> $v));
-		}
-		break;
-
-	case 'deleteSure_obsolete':
-        $r = deleteGSFileBNS($_REQUEST['fn']);
-		if ($r == 0){
-			$_SESSION['errorData']['error'][]="Cannot delete '$filePath' file from repository";
-			break;
-		}
-		unlink($rfn);
-		if (error_get_last()){
-			$_SESSION['errorData']['error'][]=error_get_last()["message"];
-			break;
-		}
-
-		$GLOBALS['filesMetaCol']->remove(array('_id'=> $_REQUEST['fn']));
-		break;
-
 	case 'deleteAll':
     case 'deleteSure':
         $r = deleteFiles($_REQUEST['fn']);
@@ -297,30 +253,38 @@ if (isset($_REQUEST['op'])){
 		break;
 
 	case 'cancelJobSure':
-		$userJobs = getUserJobs($_SESSION['User']['_id']);
 		
 		$r = delJob($_REQUEST['pid']);
-//		//$r = delJobFromOutfiles($_REQUEST['fn']);
-		print "fet";
+        if (!$r){
+            $_SESSION['errorData']['Error'][]= "Cannot cancel task. Unsuccessfully exit of 'deljob' for job $pid.";
+        }
+        //$r = delJobFromOutfiles($_REQUEST['fn']);
 		break;
 
 	case 'cancelJobDirSure':
 		$jobList=Array();
-		$jobData = getUserJobs($_SESSION['User']['_id']);
+        $jobData = getUserJobs($_SESSION['User']['_id']);
+        $delJobs_ok = 1;
+
 		if (count($jobData)){
 	  	    foreach ($jobData as $jobId =>$data){
-			if ($data['outDir'] == $filePath){
-				$r = delJob($jobId);
-			}
-			
+			    if ($data['output_dir'] == $rfn){
+                    $r = delJob($jobId);
+                    if (!$r){
+                        $_SESSION['errorData']['Error'][]= "Cannot cancel '".$jobData["execution"]."' task. Unsuccessfully exit of 'deljob' for job $pid.";
+                        $delJobs_ok=0;
+                        continue;
+                    }
+
+			    }
 		    }
 		}
-		if (count($fileData['files'])==0 && !isset($_SESSION['errorData']['SGE'])){
-		        $r = deleteGSDirBNS($_REQUEST['fn']);
-		        if ($r == 0)
+		if ($delJobs_ok && count($fileData['files'])==0 && !isset($_SESSION['errorData']['SGE'])){
+		    $r = deleteGSDirBNS($_REQUEST['fn']);
+		    if ($r == 0)
 	        	    break;
-			exec ("rm -r \"$rfn\" 2>&1",$output);
-		        $_SESSION['errorData']['error'][]=implode(" ",$output);
+            exec ("rm -r \"$rfn\" 2>&1",$output);
+		    $_SESSION['errorData']['Error'][]=implode(" ",$output);
 		}
 		break;
 
@@ -516,7 +480,57 @@ if (isset($_REQUEST['op'])){
 //		exec($cmd, $output);
 //		$_SESSION['errorData']['error'][] = implode(" ", $output);
 //		chdir($_SESSION['User']->dataDir);
-		break;
+        break;
+
+
+    case 'moveFiles':
+    case 'moveFile':
+        if (!isset($_REQUEST['target'])){
+		    print('{"error":true, "msg": "Error while moving file. Target path not given."}');die();
+            break;
+        }
+
+        // Move file/s
+        $r = moveFiles($_REQUEST['fn'],$_REQUEST['target']);
+                
+        if ($r === FALSE){
+            $msg = printErrorData();
+			print('{"error":true, "msg": "'.$msg.'"}');die();
+        }else{
+            $_SESSION['errorData']['Info'][]="File/s successfully moved!";
+            print('{"error":false, "msg": "File/s successfully moved!"}');die();
+        }
+
+        break;
+
+
+    case 'moveDir':
+        if (!isset($_REQUEST['target'])){
+            $_SESSION['errorData']['Error'][]="Error while moving directory. Target path not given.";
+						print('{"error":true, "msg": "Error while moving directory. Target path not given."}');die();
+            break;
+        }
+        $rfn_target = $GLOBALS['dataDir']."/".$_REQUEST['target'];
+
+        // Move file in mongo
+        $r = moveGSDirBNS($filePath,$_REQUEST['target']);
+                
+        if ($r == "0"){
+            $_SESSION['errorData']['Error'][]="Error while moving directory";
+						print('{"error":true, "msg": "Error while moving directory"}');die();
+            break;
+        }
+        // Move dir in disk
+        rename($rfn,$rfn_target);
+        if (!is_dir($rfn_target)){
+            $_SESSION['errorData']['Error'][]="Error while writting moved directory";
+            break;
+        }
+        $_SESSION['errorData']['Info'][]="Directory successfully moved!";
+			print('{"error":false, "msg": "Directory successfully moved!"}');die();
+        break;
+    case 'moveDirAll':
+        break;
   }
 }
 
