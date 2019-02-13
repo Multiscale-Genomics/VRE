@@ -9,13 +9,17 @@ if(!$_POST){
 	echo "Network error, please reload the Workspace";
 }
 
-
+// getting data types of all the selected files
 $fdt = getFiles_DataTypes($_REQUEST["fn"]);
 
+// getting all combinations for every tool
 $dt = getTools_DataTypes();
+//var_dump($dt);
 
+// getting all possible tools according to the given data types and tools combinations
 $toolsList = getTools_ByDT($dt, $fdt);
 
+// getting id / name pairs for all tools
 $tools = getTools_ListByID($toolsList, 1);
 
 sort($tools);

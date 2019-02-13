@@ -2,26 +2,72 @@
 
 require "Tooljob.php";
 
+// list tools
+
 function getTools_List($status = 1) {
    if ($_SESSION['User']['Type'] == 3){
        $tools = $GLOBALS['toolsCol']->find(array('external' => true, 'status' => $status, 'owner.license' => array('$ne' => "free_for_academics")), array('name' => 1, 'title' => 1, 'short_description' => 1, 'keywords' => 1))->sort(array('title' => 1));
-   }else{
+	 } elseif($_SESSION['User']['Type'] == 0 || $_SESSION['User']['Type'] == 1) {
+		 $tools = $GLOBALS['toolsCol']->find(array('external' => true, 'status' => array('$ne' => 2)), array('name' => 1, 'title' => 1, 'short_description' => 1, 'keywords' => 1, 'status' => 1))->sort(array('title' => 1));
+	 } else {
        $tools = $GLOBALS['toolsCol']->find(array('external' => true, 'status' => $status), array('name' => 1, 'title' => 1, 'short_description' => 1, 'keywords' => 1))->sort(array('title' => 1));
    }
 
-	return iterator_to_array($tools);	
+	 if($_SESSION['User']['Type'] == 1) {
+
+		 $tools_list = iterator_to_array($tools);
+
+		 foreach($tools_list as $key => $tool) {
+
+			 if($tool["status"] == 3 && !in_array($tool["_id"], $_SESSION['User']["ToolsDev"])) {
+				 unset($tools_list[$key]);
+			 }
+
+		 }
+
+			return $tools_list;
+
+	 } else {
+		return iterator_to_array($tools);	
+	 }
 
 }
 
+// list tools
+
+function getTools_ListComplete($status = 1) {
+   if ($_SESSION['User']['Type'] == 3){
+       $tools = $GLOBALS['toolsCol']->find(array('external' => true, 'status' => $status, 'owner.license' => array('$ne' => "free_for_academics")), array())->sort(array('title' => 1));
+	 }elseif($_SESSION['User']['Type'] == 0 || $_SESSION['User']['Type'] == 1) {
+	 		$tools = $GLOBALS['toolsCol']->find(array('external' => true, 'status' => array('$ne' => 2)), array())->sort(array('title' => 1));
+	 }else{
+       $tools = $GLOBALS['toolsCol']->find(array('external' => true, 'status' => $status), array())->sort(array('title' => 1));
+   }
+
+	if($_SESSION['User']['Type'] == 1) {
+
+		 $tools_list = iterator_to_array($tools);
+
+		 foreach($tools_list as $key => $tool) {
+
+			 if($tool["status"] == 3 && !in_array($tool["_id"], $_SESSION['User']["ToolsDev"])) {
+				 unset($tools_list[$key]);
+			 }
+
+		 }
+
+			return $tools_list;
+
+	 } else {
+		return iterator_to_array($tools);	
+	 }	
+
+}
+
+// list tools
 
 function getTool_fromId($toolId,$indexByName=0) {
         $filterfields=array();
-        if ($short){
-                $filterfields = array(  'arguments'   => false,
-                                        'input_files' => false,
-                                        'output_files'=> false
-                                     ); 
-        }
         $tool = $GLOBALS['toolsCol']->findOne(array('_id' => $toolId), $filterfields);
         
         if (empty($tool))
@@ -52,6 +98,125 @@ function getTool_fromId($toolId,$indexByName=0) {
 
 }
 
+// list visualizers
+
+function getVisualizer_fromId($toolId,$indexByName=0) {
+        $filterfields=array();
+        $tool = $GLOBALS['visualizersCol']->findOne(array('_id' => $toolId)/*, $filterfields*/);
+        
+        if (empty($tool))
+                return 0;
+
+        if ($indexByName){
+		$toolIndexed=Array();
+                foreach ($tool as $attribute => $value){
+                        if (is_array($value)){
+			    $t=0;
+                            foreach ($value as $v){
+                                if (isset($v['name'])){
+					$t=1;
+                                        $toolIndexed[$attribute][$v['name']]=$v;
+				}
+                            }
+			    if (!$t){
+				$toolIndexed[$attribute]=$value;
+			    }   
+                        }else{
+			    $toolIndexed[$attribute]=$value;
+			}
+                }
+		$tool = $toolIndexed;
+								}   
+	return $tool;
+
+
+}
+
+// get Tool under development
+
+function getToolDev_fromId($toolId,$indexByName=0) {
+    $tool = $GLOBALS['toolsDevMetaCol']->findOne(array('_id' => $toolId));
+
+    if (empty($tool))
+        return 0;
+
+    if ($indexByName){
+        if ($tool["step1"]["tool_io"]){
+		        $toolIndexed=Array();
+                foreach ($tool['step1']['tool_io'] as $attribute => $value){
+                        if (is_array($value)){
+			                $t=0;
+                            foreach ($value as $v){
+                                if (isset($v['name'])){
+					               $t=1;
+                                   $toolIndexed[$attribute][$v['name']]=$v;
+				                }
+                            }
+			                if (!$t){
+				                $toolIndexed[$attribute]=$value;
+			                }   
+                        }else{
+			                $toolIndexed[$attribute]=$value;
+			            }
+                }
+		        $tool["step1"]["tool_io"] = $toolIndexed;
+        }      
+        if ($tool["step3"]["tool_spec"]){
+		        $toolIndexed=Array();
+                foreach ($tool['step3']['tool_spec'] as $attribute => $value){
+                        if (is_array($value)){
+			                $t=0;
+                            foreach ($value as $v){
+                                if (isset($v['name'])){
+					               $t=1;
+                                   $toolIndexed[$attribute][$v['name']]=$v;
+				                }
+                            }
+			                if (!$t){
+				                $toolIndexed[$attribute]=$value;
+			                }   
+                        }else{
+			                $toolIndexed[$attribute]=$value;
+			            }
+                }
+		        $tool["step3"]["tool_spec"] = $toolIndexed;
+        }      
+    }
+	return $tool;
+}
+
+// delete Tool under development
+
+function deleteToolDev($toolId) {
+    $tool = $GLOBALS['toolsDevMetaCol']->findOne(array('_id' => $toolId));
+    if (!$tool){
+        $_SESSION['errorData']['Warning'][]="Cannot delete tool '$toolId'. Entry not found.";
+        return 1;
+    }
+    // Clean associated dev files
+    $dev_dir = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.dev/".$toolId;
+    if (is_dir($dev_dir)){
+        exec ("rm -r \"$dev_dir\" 2>&1",$output);
+   		if (error_get_last()){
+            $_SESSION['errorData']['Error'][]="Cannot delete tool '$toolId'.";
+			$_SESSION['errorData']['Error'][]=implode(" ",$output);
+            return 0;
+        }
+    }
+
+    // Delete from mongo
+    $GLOBALS['toolsDevMetaCol']->remove(array('_id'=> $toolId));
+
+    $tool = $GLOBALS['toolsDevMetaCol']->findOne(array('_id' => $toolId));
+    if ($tool){
+        $_SESSION['errorData']['Error'][]="Cannot delete tool '$toolId' from DB. An error occurred.";
+        return 0;
+    }
+    return 1;
+}
+
+// has tool custom visualizer
+
 function hasTool_custom_visualizer($toolId){
         $has_custom_visualizer = $GLOBALS['toolsCol']->findOne(array('_id' => $toolId,
 					            'output_files' =>array('$elemMatch' => array("custom_visualizer"=>true) )),
@@ -60,12 +225,15 @@ function hasTool_custom_visualizer($toolId){
 	return $has_custom_visualizer;
 }
 
+
+// launch tool - used for internal tools
+ 
 function launchToolInternal($toolId,$inputs=array(),$args=array(),$outs=array(),$output_dir="",$logName=""){
 
 	// Get tool.
     $tool = getTool_fromId($toolId,1);
     if (empty($tool)){
-        $_SESSION['errorData']['Error'][]="Tool not specified or not registered. Please, register '$toolId'";
+        $_SESSION['errorData']['Error'][]="Tool internal not specified or not registered. Please, register '$toolId'";
         return 0;
     }
     if ($tool['external'] !== false){
@@ -74,10 +242,11 @@ function launchToolInternal($toolId,$inputs=array(),$args=array(),$outs=array(),
     }
 
     // Set Tool job - tmp working dir
-    $project = 0;   // internal tool do not create a project folder
+    $execution = 0;   // internal tool do not create a execution folder
+    $project   = 0;   // internal tool do not have an associated project
     $descrip = "Internal job execution of ".$tool['name'];
 
-	$jobMeta  = new Tooljob($tool,$project,$descrip,$output_dir);
+	$jobMeta  = new Tooljob($tool,$execution,$project,$descrip,$output_dir);
 
     
 	// Set LogName
@@ -138,8 +307,7 @@ function launchToolInternal($toolId,$inputs=array(),$args=array(),$outs=array(),
 }
 
 
-
-function parse_configFile($configFile){
+function parse_configFile_OBSOLETE($configFile){
 	$configParsed = array();
 
 	// load config as json
@@ -168,10 +336,8 @@ function parse_configFile($configFile){
 }
 
 
-function parse_submissionFile_SGE($rfn){
+function parse_submissionFile_SGE_OBSOLETE($rfn){
         $cmdsParsed = array();
-///orozco/services/Rdata/Web/apps/nucleServ_MuG/nucleosomeDynamics_wf.py --config /orozco/services/Rdata/MuG/MuG_userdata//MuGUSER57ecf22d91df3/pyNewProj/.config.json --root_dir /orozco/services/Rdata/MuG/MuG_userdata//MuGUSER57ecf22d91df3 --metadata /orozco/services/Rdata/MuG/MuG_userdata//MuGUSER57ecf22d91df3/pyNewProj/.metadata.json --out_metadata /orozco/services/Rdata/MuG/MuG_userdata//MuGUSER57ecf22d91df3/pyNewProj/.results.json >> /orozco/services/Rdata/MuG/MuG_userdata//MuGUSER57ecf22d91df3/pyNewProj/.tool.log 2>&1
-
 
         $cmds = preg_grep("/^\//",file($rfn));
         $cwd  = str_replace("cd ","",join("",preg_grep("/^cd /", file($rfn))));
@@ -205,13 +371,13 @@ function parse_submissionFile_SGE($rfn){
                                         continue;
                                 if (!$v)
                                         $v="";
-                                // if paramValue is a file, show only 'project/filename'
+                                // if paramValue is a file, show only 'execution/filename'
                                 $v  = str_replace($GLOBALS['dataDir']."/".$_SESSION['User']['id']."/","",$v);
 
                                 // HACK; when rfn comes from sample data, filenames in cmd do not contain the right userId. Cutting filepath using explode
                                 if (preg_match('/^\//',$v)){
-                                        $project = explode("/",$rfn);
-                                        $v = $project[count($project)-2]."/".basename($v);
+                                        $execution = explode("/",$rfn);
+                                        $v = $execution[count($execution)-2]."/".basename($v);
                                 }
                                 $cmdsParsed[$n]['params'][$k]=$v;
                         }
@@ -221,14 +387,27 @@ function parse_submissionFile_SGE($rfn){
         return $cmdsParsed;
 }
 
+// list visualizers
 
-function getVisualizers_List() {
+function getVisualizers_List($status = 1) {
 	
-	$visualizers = $GLOBALS['visualizersCol']->find(array('external' => true), array('name' => 1, 'title' => 1, 'short_description' => 1, 'keywords' => 1))->sort(array('title' => 1));
+	$visualizers = $GLOBALS['visualizersCol']->find(array('external' => true, 'status' => $status), array('name' => 1, 'title' => 1, 'short_description' => 1, 'keywords' => 1))->sort(array('title' => 1));
 
 	return iterator_to_array($visualizers);	
 	
 }
+
+// list visualizers
+
+function getVisualizers_ListComplete($status = 1) {
+	
+	$visualizers = $GLOBALS['visualizersCol']->find(array('external' => true, 'status' => $status), array())->sort(array('title' => 1));
+
+	return iterator_to_array($visualizers);	
+	
+}
+
+// list file_types in use
 
 function getFileTypes_List() {
 	
@@ -264,6 +443,111 @@ function getFileTypes_List() {
 
 }
 
+// list a tool input file combination
+
+function getInputFilesCombinations($tool) {
+
+	$descriptions = [];
+	foreach($tool["input_files_combinations"] as $t) {
+
+		$descriptions[] = $t["description"];
+
+	}
+
+	return implode("~", $descriptions); 
+
+}
+
+// list visualizers
+
+function getVisualizerTableList($file_types, $visualizer = null) {
+
+	$files_list = getGSFiles_filteredBy(array("format" => array('$in' => $file_types), "visible"   => true));
+
+	$list = [];
+
+	foreach ($files_list as $file) {
+		
+		$path = getAttr_fromGSFileId($file["_id"], 'path');
+		$p = explode("/", $path);
+
+		$a = [];
+		$a["id"] = $file["_id"];
+		$a["project"] = getProject($p[1])["name"];
+		$a["execution"] = $p[2];
+		$a["file"] = $p[3];
+		$a["refGenome"] = $GLOBALS['refGenomes_names'][$file["refGenome"]];
+
+		$list[] = $a;
+	}
+
+	$html = '<table id="workspace_st2" class="table display" cellspacing="0" width="100%">';
+
+		$html .= '<thead>';
+			$html .= '<tr id="headerSearch">';
+				$html .= '<th style="background-color: #eee;padding:3px;width:60px;"></th>';
+				$html .= '<th style="background-color: #eee;padding:3px;" class="inputSearch">Files</th>';
+				$html .= '<th style="background-color: #eee;padding:3px;" class="selector">Project</th>';
+				$html .= '<th style="background-color: #eee;padding:3px;" class="selector">Execution</th>';
+				if($visualizer == "jbrowse") $html .= '<th style="background-color: #eee;padding:3px;" class="selector">Reference Genome</th>';
+			$html .= '</tr>';
+			$html .= '<tr id="heading">';
+				$html .= '<th>';
+					$html .= '<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline" style="right:3px">';
+						$html .= '<input type="checkbox" class="checkboxes" value="" onchange="toggleAllFiles(this);" />';
+						$html .= '<span></span>';
+					$html .= '</label>';
+				$html .= '</th>';
+				$html .= '<th>File</th>';
+				$html .= '<th>Project</th>';
+				$html .= '<th>Execution</th>';
+				if($visualizer == "jbrowse") $html .= '<th>Reference Genome</th>';
+			$html .= '</tr>';
+		$html .= '</thead>';
+
+		
+		$html .= '<tbody>';
+
+		$selectedFiles = [];
+
+			foreach($list as $file) { 
+
+				$tr_class = "";
+				
+				$html .= '<tr class="row-clickable '.$tr_class.'">';
+					$html .= '<td>';
+					$html .= '<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">';
+						$html .= '<input type="checkbox" class="checkboxes" value="'.$file["id"].'" onchange="changeCheckbox(this, \''.$file["file"].'\', \''.$file["id"].'\', \'Project01 (TODO) / '.$file["execution"].' /\')" />';
+						$html .= '<span></span>';
+					$html .= '</label>';
+					$html .= '</td>';
+				$html .= '<td>'.$file["file"].'</td>';
+				$html .= '<td>'.$file["project"].'</td>';
+				$html .= '<td>'.$file["execution"].'</td>';
+				if($visualizer == "jbrowse") $html .= '<td>'.$file["refGenome"].'</td>';
+				$html .= '</tr>';
+
+			} 
+
+	$html .= '</tbody>';
+	
+		$html .= '</table>';
+
+		return $html;
+
+}
 
 
-?>
+// has tool custom visualizer
+
+function getToolDev_fromTool($toolId){
+    $r = $GLOBALS['usersCol']->find(array('ToolsDev' =>array('$elemMatch' => array('$eq' => $toolId))),
+        array ("_id" => 1));
+
+    if (empty($r))
+        return Array();
+
+    $r_arr = iterator_to_array($r);
+    return array_keys($r_arr);
+}
+
