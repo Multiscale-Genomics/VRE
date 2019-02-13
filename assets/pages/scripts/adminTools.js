@@ -16,3 +16,55 @@ callShowToolJson = function(tool) {
 	});
 
 }
+
+changeToolStatus = function(tool, op) {
+
+	location.href= baseURL + "applib/changeToolStatusAdmin.php?tool=" + tool + "&status=" + op.value;
+
+}
+
+
+var DataTableMyTools = function() {
+
+	var handleDataTableMyTools = function() {
+
+		var table = $('#sample_editable_1');
+
+		var oTable = table.dataTable({
+
+				"lengthMenu": [
+						[10, 20, -1],
+						[10, 20, "All"] // change per page values here
+				],
+
+				"order": [
+						[0, "asc"]
+				],
+
+				"columnDefs": [{
+						'orderable': false,
+						'targets': [2,3,4]
+				}],
+
+		});
+
+	}
+
+	return {
+        //main function to initiate the module
+        init: function() {
+            handleDataTableMyTools();
+        }
+
+    };
+
+
+}();
+
+
+$(document).ready(function() {
+
+	DataTableMyTools.init();
+
+});
+
