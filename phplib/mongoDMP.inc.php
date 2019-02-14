@@ -50,7 +50,7 @@ function DMP_http($method,$service,$data=false){
     return $resp;
 }
 
-function isGSDirBNSXXX($fn) { ### !OJO: old params were ($col,$fn) !!!
+function isGSDirBNS_TEST($fn) { ### !OJO: old params were ($col,$fn) !!!
 
     // get DMP file
     if ($asRoot){
@@ -68,7 +68,7 @@ function isGSDirBNSXXX($fn) { ### !OJO: old params were ($col,$fn) !!!
         return true;
 }
 
-function getGSFileId_fromPathXXX($fnPath,$asRoot=0) {
+function getGSFileId_fromPath_TEST($fnPath,$asRoot=0) {
 
     // get DMP file
     if ($asRoot){
@@ -76,7 +76,7 @@ function getGSFileId_fromPathXXX($fnPath,$asRoot=0) {
         return 0;
     }
     //$user_id = ($asRoot?$asRoot:$_SESSION['User']['id']);
-    $files = getGSFiles_byUserXXX("path");
+    $files = getGSFiles_byUser_TEST("path");
     if (isset($files[$fnPath])){
         return $files[$fnPath]['_id'];
     }else{
@@ -84,7 +84,7 @@ function getGSFileId_fromPathXXX($fnPath,$asRoot=0) {
     }
 }
 
-function getGSFilesFromDirXXX($dirId,$onlyVisible=0){  ### !OJO: old params were ($dataSelection=Array(),$onlyVisible=0) !!! 
+function getGSFilesFromDir_TEST($dirId,$onlyVisible=0){  ### !OJO: old params were ($dataSelection=Array(),$onlyVisible=0) !!! 
 
     $files=Array();
 
@@ -96,7 +96,7 @@ function getGSFilesFromDirXXX($dirId,$onlyVisible=0){  ### !OJO: old params were
         }
         $dirId = $_SESSION['curDir'];
     }
-    $dir = getGSFile_fromIdXXX($dirId);
+    $dir = getGSFile_fromId_TEST($dirId);
 
     // check dir
     if (!isset($dir['_id'])){
@@ -112,7 +112,7 @@ function getGSFilesFromDirXXX($dirId,$onlyVisible=0){  ### !OJO: old params were
     // Retrieve File Data and Metada for each file in directory
     $count =count( $dir['files']);
 	foreach ($dir['files'] as $d) {
-        $fData = getGSFile_fromIdXXX($d);
+        $fData = getGSFile_fromId_TEST($d);
 
         //clean results: visible files, root dir, mtime
         if ($onlyVisible && (isset($fData['visible']) || $fData['visible'] === false) ){ continue;}
@@ -123,7 +123,7 @@ function getGSFilesFromDirXXX($dirId,$onlyVisible=0){  ### !OJO: old params were
 
         if (isset($fData['files']) && count($fData['files'])>0 ){
 	    	foreach ($fData['files'] as $dd) {
-                $ffData = getGSFile_fromIdXXX($dd);
+                $ffData = getGSFile_fromId_TEST($dd);
                 //clean results: visible files, root dir, mtime
                 if ($onlyVisible && (isset($ffData['visible']) || $ffData['visible'] === false) ){ continue;}
        			if (is_object($ffData['mtime'])){$ffData['mtime'] = $ffData['mtime']->sec;}
@@ -137,7 +137,7 @@ function getGSFilesFromDirXXX($dirId,$onlyVisible=0){  ### !OJO: old params were
 	return $files;
 }
 
-function getGSFile_fromIdXXX($fn,$filter="",$asRoot=0) {
+function getGSFile_fromId_TEST($fn,$filter="",$asRoot=0) {
     // get DMP file
     if ($asRoot){
         $_SESSION['errorData']['Error'][]="Sorry, no admin role defined in DMP yet. Not allowed to get file $fn being user ".$_SESSION['User']['id'];
@@ -174,7 +174,7 @@ function getGSFile_fromIdXXX($fn,$filter="",$asRoot=0) {
 // get files filtered by certain metadata query
 // DMP no not support it
 //
-function getGSFiles_filteredByXXX($fn,$filters) {
+function getGSFiles_filteredBy_TEST($fn,$filters) {
 
     $filter = array_merge(array('user_id' => $_SESSION['User']['id']),$filters);
 
@@ -194,8 +194,8 @@ function getGSFiles_filteredByXXX($fn,$filters) {
 		return array_merge($fileData,$fileMeta);	
 }
 
-function getAttr_fromGSFileIdXXX($fnId,$attr) {
-	$f = getGSFile_fromIdXXX($fnId);
+function getAttr_fromGSFileId_TEST($fnId,$attr) {
+	$f = getGSFile_fromId_TEST($fnId);
 	if (empty($f))
         return false;
 
@@ -205,20 +205,20 @@ function getAttr_fromGSFileIdXXX($fnId,$attr) {
 		return $f[$attr];
 }
 
-function getSizeDirBNSXXX($dir){
+function getSizeDirBNS_TEST($dir){
 	$s=0;
-	$dirObj = getGSFile_fromIdXXX($dir);
+	$dirObj = getGSFile_fromId_TEST($dir);
     if (empty($dirObj) || !isset($dirObj['files']) ){
         $_SESSION['errorData']['mongoDB'][] = $dir ." directory has no files<br/>";
         return 0;
     }
 	$files = $dirObj['files'];
 	foreach ($files as $child){
-	    $childObj = getGSFile_fromIdXXX($child);
+	    $childObj = getGSFile_fromId_TEST($child);
     	if (empty($childObj))
     		continue;
     	if ( isset($childObj['files']) ){
-    		$s += getSizeDirBNSXXX($child);
+    		$s += getSizeDirBNS_TEST($child);
         }elseif(!isset($childObj['size'])){
     		$s +=0;
     	}else{
@@ -230,7 +230,7 @@ function getSizeDirBNSXXX($dir){
 
 // create new directory registry
 
-function createGSDirBNSXXX($dirPath,$asRoot=0) {
+function createGSDirBNS_TEST($dirPath,$asRoot=0) {
 	$col = $GLOBALS['filesCol'];
 	//check dirPath
 	if (strlen($dirPath) == 0){
@@ -255,7 +255,7 @@ function createGSDirBNSXXX($dirPath,$asRoot=0) {
 	}
 
 	// already there?
-	$r = getGSFileId_fromPathXXX($dirPath,1); # OJO TODO: asroot=1 
+	$r = getGSFileId_fromPath_TEST($dirPath,1); # OJO TODO: asroot=1 
 	if ($r != "0"){
 		return $r;
 	}
@@ -269,7 +269,7 @@ function createGSDirBNSXXX($dirPath,$asRoot=0) {
 		$parentId = 0;
 	}else{
 		$parentPath = dirname($dirPath);
-		$parentId   = getGSFileId_fromPathXXX($parentPath,1); # OJO TODO: asroot=1
+		$parentId   = getGSFileId_fromPath_TEST($parentPath,1); # OJO TODO: asroot=1
 		if ($parentId == "0"){
 			$r = createGSDirBNS($parentPath);
 			if ($r=="0")
@@ -277,7 +277,7 @@ function createGSDirBNSXXX($dirPath,$asRoot=0) {
 		}
 	}
 	if ($parentId && $parentId!="0"){
-        $parentObj = getGSFile_fromIdXXX($parentId,"",$asRoot);
+        $parentObj = getGSFile_fromId_TEST($parentId,"",$asRoot);
 		if (isset($parentObj['permissions']) && $parentObj['permissions']== "000" ){
 			$_SESSION['errorData']['mongoDB'][]= "Not permissions to modify parent directory $parent";
 			return 0;
@@ -321,7 +321,7 @@ function createGSDirBNSXXX($dirPath,$asRoot=0) {
 
 // get all files owned by user
 //
-function getGSFiles_byUserXXX($index="_id") {
+function getGSFiles_byUser_TEST($index="_id") {
 
     $files=array();
 
