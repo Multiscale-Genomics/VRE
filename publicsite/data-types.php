@@ -27,6 +27,7 @@ array_multisort($keys, SORT_ASC, $datatypes);
 														<tr>
 															<th>Data type</th>
 															<th>Associated file type (format)</th>
+															<th>Data type identifier</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -40,6 +41,7 @@ array_multisort($keys, SORT_ASC, $datatypes);
 													<tr>
 														<td><?php echo $dt["name"]; ?></td>
 														<td><?php echo implode(", ", $dt["file_types"]); ?></td>
+														<td><?php echo $dt["_id"]; ?></td>
 													</tr>
 
 													<?php
