@@ -34,13 +34,17 @@ foreach (array_values(iterator_to_array($GLOBALS['studiesCol']->find(array(),arr
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>From Repository List</span>
+																	<span>From Repository List</span>
+																	<i class="fa fa-circle"></i>
+															</li>
+															<li>
+																	<span>Array Express</span>
                               </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title">List of Experiments of Array Express
+                        <h1 class="page-title"><a href="https://www.ebi.ac.uk/arrayexpress/browse.html" target="_blank"><img src="assets/layouts/layout/img/ae-logo-64.png" width=40></a> ArrayExpress - Selection of 3D-genomics experiments from ArrayExpress archive.
                         </h1>
                         <!-- END PAGE TITLE-->
                         <!-- END PAGE HEADER-->

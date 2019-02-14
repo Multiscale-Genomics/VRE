@@ -33,7 +33,8 @@ function getData_fromLocal() {
 		
 	for ($i = 0; $i < count($_FILES['file']['tmp_name']); ++$i) {
 
-		$rfnNew = "$wdP/".$_FILES['file']['name']; // $_FILES['file']['name'][$i
+		//$rfnNew = "$wdP/".$_FILES['file']['name']; // $_FILES['file']['name'][$i
+		$rfnNew = "$wdP/".cleanName($_FILES['file']['name']);
 		$size   = $_FILES['file']['size']; // $_FILES['file'][$i]['size'][$i];
 
 		// check upload errors
@@ -197,7 +198,9 @@ function getData_fromURL_DEPRECATED($source, $ext = null) {
     $source_path = explode('?',$source_path[0]);
     $nameFile = basename($source_path[0]);
     
-    $rfnNew = "$wdP/".$nameFile;
+    //$rfnNew = "$wdP/".$nameFile;
+		$rfnNew = "$wdP/".cleanName($nameFile);
+		
 	if(isset($ext)) $rfnNew .= '.'.$ext;
 	$size   = strlen($data);
 
@@ -333,7 +336,7 @@ function getData_fromTXT() {
 	}
 
 	// getting path and file size
-	$rfnNew = "$wdP/".$filename;
+	$rfnNew = "$wdP/".cleanName($filename);
 	if(isset($ext)) $rfnNew .= '.'.$ext;
 	$size   = strlen($data);
 
@@ -475,7 +478,7 @@ function getFeaturesFromDataType($datatype, $filetype) {
 /*                               */
 /*********************************/
 
-function getData_fromRepository($params=array()) { //url, repo, id, taxon
+function getData_fromRepository($params=array()) { //url, repo, id, taxon, filename, data_type
 
     // return url
     $url_experiment = $GLOBALS['url']."/repository/experiment.php?id=".$params['id'];
@@ -496,7 +499,9 @@ function getData_fromRepository($params=array()) { //url, repo, id, taxon
     }
     //filename
     $filename="";
-    if (preg_match('/^Content-Disposition: .*?filename=(?<f>[^\s]+|\x22[^\x22]+\x22)\x3B?.*$/m', $curl_data,$m)){
+    if (isset($params['filename']) && $params['filename']){
+        $filename = $params['filename'];
+    }elseif (preg_match('/^Content-Disposition: .*?filename=(?<f>[^\s]+|\x22[^\x22]+\x22)\x3B?.*$/m', $curl_data,$m)){
         $filename = trim($m['f'],' ";');
     }elseif (preg_match('/^Content-Length:\s*(\d+)/m', $curl_data,$m)){
         $hasLength = $m[1];
@@ -574,7 +579,7 @@ function getData_fromRepository($params=array()) { //url, repo, id, taxon
     
         // working_dir will be set in user temporal dir. Checking it
         // TODO Or NO! maybe we decide to run directly on uploads/
-        $dirTmp = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$GLOBALS['tmpUser_dir'];
+        $dirTmp = $GLOBALS['dataDir']."/".$dataDirPath."/".$GLOBALS['tmpUser_dir'];
         if (! is_dir($dirTmp)){
     	   if(!mkdir($dirTmp, 0775, true)) {
     		$_SESSION['errorData']['error'][]="Cannot create temporal file $dirTmp . Please, try it later.";
@@ -597,18 +602,25 @@ function getData_fromRepository($params=array()) { //url, repo, id, taxon
         // setting tool outputs -- metadata to save in DMP during tool output_file registration
         $descrip=(isset($params['id'])?"Remote file extracted from <a target='_blank' href=\"$url_experiment\">".$params['id']."</a>":"Remote file");
         $taxon = (isset($params['taxon']) && $params['taxon']?$params['taxon']:0);
+        $data_type = (isset($params['data_type']) && $params['data_type']?$params['data_type']:"");
         list($fileExtension,$compressed) = getFileExtension($fnP); 
         $filetypes = getFileTypeFromExtension($fileExtension);
         $filetype =(isset(array_keys($filetypes)[0])?array_keys($filetypes)[0]:"");
 
+        if ($filetype != "" && $data_type != ""){
+            $validated = true ; // Can lead to problems
+        }else{
+            $validated = false;
+        }
+
         $fileOut=array("name"  => "file",
         		   "file_path"=> $fnP,
-    	    	   "data_type"=> "",
+    	    	   "data_type"=> $data_type,
     	    	   "file_type"=> $filetype,
                    "source_id"=> [0],
                    "taxon_id" => $taxon,
         		   "meta_data"=> array(
-                       "validated"   => false,
+                       "validated"   => $validated,
                        "compressed"  => $compressed,
             		   "description" => $descrip)
                    );
@@ -773,7 +785,7 @@ function prepare_getData_fromURL($url,$outdir,$referer,$meta=array()) {
     
         // working_dir will be set in user temporal dir. Checking it
         // TODO Or NO! maybe we decide to run directly on uploads/
-        $dirTmp = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$GLOBALS['tmpUser_dir'];
+        $dirTmp = $GLOBALS['dataDir']."/".$dataDirPath."/".$GLOBALS['tmpUser_dir'];
         if (! is_dir($dirTmp)){
     	   if(!mkdir($dirTmp, 0775, true)) {
     		$_SESSION['errorData']['error'][]="Cannot create temporal file $dirTmp . Please, try it later.";
@@ -937,13 +949,59 @@ function  getData_wget_syncron($toolArgs,$toolOuts,$output_dir,$referer){
 /*                               */
 /*********************************/
 
-function getSampleDataList($status=1) {
+// list sampleData
 
-	$ft = $GLOBALS['sampleDataCol']->find(array('status' => $status))->sort(array('_id' => 1));
+function getSampleDataList($status=1,$filter_tool_status=true) {
 
+    $ft;
+    if ($filter_tool_status){
+        $fa = $GLOBALS['toolsCol']->find(array('status' => 1),array('_id' => 1));
+        $tools_active = array_keys(iterator_to_array($fa));
+
+        // if common/anon user, list sampledata for active tools
+        if ($_SESSION['User']['Type'] == 3 || $_SESSION['User']['Type'] == 2){
+            $ft = $GLOBALS['sampleDataCol']->find(array(
+                                                '$or' => array(
+                                                    array("status" => $status, "tool"=> array('$not' => array('$exists' => 1)) ),
+                                                    array("status" => $status, "tool"=> array('$in'  => $tools_active))
+                                                )
+                                            ))->sort(array('_id' => 1));
+
+        // if admin user, list sampledata regardless tool status    
+        }elseif ($_SESSION['User']['Type'] == 0){
+            $ft = $GLOBALS['sampleDataCol']->find(array('status' => $status))->sort(array('_id' => 1));
+        
+        // if tool dev user, list sampledata for active tools + its own tools
+        }elseif ($_SESSION['User']['Type'] == 1){
+            $fr = $GLOBALS['toolsCol']->find(array('status' => 3,'_id'=> array('$in'=>$_SESSION['User']['ToolsDev'])),array('_id' => 1));
+            $tools_owned = array_keys(iterator_to_array($fr));
+            $ft = $GLOBALS['sampleDataCol']->find(array(
+                                                '$or' => array(
+                                                    array("status" => $status, "tool"=> array('$not' => array('$exists' => 1)) ),
+                                                    array("status" => $status, "tool"=> array('$in'  => array_merge($tools_active,$tools_owned)))
+                                                )
+                                            ))->sort(array('_id' => 1));
+
+        }
+
+    }else{
+        // list active sample data sets, regardless tool status
+        $ft = $GLOBALS['sampleDataCol']->find(array('status' => $status))->sort(array('_id' => 1));
+    }
 	return iterator_to_array($ft);
 
 }
+
+// get sampleData
+
+function getSampleData($sampleData) {
+
+    return  $GLOBALS['sampleDataCol']->findOne(array('_id' => $sampleData));
+
+}
+
+
+// import sampleData into into current WS user 
 
 function getData_fromSampleData($params=array()) { //sampleData
 
@@ -951,13 +1009,14 @@ function getData_fromSampleData($params=array()) { //sampleData
         $params['sampleData']=array($params['sampleData']);
     }
     foreach ($params['sampleData'] as $sampleName ){
-        $_SESSION['errorData']['Info'][]="Importing sample data for '$sampleName'";
-        $r = setUserWorkSpace_sampleData($sampleName,$_SESSION['User']['id']);
+        $_SESSION['errorData']['Info'][]="Importing exemple dataset for '$sampleName'";
+        $dataDir = $_SESSION['User']['id'] ."/".$_SESSION['User']['activeProject'];
+        $r = setUserWorkSpace_sampleData($sampleName,$dataDir);
 		if ($r=="0"){
-            $_SESSION['errorData']['Warning'][] = "Cannot fully inject sample data '$sampleData' into user workspace.";
+            $_SESSION['errorData']['Warning'][] = "Cannot fully inject exemple dataset into user workspace.";
             redirect($GLOBALS['url']."/getdata/sampleDataList.php");
         }else{
-            $_SESSION['errorData']['Info'][] = "Sample data successfuly imported.";
+            $_SESSION['errorData']['Info'][] = "Example data successfuly imported.";
 						//redirect("../workspace");
 						header("Location:".$GLOBALS['url']."/workspace/");
 	    }
