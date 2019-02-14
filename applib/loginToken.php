@@ -8,18 +8,6 @@ use MuG_Oauth2Provider\MuG_Oauth2Provider;
 
 // Setting auth server
 $provider = new MuG_Oauth2Provider(['redirectUri'=> $GLOBALS['URL'] . $_SERVER['PHP_SELF']]);
-/*
-$conf = getConf(__DIR__."/../../conf/oauth2.conf");
-$clientId     = $conf[0];
-$clientSecret = $conf[1];
-$provider = new MuG_Oauth2Provider([
-    'clientSecret'            => $clientSecret,
-    'redirectUri'             => 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'],
-    'urlAuthorize'            => $GLOBALS['urlAuthorize'],
-    'urlAccessToken'          => $GLOBALS['urlAccessToken'], 
-    'urlResourceOwnerDetails' => $GLOBALS['urlResourceOwnerDetails']
-]);
-*/
 
 // Get auth code. Redirect user to the authorization URL
 if (!isset($_GET['code'])) {
@@ -40,6 +28,7 @@ if (!isset($_GET['code'])) {
 
 	
 } else {
+
 
     // Get an access token using the authorization code grant.
     try {
@@ -62,23 +51,33 @@ if (!isset($_GET['code'])) {
     //var_dump($resourceOwner);
     //exit(0);
 
-        
-    // Check if user exists. If not, create it
+    // Check if user exists.
     $u = checkUserLoginExists(sanitizeString($resourceOwner['username']));
 
+
+    // If new user, create or import from anon 
     if (!isSet($u)){
-        $r = createUserFromToken($resourceOwner['username'],$accessToken,$resourceOwner);
-        if (!$r)
-            exit('Login error: cannot create local VRE user');
-	    $u = checkUserLoginExists(sanitizeString($resourceOwner['username']));
-        if (!isSet($u))
-            exit('Login error: failed to create local VRE user');
+
+        // create new user
+        if (!$_SESSION['anonID']){
+            $r = createUserFromToken($resourceOwner['username'],$accessToken,$resourceOwner,false);
+            if (!$r)
+                exit('Login error: cannot create local VRE user');
+    	    $u = checkUserLoginExists(sanitizeString($resourceOwner['username']));
+            if (!isSet($u))
+                exit('Login error: failed to create local VRE user');
+
+        // import user from anon    
+        }else{
+            $r = createUserFromToken($resourceOwner['username'],$accessToken,$resourceOwner,$_SESSION['anonID']);
+        }
     }
 
     // load user
 	//$user = loadUserWithToken($resourceOwner['username'],$accessToken);
-	$user = loadUserWithToken($resourceOwner,$accessToken);
-    
+    $user = loadUserWithToken($resourceOwner,$accessToken);
+
+
     if($user){
         // remediate resource user, if needed 
         if (!$resourceOwner['mug_id']){
