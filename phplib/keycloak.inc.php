@@ -76,3 +76,26 @@ function update_keycloak_user($userId,$userData,$token){
     }
     return true;
 }
+
+function update_keycloak_userPass($userId,$token){
+
+    $url     =   $GLOBALS['authServer']."/admin/realms/mug/users/$userId/execute-actions-email";
+    $headers = array("Content-Type: application/json" , "Authorization: Bearer $token");
+
+    $data = json_encode(array("UPDATE_PASSWORD"));
+
+    list($resp,$info) =put($data,$url,$headers);
+
+    if ($info['http_code'] != 200 && $info['http_code'] != 204){
+        if ($resp){
+            $err = json_decode($resp,TRUE);
+            $_SESSION['errorData']['Warning'][]="Admin access to MuG Auth Server for user password update unauthorized. [".$err['error']."]: ".$err['error_description'];
+        }else{
+           $_SESSION['errorData']['Warning'][]="Admin access to MuG Auth Server for user password update unauthorized.";
+        }
+        return false;
+    }
+    return true;
+
+}
+
