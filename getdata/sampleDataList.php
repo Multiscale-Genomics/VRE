@@ -41,13 +41,13 @@ foreach ($sampleList as $sample){
                                   <i class="fa fa-circle"></i>
                               </li>
                               <li>
-                                  <span>From Sample Data</span>
+                                  <span>From Example Dataset</span>
                               </li>
                             </ul>
                         </div>
                         <!-- END PAGE BAR -->
                         <!-- BEGIN PAGE TITLE-->
-                        <h1 class="page-title">Import Sample Data
+                        <h1 class="page-title">Import Example Dataset
                         </h1>
                         <!-- END PAGE TITLE-->
 												<!-- END PAGE HEADER-->
@@ -84,7 +84,7 @@ foreach ($sampleList as $sample){
 													<div class="portlet box blue-oleo">
                                   <div class="portlet-title">
                                       <div class="caption">
-																				<div style="float:left;margin-right:20px;"> <i class="fa fa-database" ></i> Select sample data</div>
+																				<div style="float:left;margin-right:20px;"> <i class="fa fa-database" ></i> Select example dataset</div>
                                       </div>
                                   </div>
                                   <div class="portlet-body form">
@@ -94,14 +94,14 @@ foreach ($sampleList as $sample){
                                             <div class="col-md-12">
                                                 <div class="form-group">
 																										<input type="hidden"  name="uploadType" value="sampleData"/>
-																										<label class="control-label">List of sample data</label>
+																										<label class="control-label">List of example datasets</label>
                                     <select class="form-control form-field-enabled valid select2naf" name="sampleData[]" id="sampleData" aria-invalid="false">
 																		<option value="">Please select a sample</option>
 																		<?php
 
                                     foreach ($sampleList as $sampleId => $sample){
                                         $sampleName=$sample['name'];
-                                        ?><option value="<?php echo $sample['sample_path'];?>"><?php echo $sampleName;?></option><?php
+																				?><option value="<?php echo /*rtrim($sample['sample_path'], "/");*/ $sample['_id']; ?>"><?php echo $sampleName;?></option><?php
                                     }
                                     ?>
                                     </select>
@@ -115,7 +115,7 @@ foreach ($sampleList as $sample){
 																							<p class="font-grey-mint" >
 																		<?php
                                     foreach ($sampleList as $sampleId => $sample){
-																			?><span class="display-hide sample-description" id="<?php echo rtrim($sample['sample_path'], "/"); ?>">
+																			?><span class="display-hide sample-description" id="<?php echo /*rtrim($sample['sample_path'], "/");*/ $sample['_id']; ?>">
 																				<i class="fa fa-sticky-note" aria-hidden="true"></i> <?php echo $sample['short_description'];?>
 																			</span><?php
                                     }
