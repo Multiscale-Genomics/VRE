@@ -1,17 +1,24 @@
 <?php
 require "../phplib/genlibraries.php";
-require "../phplib/tools.inc.php";
+#require "../phplib/tools.inc.php";
 redirectOutside();
 
+$asRoot = checkAdmin();
 
 if($_REQUEST["type"] != 2) {
     // EXTRACT FILE METADATA FROM DMP FILE
-    $mt   = getGSFile_fromId($_REQUEST["id"]);
+    $mt   = getGSFile_fromId($_REQUEST["id"],"",$asRoot);
     $tool = getTool_fromId($mt["tool"],1);
 }else{
     // EXTRACT JOB METADATA FROM USER JOBS
-	$job = getUserJobPid($_SESSION['User']['_id'],$_REQUEST["id"]);
-	$mt = $job[$_REQUEST["id"]];
+    $login = ($_REQUEST['user']?$_REQUEST['user']:$_SESSION['User']['_id']);
+	$job = getUserJobPid($login,$_REQUEST["id"]);
+    $mt = $job[$_REQUEST["id"]];
+    $job_path = getAttr_fromGSFileId($mt["_id"],"path",$asRoot);
+    if ($job_path){
+        $mt["path"]=$job_path;
+    }
+    
 }
 
 // check Metadata
@@ -22,26 +29,48 @@ if (!$mt){
 
 ?> <h3>Item Metadata</h3><?php 
 
+
+// File Project and Name 
+if($mt["path"] != "") {
+    $name_th = ((isset($mt['type']) && $mt['type']=="dir")? "Directory Name":"File Name");
+    $p = explode("/", $mt['path']);
+    $project_name="foo project";
+    if (isset($mt[project]) && isProject($mt['project'])){
+        $project = getProject($mt['project']);
+        $project_name = $project['name'];
+    }
+    
+?>
+<table class="table table-striped table-bordered">
+    <tbody>
+    <tr>
+        <th><b><?php echo $name_th;?></b></th>
+    </tr>
+	<tr>
+        <td><?php print printFilePath_fromPath($mt['path'],$asRoot);?></td>
+    </tr>
+    </tbody>
+</table>
+<?php
+}
+
 // Description
 
 if($mt["description"] != "") {
 ?>
 <table class="table table-striped table-bordered">
 	<tbody><tr>
-			<th><b>Description 
-				<i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>Tooltip sample</p>"></i>
-			</b></th>
+			<th><b>Description </b></th>
 	</tr>
-				<tr>
-				<td><?php echo nl2br ($mt["description"]); ?></td>
-			</tr>
-		</tbody>
+	<tr>
+			<td><?php echo nl2br ($mt["description"]); ?></td>
+	</tr>
+	</tbody>
 </table>
 <?php
 }
 
 // Validated
-
 
 if(!isset($mt["validated"]) || $mt["validated"]) {
     $mt['validated'] = "TRUE";
@@ -52,11 +81,15 @@ if ($mt['validated'] == "FALSE"){
 ?>
 <table class="table table-striped table-bordered">
 	<tbody><tr>
-			<th><b>Valid metadata</b></th>
+			<th><b>Valid Metadata
+                <i class="icon-question tooltips" data-container="body" data-html="true" data-placement="right" data-original-title="<p align='left' style='margin:0'>This file has missing or incorrect metadata. Please, click 'Validate Metadata' and fill in the form.</p>"></i>
+            </b></th>
         	</tr>
 			<tr>
-            <td><?php echo nl2br ($mt["validated"]); if($mt["validated"] == "FALSE") { ?> 
-            <a style="margin-left:10px;" href="getdata/editFile.php?fn[]=<?php echo $mt["_id"]; ?>" class="btn btn-xs green">Validate Metadata</a>
+            <td><?php echo nl2br ($mt["validated"]);?>
+                &nbsp;&nbsp;
+                <?php if($mt["validated"] == "FALSE") { ?> 
+                    <a style="margin-left:10px;" href="getdata/editFile.php?fn[]=<?php echo $mt["_id"]; ?>" class="btn btn-xs green">Validate Metadata</a>
                 <?php } ?>
             </td>
 	    	</tr>
@@ -81,7 +114,7 @@ if($_REQUEST["type"] == 1) {
     }
     if(!isset($mt["refGenome"])){
         $mt['refGenome'] = "N/A";
-    }elseif($mt['refGenome'] == 0){
+    }elseif($mt['refGenome'] == "0"){
         $mt['refGenome'] = "Other";
     }
 
@@ -173,9 +206,9 @@ if (isset($mt['expiration'])){
 
 <?php
 
-// Tool and Input files
+// Tool
 
-if(isset($mt["tool"]) && isset($mt['input_files'])) {
+if(isset($mt["tool"]) ) {
 ?>
 <table class="table table-striped table-bordered">
 	<tbody><tr>
@@ -188,51 +221,40 @@ if(isset($mt["tool"]) && isset($mt['input_files'])) {
 	</tbody>
 </table>
 
+<?php
+}
+
+
+// Input Files
+
+if(isset($mt['input_files']) ) {
+?>
+
 <table class="table table-striped table-bordered">
-	<tbody><tr>
-			
-			<th><b>File source/s</b></th>
-	       </tr>
-			<tr>
-				
-                <td><?php
-											if (count($mt['input_files'])){
-												?>
-												<ul class="feeds" id="list-files-run-tools">
-																			
-												<?php
-                                              foreach ($mt['input_files'] as $inp){
-												$path = getAttr_fromGSFileId($inp, 'path');
-												$p = explode("/", $path);
-
-												?>
-												<li class="tool-122 tool-list-item">
-												<div class="col1">
-													<div class="cont">
-														<div class="cont-col1">
-															<div class="label label-sm label-info">
-																<i class="fa fa-file"></i>
-															</div>
-														</div>
-														<div class="cont-col2">
-															<div class="desc">
-																<span class="text-info" style="font-weight:bold;"><?php echo $p[1]; ?>  /</span> <?php echo $p[2]; ?> 
-															</div>
-														</div>
-													</div>
-												</div>
-												</li>
-												<?php
-
-											 }
-												?>
-											</ul>
-											<?php
-                     }else{
-                         echo "";
-                    }?>
-                </td>
-			</tr>
+    <tbody>
+    <tr>
+	    <th><b>File source/s</b></th>
+    </tr>
+    <tr>
+        <td><?php
+			if (count($mt['input_files'])){ ?>
+             <ul class="feeds" id="list-files-run-tools">
+																		
+			     <?php
+                foreach ($mt['input_files'] as $input_name => $inps ){
+                  if (!is_array($inps)){
+                    $inps = array($inps);
+                  }
+                  foreach ( $inps as $inp ){
+                    if ($inp == "0"){continue;}
+                    $path = getAttr_fromGSFileId($inp, 'path',$asRoot);
+                    print printFilePath_fromPath($path,$asRoot);
+                  }
+				}?>
+			</ul>
+		    <?php } ?>
+        </td>
+    </tr>
 	</tbody>
 </table>
 <?php
@@ -256,27 +278,8 @@ if(isset($mt["associated_files"])) {
 																			
 												<?php
 											 foreach ($mt['associated_files'] as $inp){
-                                                 $path = getAttr_fromGSFileId($inp, 'path');
-												$p = explode("/", $path);
-
-												?>
-												<li class="tool-122 tool-list-item">
-												<div class="col1">
-													<div class="cont">
-														<div class="cont-col1">
-															<div class="label label-sm label-info">
-																<i class="fa fa-file"></i>
-															</div>
-														</div>
-														<div class="cont-col2">
-															<div class="desc">
-																<span class="text-info" style="font-weight:bold;"><?php echo $p[1]; ?>  /</span> <?php echo $p[2]; ?> 
-															</div>
-														</div>
-													</div>
-												</div>
-												</li>
-												<?php
+                                                $path = getAttr_fromGSFileId($inp, 'path',$asRoot);
+                                                print printFilePath_fromPath($path,$asRoot);
 
 											 }
 												?>
@@ -310,12 +313,15 @@ if(isset($mt["arguments"])) {
                         $k = $tool['arguments'][$k]['description'];
                     }
                     if(gettype($v) == "array") {
-											echo "<tr><td>$k</td><td>";
-											foreach($v as $val) echo $val."<br>";
-											echo "</td></tr>";
-										} else {
-											echo "<tr><td>$k</td><td>$v</td></tr>";
-										}
+						echo "<tr><td>$k</td><td>";
+						foreach($v as $val) echo $val."<br>";
+						echo "</td></tr>";
+                    }elseif(gettype($v) == "boolean") {
+                        $v = ($v?"TRUE":"FALSE");
+                        echo "<tr><td>$k</td><td>$v</td></tr>";
+                    } else {
+						echo "<tr><td>$k</td><td>$v</td></tr>";
+					}
                 }
                 ?>
                     </table>
@@ -328,18 +334,30 @@ if(isset($mt["arguments"])) {
 }
 
 
-// cloudName
+// cloudName, memory and cpus
+$mem = "";
+$cpus = "";
 if(!isset($mt['cloudName']) || strlen($mt["cloudName"]) == 0)
     $mt['cloudName'] = $GLOBALS['cloud'];
+
+if(isset($mt['imageType'])){
+    $mem  = $mt['imageType']['memory'];
+    $cpus = $mt['imageType']['cpus'];
+}elseif(isset($tool['infrastructure']['memory'])){
+    $mem  = $tool['infrastructure']['memory'];
+    $cpus = $tool['infrastructure']['cpus'];
+}
 
 if($mt["cloudName"] != "") {
 ?>
 <table class="table table-striped table-bordered">
 	<tbody><tr>
-			<th><b>Execution cloud infrastructure</b></th>
+    	    <th style="width:50%;"><b>Cloud infrastructure</b></th>
+            <th><b><?php if ($mem){echo "Resources";}?></b></th>
 	</tr>
 			<tr>
 				<td><?php echo $mt['cloudName'];?></td>
+                <td><?php if ($mem){echo "Cores: $cpus &nbsp; RAM: $mem GB";}?></td>
 			</tr>
 	</tbody>
 </table>
@@ -347,6 +365,10 @@ if($mt["cloudName"] != "") {
 }
 ?>
 
+
+
+
+<!--- DATA ONLY FOR DEVEL USERS -->
 
 <?php
 if ($_SESSION['User']['Type']== 0 || $_SESSION['User']['Type'] == 1){
@@ -354,14 +376,14 @@ if ($_SESSION['User']['Type']== 0 || $_SESSION['User']['Type'] == 1){
 
 <h3>Development data</h3>
 
+
 <table class="table table-striped table-bordered">
 	<tbody><tr>
-			<th style="background-color: #e7ecf1;"><b>Metadata resource - <a href="http://multiscale-genomics.readthedocs.io/projects/mg-dm-api/rest.html" title="Data Management RESTful API" target="_blank">DMP</a> (TODO)</b></th>
+			<th style="background-color: #e7ecf1;"><b>Metadata resource - <a href="http://multiscale-genomics.readthedocs.io/projects/mg-dm-api/rest.html" title="Data Management RESTful API" target="_blank">DMP</a></b></th>
 	</tr>
 			<tr>
             <td>
-                <a target="_blank" href="<?php echo $GLOBALS['URL'].'mug/api/dmp/file_meta?file_id='.$_REQUEST['id'];?>"><?php echo $GLOBALS['URL'].'mug/api/dmp/file_meta?file_id='.$_REQUEST['id'];?></a>
-                <?php if ($_SESSION['User']['Type']== 0){ ?>
+                <?php if ($_SESSION['User']['Type']== 0 || $_SESSION['User']['Type'] == 1){ ?>
                     <br/>
                     <pre style="font-size:0.7em;margin:10px 25px;"><?php echo json_encode($mt, JSON_PRETTY_PRINT);?></pre>
                 <?php } ?>
@@ -369,135 +391,78 @@ if ($_SESSION['User']['Type']== 0 || $_SESSION['User']['Type'] == 1){
 			</tr>
 	</tbody>
 </table>
+
+
 <table class="table table-striped table-bordered">
 	<tbody><tr>
-			<th style="background-color: #e7ecf1;"><b>Resource location (TODO)</b></th>
+			<th style="background-color: #e7ecf1;"><b>Resource location</b></th>
 	</tr>
 			<tr>
-			<td><?php echo $mt['path'];?></td>
+            <td><?php
+            if ($mt['path']){echo $mt['path'];}else{echo "Job has no execution directory !!";}?>
+            </td>
 			</tr>
 	</tbody>
 </table>
-<?php
-}
-?>
-
 
 <?php
-
-// SHOWING AUXILIAR FILES ACCORDING DMP FILE
-if($_REQUEST["type"] == 0) {
-
-    $path = dirname($mt['logPath'])."/";
-    //$p = getGSFile_fromId($_REQUEST["id"])['path'];
-	//$path = __DIR__.'/../files/'.$p.'/';
-
-?>
-
-		<?php if( isset($mt['logPath']) && ($_SESSION['User']['Type'] == 0 || $_SESSION['User']['Type'] == 1) ) { ?>
-		<table class="table table-striped table-bordered">
-			<tbody><tr>
-					<th style="background-color: #e7ecf1;"><b>Associated files location</b></th>
-			</tr>
-					<tr>
-								<td><?php echo $path;?></td>
-					</tr>
-			</tbody>
-		</table>
-		<?php } ?>
-
-
-		<div id="meta-log">
-
-				<?php if(file_exists($mt['logPath'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['logPath']); ?>" class="btn green" target="_blank"><i class="fa fa-file-text-o"></i> VIEW LOG FILE </a>
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW LOG FILE   </a>
-				<?php } ?>
-
-				<?php if(($_SESSION['User']['Type'] == 0) || ($_SESSION['User']['Type'] == 1)) { ?>
-
-				<?php if(file_exists($path.'.submit')) { ?>
-                <a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($path.'.submit'); ?>" class="btn green" target="_blank"><i class="fa fa-paper-plane"></i> VIEW SUBMIT FILE </a>
-
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW SUBMIT FILE </a>
-				<?php } ?>
-				<?php if(file_exists($path.'.config.json')) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($path.'.config.json'); ?>" class="btn green" target="_blank"><i class="fa fa-cog"></i> VIEW CONFIG FILE </a>
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW CONFIG FILE </a>
-				<?php } ?>
-				<?php if(file_exists($path.'.input_metadata.json')) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($path.'.input_metadata.json'); ?>" class="btn green" target="_blank"><i class="fa fa-tags"></i> VIEW META FILE </a>
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW META FILE </a>
-				<?php } ?>
-				<?php if(file_exists($path.'.results.json')) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($path.'.results.json'); ?>" class="btn green" target="_blank"><i class="fa fa-line-chart"></i> VIEW RESULTS FILE </a>
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW RESULTS FILE </a>
-				<?php } ?>
-
-				<?php } ?>
-
-		</div>
+                
+if($_REQUEST["type"] == 2) { ?>
+<table class="table table-striped table-bordered">
+	<tbody><tr>
+			<th style="background-color: #e7ecf1;"><b>Job identifier</b></th>
+	</tr>
+	<tr>
+			<td><?php echo $_REQUEST['id'];?></td>
+	</tr>
+	</tbody>
+</table>
 
 <?php
 }
-?>
 
-<?php 
-// SHOWING AUXILIAR FILES ACCORDING USER JOB 
-
-if($_REQUEST["type"] == 2) {
-?>
-		<table class="table table-striped table-bordered">
-			<tbody><tr>
-					<th style="background-color: #e7ecf1;"><b>Job identifier</b></th>
-			</tr>
-					<tr>
-								<td><?php echo $_REQUEST['id'];?></td>
-					</tr>
-			</tbody>
-		</table>
-
-		<div id="meta-log">
-
-				<?php if(file_exists($mt['log_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['log_file']); ?>" class="btn green" target="_blank"><i class="fa fa-file-text-o"></i> VIEW LOG FILE </a>
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW LOG FILE </a>
-				<?php } ?>
-
-
-				<?php if(($_SESSION['User']['Type'] == 0) || ($_SESSION['User']['Type'] == 1)) { ?>
-
-				<?php if(file_exists($mt['submission_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['submission_file']); ?>" class="btn green" target="_blank"><i class="fa fa-paper-plane"></i> VIEW SUBMIT FILE </a>
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW SUBMIT FILE </a>
-				<?php } ?>
-				<?php if(file_exists($mt['config_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['config_file']); ?>" class="btn green" target="_blank"><i class="fa fa-cog"></i> VIEW CONFIG FILE </a>
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW CONFIG FILE </a>
-				<?php } ?>
-				<?php if(file_exists($mt['metadata_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['metadata_file']); ?>" class="btn green" target="_blank"><i class="fa fa-tags"></i> VIEW META FILE </a>
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW META FILE </a>
-				<?php } ?>
-				<?php if(file_exists($mt['stageout_file'])) { ?>
-				<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['stageout_file']); ?>" class="btn green" target="_blank"><i class="fa fa-line-chart"></i> VIEW RESULTS FILE </a>
-				<?php }else{ ?>
-				<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW RESULTS FILE </a>
-				<?php } ?>
-
-				<?php } ?>
-
-		</div>
-
-<?php
 }
 ?>
+<!--- END OF DEVEL USERS -->
+
+
+
+<!--- BLUE BUTTONS -->
+
+<div id="meta-log">
+        <?php
+        // Log button
+        if(file_exists($mt['log_file'])) { ?>
+			<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['log_file']); ?>" class="btn green" target="_blank"><i class="fa fa-file-text-o"></i> VIEW LOG FILE </a>
+		<?php }else{ ?>
+			<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW LOG FILE </a>
+		<?php } 
+    
+        
+        // Devel buttons
+
+        if(($_SESSION['User']['Type'] == 0) || ($_SESSION['User']['Type'] == 1)) { ?>
+
+			<?php if(file_exists($mt['submission_file'])) { ?>
+			<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['submission_file']); ?>" class="btn green" target="_blank"><i class="fa fa-paper-plane"></i> VIEW SUBMIT FILE </a>
+			<?php }else{ ?>
+			<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW SUBMIT FILE </a>
+			<?php } ?>
+			<?php if(file_exists($mt['config_file'])) { ?>
+			<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['config_file']); ?>" class="btn green" target="_blank"><i class="fa fa-cog"></i> VIEW CONFIG FILE </a>
+			<?php }else{ ?>
+			<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW CONFIG FILE </a>
+			<?php } ?>
+			<?php if(file_exists($mt['metadata_file'])) { ?>
+			<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['metadata_file']); ?>" class="btn green" target="_blank"><i class="fa fa-tags"></i> VIEW META FILE </a>
+			<?php }else{ ?>
+			<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW META FILE </a>
+			<?php } ?>
+			<?php if(file_exists($mt['stageout_file'])) { ?>
+			<a href="workspace/workspace.php?op=openPlainFileFromPath&fnPath=<?php echo urlencode($mt['stageout_file']); ?>" class="btn green" target="_blank"><i class="fa fa-line-chart"></i> VIEW RESULTS FILE </a>
+			<?php }else{ ?>
+			<a href="javascript:;" class="btn grey tooltips" data-container="body" data-html="true" data-placement="bottom" data-original-title="<p align='left' style='margin:0'>Fie not available</p>"><i class="fa fa-exclamation-triangle"></i> VIEW RESULTS FILE </a>
+            <?php }
+        } ?>
+</div>
+
