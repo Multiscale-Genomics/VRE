@@ -41,8 +41,12 @@ if (file_exists($avatarImg)){
                     <!-- END RESPONSIVE MENU TOGGLER -->
                     <!-- BEGIN TOP NAVIGATION MENU -->
 										<div class="top-menu">
+
+												<div class="display-hide" id="session-expire-top"> <i class="glyphicon glyphicon-time"></i> Your session will expire in <span>60</span> seconds </div>
+
 												<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
                         <ul class="nav navbar-nav pull-right">
+
                             <!-- BEGIN USER LOGIN DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                             <li class="dropdown dropdown-user">

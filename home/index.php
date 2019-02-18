@@ -5,9 +5,10 @@ redirectOutside();
 
 $tls = getTools_List(1);
 $tlsProv = getTools_List(0);
-$vslzrs = getVisualizers_List();
+$vslzrs = getVisualizers_List(1);
+$vslzrsProv = getVisualizers_List(0);
 
-$toolList = array_merge($tls, $tlsProv, $vslzrs);
+$toolList = array_merge($tls, $tlsProv, $vslzrs, $vslzrsProv);
 
 sort($toolList);
 
@@ -44,11 +45,16 @@ sort($toolList);
                         </p>
 												<div class="portfolio-content portfolio-3">
 
+														<input type="hidden" id="base-url"     value="<?php echo $GLOBALS['BASEURL']; ?>"/>
+				
 														<?php 
 														
 														$kw = array();
 														foreach($toolList as $t) { 
-															foreach($t['keywords'] as $tk) $kw[] = $tk;
+															foreach($t['keywords'] as $tk) {
+																if($tk == "next gen seq") $tk = "next_gen_seq"; 
+																$kw[] = $tk;
+															}
 														}
 
 														$kw = array_unique($kw);
@@ -61,7 +67,7 @@ sort($toolList);
 																		<div data-filter="*" class="cbp-filter-item-active cbp-filter-item btn blue btn-outline uppercase">All</div>
 		
 																		<?php foreach($kw as $k) { ?>
-																		<div data-filter=".<?php echo $k; ?>" class="cbp-filter-item btn blue btn-outline uppercase"><?php echo /*str_replace("-", " ", $k);*/ $k; ?></div>
+																		<div data-filter=".<?php echo $k; ?>" class="cbp-filter-item btn blue btn-outline uppercase"><?php echo str_replace("_", " ", $k); $k; ?></div>
 																		<?php } ?>																	
 	
                                 </div>
@@ -74,8 +80,11 @@ sort($toolList);
 
 																$kw = implode(" ", $t['keywords']);
 
-																if (strpos($kw, 'visualizer') === false) $type = 'tools';
+																if (strpos($kw, 'visualization') === false) $type = 'tools';
 																else $type = 'visualizers';
+
+																$kw = str_replace("next gen seq", "next_gen_seq", $kw);
+
 
 																?>
 

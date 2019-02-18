@@ -11,16 +11,20 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			$currentSection = 'hd';
 		}elseif(dirname($_SERVER['PHP_SELF']) == '/cookies') {
       $currentSection = '';
+		}elseif(dirname($_SERVER['PHP_SELF']) == '/launch') {
+      $currentSection = 'lt';
 		}else{
 			$currentSection = 'uw';
 		}
 		break;
 	case 'input': 
-	case 'output': $currentSection = 'uw';
+	case 'output': $currentSection = 'lt';
+								 break;
+	case 'newProject': $currentSection = 'uw';
 								 break;
 	case 'editFile':$currentSection = 'dt';
 								  break;
-	case 'uploadForm': 
+	case 'uploadForm':	
 	case 'uploadForm2': $currentSection = 'dt';
 					 	    $currentSubSection = 'lc';
 					 	    break;
@@ -41,8 +45,10 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 						break;
 	case 'tools':$currentSection = 'he';
 					  $currentSubSection = 'h6';
+						break;
+	case 'visualizers':$currentSection = 'he';
+					  $currentSubSection = 'h11';
 					  break;
-
 	case 'hdesk':$currentSection = 'he';
 					  $currentSubSection = 'h7';
 					  break;
@@ -57,8 +63,14 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 					  break;
 	case 'repositoryList': 
 	case 'experiment': $currentSection = 'dt';
-					 	   $currentSubSection = 'rp';
-					  	   break;
+											$currentSubSection = 'rp';
+											$currentSubSubSection = 'ae';
+							 break;
+	case 'bignasimList':
+							$currentSection = 'dt';
+							$currentSubSection = 'rp';
+							$currentSubSubSection = 'bs';
+							 break;
 	case 'dataFromTxt': $currentSection = 'dt';
 					 	   $currentSubSection = 'tx';
 					  	   break;
@@ -78,14 +90,29 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 					  	   $currentSubSection = 'au';
 					  	   break;
 	case 'adminTools': $currentSection = 'ad';
-					  	   $currentSubSection = 'at';
+								 $currentSubSection = 'at';
+								 $currentSubSubSection = 'mt';	 
 								 break;
-	case 'jsonValidator': $currentSection = 'ad';
-					  	   $currentSubSection = 'jv';
+	case 'logs': $currentSection = 'ad';
+								 $currentSubSection = 'at';
+								 $currentSubSubSection = 'lg';	 
+								 break;
+	case 'adminJobs': $currentSection = 'ad';
+                      $currentSubSection = 'aj';
+					  break;
+	case 'jsonTestValidator': 
+	case 'jsonSpecValidator':
+	case 'myNewTools': 
+	case 'vmURL':
+	case 'newTool': 
+	case 'createTest': $currentSection = 'ad';
+								 $currentSubSection = 'at';
+								$currentSubSubSection = 'td';
 					  	   break;
 	case 'help': $currentSection = 'he';
-							 $currentSubSection = 'h6';
 							 $a = explode("/", dirname($_SERVER['PHP_SELF']));
+							 if($a[1] == "tools") $currentSubSection = 'h6';
+							 else $currentSubSection = 'h11';
 							 $currentSubSubSection = $a[sizeof($a) - 2];
 							 break;
 	case 'method': $currentSection = 'he';
@@ -131,7 +158,8 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 $tools = getTools_List();
 sort($tools);
 
-
+$visualizers = getVisualizers_List();
+sort($visualizers);
 
 ?>
 
@@ -192,13 +220,26 @@ sort($tools);
                                         </a>
                                     </li>
                                     <li class="nav-item <?php if($currentSubSection == 'rp') { ?>active open<?php } ?>">
-                                        <a href="repository/repositoryList.php" class="nav-link ">
-                                            <span class="title">From Repository</span>
-                                        </a>
+                                        <a href="javascript:;" class="nav-link nav-toggle ">
+																						<span class="title">From Repository</span>
+																						<span class="arrow"></span>
+																				</a>
+																				<ul class="sub-menu">
+																					<li class="nav-item <?php if($currentSubSubSection == 'ae') { ?>active open<?php } ?>">
+																						<a href="repository/repositoryList.php" class="nav-link">
+																						<span class="title"> Array Express </span>
+																						</a>
+																					</li>
+																					<li class="nav-item <?php if($currentSubSubSection == 'bs') { ?>active open<?php } ?>">
+																						<a href="repository/bignasimList.php" class="nav-link">
+																						<span class="title"> BIGNASim </span>
+																						</a>
+																					</li>
+																				</ul>
                                     </li>
                                     <li class="nav-item <?php if($currentSubSection == 'sd') { ?>active open<?php } ?>">
                                         <a href="getdata/sampleDataList.php" class="nav-link ">
-                                            <span class="title">Import sample data</span>
+                                            <span class="title">Import example dataset</span>
                                         </a>
                                     <!--</li>
 																		<li class="nav-item <?php if($currentSubSection == 'id') { ?>active open<?php } ?>">
@@ -213,6 +254,13 @@ sort($tools);
                                     </li>-->
                                 </ul>
                             </li>
+
+														<li class="nav-item  <?php if($currentSection == 'lt') { ?>active open<?php } ?>">
+                                <a href="launch/" class="nav-link nav-toggle">
+                                    <i class="icon-rocket"></i>
+                                    <span class="title">Run Tool / Visualizer</span>
+                                </a>
+														</li>
                            
 														<li class="nav-item  <?php if($currentSection == 'he') { ?>active open<?php } ?>">
                                 <a href="javascript:;" class="nav-link nav-toggle">
@@ -317,6 +365,33 @@ sort($tools);
 																					<?php } ?>
 																				</ul>
 																		</li>
+																		<li class="nav-item  <?php if($currentSubSection == 'h11') { ?>active open<?php } ?>">
+                                        <a href="help/visualizers.php" class="nav-link">
+                                            <span class="title">Visualizers</span>
+																						<span class="arrow <?php if($currentSubSection == 'h11') { ?>open<?php } ?>"></span>
+																				</a>
+																				<ul class="sub-menu">
+																					<?php foreach($visualizers as $t) { 
+																						
+																						$s = $GLOBALS['helpsCol']->find(array('tool' => $t["_id"]));
+
+																						$sections = iterator_to_array($s);
+
+																						$arrSect = array();
+
+																						foreach($sections as $sec) {
+																							$arrSect[] = $sec['help'];
+																						}
+
+																					?>
+																						<li class="nav-item <?php if($currentSubSubSection == $t["_id"]) { ?>active open<?php } ?>">
+																						<a href="visualizers/<?php echo $t["_id"]; ?>/help/help.php" class="nav-link">
+																						<span class="title"> <?php echo $t["name"]; ?> </span>
+																						</a>
+																					</li>
+																					<?php } ?>
+																				</ul>
+																		</li>
 																		<?php if(allowedRoles($_SESSION['User']['Type'], $GLOBALS['NO_GUEST'])){ ?>
 																		<li class="nav-item  <?php if($currentSubSection == 'h7') { ?>active open<?php } ?>">
                                         <a href="help/hdesk.php" class="nav-link ">
@@ -396,8 +471,13 @@ sort($tools);
                                             <span class="title">Users Administration</span>
                                         </a>
 																		</li>
+                                    <li class="nav-item  <?php if($currentSubSection == 'aj') { ?>active open<?php } ?>">
+                                        <a href="admin/adminJobs.php" class="nav-link ">
+                                            <span class="title">Job Administration</span>
+                                        </a>
+																		</li>
 																		<?php } ?>
-                                    <li class="nav-item  <?php if($currentSubSection == 'at') { ?>active open<?php } ?>">
+                                    <!--<li class="nav-item  <?php if($currentSubSection == 'at') { ?>active open<?php } ?>">
                                         <a href="admin/adminTools.php" class="nav-link ">
                                             <span class="title">Tool Administration</span>
                                         </a>
@@ -406,13 +486,37 @@ sort($tools);
                                         <a href="admin/jsonValidator.php" class="nav-link ">
                                             <span class="title">JSON Validator</span>
                                         </a>
-                                    </li>
+																		</li>-->
+																		<li class="nav-item  <?php if($currentSubSection == 'at') { ?>active open<?php } ?>">
+                                        <a href="javascript:;" class="nav-link nav-toggle">
+                                            <span class="title">My tools</span>
+																						<span class="arrow <?php if($currentSubSection == 'at') { ?>open<?php } ?>"></span>
+																				</a>
+																				<ul class="sub-menu">	
+																					<li class="nav-item  <?php if($currentSubSubSection == 'mt') { ?>active open<?php } ?>">
+																						<a href="admin/adminTools.php" class="nav-link ">
+																								<span class="title">Installed</span>
+																						</a>
+																					</li>
+																					<li class="nav-item  <?php if($currentSubSubSection == 'td') { ?>active open<?php } ?>">
+																							<a href="admin/myNewTools.php" class="nav-link ">
+																									<span class="title">Development</span>
+																							</a>
+																					</li>
+																					<li class="nav-item  <?php if($currentSubSubSection == 'lg') { ?>active open<?php } ?>">
+																							<a href="admin/logs.php" class="nav-link ">
+																									<span class="title">Logs</span>
+																							</a>
+																					</li>
+																				</ul>
+																		</li>
+
 								</ul>
                             </li>
 							<?php } ?>
 
-													<li class="nav-item active open beta-long" style="color:#b4bcc8;margin-left:18px;margin-top:10px;font-size:12px;">This is the 1.0 version of MuG VRE</li>
-													<li class="nav-item active open beta-short" style="color:#b4bcc8;margin-left:8px;margin-top:10px;font-size:12px;display:none;">v1.0</li>
+													<li class="nav-item active open beta-long" style="color:#b4bcc8;margin-left:18px;margin-top:10px;font-size:12px;">This is the 1.1 version of MuG VRE</li>
+													<li class="nav-item active open beta-short" style="color:#b4bcc8;margin-left:8px;margin-top:10px;font-size:12px;display:none;">v1.1</li>
 											
                         </ul>
                         <!-- END SIDEBAR MENU -->

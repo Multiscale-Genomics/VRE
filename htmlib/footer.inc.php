@@ -1,4 +1,34 @@
 
+<div class="modal fade bs-modal" id="modalSessionExpired" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Your session has expired!</h4>
+                            </div>
+														<div class="modal-body table-responsive">
+															<div class="row">
+																<div class="col-md-2" style="text-align:center;">
+																	<i class="fa fa-clock-o font-green" aria-hidden="true" style="font-size: 50px;line-height: 45px;"></i>
+																</div>
+																<div class="col-md-10" id="session-text">
+																	Your session has expired after N of inactivity, please log in again or keep using the MuG VRE as a non-registered user.
+																</div>
+															</div>
+														</div>
+														<div class="modal-footer">
+														<?php if ($_SESSION["User"]["Type"] != 3) { ?>
+															<a class="btn green" href="<?php echo $GLOBALS['URL']; ?>/login.php">Log in</a>
+															<a class="btn green" href="<?php echo $GLOBALS['URL']; ?>">Non-registered</a>	
+														<?php } else { ?>
+															<a class="btn green" href="<?php echo $GLOBALS['URL']."?id=".$_SESSION['User']['_id']; ?>">Continue</a>
+															<a class="btn green" href="<?php echo $GLOBALS['URL']; ?>">Start again</a>	
+														<?php }  ?>
+                							
+                            </div>
+                        </div>
+                    </div>
+								</div>
+
 <div class="modal fade bs-modal" id="modalTerms" tabindex="-1" role="basic" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">

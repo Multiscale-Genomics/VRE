@@ -1,11 +1,10 @@
 <?php
 
 require "../phplib/genlibraries.php";
-require "../phplib/tools.inc.php";
+#require "../phplib/tools.inc.php";
 #require "../phplib/Tooljob.php";
 
 redirectOutside();
-
 
 $debug=0;
 
@@ -31,10 +30,13 @@ if ($debug){
 	}
 	}
 }
+
 //
 // Get tool.
 
 $tool = getTool_fromId($_REQUEST['tool'],1);
+
+
 if (empty($tool)){
 	$_SESSION['errorData']['Error'][]="Tool not specified or not registered. Please, register '".$_REQUEST['tool']."'";
     	redirect('/workspace/');
@@ -43,8 +45,19 @@ if (empty($tool)){
 //
 // Set Tooljob
 
+/*
+    if (!isset($_REQUEST['execution']) ){ ## TODO: TEMPORAL HACK TO ENSURE WE HAVE EXECUTION VAR. WAIT UNTIL GENIS MODERNIZE ALL FORMS
+    $_REQUEST['execution'] = $_REQUEST['project'];
+    $_REQUEST['project'] = "99";
+    }
+ */
 
-$jobMeta  = new Tooljob($tool,$_REQUEST['project'],$_REQUEST['description']); 
+if (!isset($_REQUEST['execution']) || !isset($_REQUEST['project'])){
+    $_SESSION['errorData']['Internal'][]="Error launching tool. 'execution' or 'project' are not received";
+    redirect('/workspace/');
+}
+
+$jobMeta  = new Tooljob($tool,$_REQUEST['execution'],$_REQUEST['project'],$_REQUEST['description']); 
 
 if ($debug){
 	print "<br/>NEW TOOLJOB SET:</br>";
@@ -68,13 +81,14 @@ $files   = Array(); // distinct file Objs to stage in
 
 $filesId = Array();
 foreach($_REQUEST['input_files'] as $input_file){
-    if (is_array($input_file))
-	$filesId = array_merge($filesId,$input_file);
-    else
-	array_push($filesId,$input_file);
+    if (is_array($input_file)){
+	    $filesId = array_merge($filesId,$input_file);
+    }else{
+        if ($input_file)
+            array_push($filesId,$input_file);
+    }
 }
 $filesId=array_unique($filesId);
-
 
 foreach ($filesId as $fnId){
     $file = getGSFile_fromId($fnId);
@@ -85,11 +99,11 @@ foreach ($filesId as $fnId){
     $files[$file['_id']]=$file;
     $associated_files = getAssociatedFiles_fromId($fnId);
     foreach ($associated_files as $assocId){
-	$assocFile = getGSFile_fromId($assocId);
+    	$assocFile = getGSFile_fromId($assocId);
     	if (!$assocFile){
         	$_SESSION['errorData']['Error'][]="File associated to ".basename($file['path'])." ($assocId) does not belong to current user or has been not properly registered. Stopping execution";
-		redirect('/workspace/');
-	}
+		    redirect('/workspace/');
+	    }
     	$files[$assocFile['_id']]=$assocFile;
     }
 	
@@ -100,20 +114,25 @@ if ($debug){
 	print "<br/></br>TOTAL number of FILES (including associated) : ".count(array_keys($files))."</br>";
 }
 
+
 //
 // Set Arguments
+if (!$_REQUEST['arguments']){
+    $_REQUEST['arguments']=array();
+}
 $jobMeta->setArguments($_REQUEST['arguments'],$tool);
 
 //
 // Set InputFiles
 $r = $jobMeta->setInput_files($_REQUEST['input_files'],$tool,$files);
+
 if ($debug){
 	print "<br/>TOOL Input_files are:</br>";
-	var_dump($jobMeta->input_files);
+    var_dump($jobMeta->input_files);
 }
+
 if ($r == "0"){
-        ?><script type="text/javascript">window.history.go(-1);</script><?php
-         exit(0);
+    redirect($_SERVER['HTTP_REFERER']);
 }
 //
 // Checking input_files locally
@@ -124,9 +143,9 @@ foreach ($files as $fnId => $file) {
     $rfn  = $GLOBALS['dataDir']."/$fn";
     if (! is_file($rfn)){
         $_SESSION['errorData']['Error'][]="File '".basename($fn)."' is not found or has size zero. Stopping execution";
-        ?><script type="text/javascript">window.history.go(-1);</script><?php
-         exit(0);
-    	//redirect($_SERVER['HTTP_REFERER']);
+        ?><script type="text/javascript">//window.history.go(-1);</script><?php
+        //exit(0);
+    	redirect($_SERVER['HTTP_REFERER']);
     }
 
 }
@@ -144,9 +163,7 @@ if ($_REQUEST['input_files_public_dir']){
     	var_dump($files_pub);
     }
     if (!count($files_pub)){
-        ?><script type="text/javascript">window.history.go(-1);</script><?php
-         exit(0);
-    	//redirect($_SERVER['HTTP_REFERER']);
+    	redirect($_SERVER['HTTP_REFERER']);
     }
 
     // Set InputFiles public dir
@@ -156,9 +173,7 @@ if ($_REQUEST['input_files_public_dir']){
     	var_dump($jobMeta->input_files_pub);
     }
     if ($r == "0"){
-        ?><script type="text/javascript">window.history.go(-1);</script><?php
-         exit(0);
-    	//redirect($_SERVER['HTTP_REFERER']);
+    	redirect($_SERVER['HTTP_REFERER']);
     }
 }
 
@@ -172,9 +187,7 @@ if ($debug)
 	echo "<br/></br>WD CREATED SCCESSFULLY AT: $jobMeta->working_dir<br/>";
 
 if (!$jobId){
-        ?><script type="text/javascript">window.history.go(-1);</script><?php
-         exit(0);
-    	//redirect($_SERVER['HTTP_REFERER']);
+    	redirect($_SERVER['HTTP_REFERER']);
 }
 
 //
@@ -186,9 +199,7 @@ $r = $jobMeta->prepareExecution($tool,$files,$files_pub);
 if ($debug)
 	echo "<br/></br>PREPARE EXECUTION RETURNS ($r). <br/>";
 if($r == 0){
-        ?><script type="text/javascript">window.history.go(-1);</script><?php
-         exit(0);
-    	//redirect($_SERVER['HTTP_REFERER']);
+    	redirect($_SERVER['HTTP_REFERER']);
 }
 
 //
@@ -219,6 +230,14 @@ addUserJob($_SESSION['User']['_id'],(array)$jobMeta,$jobMeta->pid);
 if ($debug)
 	exit(0);
 
+if (!isset($_SESSION['errorData']['Error'])){
+    $proj = getProject($jobMeta->project);
+    $_SESSION['errorData']['Info'][]="Job successfully sent! Monitor it at <b>".$proj['name']." &rsaquo; ".$jobMeta->execution." &rsaquo; ".$jobMeta->title."</b>.";
+    if ($_SESSION['User']['activeProject'] != $jobMeta->project){
+        $projWS = getProject($_SESSION['User']['activeProject']);
+        $_SESSION['errorData']['Info'][]="Notice that your current workspace belongs to project '".$projWS['name']."'. Move to '".$proj['name']."' to check out your job.";
+    }
+}
 redirect("/workspace/");
 
 ?>

@@ -43,7 +43,15 @@
         <link href="assets/pages/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/pages/css/treeTable.dataTables.css" rel="stylesheet" type="text/css" />
 				<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />	
-				<link href="assets/global/plugins/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css" />	
+				<link href="assets/global/plugins/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/progress-tracker/progress-tracker.css" rel="stylesheet" type="text/css" />
+			<?php } elseif(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'launch'){ ?>
+					<link href="assets/pages/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />	
+				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
 			<?php } elseif((dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'home') || (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'publicsite')){ ?>
 				<link href="assets/global/plugins/cubeportfolio/css/cubeportfolio.css" rel="stylesheet" type="text/css" />
 			<?php } else { ?>
@@ -57,6 +65,13 @@
 			case 'dataFromID': ?>
 			<link href="assets/global/plugins/typeahead/typeahead.css" rel="stylesheet" type="text/css" />
 			<?php break; 
+			case 'listOfProjects': ?>
+			<link href="assets/pages/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+      <link href="assets/pages/css/treeTable.dataTables.css" rel="stylesheet" type="text/css" />
+			<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />	
+			<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+      <link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+			<?php break; 
 			case 'uploadForm': ?>
 			<link href="assets/global/plugins/dropzone/dropzone.min.css" rel="stylesheet" type="text/css" />
 					<link href="assets/global/plugins/dropzone/basic.min.css" rel="stylesheet" type="text/css" />
@@ -64,14 +79,21 @@
 			case 'uploadForm2':
 			case 'editFile':
 			case 'editFile2': ?>
+			<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
 			<link href="assets/global/plugins/typeahead/typeahead.css" rel="stylesheet" type="text/css" />
 			<?php break; 
 			case 'adminUsers':
 			case 'adminTools':
+			case 'adminJobs':
+			case 'myNewTools':
 			case 'dashboard':
-			case 'repositoryList': ?>
-			<link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
-					<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+			case 'repositoryList':
+			case 'bignasimList':
+            case 'logs': ?>
+    			<link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />	
+    			<link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+	    		<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 			<?php break;
 			case 'help':
 			case 'method':
@@ -83,36 +105,30 @@
 			<link href="assets/global/plugins/markdown/bootstrap-markdown-editor.css" rel="stylesheet" type="text/css" />
 			<?php break;
 			case 'output': ?>
-				<?php if(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/pydockdna'){ ?>
+				<?php if(dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/pydockdna' || dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/pydock'){ ?>
 				<link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
 	        <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/naflex'){ ?>
 				<link href="tools/naflex/css/styles.css" rel="stylesheet" type="text/css" />
+				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/nucldynwf'){ ?>
+				<link href="assets/pages/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/global/plugins/datatables/plugins/fixedColumns/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/nucldynwf_pmes'){ ?>
+				<link href="assets/pages/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/global/plugins/datatables/plugins/fixedColumns/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 				<?php } ?>
 			<?php break;
 			case 'input': ?>
-				<?php if (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/naflex'){ ?>
 				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
 				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/nucldynwf'){ ?>
-				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-        <link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit_map_parse_filter'){ ?>	
-				<link href="assets/global/plugins/typeahead/typeahead.css" rel="stylesheet" type="text/css" />
-				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/tadbit_segment'){ ?>	
-				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/dnadyn'){ ?>
-				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-				<?php } elseif (dirname($_SERVER['PHP_SELF']) == $GLOBALS['BASEURL'].'tools/chromatindyn'){ ?>
-				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-        <link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-				<?php } ?>
+				<link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+				<link href="assets/global/plugins/typeahead/typeahead.css" rel="stylesheet" type="text/css" />	
 			<?php break;
-			case 'jsonValidator': ?>
+			case 'jsonTestValidator':
+			case 'jsonSpecValidator': ?>
 				<link href="assets/global/plugins/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/codemirror/addon/lint/lint.css" rel="stylesheet" type="text/css" />
 			<?php break;
@@ -120,7 +136,12 @@
 				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
 				<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
 			<?php break;
-			case 'tools': ?>
+			case 'createTest': ?>
+				<link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+        	<link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+			<?php break;
+			case 'tools':
+			case 'visualizers': ?>
 				<link href="assets/global/plugins/cubeportfolio/css/cubeportfolio.css" rel="stylesheet" type="text/css" />
 			<?php break ?>;
 
@@ -160,7 +181,8 @@
 			case 'output': ?>
 			<link href="assets/pages/css/customized-tools.css" rel="stylesheet" type="text/css" />
 			<?php break; 
-			case 'tools': ?>
+			case 'tools': 
+			case 'visualizers': ?>
 			<link href="assets/pages/css/portfolio.min.css" rel="stylesheet" type="text/css" />	
 			<?php break; ?>
 		<?php } ?>
@@ -178,11 +200,21 @@
 			case 'editFile2':
 			case 'adminUsers':
 			case 'newUser':
+			case 'newProject':
+			case 'editProject':
+			case 'listOfProjects':
 			case 'editUser':
 			case 'adminTools':
-			case 'jsonValidator':
+			case 'adminJobs':
+			case 'myNewTools':
+			case 'newTool':
+			case 'vmURL':
+			case 'createTest':
+			case 'jsonSpecValidator':
+			case 'jsonTestValidator':
 			case 'dashboard':
 			case 'repositoryList':
+			case 'bignasimList':
 			case 'sampleDataList':
 			case 'experiment':
 			case 'dataFromTxt':
@@ -208,7 +240,10 @@
 			case 'tutorials':
 			case 'references':
 			case 'tools':
+			case 'visualizers':
 			case 'restoreLink':
+			case 'form':
+            case 'logs':
 	
 	?>		
 			<link href="assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />

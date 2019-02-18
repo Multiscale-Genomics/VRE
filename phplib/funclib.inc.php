@@ -73,7 +73,7 @@ function redirectInside(){
 	redirect("/workspace/");
 }
 
-function checkIfSessionUser($url = "/workspace/"){
+function checkIfSessionUser_OBSOLETE($url = "/workspace/"){
 	if(checkLoggedIn()){
 		if($url == 'index.php') $url = "/workspace/";
 		redirect($url);
@@ -132,5 +132,27 @@ function getSize($bytes) {
 
 }
 
+function cleanName($str) {
+
+	return preg_replace('/[\(\) \/\,\#\@\>\<\$\%\&\!\?\¿\¡\*\'\"\{\}\:\;\º\ª\ç]/', '-', $str);
+
+}
+
+function secondsToTime($seconds) {
+    $dtF = new \DateTime('@0');
+    $dtT = new \DateTime("@$seconds");
+    return $dtF->diff($dtT)->format('%H:%I:%S');
+}
+
+function momentToTime($moment) {
+
+    if ($moment){
+        $dtime = DateTime::createFromFormat("Y/m/d*H:i:s",$moment);
+        $timestamp = $dtime->getTimestamp();
+        return $timestamp;
+    }else{
+        return 0;
+    }
+}
 
 ?>

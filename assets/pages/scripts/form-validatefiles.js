@@ -595,5 +595,16 @@ jQuery(document).ready(function() {
   
     }); 
 
+		$(".data-type-selector").select2({
+			placeholder: "Select data type",
+			width: '100%',
+			minimumResultsForSearch: 1
+		});
+
+		$(".file-type-selector").select2({
+			placeholder: "Select file type",
+			width: '100%',
+			minimumResultsForSearch: 1
+		});
 
 });

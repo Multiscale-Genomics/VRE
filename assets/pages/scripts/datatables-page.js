@@ -12,7 +12,7 @@ $(document).ready(function() {
   table = $('#workspace').DataTable({
   //pagingType: "full_numbers",
 	pageLength: 20,
-	lengthMenu: [[5,15,20,-1],[5,15,20,"All"]],
+	lengthMenu: [[20,-1],[20,"All"]],
 	orderCellsTop: true,
 	ordering: true,
 	language: {
@@ -62,13 +62,17 @@ $(document).ready(function() {
 				$(row).css('font-weight', 'bold');
 				$(row).css('color', '#337ab7');
 				if($('td:first-child', row).hasClass('highlighted_folder')) {
-					var folderIcon = '<span class="fa-stack fa-lg" style="height: 0;">' +
+					/*var folderIcon = '<span class="fa-stack fa-lg" style="height: 0;">' +
   				'<i class="fa fa-folder fa-stack-1x font-blue-oleo" style="left:-5px;top: -9px;"></i>' + 
   				'<i class="fa fa-folder-o font-green" style="position: absolute;left: 5px;top: -9px;"></i>' + 
+					'</span>';*/
+					var folderIcon = '<span class="fa-stack fa-lg collapse-folder" style="height: 0;">' +
+  				'<i class="fa fa-folder-open fa-stack-1x font-blue-oleo" style="left:-5px;top: -9px;"></i>' +
+  				'<i class="fa fa-folder-open-o font-green" style="position: absolute;left: 4px;top: -9px;"></i>' +
 					'</span>';
 				}else{
-
-					var folderIcon = '<i class="fa fa-folder" aria-hidden="true" style="font-size:18px;margin-left:5px;"></i>';
+					//var folderIcon = '<i class="fa fa-folder" aria-hidden="true" style="font-size:18px;margin-left:5px;"></i>';
+					var folderIcon = '<i class="fa fa-folder-open collapse-folder" aria-hidden="true" style="font-size:18px;margin-left:5px;"></i>';
 				}
 		 		$('td:first-child .mt-checkbox', row).after(folderIcon);
 
@@ -546,8 +550,62 @@ $(document).ready(function() {
 		window.location.reload();
   } );
 
+	// COLLAPSE FOLDER
+	$('.collapse-folder', table.rows().nodes()).on( 'click', function () {
+
+    var tr = $(this).parent().parent();
+    var td = $(this).parent();
+    var trID = tr.data("tt-id").toString();
+
+    if($(tr).hasClass("folder-off")) {
+      $(tr).removeClass("folder-off");
+      var folderAction = "visible";
+      //open
+      if($(td).hasClass('highlighted_folder')) {
+        $(this).html('<i class="fa fa-folder-open fa-stack-1x font-blue-oleo" style="left:-5px;top: -9px;"></i>' +
+        '<i class="fa fa-folder-open-o font-green" style="position: absolute;left: 4px;top: -9px;"></i>');
+      } else {
+        $(this).removeClass('fa-folder');
+        $(this).addClass('fa-folder-open');
+      }
+    } else {
+      //collapse
+      $(tr).addClass("folder-off");
+      var folderAction = "hidden";
+      if($(td).hasClass('highlighted_folder')) {
+        $(this).html('<i class="fa fa-folder fa-stack-1x font-blue-oleo" style="left:-5px;top: -9px;"></i>' +
+        '<i class="fa fa-folder-o font-green" style="position: absolute;left: 4px;top: -9px;"></i>');
+      } else {
+        $(this).addClass('fa-folder');
+        $(this).removeClass('fa-folder-open');
+      }
+    }
+
+    $(table.rows().nodes()).each(function() {
+      var id = $(this).data("tt-id").toString();
+      var l1 = id.split(".");
+      if(l1.length == 2  && l1[0] == trID) {
+        if(folderAction == "hidden") $(this).hide();
+        else $(this).show();
+      }
+    });
+
+  } );
+	
+	// SELECT2 PROJECT
+  $("#select_project").select2({
+  	placeholder: "Select project",
+  	width: '100%',
+  	minimumResultsForSearch: 1
+  });
 
 });
+
+// TODO
+loadProjectWS = function(id) {
+  console.log(id.value);
+  location.href = baseURL + "applib/manageProjects.php?op=reload&pr_id=" + id.value;
+}
 
 // every time a folder is expanded or collapsed, we must check if there are checked checkboxes
 // this function is outside $ because is called from a function on the dataTables.treeTable.js library (line 137)

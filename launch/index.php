@@ -95,7 +95,7 @@ sort($toolList);
 														
 							$kw = array();
 							foreach($toolList as $t) { 
-								foreach($t['keywords'] as $tk) $kw[] = $tk;
+                                foreach($t['keywords'] as $tk) $kw[] = $tk;
 							}
 
 							sort($kw);	
@@ -116,7 +116,7 @@ sort($toolList);
 							<?php 
 													
 							// TO MODIFY WITH NEW "secondary kws"	
-							$kwt = array();
+                            $kwt = array();
 							foreach($toolList as $t) { 
 								foreach($t['keywords_tool'] as $tk) $kwt[] = $tk;
 							}
