@@ -212,8 +212,39 @@ var Profile = function () {
 					}
          		});
          		
-            }
+            },
+
+
+           /* submitHandler: function(form) {
+				$('#reset-password').prop('disabled', true);
+				$('#reset-password').html('Sending petition...');
+				
+				$.ajax({
+           			type: "POST",
+
+           			url: baseURL + "applib/changeProfilePassword.php",
+           			data: "", 
+           			success: function(data) {
+						d = data.replace(/(\r\n|\n|\r|\t)/gm,"");
+               			if(d == '1'){
+                            if(isFirstTime == 1) location.href = baseURL + 'home';
+
+						}else{
+							$('#err-chg-prf').fadeIn(300);
+						}
+						$('#submit-changes').prop('disabled', false);
+						$('#submit-changes').html('Save Changes');
+					},
+					error: function(data){
+						$('#err-chg-prf').fadeIn(300);
+						$('#submit-changes').prop('disabled', false);
+						$('#submit-changes').html('Save Changes');
+					}
+         		});
+         		
+            }*/
         });
+
 
         $('#form-change-profile input').keypress(function(e) {
             if (e.which == 13) {
