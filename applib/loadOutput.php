@@ -4,9 +4,9 @@ require "../phplib/genlibraries.php";
 redirectOutside();
 
 if($_REQUEST){
-//if($_POST){
 
-	$wd  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp/outputs_".$_REQUEST['project'];
+	$wd  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir']."/outputs_".$_REQUEST['execution'];
+
 	$indexFile = $wd.'/index';
 
 	$results =Array();
@@ -35,7 +35,7 @@ if($_REQUEST){
 
 	if(!count($results)) {
 
-		$files = $GLOBALS['filesCol']->findOne(array('_id' => $_REQUEST['project']), array('files' => 1, '_id' => 0));
+		$files = $GLOBALS['filesCol']->findOne(array('_id' => $_REQUEST['execution']), array('files' => 1, '_id' => 0));
 
 		$has_statistics = false;
 		foreach($files["files"] as $id) {

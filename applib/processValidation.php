@@ -27,9 +27,15 @@ if(!$_REQUEST['fn']){
 	die();
 }
 
+// user project path
+$userPath = getAttr_fromGSFileId($_SESSION['User']['dataDir'],"path");
+
+// file to be processed
+
 $fn     = $_REQUEST['fn'];
 $fnPath = getAttr_fromGSFileId($fn,'path');
 $rfn    = $GLOBALS['dataDir']."/".$fnPath;
+
 
 $resp['fileId']   = $fn;
 $resp['fileName'] = basename($fnPath);
@@ -220,20 +226,20 @@ switch ($_REQUEST['op']) {
 
 	case 'BAM':
 
-            $subs   = get_seds_fromChrNameValidation($fn);
-            $sort   = (isset($_SESSION['validation'][$fn]['action']['sort']            )? true:false);
-            $index  = (isset($_SESSION['validation'][$fn]['action']['index']           )? true:false);
-            $chrs   = (isset($_SESSION['validation'][$fn]['action']['enqueue_chrNames'])? true:false); #TODO !!!
+      $subs   = get_seds_fromChrNameValidation($fn);
+      $sort   = (isset($_SESSION['validation'][$fn]['action']['sort']            )? true:false);
+      $index  = (isset($_SESSION['validation'][$fn]['action']['index']           )? true:false);
+      $chrs   = (isset($_SESSION['validation'][$fn]['action']['enqueue_chrNames'])? true:false); #TODO !!!
 	    
-
-            if (count($subs) || $sort || $index || $chrs){
-                $bamFn  = $rfn;
-                $dirFn  = str_replace("/".basename($fnPath),"",$fnPath);
-                $dirRfn = $GLOBALS['dataDir']."/".$dirFn;
+      if (count($subs) || $sort || $index || $chrs){
+        $bamFn  = $rfn;
+        //$dirFn  = str_replace("/".basename($fnPath),"",$fnPath);
+        //$dirRfn = $GLOBALS['dataDir']."/".$dirFn;
 
 		// prepare temporal dir
-		$dirTmp = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
-		if (! is_dir($dirTmp)){
+		$dirTmp   = $GLOBALS['dataDir']."/".$userPath."/".$GLOBALS['tmpUser_dir'];
+
+        if (! is_dir($dirTmp)){
 		   if(!mkdir($dirTmp, 0775, true)) {
 			$_SESSION['errorData']['error'][]="Cannot create temporal file $dirTmp . Please, try it later.";
 			$resp['state']=0;
@@ -241,7 +247,7 @@ switch ($_REQUEST['op']) {
 		    }
         }
         //output file dir
-		$output_dir  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/uploads";
+		$output_dir  = $GLOBALS['dataDir']."/".$userPath."/uploads"; #$GLOBALS['dataDir']."/".$_SESSION['User']['id']."/uploads";
 
         // enqueue BAMval tool	
 		$resp['state']=3;
@@ -291,19 +297,20 @@ switch ($_REQUEST['op']) {
 
          if ($pid){
 		    $resp['state']=3;
-                    unset($_SESSION['validation'][$fn]);
-                }else{
+            unset($_SESSION['validation'][$fn]);
+         }else{
 		    $resp['state']=0;
-                    $_SESSION['errorData']['Error'][]="Cannot submit BAM preprocessing to the queue. Try it later, sorry.";
+            $_SESSION['errorData']['Error'][]="Cannot submit BAM preprocessing to the queue. Try it later, sorry.";
 		    $resp['msg'] .= printErrorData();
 		    break;
-                }
-           }else{
-		$resp['state']= 1;
-                unset($_SESSION['validation'][$fn]);
-                $_REQUEST['sorted'] = "sorted";
-           }
-	   break;
+         }
+
+      }else{
+	      $resp['state']= 1;
+          unset($_SESSION['validation'][$fn]);
+          $_REQUEST['sorted'] = "sorted";
+      }
+	  break;
 
 	case 'BEDGRAPH':
 	case 'WIG':

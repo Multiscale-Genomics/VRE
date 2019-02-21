@@ -104,7 +104,7 @@ function get_chrAlternatives(){
 // add items in validation action list (SESSION['validation'])
 
 function validateUPLOAD($fn,$inFn,$refGenome,$format){
-        $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+	    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
         $chrs     = Array();
         $chrRefRoot="chr";
 
@@ -216,7 +216,7 @@ function validateUPLOAD($fn,$inFn,$refGenome,$format){
 
 
 function getChrFromWIG($wigFn){
-	$dirTmp    = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$trackLines= "";
 	$stdErr    = "";
 	$chrNames  = Array();
@@ -239,7 +239,7 @@ function getChrFromWIG($wigFn){
 
 function getChrFromGFF($gffFn){
 
-	$dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$chrs     = "";
 	$stdErr   = "";
 	$chrNames = Array();
@@ -269,7 +269,7 @@ function getChrFromGFF($gffFn){
 }
 
 function getChrFromBIGWIG($bwFn){
-	$dirTmp    = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$dirExe    = $GLOBALS['appsDir']."/UCSC/";
 	$trackLines= "";
 	$stdErr    = "";
@@ -292,7 +292,7 @@ function getChrFromBIGWIG($bwFn){
 
 
 function getChrFromBEDGRAPH($bgFn){
-	$dirTmp    = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$trackLines= "";
 	$stdErr    = "";
 	$chrNames  = Array();
@@ -310,7 +310,7 @@ function getChrFromBEDGRAPH($bgFn){
 }
 
 function getChrFromBAM($bamFn){
-	$dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$samtools = "/orozco/services/Rdata/Web/apps/samtools/bin/samtools";
 	$SQs      = "";
 	$stdErr   = "";
@@ -348,7 +348,7 @@ function getChrFromBAM($bamFn){
 }
 
 function runValidatorBAM($bamFn){
-	$dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$bamValidator  = "/orozco/services/Rdata/Web/apps/bamValidator/bamUtil-1.0.13/bin/bam";
 	$report   = 0;
 	$stdErr   = "";
@@ -364,7 +364,7 @@ function runValidatorBAM($bamFn){
 
 /*
 function validateWIG($inFn,$refGenome){
-	$dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$chrs     = Array();
 
 	$chrRef = get_chrNames($refGenome);
@@ -431,7 +431,7 @@ function validateWIG($inFn,$refGenome){
 function validateBAM($bamFn,$refGenome){
 
 	$samtools = "/orozco/services/Rdata/Web/apps/samtools/bin/samtools";
-	$dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$chrs     = Array();
 
 	$chrRef = get_chrNames($refGenome);
@@ -553,7 +553,7 @@ function processBAM($bamId,$type,$cores){
 	$bam      = $fileInfo['path'];
 	$bamFn    = $GLOBALS['dataDir']."/".$bam;
 	$samtools = "/orozco/services/Rdata/Web/apps/samtools/bin/samtools";
-	$dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$bamNew   = $dirTmp. "/".basename($bam); 
 
 	# edit/sort BAM according SESSION[validation] 
@@ -596,7 +596,7 @@ function processBAM($bamId,$type,$cores){
 
 
 function processUPLOAD($inId){
-	$dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$fileInfo = $GLOBALS['filesCol']->findOne(array('_id' => $inId));
     $fileMeta = $GLOBALS['filesMetaCol']->findOne(array('_id' => $inId));
     $in       = $fileInfo['path'];
@@ -647,7 +647,7 @@ function processUPLOAD($inId){
 
 function convert2BW_getCmd($input,$bw,$refGenome){
 	$chrSizes= glob($GLOBALS['refGenomes']. "/*/$refGenomes/$refGenome.fa.chrom.sizes")[0];
-	$dirTmp  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$dirExe  = $GLOBALS['appsDir']."/UCSC/";
 	$ext = pathinfo($input, PATHINFO_EXTENSION);
 	$ext = preg_replace('/_\d+$/',"",$ext);
@@ -672,7 +672,7 @@ function convert2BW_getCmd($input,$bw,$refGenome){
 function convert2BW($fn,$BW,$refGenome,$format){
 	//$chrSizes= $GLOBALS['refGenomes']. "/$refGenome/$refGenome.fa.chrom.sizes";
 	$chrSizes= glob($GLOBALS['refGenomes']. "/*/$refGenomes/$refGenome.fa.chrom.sizes")[0];
-	$dirTmp  = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/.tmp";
+    $dirTmp   = $GLOBALS['dataDir']."/".$_SESSION['User']['id']."/".$_SESSION['User']['activeProject']."/".$GLOBALS['tmpUser_dir'];
 	$dirExe  = $GLOBALS['appsDir']."/UCSC/";
 
 	$input  = $GLOBALS['dataDir']."/".$fn;

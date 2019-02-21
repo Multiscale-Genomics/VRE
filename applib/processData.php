@@ -7,8 +7,6 @@ redirectOutside();
 $dataDirPath = getAttr_fromGSFileId($_SESSION['User']['dataDir'],"path");
 $wd          = $dataDirPath."/uploads";
 
-//$dirTmp    = $GLOBALS['tmpDir']."/$dataDirPath/.tmp";
-
 
 if(empty($_FILES)){
 	$_SESSION['errorData']['upload'][]="ERROR: Recieving blank. Please select a file to upload";
