@@ -12,6 +12,8 @@ $(document).ready(function() {
 		$(/*#html-content-help,*/ '#bt-edit').click(function() {
 			if(firstTime) {
 				firstTime = false;
+				if($('#visualizer').val() == 1) var is_view = 1;
+				else var is_view = 0;
 				$('#editor').markdownEditor({
 					preview: true,
 					height:'calc(100vh - 350px)',
@@ -20,7 +22,7 @@ $(document).ready(function() {
 						callback( marked(content) );
 					},
 					imageUpload: true,
-					uploadPath: baseURL + "applib/uploadImagesHelp.php?tool=" + $('#tool').val()
+					uploadPath: baseURL + "applib/uploadImagesHelp.php?tool=" + $('#tool').val() + "&is_view=" + is_view
 				});
 			}
 

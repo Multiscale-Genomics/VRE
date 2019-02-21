@@ -8,9 +8,13 @@ var Helpdesk = function() {
 					if($(this).val() == "tools") {
 						$('#Tool').prop('disabled', false);
 						$('#row-tools').show();
+						$('#label-msg').html("Message details");
+					}else if($(this).val() == "tooldev"){
+						$('#label-msg').html("Please tell us which kind of tool(s) you want to integrate in the VRE");
 					}else{
 						$('#Tool').prop('disabled', true);
 						$('#row-tools').hide();
+						$('#label-msg').html("Message details");
 					}
 				});
 

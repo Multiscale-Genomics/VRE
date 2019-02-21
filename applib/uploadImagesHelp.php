@@ -8,7 +8,7 @@ if (! empty($_FILES)) {
 	foreach ($_FILES as $file) {
 
 		$uploadOk = 1;
-		$imageFileType = pathinfo($file["name"], PATHINFO_EXTENSION);	
+		$imageFileType = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));	
 
 		// Check is image
 		$check = getimagesize($file["tmp_name"]);
@@ -35,9 +35,13 @@ if (! empty($_FILES)) {
 				break;
 		} else {
 			$filename = uniqid("", true) . ".". pathinfo($file["name"], PATHINFO_EXTENSION);
-			$target_file = $GLOBALS['htmlPath'].'tools/'.$_REQUEST['tool'].'/help/img/' . $filename ;
+	
+			if($_REQUEST["is_view"] == 1) $path = "visualizers";
+			else $path = "tools";
+
+			$target_file = $GLOBALS['htmlPath'].$path.'/'.$_REQUEST['tool'].'/help/img/' . $filename ;
 			if (move_uploaded_file($file["tmp_name"], $target_file)) {
-				$uploadedFiles[] = '/tools/'.$_REQUEST['tool'].'/help/img/' . urlencode($filename);
+				$uploadedFiles[] = '/'.$path.'/'.$_REQUEST['tool'].'/help/img/' . urlencode($filename);
 			}else{
 				$uploadedFiles = array();
 				break;
