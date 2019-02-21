@@ -395,9 +395,9 @@ var Dashboard = function() {
 		
 			$("#spark_registers").sparkline('html', {
                 type: 'bar',
-                width: '100',
-                barWidth: 5,
-                height: '60',
+                width: '300',
+                barWidth: 30,
+                height: '120',
                 barColor: '#006b8f',
 				tooltipFormat: '{{offset:offset}}: {{value}}',
     			tooltipValueLookups: {
@@ -424,8 +424,8 @@ var Dashboard = function() {
 
             $("#spark_types").sparkline('html', {
                 type: 'pie',
-                width: '60',
-                height: '60',
+                width: '120',
+                height: '120',
                 sliceColors: ['#006b8f', '#4dd2ff','#0099cc', '#004d66', '#00ace6'],
 				tooltipFormat: '<span style="color: {{color}}">&#9679;</span> {{offset:names}} ({{percent.1}}%)',	
 				tooltipValueLookups: {
@@ -436,8 +436,8 @@ var Dashboard = function() {
 
             $("#spark_disk").sparkline('html', {
                 type: 'box',
-                width: '100',
-                height: '60',
+                width: '200',
+                height: '120',
                 lineColor: '#006b8f',
 				fillColor: '#ccf2ff',
 				minSpotColor: '#000',
