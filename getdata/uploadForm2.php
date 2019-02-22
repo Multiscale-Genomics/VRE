@@ -254,7 +254,7 @@ redirectOutside();
 
 				  <div class="form-group formatTR" id="formatTR<?php echo $idx;?>">
 				        <label>File Format</label>
-								<select id="format<?php echo $idx;?>" name="format" onchange="customfromFormat(this.value, <?php echo $idx;?>)" class="form-control formatSelector">
+								<select id="format<?php echo $idx;?>" name="format" onchange="customfromFormat(this.value, <?php echo $idx;?>)" class="form-control formatSelector file-type-selector">
 								<option value="" >Select the file format</option>
 								<?php foreach($filetypes as $ft) { ?>
 								<option value="<?php echo $ft['_id']; ?>" <?php if (in_array($fileExtension,$ft['extension'])){echo "selected";}?>><?php echo $ft['_id']; ?></option>
@@ -283,7 +283,7 @@ redirectOutside();
 
 					<div class="form-group display-hide" id="dataType<?php echo $idx;?>">
 				        <label>Data Type <i class="icon-question tooltips" data-container="body" data-placement="right" data-original-title="Data type description"></i></span></label>
-				        <select name="data_type" id="data_type_sel<?php echo $idx;?>" class="form-control" onchange="customfromDataType(this.value, <?php echo $idx;?>)" disabled>
+				        <select name="data_type" id="data_type_sel<?php echo $idx;?>" class="form-control data-type-selector" onchange="customfromDataType(this.value, <?php echo $idx;?>)" disabled>
 								</select>
 								<!--<span class="help-block font-red warn1" style="display:none;">This field is required.</span>-->
 				  </div>

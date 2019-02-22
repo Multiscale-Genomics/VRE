@@ -5,8 +5,8 @@ var SampleData = function() {
 		$("#sampleData").change(function() {
 
 			$(".sample-description").hide();
-
-			$("#" + $(this).val().slice(0,-1)).show();
+	
+			$("#" + $(this).val()).show();
 
 		});
 
@@ -44,7 +44,7 @@ var SampleData = function() {
             submitHandler: function(form) {
 
 							$("#btn-sample").prop('disabled', true);	
-							$("#btn-sample").html('<i class="fa fa-spinner fa-pulse fa-spin"></i> Importing sample data, please don\'t close the tab.');
+							$("#btn-sample").html('<i class="fa fa-spinner fa-pulse fa-spin"></i> Importing example dataset, please don\'t close the tab.');
 
             	form.submit();
 
@@ -54,7 +54,7 @@ var SampleData = function() {
         $("#sampleData").rules("add", {
 					required:true, 
 					messages: {
-						required:"You must select a sample data from the list."
+						required:"You must select an example dataset from the list."
 					}
 				});
 

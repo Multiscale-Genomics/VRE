@@ -46,12 +46,12 @@ function createUser(&$f) {
 	$aux = (array)$objUser;
 
     //load user in current session
-	$_SESSION['userId'] = $aux['id']; //OBSOLETE
-	$_SESSION['User'] = $aux;
+    $_SESSION['userId'] = $aux['id']; //OBSOLETE
+	$_SESSION['User']   = $aux;
 	unset($_SESSION['crypPassword']);
 
     // create user directory 
-	$dataDirId =  prepUserWorkSpace($aux['id']);
+	$dataDirId =  prepUserWorkSpace($aux['id'],$aux['activeProject']);
 	if (!$dataDirId){
         $_SESSION['errorData']['Error'][]="Error creating data dir";
         echo "Error creating data dir";
@@ -70,6 +70,7 @@ function createUser(&$f) {
         return false;
     }
 
+    /*    
     // register user in MuG ldap
     $r = saveNewUser_ldap($aux);
     if (!$r){
@@ -78,6 +79,7 @@ function createUser(&$f) {
 	    unset($_SESSION['User']);
         return false;
     }
+     */
 
     // send mail
 	sendWelcomeToNewUser($aux['_id'], $aux['Name'], $aux['Surname']);
@@ -85,17 +87,31 @@ function createUser(&$f) {
 }
 
 // create user - after being authentified by the Auth Server
-function createUserFromToken($login,$token,$userinfo=array()){
-
-		//var_dump($userinfo);
-		//die();
+function createUserFromToken($login,$token,$userinfo=array(),$anonID=false){
 
     // create full user oject
-    $f = array(
-        "Email"        => $login,
-        "Token"        => $token,
-        "Type"         => 2
-    );
+    if (!$anonID){
+        $f = array(
+            "Email"        => $login,
+            "Token"        => $token,
+            "Type"         => 2
+        );
+    }else{
+        $f = checkUserLoginExists($anonID);
+        // replace currently logged anon user
+        if ($f){
+            $f["Email"] = $login;
+            $f["Token"] = $token;
+            $f["Type"]  = 2;
+        
+        }else{
+          $f = array(
+            "Email"        => $login,
+            "Token"        => $token,
+            "Type"         => 2
+          );
+        }
+    }
     if ($userinfo){
         if ($userinfo['lastName'])
            $f['Surname'] = $userinfo['lastName'];
@@ -115,16 +131,25 @@ function createUserFromToken($login,$token,$userinfo=array()){
     unset($_SESSION['crypPassword']);
 
     // create user directory
-    $dataDirId =  prepUserWorkSpace($aux['id']);
-	if (!$dataDirId){
-        $_SESSION['errorData']['Error'][]="Error creating data dir";
-        echo "Error creating data dir";
-        return false;
+    if (!$aux['dataDir']){
+        // create new workspace
+        $dataDirId =  prepUserWorkSpace($aux['id'],$aux['activeProject']);
+    	if (!$dataDirId){
+            $_SESSION['errorData']['Error'][]="Error creating data dir";
+            echo "Error creating data dir";
+            return false;
+        }
+        $aux['dataDir']= $dataDirId;
+        $_SESSION['User']['dataDir'] = $dataDirId;
+    }else{
+        // change ownership for re-used  workspace
+        print "get files from datadir ".$aux['dataDir']."<br/>\n";
+        $workspace_files = getGSFileIdsFromDir($aux['dataDir'],1);
+        foreach ($workspace_files as $fn){
+        }
     }
-    $aux['dataDir']= $dataDirId;
-    $_SESSION['User']['dataDir'] = $dataDirId;
-
     // register user in mongo. NOT in ldap, as user exists for a oauth2 provider
+
   	$r = saveNewUser($aux);
     if (!$r){
         $_SESSION['errorData']['Error'][]="User creation failed while registering it into the database. Please, manually clean orphan files for ".$aux['id']. "(".$dataDirId.")";
@@ -132,10 +157,15 @@ function createUserFromToken($login,$token,$userinfo=array()){
 	    unset($_SESSION['User']);
         return false;
     }
-
+    if ($anonID){
+    	// if replacing anon user, delete old anon from mongo
+//    	$GLOBALS['usersCol']->remove(array('_id'=> $anonID));    
+    }
+    
     //  inject user['id'] into auth server (keycloak) as 'mug_id' (so APIs will find it in /openid-connect/userinfo endpoint)
     $r = injectMugIdToKeycloak($aux['_id'],$aux['id']);
 
+    exit(0);
     // if not all user metadata mapped from oauth2 provider, ask the user
     if (!$aux['Name'] || !$aux['Surname'] || !$aux['Inst'] || !$aux['Country']){
         redirect('../user/usrProfile.php');
@@ -146,7 +176,7 @@ function createUserFromToken($login,$token,$userinfo=array()){
 
 
 // create anonymous user - without being authentified by the Auth Server
-function createUserAnonymous(){
+function createUserAnonymous($sampleData=""){
 
     // create full user oject
     
@@ -165,9 +195,11 @@ function createUserAnonymous(){
     //load user in current session
     $_SESSION['userId'] = $aux['id']; //OBSOLETE
 	$_SESSION['User']   = $aux;
+	$_SESSION['anonID'] = $aux['Email'];
+
 
     // create user directory
-    $dataDirId =  prepUserWorkSpace($aux['id']);
+    $dataDirId =  prepUserWorkSpace($aux['id'],$aux['activeProject'],$sampleData);
 	if (!$dataDirId){
         $_SESSION['errorData']['Error'][]="Error creating data dir";
         echo "Error creating data dir";
@@ -178,6 +210,7 @@ function createUserAnonymous(){
     $_SESSION['User']['dataDir'] = $dataDirId;
     $_SESSION['User']['terms'] = "1";
 
+
     // register user in mongo. NOT in ldap nor in the oauth2 provider
   	$r = saveNewUser($aux);
     if (!$r){
@@ -186,6 +219,9 @@ function createUserAnonymous(){
 	    unset($_SESSION['User']);
         return false;
     }
+
+    //print "<br/>storing into SESSION : <br/>";
+    //var_dump($_SESSION['User']);
     return true;
 }
 
@@ -199,7 +235,7 @@ function createUserFromAdmin(&$f) {
     $_SESSION['errorData']['Info'][] = "New user data object created. Login = ".$aux['_id']." Password = ".$f['pass1'];
 
     // create user directory
-    $dataDirId =  prepUserWorkSpace($aux['id'],$f['DataSample']);
+    $dataDirId =  prepUserWorkSpace($aux['id'],$aux['activeProject'],$f['DataSample'],array(),TRUE,1);
     if (!$dataDirId){
 		$_SESSION['errorData']['Error'][] = "Error creating new user directory with '".$aux['id']."'. If needed <a href=\"applib/delUser.php?id=".$aux['id']."\">delete user</a>";
         echo "Error creating data dir";
@@ -217,13 +253,14 @@ function createUserFromAdmin(&$f) {
     }
     $_SESSION['errorData']['Info'][] = "New user successfuly created";
 
+    /*
     // register user in MuG ldap
     $r = saveNewUser_ldap($aux);
     if (!$r){
         $_SESSION['errorData']['Error'][]="Failed to register ".$userObj['id']." into LDAP";
         $_SESSION['errorData']['Error'][]="User creation failed while registering it to LDAP. Please, <a href=\"applib/delUser.php?id=".$aux['id']."\">DELETE USER</a>";
         return false;
-    }
+    }*/
 
     // send mail to user, if selected
 	if($f['sendEmail'] == 1) sendPasswordToNewUser($f['Email'], $f['Name'], $f['Surname'], $f['pass1']);
@@ -231,118 +268,58 @@ function createUserFromAdmin(&$f) {
     return true;
 }
 
-// update user document in  Mongo
-function updateUser($f) {
-    $GLOBALS['usersCol']->update(array('_id' => $f['_id']), $f, array('upsert=>1'));
-}
 
 // load user to SESSION
-function setUser($f,$lastLogin) {
+function setUser($f,$lastLogin=FALSE) {
     $aux = (array)$f;
 	unset($aux['crypPassword']);
 	//unset($aux['lastLogin']);
     $_SESSION['User']   = $aux;
 	$_SESSION['curDir'] = $_SESSION['User']['id'];
 
-	if(!isset($_SESSION['lastUserLogin'])) $_SESSION['lastUserLogin'] = $lastLogin;
+	if(!isset($_SESSION['lastUserLogin']) && $lastLogin) $_SESSION['lastUserLogin'] = $lastLogin;
 }
 
-function delUser($id, $asRoot=1){
+function delUser($id, $asRoot=1, $force=false){
 
     //delete data from Mongo and disk
-    $homeId = getGSFileId_fromPath($id,$asRoot);
-    if (!$homeId)
-        $homeId = getGSFileId_fromPath($id."/",$asRoot);
-
-    $home   = getGSFile_fromId($homeId,"all",$asRoot);
-    $rfn   = $GLOBALS['dataDir']."/".$home['path'];
-/*
-    if (empty($home) || !is_dir($rfn) ){
-	    $_SESSION['errorData']['Error'][]="Cannot delete user ID=$id. Its data in the repository ($rfn) or in the databse ($homeId) is not found";
-      return 0;
+    
+    $homePath =  $id;
+    $homeId = getGSFileId_fromPath($homePath,$asRoot);
+    if (!$homeId){
+        $homePath =  "$id/";
+        $homeId = getGSFileId_fromPath($homePath,$asRoot);
     }
-*/
 
-    $r = deleteGSDirBNS($homeId,$asRoot);
-    if ($r == 0){
-	    $_SESSION['errorData']['Error'][]="Cannot delete user entry in database.";
-        return 0;
+    if ($homeId){
+        $home   = getGSFile_fromId($homeId,"all",$asRoot);
+    
+        $r = deleteGSDirBNS($homeId,$asRoot,$force);
+        if ($r == 0){
+	        $_SESSION['errorData']['Error'][]="Cannot delete $homeId directory from database.";
+            if (!$force){return 0;}
+        }
+    }else{
+        $_SESSION['errorData']['Error'][]="Cannot delete user. It has no data registered, at least homeDir '$id/' is not found in DB";
+        if (!$force){return 0;}
     }
- 
 
+    $rfn =  $GLOBALS['dataDir']."/".$homePath;
     if (is_dir($rfn)){
+        print "KK - rm -r '$rfn' 2>&1\n";
 	    exec ("rm -r \"$rfn\" 2>&1",$output);
-      	// if (is_dir($rfn)){
-	    //   $_SESSION['errorData']['Error'][]="Cannot delete user data in repository. '$rfn' still accessible";
-    	//	 $_SESSION['errorData']['Error'][]=implode(" ",$output);
-        //   return 0;
-        //}
     }
 
-
-    //delete user from ldap
+    /*
+    //delete user from KC
     $user = $GLOBALS['usersCol']->findOne(array('id' => $id));
     $r = delUser_ldap($user['_id']);
+     */
 
 	//delete user from mongo
 	$GLOBALS['usersCol']->remove(array('id'=> $id));
 
     return 1;
-
-
-    //delete data from Mongo and disk
-    $data = $GLOBALS['filesCol']->find(array('owner' => $id));
-	if ($data->count() != 0 ){
-	    foreach ($data as $f){
-            $rfn      = $GLOBALS['dataDir']."/".$f['path'];
-    		if ((isset($f['type']) && $f['type']=="dir")  || isset($f['files'])){
-                if (!is_file($rfn))
-                    next;
-    			$r = deleteGSDirBNS($f['_id'],1);
-                if ($r == 0)
-         			return 0;
-	    		if (is_dir($rfn)){
-	               	exec ("rm -r \"$rfn\" 2>&1",$output);
-				    if (is_dir($rfn)){
-		                $_SESSION['errorData']['error'][]="Cannot delete user data $rfn";
-		                $_SESSION['errorData']['error'][]=implode(" ",$output);
-				    }
-			    }
-		    }else{
-                if (!is_dir($rfn))
-                    next;
-			    $r = deleteGSFileBNS($f['_id'],1);
-	            if ($r == 0)
-         		    return 0;
-			    if (is_file($rfn)){
-		        	unlink ($rfn);
-				    if (is_file($rfn)){
-    			        $_SESSION['errorData']['error'][]="Cannot delete user file $rfn";
-    			        if (error_get_last())
-    			            $_SESSION['errorData']['error'][]=error_get_last()["message"];
-    	         		return 0;
-    				}
-			    }
-		    }
-	    }
-	}
-    $data = $GLOBALS['filesCol']->find(array('owner' => $id));
-	if ($data->count() != 0){
-		$_SESSION['errorData']['Error'][]="Cannot delete user. Failed to clean all files onwed by $id. Manual clean required.";
-	    	foreach ($data as $f){
-			    $_SESSION['errorData']['Error'][]= "Cannot delete user file ".$f['path'];
-		    }
-		return 0;
-	}
-    //delete user from ldap
-    $user = $GLOBALS['usersCol']->findOne(array('id' => $id));
-    $r = delUser_ldap($user['_id']);
-
-	//delete user from mongo
-	$GLOBALS['usersCol']->remove(array('id'=> $id));
-
-    return 1;
-
 }
 
 
@@ -375,10 +352,44 @@ function injectMugIdToKeycloak($login,$id){
         return false;
     }
 }
+
+function resetPasswordViaKeycloak($login,$id){
+
+    $kc_token = get_keycloak_admintoken();
+
+    if ($kc_token  && isset($kc_token['access_token'])){
+        $kc_user = get_keycloak_user($login,$kc_token['access_token']);
+        if ($kc_user && isset($kc_user['id'])){
+
+            $r = update_keycloak_userPass($kc_user['id'],$kc_token['access_token']);
+
+            print "AQUI ESTA!!";
+            var_dump($r);
+            die();
+
+            if (!$r){
+                $_SESSION['errorData']['Warning'][]="User not valid to be used outside VRE. Could not inject 'mug_id' into Auth Server. Cannot update ".$aux['_id']." in its registry";
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            $_SESSION['errorData']['Warning'][]="User not valid to be used outside VRE. Could not inject 'mug_id' into Auth Server. Cannot get ".$aux['_id']." from its registry";
+            return false;
+        }
+    }else{
+        $_SESSION['errorData']['Warning'][]="User not valid to be used outside VRE. Could not inject 'mug_id' into Auth Server. Token not created";
+        return false;
+    }
+}
     
     
 function logoutUser() {
     session_unset();
+}
+
+function logoutAnon() {
+    unset($_SESSION['User']);
 }
 
 function saveNewUser($userObj) {
@@ -389,34 +400,72 @@ function saveNewUser($userObj) {
     return true;
 }
 
-function checkUserIDExists($login) {
-	//die("check user login exists");
-    if ($login)
-        $user = $GLOBALS['usersCol']->findOne(array('id' => $login));
+// update user document in  Mongo
 
-    return ($user);
+function updateUser($f) {
+    $GLOBALS['usersCol']->update(array('_id' => $f['_id']), $f, array('upsert=>1'));
+}
+
+// update attribute user document in Mongo
+
+function modifyUser($login,$attribute,$value) {
+    $GLOBALS['usersCol']->update(array('_id'   => $login ),
+                                 array('$set'  => array($attribute => $value)),
+                                 array('upsert' => 1)
+                             );
+}
+
+function checkUserIDExists($userId) {
+    $user= array();
+    if ($userId)
+        $user = $GLOBALS['usersCol']->findOne(array('id' => $userId));
+
+    return $user;
 }
 
 function checkUserLoginExists($login) {
-	//die("check user login exists");
+    $user= array();
     if ($login)
         $user = $GLOBALS['usersCol']->findOne(array('_id' => $login));
 
-    return ($user);
+    return $user;
 }
 
 function loadUser($login, $pass) {
+
+    // check user exists
     $user = $GLOBALS['usersCol']->findOne(array('_id' => $login));
-    //if (!$user['_id'] || !password_verify($pass, $user['crypPassword']) || ($user['Status'] == 0)) {
     if (!$user['_id'] || $user['Status'] == 0) {
-        return False;
-	}
-    if ($user['Type']!=3 && !check_password($pass, $user['crypPassword'])) {
+        $_SESSION['errorData']['Error'][]="Requested user (_id = $login) not found. Cannot load user.";
         return False;
     }
+    // check pass/token verifies - except when loading an ANON or when impersonating
+    $pass_verified =  check_password($pass, $user['crypPassword']);
+    $impersonating =  (isset($_SESSION['User']) && $_SESSION['User']['Type'] == 0 && $pass == 99 ? TRUE : FALSE );
+    $loadingAnon   =  ($user['Type'] == 3 ? TRUE : FALSE );
+
+    if (!$pass_verified){
+        if (!$loadingAnon  && !$impersonating){
+            //$_SESSION['errorData']['Error'][]="Trying to load user without password from SESSION data. Rejected!";
+            // keep open SESSION
+            $user['lastReload'] = moment();
+            updateUser($user);
+            setUser($user);
+            return False;
+        }else{
+            if ($impersonating){
+                $_SESSION['errorData']['Info'][]="User $login successfully impersonated!";
+            }
+        }
+    }
+
+    // edit user to load
 	$auxlastlog = $user['lastLogin'];
     $user['lastLogin'] = moment();
     updateUser($user);
+
+    
+    // load user into SESSION 
     setUser($user,$auxlastlog);
 
     return $user;
@@ -433,6 +482,7 @@ function loadUserWithToken($userinfo, $token){
     $user['lastLogin'] = moment();
     $user['Token']     = $token;
     $user['TokenInfo'] = $userinfo;
+
     updateUser($user);
     setUser($user,$auxlastlog);
 
@@ -495,6 +545,31 @@ function getUserJobs($login) {
         return $r['lastjobs'];
     else
         return Array();
+}
+
+function getAllUserJobs() {
+    $r = $GLOBALS['usersCol']->find(array('$nor' => array(
+                                                            array('lastjobs'=> array('$exists' => false)),
+                                                            array('lastjobs'=> array('$size' => 0)),
+                                                         )
+                                    ),
+                                    array("_id" => 1, "lastjobs" => 1, "id" => 1)
+                                );
+
+    if (empty($r))
+        return Array();
+
+    $r_arr = iterator_to_array($r);
+    // return [login] => array(jobId_1 => job1, jobId_2 => job2)
+    $result = array();
+    foreach ($r_arr as $login => $info){
+        $result[$login] = $info["lastjobs"];
+        foreach ($info["lastjobs"] as $job_id => $job){
+            $result[$login][$job_id]["userId"]= $info["id"];
+        }
+    }
+    return $result;
+
 }
 
 function getUserJobPid($login,$pid) {

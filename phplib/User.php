@@ -19,16 +19,19 @@ class User {
     public $Token;
     public $AuthProvider;
     public $id;
-//	public $dataDir;
+    public $activeProject;
 
     function __construct($f) {
 
+        // stop unless Email
         if (!$f['Email'])
             return 0;
 
-        foreach (array('Surname','Name','Inst','Country','Email','Type','dataDir','diskQuota','DataSample','AuthProvider') as $k)
+        // set attributes from arguments
+        foreach (array('Surname','Name','Inst','Country','Email','Type','dataDir','diskQuota','DataSample','AuthProvider','activeProject') as $k)
             $this->$k= sanitizeString($f[$k]);
 
+        // set credential attributes (crypPassword or Token or ANON)
         if ($f['pass1']){
             //$this->crypPassword = password_hash($f['pass1'], PASSWORD_DEFAULT);
             //$this->crypPassword = crypt($f['pass1'], '$6$'.randomSalt(8).'$');
@@ -40,19 +43,36 @@ class User {
         }else{
             return 0;
         }
-    	$this->Status       = "1";
-    	$this->Type         = (!isset($this->Type)?$this->Type=2:$this->Type=$this->Type);
-    	$this->_id          = $this->Email;
-    	$this->id           = ($this->Type!=3?uniqid($GLOBALS['AppPrefix'] . "USER"):uniqid($GLOBALS['AppPrefix'] . "ANON"));
-    	$this->lastLogin    = moment();
-    	$this->registrationDate = moment();
-    	$this->Surname      = ucfirst($this->Surname);
-        $this->Name         = ucfirst($this->Name);
-    	$this->diskQuota    = (!$this->diskQuota && $this->Type!=3? $GLOBALS['DISKLIMIT']:$GLOBALS['DISKLIMIT_ANON']);
-    	$this->DataSample   = ($this->DataSample?$this->DataSample:$GLOBALS['sampleData_default']);
+        $this->Token_mug_ebi= array();
+        
+        // set user type (0: admin, 1:Tool dev, 2:registered user, 3:guest)
+        $this->Type = (!isset($this->Type)?$this->Type=2:$this->Type=$this->Type);
+
+        // set ids
+    	$this->_id           = $this->Email;
+        $this->id            = ($this->Type!=3?uniqid($GLOBALS['AppPrefix'] . "USER"):uniqid($GLOBALS['AppPrefix'] . "ANON"));
+        $this->activeProject = (!$this->activeProject?createLabel_proj():$this->activeProject);
+        
+        // set status (1: active, ...)
+        $this->Status = "1";
+
+        // set creation time and last login
+    	$this->lastLogin        = moment();
+        $this->registrationDate = (!$this->registrationDate?moment():$this->registrationDate);
+
+        // set user quota according to user type
+    	$this->diskQuota  = (!$this->diskQuota && $this->Type!=3? $GLOBALS['DISKLIMIT']:$GLOBALS['DISKLIMIT_ANON']);
+
+        // process given attributes 
+    	$this->Surname = ucfirst($this->Surname);
+        $this->Name    = ucfirst($this->Name);
+
+        // set inicial sample data for user workspace 
+        $this->DataSample = ($this->DataSample?$this->DataSample:$GLOBALS['sampleData_default']);
 
         return $this;
     }
+
 }
 
 ?>
