@@ -21,11 +21,15 @@ $GLOBALS['filesCol']    = $GLOBALS['db']->files;
 $GLOBALS['filesMetaCol']= $GLOBALS['db']->filesMetadata;
 $GLOBALS['checkMail']   = $GLOBALS['db']->checkMail;
 $GLOBALS['toolsCol']    = $GLOBALS['db']->tools;
+$GLOBALS['toolsDevCol']    = $GLOBALS['db']->tools_dev;
+$GLOBALS['toolsDevMetaCol']    = $GLOBALS['db']->tools_dev_meta;
 $GLOBALS['visualizersCol'] = $GLOBALS['db']->visualizers;
 $GLOBALS['fileTypesCol']= $GLOBALS['db']->file_types;
 $GLOBALS['dataTypesCol']= $GLOBALS['db']->data_types;
 $GLOBALS['helpsCol']    = $GLOBALS['db']->helps;
 $GLOBALS['sampleDataCol']= $GLOBALS['db']->sampleData;
+$GLOBALS['projectsCol'] = $GLOBALS['db']->projects;
+$GLOBALS['logExecutionsCol'] = $GLOBALS['db']->log_executions;
 
 $GLOBALS['dbData']      = $MuGVREConn->$GLOBALS['dbname_Data'];
 $GLOBALS['studiesCol']  = $GLOBALS['dbData']->studies;
