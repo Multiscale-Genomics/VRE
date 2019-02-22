@@ -17,12 +17,13 @@ function execJob ($workDir,$shFile,$queue,$cpus=1,$mem=0) {
 
     if (!$process->status()){
         $_SESSION['errorData']['Error'][]="Job submission failed.<br/>".$process->getFullCommand."<br/>".$process->getErr();
-        logger("ERROR: SGE job is not running. MORE_INFO = '".$process->getErr(). "'");
-        return 0;
+        $errMesg = "ERROR: Job submission failed. FullCommand: '".$process->getFullCommand."'. ErrorSGE: '".$process->getErr(). "'";
+        logger($errMesg);
+        return array(0,$errMesg);
     }
     
     logger("The process $cmd is currently running PID = $pid");
-    return $pid;
+    return array($pid,"");
 }
 
 function execJobPMES ($cloudName,$data){
@@ -31,23 +32,29 @@ function execJobPMES ($cloudName,$data){
     // Start PMES process
     $process = new ProcessPMES($cloudName);
 
+    if ($cloudName=="mug-ebi"){
+        die();
+    }
+
     if (!$process->listening){
-	$_SESSION['errorData']['Error'][]="Job submission failed.<br/>PMES call to '".$process->getServer()."' returned: ".$process->getErr();
-    	logger("ERROR: PMES job is not running. Server not listening. TEST_RESPONSE = '".json_encode($process->lastCall)."'");
-	return 0;
+        $errMesg = "Job submission failed.<br/>PMES call to '".$process->getServer()."' returned: ".$process->getErr();
+        $_SESSION['errorData']['Error'][]=$errMesg;
+        $errMesg.="<br/>Server not listening. TEST_RESPONSE = '".json_encode($process->lastCall)."'";
+    	logger($errMesg);
+        return array(0,$errMesg);
     }
 
     $process->runPMES($data);
     $jobid =  $process->getJobId();
 
     if ($jobid == "0"){
-        $_SESSION['errorData']['Error'][]="Job submission failed.<br/>".json_encode($process->lastCall)."<br/>".$process->getErr();
-        logger("ERROR: PMES job is not running. MORE_INFO = '".$process->getErr(). "'");
-        return 0;
+        $errMesg = "Job submission failed.<br/>".json_encode($process->lastCall)."<br/>".$process->getErr();
+        $_SESSION['errorData']['Error'][]=$errMesg;
+        return array(0,$errMesg);
     }
 
     logger("The process is currently running JOB_ID = $jobid");
-    return $jobid;
+    return array($jobid,"");
 }
 
 
@@ -120,10 +127,11 @@ function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL,$cloudName="local
         $job = $process->getActivityInfo($pid);
 
         if ($job['jobOutputMessage'] || $job['jobErrorMessage'] ){
-         if (is_file($logFile)){    
-            $F = fopen($logFile, "w");
+            if (is_file($logFile) || is_dir(dirname($logFile))){
+                $F = fopen($logFile, "w");
+            }
             if ( !$F ) {
-		         $_SESSION['errorData']['Warning'][]="Cannot update LOG file '".basename(dirname($logFile))."' ($cloudName). Recently deleted from workspace or not accessible.";
+		        //$_SESSION['errorData']['Warning'][]="Cannot update LOG file '".basename(dirname($logFile))."' ($cloudName). Recently deleted from workspace or not accessible.";
                 return true;
             } 
             if ($job['jobOutputMessage']){
@@ -135,10 +143,8 @@ function updateLogFromJobInfo($logFile,$pid,$launcherType=NULL,$cloudName="local
                 fwrite($F, $job['jobErrorMessage']);
             }
             fclose($F);
-         }
         }else{
         //     $_SESSION['errorData']['Warning'][]="Cannot update LOG file '".basename(dirname($logFile))."' ($cloudName). Recently deleted from workspace or not accessible";
-        //     return true;
         }
     }
     return true;
@@ -228,7 +234,7 @@ function delJobFromOutfiles($outfiles){
 	return 1;
 }
 
-function delJob($pid,$launcherType=NULL,$cloudName="local"){
+function delJob($pid,$launcherType=NULL,$cloudName="local",$login=NULL){
 
     $job=Array();
     if (! $pid)
@@ -245,7 +251,7 @@ function delJob($pid,$launcherType=NULL,$cloudName="local"){
     // cancel job
     $r = false;
     if ($launcherType == "SGE"){
-        $process = new ProcessSGE($cloudName);
+        $process = new ProcessSGE();
         list($r,$msg) = $process->stop($pid);
         if (!$r)
            $_SESSION['errorData']['Error'][]="Cannot delete $launcherType job [id = $pid].<br/>$msg";
@@ -259,17 +265,24 @@ function delJob($pid,$launcherType=NULL,$cloudName="local"){
         $_SESSION['errorData']['Error'][]="Cannot delete job of type '$launcherType' [id = $pid]. Launcher not implemented.";
         return false;
     }
+    $_SESSION['errorData']['Info'][]="Job successfully cancelled";
+    logger("JOB $pid FINISHED. HAS BEEN CANCELLED");
+    log_addFinish($pid,"Job has been cancelled");
 
-    // delete job from user
+    // wait to make qdel/terminateActivity effective
+    sleep(15);
+
+    // check job status and register output files, if required
     if ($r){
-        delUserJob($_SESSION['User']['id'],$pid);
+        if (!$login){$login = $_SESSION['User']['_id'];}
+        $filesPending= processPendingFiles($login);
+        //delUserJob($login,$pid); // directly deleting job entry leds to no output registration! 
     }else{
     	$_SESSION['errorData']['Internal Error'][] = "Error while cancelling $launcherType job [id = $pid].<br>Job deleted from the system, but not from user metadata"; 
     	return false;
     }
     return true;
 }
-
 /*
 function jobStateDicc($state){
 	$dicc = Array (

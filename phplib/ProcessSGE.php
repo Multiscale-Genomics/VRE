@@ -88,9 +88,10 @@ class ProcessSGE{
 		$command = QSTAT." -u $this->username | awk '$1 ~ /[0-9]+/ {print $1\"\t\"$5\"\t\"$6 $7}'";
 		exec($command,$queueJobs);
 
-		if (!isset($queueJobs[0]))
+		if (!isset($queueJobs[0])){
+            log_addInfo($jobid,"Job not running anymore");
 			return $jobs;
-		else{
+        }else{
 			foreach ($queueJobs as $jobLine){
 				list($pid,$state,$start)=explode("\t",$jobLine);
 				$cmd = QSTAT. " -j $pid | grep job_name | cut -d: -f2 | tr -d \" \"";
@@ -128,6 +129,7 @@ class ProcessSGE{
 
 		if (!isset($jobState[0]) ){
 			$job['state']="FINISHING";
+            log_addInfo($jobid,"Job not running anymore. State: ".$job['state']);
 		}else{
 			list($pid,$state,$start) = explode("\t",$jobState[0]);
 			$job['state']= $this->jobState[$state];
@@ -148,7 +150,7 @@ class ProcessSGE{
 
 	public function getErr(){
 		if ($this->stderr)
-			return $this->stderr;
+			return $this->stout.$this->stderr;
 		else
 			return NULL;
 	}
@@ -174,6 +176,7 @@ class ProcessSGE{
 		$command = QDEL.' '.$pid;
         exec($command,$r);
         $res = join(" ",$r);
+        log_addInfo($jobid,"SGE/qdel: ".$res);
         if (preg_match('/has deleted/i',$res) || preg_match('/registered the job \d+ for deletion/',$res))
             return array(true,$res);
         else

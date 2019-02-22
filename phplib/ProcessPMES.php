@@ -77,6 +77,9 @@ class ProcessPMES{
 
         list($r,$info) = post($data_string,$url,$headers);
 
+		logger("RESPONSE => ".json_encode($r). "'");
+
+
         if ($r == "0"){
             if ($_SESSION['errorData']['Error']){
     			$err = array_pop($_SESSION['errorData']['Error']);
@@ -114,7 +117,14 @@ class ProcessPMES{
 		$r = $this->post(array($jobid),$service);
 
 		if ($r != "0"){
-            $jobInfo = flattenArray(array_shift(json_decode($r,TRUE)));
+            if (preg_match('/<html>/',$r)){
+                $jobInfo = array('jobStatus' => "IN LIMBO",
+                                 'jobOutputMessage' => $r
+                            );
+                log_addError($jobid,"PMES/getActivityReport: ".json_encode($jobInfo,TRUE),0);
+            }else{
+                $jobInfo = flattenArray(array_shift(json_decode($r,TRUE)));
+            }
         }
         return $jobInfo;
     }
@@ -123,8 +133,12 @@ class ProcessPMES{
 		$job=array();
         $jobPMES = $this->getActivityInfo($jobid);
         if (count($jobPMES)){
-    		if ($jobPMES['jobStatus'] && in_array($jobPMES['jobStatus'], array("FINISHED","ERROR","FAILED","UNKNOWN", "CANCELLED")) )
-       			return $job;
+            // Consider NOT_RUNNING for finished jobs
+    		if ($jobPMES['jobStatus'] && in_array($jobPMES['jobStatus'], array("FINISHED","ERROR","FAILED","UNKNOWN", "CANCELLED", "IN LIMBO" )) ){
+                log_addInfo($jobid,"Job not running anymore. State: ".$jobPMES['jobStatus']);
+                return $job;
+            }
+            // For RUNNING, set job['state']
     		$job = $jobPMES;
     		$job['state']          = ($jobPMES['jobStatus']?$jobPMES['jobStatus']:"UNKNOWN");
     		$job['submission_time']= "";
@@ -133,7 +147,7 @@ class ProcessPMES{
 	}
 
     public function getSystemStatus(){
-                $service= "getSystemStatus";
+        $service= "getSystemStatus";
 		$url = $this->server.$this->APIroot.$service;
 
 		$c = curl_init();
@@ -149,9 +163,20 @@ class ProcessPMES{
 	public function stop($jobid){
 		$service = "terminateActivity";
         $r = $this->post(array($jobid),$service);
-        print "<br/><br/><br/><br/>TERMINATEACTIVITY RETURNS:";
-        var_dump($r);
-        return $r;
+        log_addInfo($jobid,"PMES/terminateActivity: ".$r);
+        if ($r == "0"){
+           $_SESSION['errorData']['Error'][]="Error calling 'terminateActivity' via POST";
+           return 0;
+        }
+        if (preg_match('/will be cancelled/',$r)){
+            return 1;
+        }elseif(preg_match('/cannot be cancelled, the job has been finished in Failed state/',$r)){
+            $_SESSION['errorData']['Warning'][]="Forcing job cancellation for [ID $jobid]. Job was found in error";
+            return 1;
+        }else{
+            $_SESSION['errorData']['Error'][]=$r;
+            return 0;
+        }
 	}
 
 	public function getErr(){
@@ -163,11 +188,11 @@ class ProcessPMES{
 
 
 	public function getJobId(){
-                return $this->jobid;
-        }
+           return $this->jobid;
+    }
 	public function getServer(){
-                return $this->server;
-        }
+           return $this->server;
+    }
 
     public function getCurrentCloud(){
         if (isset($GLOBALS['cloud']) and isset($GLOBALS['clouds'][$GLOBALS['cloud']]) ){
@@ -187,12 +212,59 @@ class ProcessPMES{
 		return 0;
 	}
 
-	public function status(){
-		return 1;
-	}
+    private function openstack_getAccessToken(){
 
-	public function start(){
-		return 1;
-	}
+        if ( !isset($this->cloud['auth']) ){
+            $_SESSION['errorData']['Error'][]="No authorization data set. Cannot connect to openstack cloud.";
+            return 0;
+        }
+
+        // request openstack token via REST
+        //
+        $auth_data = $this->cloud['auth'];
+
+        $data = array ("auth" => array( "tenantName"          => "'".$auth_data["OS_TENANT_NAME"]."'",
+                                        "passwordCredentials" => array ( "username" => "'".$auth_data["OS_USERNAME"]."'",
+                                                                         "password" => "'".$auth_data["OS_PASSWORD"]."'")));
+
+        $url = $auth_data["OS_AUTH_URL"]."/tokens";
+
+        $data_string = json_encode($data);
+
+        if (!strlen($data_string)){
+            $_SESSION['errorData']['Error'][]="Curl: cannot POST openstack token request. Data to send is empty";
+            return 0;
+        }
+        logger("OS TOKEN request: ".$cmd);
+
+        $cmd = "curl -H \"Content-Type: application/json\" -X POST -d '".json_encode($data)."'  $url";
+        subprocess($cmd,$r_str,$stdErr);
+
+        $r = json_decode($r_str, true); 
+        var_dump($r);
+
+
+        print "<br/> CMD --> $cmd <br/>";
+        print "<br/><br/><br/>----------------------------------------------------R2 ---------> $r";
+
+        // curl_init returns 401. Instead, using curl via subprocess
+        //$headers = array('Content-Type: application/json');
+        //list($r,$info) = post($data_string,$url,$headers);
+
+        if (!isset($r['access']["token"])){
+            if ($_SESSION['errorData']['Error']){
+                $_SESSION['errorData']['Error'] = "Cannot access to the requestes cloud. Authorization failed.";
+                logger("ERROR: Cannot access to the requestes cloud. Authorization failed. Response: $r");
+            }
+            return 0;
+        }
+        return $r['access']["token"];
+    }
+
+    private function openstack_isTokenExpired($token){
+        $token_expires = strtotime($token["expires"]);
+        date_default_timezone_set("UTC");
+        return $token_expires < time();
+    }
 }
 ?>

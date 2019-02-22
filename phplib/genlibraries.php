@@ -16,14 +16,18 @@ require "keycloak.inc.php";
 require "log.inc.php";
 require "ProcessJob.inc.php";
 require "oauth2.inc.php";
+require "oauth2_openstack.inc.php";
 
 require "templates.inc.php";
 require "mongoDB.inc.php";
+require "mongoDB_proj.inc.php";
 require "validation.inc.php";
 require "utilities.inc.php";
 require "projects.inc.php";
 require "getdata.inc.php";
 require "tools.list.inc.php";
+require "tools.inc.php";
+require "input.tools.lib.php";
 require "statistics.inc.php";
 require "datatypes.inc.php";
 
