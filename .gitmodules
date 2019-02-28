@@ -1,0 +1,3 @@
+[submodule "visualizers/cytoscape/ChAs_Frontend"]
+	path = visualizers/cytoscape/ChAs_Frontend
+	url = https://github.com/VeraPancaldiLab/ChAs_Frontend.git
