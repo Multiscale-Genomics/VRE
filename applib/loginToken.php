@@ -1,7 +1,6 @@
 <?php
 
 require "../phplib/genlibraries.php";
-//require  __DIR__ . '/../vendor/autoload.php';
 
 use MuG_Oauth2Provider\MuG_Oauth2Provider;
 

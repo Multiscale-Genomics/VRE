@@ -4,7 +4,7 @@ MuG VRE is a web application aimed to allow MuG users to access MuG data and exp
 It is written in PHP, HTML and Javascript.
 
 ## URL
- [https://vre.multiscalegenomics.eu/](https://vre.multiscalegenomics.eu) : production web site - version 1.1
+* [https://vre.multiscalegenomics.eu/](https://vre.multiscalegenomics.eu) : production web site - version 1.1
 * [https://dev.multiscalegenomics.eu/](https://dev.multiscalegenomics.eu) : development web site - version 1.2
 
 ## Code structure

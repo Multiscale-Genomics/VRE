@@ -1,0 +1,16 @@
+{
+    "name": "root/mugvre",
+    "description": "MuGVRE PHP lib dependencies",
+    "type": "project",
+    "require": {
+        "league/oauth2-client": "^2.4",
+        "justinrainbow/json-schema": "^5.2"
+    },
+    "license": "Apache2",
+    "authors": [
+        {
+            "name": "Laia",
+            "email": "laia.codo@bsc.es"
+        }
+    ]
+}

@@ -1,8 +1,6 @@
 <?php
 
 require "../phplib/genlibraries.php";
-require "../phplib/admin.inc.php";
-require __DIR__ . '/../vendor/json-schema/vendor/autoload.php';
 
 if($_REQUEST){
 

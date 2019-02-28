@@ -1,66 +1,6 @@
 <?php
 
-require __DIR__ . '/../phplib/globals.inc.php';
-require __DIR__ . '/../vendor/json-schema/vendor/autoload.php';
-
-/*
-    require __DIR__ . '/../vendor/json-schema2/vendor/autoload.php';
-
-use Swaggest\JsonSchema\Structure\ClassStructure;
-use Swaggest\JsonSchema\Schema;
-
-$_REQUEST['json'] = <<<'JSON'
-{
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "integer"
-        },
-        "name": {
-            "type": "string"
-        },
-        "orders": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/order"
-            }
-        }
-    },
-    "required":["id"],
-    "definitions": {
-        "order": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "price": {
-                    "type": "number"
-                },
-                "updated": {
-                    "type": "string",
-                    "format": "date-time"
-                }
-            },
-            "required":["id"]
-        }
-    }
-}
-JSON;
-
-var_dump($_REQUEST['json']);
-
-$schema = Schema::import(json_decode($_REQUEST['json']));
-
-var_dump($schema);
-
-
-//https://github.com/swaggest/php-json-schema
-
-die();
-
-*/
-
+require "../phplib/genlibraries.php";
 
 $data = json_decode($_REQUEST['json']);
 

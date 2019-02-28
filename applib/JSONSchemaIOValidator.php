@@ -1,7 +1,6 @@
 <?php
 
-require __DIR__ . '/../phplib/globals.inc.php';
-require __DIR__ . '/../vendor/json-schema/vendor/autoload.php';
+require "../phplib/genlibraries.php";
 
 $data = json_decode($_REQUEST['json']);
 
