@@ -26,6 +26,10 @@ if (!$mt){
     print "Sorry, no metadata accessible for this resource";
     exit(0);
 }
+// temporal fix for back-compatibility
+if (isset($mt['logPath'])){$mt['log_file'] = $mt['logPath'];}
+if (isset($mt['shPath'])){ $mt['submission_file'] = $mt['shPath'];}
+
 
 ?> <h3>Item Metadata</h3><?php 
 
