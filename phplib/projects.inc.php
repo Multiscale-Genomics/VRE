@@ -306,11 +306,11 @@ function save_fromSampleDataMetadata($meta_folder,$dataDir,$sampleData,$type,$ve
     $meta_folder['file_path'] = "$dataDir/".$meta_folder['file_path'];
     $meta_folder['user_id']    = dirname($dataDir);
     $meta_folder['meta_data']['validated'] = true;
-    if (isset($meta_folder['meta_data']['shPath'])){
-        $meta_folder['meta_data']['shPath']  = "$dataDirP/".$meta_folder['meta_data']['shPath'];
+    if (isset($meta_folder['meta_data']['submission_file'])){
+        $meta_folder['meta_data']['submission_file']  = "$dataDirP/".$meta_folder['meta_data']['submission_file'];
     }
-    if (isset($meta_folder['meta_data']['logPath']))
-        $meta_folder['meta_data']['logPath']  = "$dataDirP/".$meta_folder['meta_data']['logPath'];
+    if (isset($meta_folder['meta_data']['log_file']))
+        $meta_folder['meta_data']['log_file']  = "$dataDirP/".$meta_folder['meta_data']['log_file'];
     if (isset($meta_folder['meta_data']['associated_files'])){
         $t= array();
         foreach($meta_folder['meta_data']['associated_files'] as $assoc){
@@ -809,11 +809,11 @@ function formatData($data) {
 				#$viewLog_state="enabled";
 				#if ($data['pending']=="HOLD" || $data['pending']=="PENDING"){
 				#	$viewLog_state = 'disabled';
-				#}elseif(!is_file($GLOBALS['dataDir']."/".$data['logPath']) && !is_link($GLOBALS['dataDir']."/".$data['logPath'])){
+				#}elseif(!is_file($GLOBALS['dataDir']."/".$data['log_file']) && !is_link($GLOBALS['dataDir']."/".$data['log_file'])){
 				#	$viewLog_state = 'disabled';
 				#}
-				#$data['viewLog'] = "<tr><td>Log file:</td><td><a target=\"_blank\" href=\"workspace/workspace.php?op=openPlainFileFromPath&fnPath=".urlencode($data['logPath'])."\" class=\"$viewLog_state\">View</a></td></tr>";
-				#$data['logPath'] = basename($data['logPath']);
+				#$data['viewLog'] = "<tr><td>Log file:</td><td><a target=\"_blank\" href=\"workspace/workspace.php?op=openPlainFileFromPath&fnPath=".urlencode($data['log_file'])."\" class=\"$viewLog_state\">View</a></td></tr>";
+				#$data['log_file'] = basename($data['log_file']);
 			}else{
 				$data['filename']= maxlength(basename($data['path']), 15);
 				$data['longfilename']= basename($data['path']);
@@ -831,22 +831,22 @@ function formatData($data) {
     			}
             }
 		}
-		if(isset($data['shPath'])){
-			$data['execDetails'] = "<tr><td>Execution details:</td><td><a href=\"javascript:callShowSHfile('".$data ['tool']."','".$data['shPath']."');\">Analysis parameters</a></td></tr>";
+		if(isset($data['submission_file'])){
+			$data['execDetails'] = "<tr><td>Execution details:</td><td><a href=\"javascript:callShowSHfile('".$data ['tool']."','".$data['submission_file']."');\">Analysis parameters</a></td></tr>";
 		}else{
 			$data['execDetails'] = "";
 		}
-		if(isset($data['logPath'])){
-			if (preg_match('/^\//',$data['logPath'])){
-				$data['logPath'] = str_replace($GLOBALS['dataDir']."/","",$data['logPath']);
+		if(isset($data['log_file'])){
+			if (preg_match('/^\//',$data['log_file'])){
+				$data['log_file'] = str_replace($GLOBALS['dataDir']."/","",$data['log_file']);
 			}
 			$viewLog_state="enabled";
 			if ($data['pending']=="HOLD" || $data['pending']=="PENDING"){
 				$viewLog_state = 'disabled';
-			}elseif(!is_file($GLOBALS['dataDir']."/".$data['logPath']) && !is_link($GLOBALS['dataDir']."/".$data['logPath'])){
+			}elseif(!is_file($GLOBALS['dataDir']."/".$data['log_file']) && !is_link($GLOBALS['dataDir']."/".$data['log_file'])){
 				$viewLog_state = 'disabled';
 			}
-			$data['viewLog'] = "<tr><td>Log file:</td><td><a target=\"_blank\" href=\"workspace/workspace.php?op=openPlainFileFromPath&fnPath=".urlencode($data['logPath'])."\" class=\"$viewLog_state\">View</a></td></tr>";
+			$data['viewLog'] = "<tr><td>Log file:</td><td><a target=\"_blank\" href=\"workspace/workspace.php?op=openPlainFileFromPath&fnPath=".urlencode($data['log_file'])."\" class=\"$viewLog_state\">View</a></td></tr>";
 		}else{
 			$data['viewLog'] = "";
 		}
@@ -1281,8 +1281,8 @@ function processPendingFiles($sessionId,$files=array()){
 			'parentDir'=> getGSFileId_fromPath($parentDir),
 			'description'=> $descrip,
 			'pending' => $jobProcess['state'],
-			'shPath'  => fromAbsPath_toPath($job['submission_file']),
-			'logPath' => fromAbsPath_toPath($job['log_file'])
+			'submission_file'  => fromAbsPath_toPath($job['submission_file']),
+			'log_file'=> fromAbsPath_toPath($job['log_file'])
            	);
 
 	    	//list job in workspace

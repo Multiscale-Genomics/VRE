@@ -297,8 +297,8 @@ class Tooljob {
     	        //'inPaths'     => array_map(create_function('$o', 'return $o->path;'), $this->input_files),
     	        'input_files' => $input_ids,
                 'tool'        => $this->toolId,
-    			'shPath'      => $this->submission_file,
-    			'logPath'     => $this->log_file,
+    			'submission_file'      => $this->submission_file,
+    			'log_file'    => $this->log_file,
             	'arguments'   => array_merge($this->arguments,$this->input_paths_pub)
             );
 
@@ -1231,21 +1231,21 @@ class Tooljob {
         unset($file['format']);
         unset($file['data_type']); 
         unset($file['tracktype']); 
-        unset($file['shPath']); 
-        unset($file['logPath']); 
+        unset($file['submission_file']); 
+        unset($file['log_file']); 
         unset($file['input_files']);
         unset($file['owner']);
 
 		// other -> meta_data
-                $mugfile['meta_data']  = $file;
+        $mugfile['meta_data']  = $file;
 
 		// refGenome -> assembly	
-                if (isset($mugfile['meta_data']['refGenome']) ){
-                        $mugfile['meta_data']['assembly'] = $mugfile['meta_data']['refGenome'];
+        if (isset($mugfile['meta_data']['refGenome']) ){
+            $mugfile['meta_data']['assembly'] = $mugfile['meta_data']['refGenome'];
 			unset($mugfile['meta_data']['refGenome']);
 		}
 
-                return $mugfile;
+        return $mugfile;
     }
 
     /**

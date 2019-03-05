@@ -764,7 +764,7 @@ function prepMetadataUpload($request,$validationState=0){
             'format'     => $format,
             'validated'  => $validated,
             'trackType'  => $tracktype,
-	    'visible'    => $visible,
+	        'visible'    => $visible,
 	);
 	// GFF, BAM, BW,.. metadata
 	if (isset($request['refGenome']))   {$insertMeta['refGenome']  = $request['refGenome'];}
@@ -773,8 +773,8 @@ function prepMetadataUpload($request,$validationState=0){
 	if (isset($request['sorted']))      {$insertMeta['sorted']     = $request['sorted'];}
 	if (isset($request['description'])) {$insertMeta['description']= $request['description'];}
 	//  results metadata
-	if (isset($request['shPath']))      {$insertMeta['shPath']     = $request['shFile'];}
-	if (isset($request['logPath']))     {$insertMeta['logPath']    = $request['logFile'];}
+	if (isset($request['submission_file'])){$insertMeta['submission_file'] = $request['shFile'];}
+	if (isset($request['log_file']))    {$insertMeta['log_file']   = $request['logFile'];}
 	if (isset($request['in']))          {$insertMeta['in']         = $request['in'];}
 
 	return  $insertMeta;

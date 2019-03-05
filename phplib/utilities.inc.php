@@ -299,7 +299,7 @@ function prepMetadataUpload($request,$validationState=0){
         $insertMeta=array(
             'format'     => $format,
             'validated'  => $validated,
-	    'data_type'  => $data_type,
+	        'data_type'  => $data_type,
             //'trackType'  => $tracktype,
             'visible'    => $visible,
         );
@@ -312,8 +312,8 @@ function prepMetadataUpload($request,$validationState=0){
         if (isset($request['sorted']))      {$insertMeta['sorted']     = $request['sorted'];}
         if (isset($request['description'])) {$insertMeta['description']= $request['description'];}
         //  results metadata
-        if (isset($request['shPath']))      {$insertMeta['shPath']     = $request['shFile'];}
-        if (isset($request['logPath']))     {$insertMeta['logPath']    = $request['logFile'];}
+        if (isset($request['submission_file']))      {$insertMeta['submission_file']     = $request['shFile'];}
+        if (isset($request['log_file']))     {$insertMeta['log_file']    = $request['logFile'];}
         if (isset($request['inPaths']))     {$insertMeta['inPaths']    = $request['inPaths'];}
         if (isset($request['outPaths']))    {$insertMeta['outPaths']   = $request['outPaths'];}
 
@@ -519,17 +519,17 @@ function prepMetadataResult($meta,$fnPath=0,$lastjob=Array() ){
             $meta['input_files']=$input_ids;
         }
 
-        if (!isset($meta['shPath']) && isset($lastjob['shPath']) )
-                $meta['shPath']=$lastjob['shPath'];
+        if (!isset($meta['submission_file']) && isset($lastjob['submission_file']) )
+                $meta['submission_file']=$lastjob['submission_file'];
 
-        if (!isset($meta['shPath']) && isset($lastjob['submission_file']) )
-                $meta['shPath']=$lastjob['submission_file'];
+        if (!isset($meta['submission_file']) && isset($lastjob['submission_file']) )
+                $meta['submission_file']=$lastjob['submission_file'];
 
-        if (!isset($meta['logPath']) && isset($lastjob['logPath']) )
-                $meta['logPath']=$lastjob['logPath'];
+        if (!isset($meta['log_file']) && isset($lastjob['log_file']) )
+                $meta['log_file']=$lastjob['log_file'];
 
-        if (!isset($meta['logPath']) && isset($lastjob['log_file']) )
-                $meta['logPath']=$lastjob['log_file'];
+        if (!isset($meta['log_file']) && isset($lastjob['log_file']) )
+                $meta['log_file']=$lastjob['log_file'];
 
         if (!isset($meta['tool']) && isset($lastjob['tool']))
                 $meta['tool']=$lastjob['tool'];
