@@ -1,0 +1,13 @@
+{
+  "name": "jszlib",
+  "homepage": "https://github.com/rbuels/jszlib",
+  "_release": "18cd14e592",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "18cd14e592652c10f7b494b1e29f891b0a5590a4"
+  },
+  "_source": "https://github.com/rbuels/jszlib.git",
+  "_target": "*",
+  "_originalSource": "rbuels/jszlib"
+}

@@ -1,0 +1,396 @@
+=head2 Tue Oct  2 14:22:01 2018: C<Module> L<Heap::Simple|Heap::Simple>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:22:15 2018: C<Module> L<Heap::Simple::XS|Heap::Simple::XS>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.10>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:22:17 2018: C<Module> L<Devel::Size|Devel::Size>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.82>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:22:18 2018: C<Module> L<File::Next|File::Next>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.16>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:22:32 2018: C<Module> L<Data|Data>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.14>
+
+=item *
+
+C<EXE_FILES: scripts/stag-autoschema.pl scripts/stag-db.pl scripts/stag-diff.pl scripts/stag-drawtree.pl scripts/stag-filter.pl scripts/stag-findsubtree.pl scripts/stag-flatten.pl scripts/stag-grep.pl scripts/stag-handle.pl scripts/stag-itext2simple.pl scripts/stag-itext2sxpr.pl scripts/stag-itext2xml.pl scripts/stag-join.pl scripts/stag-merge.pl scripts/stag-mogrify.pl scripts/stag-parse.pl scripts/stag-query.pl scripts/stag-splitter.pl scripts/stag-view.pl scripts/stag-xml2itext.pl scripts/stag-itext2simple.pl>
+
+=back
+
+=head2 Tue Oct  2 14:22:53 2018: C<Module> L<File::Slurp::Tiny|File::Slurp::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.004>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:22:54 2018: C<Module> L<Tree::DAG_Node|Tree::DAG_Node>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.31>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:22:58 2018: C<Module> L<XML::RegExp|XML::RegExp>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.04>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:23:00 2018: C<Module> L<libxml-perl|libxml-perl>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.08>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:23:01 2018: C<Module> L<XML::DOM|XML::DOM>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.46>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:23:03 2018: C<Module> L<XML::DOM::XPath|XML::DOM::XPath>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.14>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:23:06 2018: C<Module> L<Bio::FeatureIO|Bio::FeatureIO>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.6.905>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:23:07 2018: C<Module> L<Digest::Crc32|Digest::Crc32>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.01>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:23:11 2018: C<Module> L<File::ReadBackwards|File::ReadBackwards>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.05>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:23:12 2018: C<Module> L<Bio::GFF3|Bio::GFF3>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.0>
+
+=item *
+
+C<EXE_FILES: bin/gff3_from_fasta>
+
+=back
+
+=head2 Tue Oct  2 14:23:14 2018: C<Module> L<Clone::Choose|Clone::Choose>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.010>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:23:15 2018: C<Module> L<Hash::Merge|Hash::Merge>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.300>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Oct  2 14:23:18 2018: C<Module> L<local::lib|local::lib>
+
+=over 4
+
+=item *
+
+C<installed into: /var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.000024>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+

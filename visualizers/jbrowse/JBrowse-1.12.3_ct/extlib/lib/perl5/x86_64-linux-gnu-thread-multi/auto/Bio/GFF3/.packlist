@@ -1,0 +1,12 @@
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/bin/gff3_from_fasta
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5/Bio/GFF3/LowLevel.pm
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5/Bio/GFF3/LowLevel/Parser.pm
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5/Bio/GFF3/LowLevel/Parser/1_0_backcompat.pm
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5/Bio/GFF3/Transform/FromFasta.pm
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/lib/perl5/Bio/GFF3/Transform/SyncDirectives.pm
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/man/man1/gff3_from_fasta.1p
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/man/man3/Bio::GFF3::LowLevel.3pm
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/man/man3/Bio::GFF3::LowLevel::Parser.3pm
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/man/man3/Bio::GFF3::LowLevel::Parser::1_0_backcompat.3pm
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/man/man3/Bio::GFF3::Transform::FromFasta.3pm
+/var/www/html/visualizers/jbrowse/TEST/JBrowse-1.12.3/extlib/man/man3/Bio::GFF3::Transform::SyncDirectives.3pm

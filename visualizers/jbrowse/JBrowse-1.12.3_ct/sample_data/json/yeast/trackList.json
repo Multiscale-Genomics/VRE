@@ -1,0 +1,71 @@
+{
+   "plugins" : [
+      "NeatHTMLFeatures",
+      "NeatCanvasFeatures",
+      "HideTrackLabels"
+   ],
+   "names" : {
+      "url" : "names/",
+      "type" : "Hash"
+   },
+   "formatVersion" : 1,
+   "dataset_id" : "yeast",
+   "tracks" : [
+      {
+         "urlTemplate" : "seq/{refseq_dirpath}/{refseq}-",
+         "key" : "Reference sequence",
+         "seqType" : "dna",
+         "type" : "SequenceTrack",
+         "chunkSize" : 20000,
+         "category" : "Reference sequence",
+         "storeClass" : "JBrowse/Store/Sequence/StaticChunked",
+         "label" : "DNA"
+      },
+      {
+         "key" : "Protein-coding genes",
+         "subfeatures" : true,
+         "compress" : 0,
+         "urlTemplate" : "tracks/Genes/{refseq}/trackData.json",
+         "track" : "Genes",
+         "type" : "FeatureTrack",
+         "style" : {
+            "className" : "feature5",
+            "subfeatureClasses" : {
+               "CDS" : "transcript-CDS"
+            },
+            "arrowheadClass" : "transcript-arrowhead"
+         },
+         "autocomplete" : "all",
+         "category" : "Genes",
+         "label" : "Genes",
+         "storeClass" : "JBrowse/Store/SeqFeature/NCList",
+         "feature" : [
+            "gene"
+         ]
+      },
+      {
+         "feature" : [
+            "mRNA"
+         ],
+         "description" : 1,
+         "category" : "Genes",
+         "label" : "transcript_with_no_features",
+         "storeClass" : "JBrowse/Store/SeqFeature/NCList",
+         "autocomplete" : "all",
+         "style" : {
+            "subfeatureClasses" : {
+               "UTR" : "transcript-UTR",
+               "CDS" : "transcript-CDS"
+            },
+            "arrowheadClass" : "transcript-arrowhead",
+            "className" : "transcript"
+         },
+         "type" : "FeatureTrack",
+         "track" : "transcript_with_no_features",
+         "compress" : 0,
+         "urlTemplate" : "tracks/transcript_with_no_features/{refseq}/trackData.json",
+         "subfeatures" : true,
+         "key" : "Exonerate predictions (misconfigured for test, and with a long description)"
+      }
+   ]
+}

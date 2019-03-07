@@ -1,0 +1,13 @@
+{
+  "name": "jDataView",
+  "homepage": "https://github.com/rbuels/jDataView",
+  "_release": "db0893d468",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "db0893d468ba034fadbbb5700d4ed79ab0dc236e"
+  },
+  "_source": "https://github.com/rbuels/jDataView.git",
+  "_target": "*",
+  "_originalSource": "rbuels/jDataView"
+}

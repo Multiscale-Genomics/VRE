@@ -1,0 +1,15 @@
+{
+  "name": "FileSaver",
+  "main": "./FileSaver.js",
+  "dependencies": {},
+  "homepage": "https://github.com/dkasenberg/FileSaver.js",
+  "_release": "4f79d8e666",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "4f79d8e66662b63df4928bfce769cdafae846600"
+  },
+  "_source": "https://github.com/dkasenberg/FileSaver.js.git",
+  "_target": "*",
+  "_originalSource": "dkasenberg/FileSaver.js"
+}

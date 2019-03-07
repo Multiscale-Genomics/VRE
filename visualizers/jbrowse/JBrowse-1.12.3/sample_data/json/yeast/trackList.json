@@ -1,0 +1,71 @@
+{
+   "dataset_id" : "yeast",
+   "tracks" : [
+      {
+         "seqType" : "dna",
+         "type" : "SequenceTrack",
+         "category" : "Reference sequence",
+         "label" : "DNA",
+         "urlTemplate" : "seq/{refseq_dirpath}/{refseq}-",
+         "storeClass" : "JBrowse/Store/Sequence/StaticChunked",
+         "chunkSize" : 20000,
+         "key" : "Reference sequence"
+      },
+      {
+         "autocomplete" : "all",
+         "compress" : 0,
+         "feature" : [
+            "gene"
+         ],
+         "storeClass" : "JBrowse/Store/SeqFeature/NCList",
+         "urlTemplate" : "tracks/Genes/{refseq}/trackData.json",
+         "label" : "Genes",
+         "category" : "Genes",
+         "type" : "FeatureTrack",
+         "track" : "Genes",
+         "subfeatures" : true,
+         "key" : "Protein-coding genes",
+         "style" : {
+            "arrowheadClass" : "transcript-arrowhead",
+            "className" : "feature5",
+            "subfeatureClasses" : {
+               "CDS" : "transcript-CDS"
+            }
+         }
+      },
+      {
+         "subfeatures" : true,
+         "description" : 1,
+         "style" : {
+            "className" : "transcript",
+            "arrowheadClass" : "transcript-arrowhead",
+            "subfeatureClasses" : {
+               "CDS" : "transcript-CDS",
+               "UTR" : "transcript-UTR"
+            }
+         },
+         "key" : "Exonerate predictions (misconfigured for test, and with a long description)",
+         "urlTemplate" : "tracks/transcript_with_no_features/{refseq}/trackData.json",
+         "label" : "transcript_with_no_features",
+         "compress" : 0,
+         "autocomplete" : "all",
+         "storeClass" : "JBrowse/Store/SeqFeature/NCList",
+         "feature" : [
+            "mRNA"
+         ],
+         "type" : "FeatureTrack",
+         "track" : "transcript_with_no_features",
+         "category" : "Genes"
+      }
+   ],
+   "plugins" : [
+      "NeatHTMLFeatures",
+      "NeatCanvasFeatures",
+      "HideTrackLabels"
+   ],
+   "formatVersion" : 1,
+   "names" : {
+      "url" : "names/",
+      "type" : "Hash"
+   }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "json-schema",
+  "homepage": "https://github.com/kriszyp/json-schema",
+  "version": "0.2.1",
+  "_release": "0.2.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.1",
+    "commit": "1dd6acbdeda7304b9fd66ce393c940d95ac169a8"
+  },
+  "_source": "https://github.com/kriszyp/json-schema.git",
+  "_target": "0.2.1",
+  "_originalSource": "kriszyp/json-schema"
+}

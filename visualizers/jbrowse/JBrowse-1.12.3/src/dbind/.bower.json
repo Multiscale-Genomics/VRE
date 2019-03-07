@@ -1,0 +1,13 @@
+{
+  "name": "dbind",
+  "homepage": "https://github.com/rbuels/dbind",
+  "_release": "2b70834f3b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "2b70834f3b88227274f158358a9c6f0cd09070ac"
+  },
+  "_source": "https://github.com/rbuels/dbind.git",
+  "_target": "*",
+  "_originalSource": "rbuels/dbind"
+}

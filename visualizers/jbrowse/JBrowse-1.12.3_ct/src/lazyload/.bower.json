@@ -1,0 +1,13 @@
+{
+  "name": "lazyload",
+  "homepage": "https://github.com/rbuels/lazyload",
+  "_release": "d428749c54",
+  "_resolution": {
+    "type": "branch",
+    "branch": "amd",
+    "commit": "d428749c5400213340d65d6156f43224ee477586"
+  },
+  "_source": "https://github.com/rbuels/lazyload.git",
+  "_target": "amd",
+  "_originalSource": "rbuels/lazyload"
+}
