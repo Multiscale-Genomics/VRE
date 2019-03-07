@@ -250,6 +250,7 @@
 										{
 											"name": "Genes",
 						                    "url": "assets/data/refGene.hg38.bed.gz",
+								    "indexed": false,
                                                                     "height": 1000,
 						                    "displayMode": "EXPANDED"
 					                	}
