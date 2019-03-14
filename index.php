@@ -3,8 +3,9 @@
   <meta charset="utf-8" />
   </head>
 <?php
-
+ 
 require "phplib/genlibraries.php";
+
 
 //checkIfSessionUser(basename($_SERVER['PHP_SELF']));
 
@@ -68,4 +69,5 @@ if (!$_REQUEST['id']){
     }
 
 }
+
 redirect("../home/redirect.php");
