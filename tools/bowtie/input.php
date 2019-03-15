@@ -147,52 +147,45 @@ $tool   = getTool_fromId($toolId,1);
                                   </div>
                                   <div class="portlet-body form form-block" id="form-block1">
                                       <div class="form-body">
-                                          <h4 class="form-section">File inputs</h4>
-                                            <div class="row">
-																							<div class="col-md-6">
-																							<?php $ff = matchFormat_File($tool['input_files']['loc']['file_type'], $inPaths); ?>
-																							<?php InputTool_printSelectFile($tool['input_files']['loc'], $rerunParams['loc'], $ff[0], false, true); ?>
-																							</div>
-																							<div class="col-md-6">
-																							<?php $ff = matchFormat_File($tool['input_files']['fastq2']['file_type'], $inPaths); ?> 
-																							<?php InputTool_printSelectFile($tool['input_files']['fastq2'], $rerunParams['fastq2'], $ff[1], false, false); ?>
-																							</div>
-                                          	</div>
+<h4 class="form-section">File inputs</h4>
+<div class="row">
+	<div class="col-md-6">
+		<?php $ff = matchFormat_File($tool['input_files']['loc']['file_type'], $inPaths); ?>
+		<?php InputTool_printSelectFile($tool['input_files']['loc'], $rerunParams['loc'], $ff[0], false, true); ?>
+	</div>
+	<div class="col-md-6">
+		<?php $ff = matchFormat_File($tool['input_files']['fastq2']['file_type'], $inPaths); ?> 
+		<?php InputTool_printSelectFile($tool['input_files']['fastq2'], $rerunParams['fastq2'], $ff[1], false, false); ?>
+	</div>
+</div>
 
-																						<div class="row">
-																							<?php if(($_REQUEST["op"] == 1) || (count($_REQUEST['fn']) == 3 && !isset($_REQUEST["op"])) || (count($_REQUEST['fn']) == 4 && !isset($_REQUEST["op"]))) { ?>
 
-																							<div class="col-md-6">
-																							<?php $ff = matchFormat_File($tool['input_files']['genome']['file_type'], $inPaths); ?> 
-																							<?php InputTool_printSelectFile($tool['input_files']['genome'], $rerunParams['genome'], $ff[0], false, true); ?>
-																							</div>
-
-																							<div class="col-md-6">
-																							<?php $ff = matchFormat_File($tool['input_files']['index']['file_type'], $inPaths); ?> 
-																							<?php InputTool_printSelectFile($tool['input_files']['index'], $rerunParams['index'], $ff[0], false, true); ?>
-																							</div>
-
+<div class="row">
+<?php if(($_REQUEST["op"] == 1) || (count($_REQUEST['fn']) == 3 && !isset($_REQUEST["op"])) || (count($_REQUEST['fn']) == 4 && !isset($_REQUEST["op"]))) { ?>
+	<div class="col-md-6">
+		<?php InputTool_printListOfFiles($tool['input_files_public_dir']['genome_public'], $rerunParams['genome_public'], true); ?>
+	</div>
+	<div class="col-md-6">
+		<?php InputTool_printListOfFiles($tool['input_files_public_dir']['index_public'], $rerunParams['index_public'], true); ?>
+	</div>
 																							<?php } else { ?>
+	<div class="col-md-6">
+		<?php $ff = matchFormat_File($tool['input_files']['genome']['file_type'], $inPaths); ?> 
+		<?php InputTool_printSelectFile($tool['input_files']['genome'], $rerunParams['genome'], $ff[0], false, true); ?>
+	</div>
+	<div class="col-md-6">
+		<?php $ff = matchFormat_File($tool['input_files']['index']['file_type'], $inPaths); ?> 
+		<?php InputTool_printSelectFile($tool['input_files']['index'], $rerunParams['index'], $ff[0], false, true); ?>
+	</div>
+<?php } ?>
+</div>
 
-																							<div class="col-md-6">
-																								<?php InputTool_printListOfFiles($tool['input_files_public_dir']['genome_public'], $rerunParams['genome_public'], true); ?>
-																							</div>
 
-																							<div class="col-md-6">
-																								<?php InputTool_printListOfFiles($tool['input_files_public_dir']['index_public'], $rerunParams['index_public'], true); ?>
-																							</div>
-
-																							<?php } ?>
-
-																					</div>
-
-																					<h4 class="form-section">Settings</h4>
-
-																					<?php InputTool_printSettings($tool['arguments'], $rerunParams); ?>
-																					
-                                     </div>
-                                  </div>
-                              </div>
+<h4 class="form-section">Settings</h4>
+<?php InputTool_printSettings($tool['arguments'], $rerunParams); ?>
+   </div>
+    </div>
+             </div>
                               <!-- END PORTLET 2: SECTION 1 -->
 
                               <div class="alert alert-danger err-tool display-hide">
