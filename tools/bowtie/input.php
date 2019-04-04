@@ -161,7 +161,7 @@ $tool   = getTool_fromId($toolId,1);
 
 
 <div class="row">
-<?php if(($_REQUEST["op"] == 1) || (count($_REQUEST['fn']) == 3 && !isset($_REQUEST["op"])) || (count($_REQUEST['fn']) == 4 && !isset($_REQUEST["op"]))) { ?>
+<?php if(($_REQUEST["op"] == 1) || !isset($_REQUEST["op"]) ) { ?>
 	<div class="col-md-6">
 		<?php InputTool_printListOfFiles($tool['input_files_public_dir']['genome_public'], $rerunParams['genome_public'], true); ?>
 	</div>
