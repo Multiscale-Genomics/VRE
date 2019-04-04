@@ -164,7 +164,7 @@ class GFF_TX extends Base {
 
         public function __construct($label,$path,$file){
                 parent::__construct("GFF",$label,$path,$file);
-                $this->metadata = array("category" => "Your Data / Projects / $path", "type" => "TSS nucleosome classification", "description" => "Classification of The Transcription Start Sites (TSS) according to the nucleosome architecture. They are classified based on the width of the NFRs (closed (c) or open (o))<br/> and on the fuzziness of the -1 and + 1  nucleosomes (missed (M), fuzzy (F) or well-positioned (W)).", "Details" => "A Transcription Start Site can be classified as any of the following:<br/>
+                $this->metadata = array("category" => "Your Data / Projects / $path", "type" => "TSS nucleosome classification", "description" => "Classification of The Transcription Start Sites (TSS) according to the nucleosome architecture. They are classified based on the width of the NFRs (closed (c), open (o) or overlapping(overlap))<br/> and on the fuzziness of the -1 and + 1  nucleosomes (missed (M), fuzzy (F) or well-positioned (W)).", "Details" => "A Transcription Start Site can be classified as any of the following:<br/>
 <span style=' background: #A9F5E1;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> +1_missing</b><br/>
 <span style=' background: #F6CEF5;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> +1_too_fuzzy</b><br/>
 <span style=' background: #CEECF5;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> -1_missing</b><br/>
@@ -368,8 +368,8 @@ class GFF_ND extends GFF_NR{
 		parent::__construct($label,$path,$file);
 
                 $this->style = array("className" => "feature", "color" => "function( feature, variableName, glyphObject, track ) { switch (feature.get('class')) { case 'INCLUSION': return '#04B431'; case 'EVICTION': return '#FF0000'; case 'INCREASED FUZZINESS': return '#424242'; case 'DECREASED FUZZINESS': return '#BDBDBD'; case 'SHIFT -': return '#0040FF'; case 'SHIFT +': return '#8000FF'}}");
-                $this->metadata = array("category" => "Your Data / Projects / $path", "description" => "Detection of local changes in the position of nucleosomes at the single read level between two nucleosome maps.", "Details" =>"Changes are classified as: Shift upstream or downstrean, Inclusion or Eviction, Increase or decrease of fuzziness (concentration or dispersion).<br> 
-The movement of hotspots is scored according to how many moved reads are involved on the change.<br/>
+                $this->metadata = array("category" => "Your Data / Projects / $path", "description" => "Detection of local changes in the position of nucleosomes at the single read level between two nucleosome maps.", "Details" =>"Changes are classified as: Shift upstream or downstrean, Inclusion or Eviction.<br> 
+The movement of hotspots is scored according to the number of reads involved on the change.<br/>
 
 
 <b>nreads</b> is the number of reads involved in the hotspot.<br/>
@@ -380,9 +380,7 @@ The movement of hotspots is scored according to how many moved reads are involve
 <span style='background: #8000FF;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> SHIFT +:</b> Indicates an upstream shift of the nucleosomes.<br/>
 <span style='background: #0040FF;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> SHIFT -:</b> Indicates a downstream shift.<br/>
 <span style='background: #04B431;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> INCLUSION:</b> Condition 2 has a local increase in nucleosome coverage relative to condition 1.<br/>
-<span style='background: #FF0000;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> EVICTION:</b> Condition 2 has a local decrease in nucleosome coverage relative to condition 1.<br/>
-<span style='background: #424242;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> INCREASED FUZZINESS:</b> A well positioned nucleosome in condition 1 tend to become more fuzzy in condition 2.<br/>
-<span style='background: #BDBDBD;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> DECREASED FUZZINESS:</b> A fuzzy nucleosome in condition 1 tend to become better positioned in condition 2.<br/>
+<span style='background: #FF0000;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b> EVICTION:</b> Condition 2 has a local decrease in nucleosome coverage relative to condition 1.
 ");
 
 		$newWin = new newWindow("View 1000 bp. around the hotspot","Nucleosome Dynamics plot",$GLOBALS['jbrowseURL']."getGraph.php?start={start}&end={end}&chr={seq_id}&label=".$label."&window=1000&win=no");
