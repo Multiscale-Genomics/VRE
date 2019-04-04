@@ -159,13 +159,12 @@ function createUserFromToken($login,$token,$userinfo=array(),$anonID=false){
     }
     if ($anonID){
     	// if replacing anon user, delete old anon from mongo
-//    	$GLOBALS['usersCol']->remove(array('_id'=> $anonID));    
+        //$GLOBALS['usersCol']->remove(array('_id'=> $anonID));    
     }
     
     //  inject user['id'] into auth server (keycloak) as 'mug_id' (so APIs will find it in /openid-connect/userinfo endpoint)
     $r = injectMugIdToKeycloak($aux['_id'],$aux['id']);
 
-    exit(0);
     // if not all user metadata mapped from oauth2 provider, ask the user
     if (!$aux['Name'] || !$aux['Surname'] || !$aux['Inst'] || !$aux['Country']){
         redirect('../user/usrProfile.php');

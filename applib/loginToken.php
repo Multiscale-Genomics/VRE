@@ -58,7 +58,8 @@ if (!isset($_GET['code'])) {
     if (!isSet($u)){
 
         // create new user
-        if (!$_SESSION['anonID']){
+        //if (!$_SESSION['anonID']){
+        if (1){
             $r = createUserFromToken($resourceOwner['username'],$accessToken,$resourceOwner,false);
             if (!$r)
                 exit('Login error: cannot create local VRE user');
