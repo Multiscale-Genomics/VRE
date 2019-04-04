@@ -1009,11 +1009,11 @@ function getData_fromSampleData($params=array()) { //sampleData
         $params['sampleData']=array($params['sampleData']);
     }
     foreach ($params['sampleData'] as $sampleName ){
-        $_SESSION['errorData']['Info'][]="Importing exemple dataset for '$sampleName'";
+        $_SESSION['errorData']['Info'][]="Importing example dataset for '$sampleName'";
         $dataDir = $_SESSION['User']['id'] ."/".$_SESSION['User']['activeProject'];
         $r = setUserWorkSpace_sampleData($sampleName,$dataDir);
 		if ($r=="0"){
-            $_SESSION['errorData']['Warning'][] = "Cannot fully inject exemple dataset into user workspace.";
+            $_SESSION['errorData']['Warning'][] = "Cannot fully inject example dataset into user workspace.";
             redirect($GLOBALS['url']."/getdata/sampleDataList.php");
         }else{
             $_SESSION['errorData']['Info'][] = "Example data successfuly imported.";

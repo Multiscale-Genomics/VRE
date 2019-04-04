@@ -2280,7 +2280,7 @@ function moveFiles($fns,$target_fn){
             }
             $target_dir_rfn  = $GLOBALS['dataDir'] . "/$target_dir";
 
-            // move file from DMP
+            // move file (and associated) in DB
             $r = moveGSFileBNS($file_fn,"$target_dir/$target_filename");
             if ($r == "0"){
                 $_SESSION['errorData']['Error'][]="Error while moving file '".basename($file_fn)."'";
@@ -2296,19 +2296,22 @@ function moveFiles($fns,$target_fn){
                 continue;
             }
     
-            // move associated ids
+            // move associated files in disk
             if (isset($file['associated_files'])){
                 foreach ($file['associated_files'] as $assoc_id){
                     $assoc = getGSFile_fromId($assoc_id);	
                     if ($assoc){
-                        $r = moveGSFileBNS($assoc['path'],"$target_dir/".basename($assoc_path));
-                        if ($r == "0"){
+                        $fnOri_assoc_name = str_replace($target_filename,basename($file_fn),basename($assoc['path']));
+                        $fnOri_assoc_rfn  = dirname($file_rfn)."/$fnOri_assoc_name";
+                        rename($fnOri_assoc_rfn,$GLOBALS['dataDir']."/".$assoc['path']);
+                        if (!is_file($GLOBALS['dataDir']."/".$assoc['path'])){
                            $_SESSION['errorData']['Warning'][]= "File '".basename($file_fn)."' successfully moved, but  not its associated file (".basename($assoc['path']).").";
         			       $result = false;
                        }
                     }
                }
-           }
+            }
+ 
         }
     }
 
