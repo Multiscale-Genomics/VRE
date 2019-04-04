@@ -342,11 +342,10 @@ function moveGSFileBNS($fn,$fnNew,$asRoot=0,$owner=""){
         $owner = $_SESSION['User']['id'];
     }
 
-
     $fn     = fromAbsPath_toPath($fn);
     $fnNew  = fromAbsPath_toPath($fnNew);
 
-    // Check file to be created is not there   
+    // Check file to be created is not there 
     $fileNewId = getGSFileId_fromPath($fnNew,$asRoot);
     if ( $fileNewId != "0"){
         $_SESSION['errorData']['Error'][]="Cannot move '$fn' to '$fnNew'. The target file already exists.";
@@ -356,6 +355,8 @@ function moveGSFileBNS($fn,$fnNew,$asRoot=0,$owner=""){
     // Check file to be moved exists 
     $fileOldId = getGSFileId_fromPath($fn,$asRoot);
     $fileOld   = getGSFile_fromId($fileOldId,"",$asRoot);
+
+
 	if ( empty($fileOld)){
 		$_SESSION['errorData']['Error'][] = "Cannot move file '$fn'. File not found or not accessible.";
 		return 0;
@@ -370,6 +371,7 @@ function moveGSFileBNS($fn,$fnNew,$asRoot=0,$owner=""){
 		return 0;
     }
     //print "MOVE FILE ID = $fileOldId ---> $fileNewId<br/>";
+    
 
     //Set parent for the new file
     $parentOld = $fileOld['parentDir']; 
@@ -409,7 +411,22 @@ function moveGSFileBNS($fn,$fnNew,$asRoot=0,$owner=""){
     if ($p_code !=""){
         modifyGSFileBNS($fileOld['_id'],"project", $p_code);
     }
-
+    // Update file metadata entry
+    $submissionAttrib = (isset($fileOld["submission_file"])?"submission_file":"shPath");
+    if ($fileOld[$submissionAttrib]){
+        $submissionOld_dir = dirname(fromAbsPath_toPath($fileOld[$submissionAttrib]));
+        $submissionNew_dir = dirname($fnNew);
+        $submissionNew = str_replace($submissionOld_dir, $submissionNew_dir ,$fileOld[$submissionAttrib]);
+        addMetadataBNS($fileOld['_id'], array($submissionAttrib => $submissionNew));
+    }
+    $logAttrib = (isset($fileOld["log_file"])?"log_file":"logPath");
+    if ($fileOld[$logAttrib]){
+        $meta_old_dir = dirname(fromAbsPath_toPath($fileOld[$logAttrib]));
+        $meta_new_dir = dirname($fnNew);
+        $meta_new = str_replace($meta_old_dir, $meta_new_dir ,$fileOld[$logAttrib]);
+        addMetadataBNS($fileOld['_id'], array($logAttrib => $meta_new));
+    }
+    
     // if not only rename required, update parents and children
     
     if ($parentNew != $parentOld){
@@ -439,6 +456,29 @@ function moveGSFileBNS($fn,$fnNew,$asRoot=0,$owner=""){
     	modifyGSFileBNS($parentOld,"atime", new MongoDate(strtotime("now")));
         $size_parent = 0 + getAttr_fromGSFileId($parentOld,"size");
         modifyGSFileBNS($parentNew,"size", $size_parent - $fileOld['size']);
+    }
+
+    // Move associated files, if present
+    if ($fileOld["associated_files"]){
+        foreach ($fileOld["associated_files"] as $assocId){
+            // set associated file paths
+            $fileAssoc   = getGSFile_fromId($assocId,"",$asRoot);
+            if (!$fileAssoc || !isset($fileAssoc['path'])){
+                $_SESSION['errorData']['Warning'][] = "Moving only '".basename($fnNew)."' file. Error  encountered while moving its associated file. Entry '$assocId' not found or mal formatted";
+                var_dump($fileAssoc);
+                continue;
+            }
+            $fnNew_assoc_name = str_replace(basename($fn),basename($fnNew),basename($fileAssoc['path']));
+            $fnNew_assoc = dirname($fnNew)."/$fnNew_assoc_name";
+            // move new associated file
+            if ($fnNew_assoc != $fileAssoc['path']){
+                $r = moveGSFileBNS($fileAssoc['path'],$fnNew_assoc,$asRoot,$owner);
+                if ($r == 0){
+    		       $_SESSION['errorData']['Error'][] = "Moving only '".basename($fnNew)."' file. Error encountered while moving associated file '".basename($fileAssoc['path']);
+                   continue;
+                }
+            }
+        }
     }
     
 	return 1;
@@ -505,7 +545,19 @@ function moveGSDirBNS($fn,$fnNew,$asRoot=0,$owner=""){
     // Update dir entry
     modifyGSFileBNS($dir['_id'],"path", $fnNew);
  	modifyGSFileBNS($dir['_id'],"parentDir", $parentNew);
-   	modifyGSFileBNS($dir['_id'],"atime", new MongoDate(strtotime("now")));
+    modifyGSFileBNS($dir['_id'],"atime", new MongoDate(strtotime("now")));
+    $submissionAttrib = (isset($fileOld["submission_file"])?"submission_file":"shPath");
+    if ($dir[$submissionAttrib]){
+        $submissionOld_dir = dirname(fromAbsPath_toPath($dir[$submissionAttrib]));
+        $submissionNew = str_replace($submissionOld_dir, $fnNew ,$dir[$submissionAttrib]);
+        addMetadataBNS($dir['_id'], array($submissionAttrib => $submissionNew));
+    }
+    $logAttrib = (isset($dir["log_file"])?"log_file":"logPath");
+    if ($dir[$logAttrib]){
+        $meta_old_dir = dirname(fromAbsPath_toPath($dir[$logAttrib]));
+        $meta_new = str_replace($meta_old_dir, $fnNew ,$dir[$logAttrib]);
+        addMetadataBNS($dir['_id'], array($logAttrib => $meta_new));
+    }
    
     $dirNew = getGSFileId_fromPath($fnNew,$asRoot);
     if ( empty($dirNew)){
