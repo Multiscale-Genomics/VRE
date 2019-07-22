@@ -237,7 +237,7 @@ $tool   = getTool_fromId($toolId,1);
 						      																		</select>		
                                                   </div>-->
 																									<?php 
-																										$ff = matchFormat_File($tool['input_files']['condition1']['file_type'], $inPaths);
+                                                        $ff = matchFormat_File($tool['input_files']['condition1']['file_type'], $inPaths);
 																										$p = [];
 																										$r = 0;
 																										foreach($ff as $fi) {

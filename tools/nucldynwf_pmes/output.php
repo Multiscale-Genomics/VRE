@@ -194,7 +194,7 @@ $gffFiles = glob("$pathGff/*gff");
 																case 'ND': $type = "Nucleosome Dynamics"; break;
 																case 'NFR': $type = "Nucleosome Free Regions"; break;
 																case 'NR': $type = "NucleR"; break;
-																case 'P': $type = "Phasing"; break;
+																case 'P': $type = "Periodicity"; break;
 																case 'STF': $type = "Stiffness"; break;
 																case 'TSS': $type = "TSS Classification"; break;
 															}
