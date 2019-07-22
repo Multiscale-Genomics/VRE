@@ -36,6 +36,14 @@ if (isset($_REQUEST['op'])){
 	case 'deleteAll':
     case 'deleteSure':
         $r = deleteFiles($_REQUEST['fn']);
+        # OJO
+        $RData = str_replace(".bam",".RData",$rfn);
+        if (is_file($RData)){
+            exec ("rm -r \"$RData\" 2>&1",$output);
+            if (error_get_last()){
+                $_SESSION['errorData']['error'][]=implode(" ",$output);
+            }
+        }
         break;
 
 	case 'deleteDirOk':
