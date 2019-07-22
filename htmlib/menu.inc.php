@@ -79,7 +79,10 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 					  	   break;
     case 'sampleDataList': $currentSection = 'dt';
                           $currentSubSection = 'sd';
-                          break; 
+                          break;
+    case 'data_senescence': $currentSection = 'dr';
+                          $currentSubSection = 'se';
+                          break;
 	case 'usrProfile': $currentSection = 'up';
 					  	   $currentSubSection = 'mp';
 						   break;
@@ -240,7 +243,8 @@ sort($visualizers);
                                     <li class="nav-item <?php if($currentSubSection == 'sd') { ?>active open<?php } ?>">
                                         <a href="getdata/sampleDataList.php" class="nav-link ">
                                             <span class="title">Import example dataset</span>
-                                        </a>
+																				</a>
+																		</li>
                                     <!--</li>
 																		<li class="nav-item <?php if($currentSubSection == 'id') { ?>active open<?php } ?>">
                                         <a href="getdata/dataFromID.php" class="nav-link ">
@@ -254,7 +258,26 @@ sort($visualizers);
                                     </li>-->
                                 </ul>
                             </li>
-
+                                    <li class="nav-item  <?php if($currentSection == 'dr') { ?>active open<?php } ?>">
+                                <a href="javascript:;" class="nav-link nav-toggle">
+                                    <i class="icon-layers"></i>
+                                    <span class="title">Data Repositories</span>
+                                    <?php if($currentSection == 'dt') { ?><span class="selected"></span><?php } ?>
+                                    <span class="arrow <?php if($currentSection == 'dr') { ?>open<?php } ?>"></span>
+                                </a>
+                                    <ul class="sub-menu">
+                                       <li class="nav-item <?php if($currentSubSection == 'se') { ?>active open<?php } ?>">
+                                        <a href="data_repositories/data_senescence.php" class="nav-link ">
+                                            <span class="title">Senescence Data</span>
+                                        </a>
+                                       </li> 
+                                       <li class="nav-item <?php if($currentSubSection == 'bn') { ?>active open<?php } ?>">
+                                        <a href="https://www.multiscalegenomics.eu/MuGVRE/modules/BigNASimMuG/browse.php"  target="_blank" class="nav-link ">
+                                            <span class="title">BigNASim Data</span>
+                                        </a>
+                                       </li> 
+                                    </ul>                    
+                                   </li>
 														<li class="nav-item  <?php if($currentSection == 'lt') { ?>active open<?php } ?>">
                                 <a href="launch/" class="nav-link nav-toggle">
                                     <i class="icon-rocket"></i>

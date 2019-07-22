@@ -216,6 +216,7 @@
 			case 'repositoryList':
 			case 'bignasimList':
 			case 'sampleDataList':
+            case 'data_senescence':
 			case 'experiment':
 			case 'dataFromTxt':
 			case 'dataFromID':

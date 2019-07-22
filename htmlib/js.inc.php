@@ -421,6 +421,9 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			<?php break; 
 			case 'sampleDataList': ?>
 				<script src="assets/pages/scripts/sample-data.js?v=<?php echo rand(); ?>" type="text/javascript"></script>
+			<?php break; 
+			case 'data_senescence': ?>
+				<script src="assets/pages/scripts/sample-data-viewers.js?v=<?php echo rand(); ?>" type="text/javascript"></script>
 			<?php break; 	
 			case 'restoreLink': ?>
 			<script src="assets/pages/scripts/restore-link.js?v=<?php echo rand(); ?>" type="text/javascript"></script>
@@ -498,6 +501,7 @@ switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 			case 'tools':
 			case 'visualizers':
 			case 'sampleDataList':
+			case 'data_senescence':
 			case 'form':
 			case 'logs':
 
