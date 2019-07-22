@@ -1,7 +1,3 @@
-<!--[if lt IE 9]>
-<script src="assets/global/plugins/respond.min.js"></script>
-<script src="assets/global/plugins/excanvas.min.js"></script>
-<![endif]-->
 <?php
 switch(pathinfo($_SERVER['PHP_SELF'])['filename']){
 	case 'adminUsers':
