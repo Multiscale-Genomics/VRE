@@ -86,6 +86,32 @@ if (isset($_REQUEST['op'])){
 		exit(0);
 		break;
 
+    case 'downloadtgz_phar':
+
+        if (filetype($rfn) != 'dir') {
+            $_SESSION['errorData']['Error'][] = "Cannot tar ".$_REQUEST['fn']." File is not a directory";
+            break;
+        }
+        $target = $GLOBALS['dataDir']."/".$userPath."/".$GLOBALS['tmpUser_dir']."/".basename($rfn).rand().".tar.gz";
+
+        try {
+          ini_set('max_execution_time', '3000');
+          ini_set('set_time_limit', '0');
+
+          //setup phar
+          $phar = new PharData($target);
+          $phar->buildFromDirectory($rfn);
+          $phar->compress(Phar::GZ);
+          $_SESSION['errorData']['Info'][] = "Compressing all files done, check for the file $target";
+        } catch (Exception $e) {
+          // handle errors
+          $_SESSION['errorData']['Error'][] =  'An error has occured, details:'. $e->getMessage();
+          break;
+        }
+        downloadFile($tmpZip);
+        exit(0);
+        break;
+
 	case 'downloadtgz' :
 		if (filetype($rfn) != 'dir') {
 			$_SESSION['errorData']['Error'][] = "Cannot tar ".$_REQUEST['fn']." File is not a directory";
@@ -178,29 +204,7 @@ if (isset($_REQUEST['op'])){
 		print passthru("/bin/cat \"$rfn\"");
 		exit;
 
-	case 'deleteAll':
-    case 'deleteSure':
-        $r = deleteFiles($_REQUEST['fn']);
         break;
-
-	case 'deleteDirOk':
-
-        if (basename($filePath) == "uploads" || basename($filePath) == "repository" ){
-			$_SESSION['errorData']['error'][]="Cannot delete structural directory '$filePath'.";
-            break;
-        }
-        $r = deleteGSDirBNS($_REQUEST['fn']);
-
-		if ($r == 0){
-			$_SESSION['errorData']['error'][]="Cannot delete directory '$filePath' file from repository";
-            break;
-        }
-        exec ("rm -r \"$rfn\" 2>&1",$output);
-		if (error_get_last()){
-			$_SESSION['errorData']['error'][]=implode(" ",$output);
-        }
-		break;
-
 
 	case 'cancelJobPids':
 		$r = delJob($_REQUEST['pids']);

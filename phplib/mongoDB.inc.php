@@ -290,7 +290,7 @@ function getAssociatedFiles_fromId($fn,$assoc=Array()) {
 	if (in_array($fn,$assoc))
 		return $assoc;
 
-	$f  = getGSFile_fromId($fn);
+	$f  = getGSFile_fromId($fn,"",1);
 	if (isset($f['associated_files'])){
 		foreach ($f['associated_files'] as $a){
 			$assoc = getAssociatedFiles_fromId($a,$assoc);
